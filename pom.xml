@@ -9,7 +9,7 @@
     <version>7</version>
   </parent>
   <groupId>org.xipki.iaik</groupId>
-  <artifactId>sun-pkcs11wrapper</artifactId>
+  <artifactId>sunpkcs11-wrapper</artifactId>
   <packaging>bundle</packaging>
   <version>1.3.0-SNAPSHOT</version>
   <name>PKCS#11 wrapper</name>
