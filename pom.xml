@@ -11,7 +11,7 @@
   <groupId>org.xipki.iaik</groupId>
   <artifactId>sunpkcs11-wrapper</artifactId>
   <packaging>bundle</packaging>
-  <version>1.3.0-SNAPSHOT</version>
+  <version>1.3.0</version>
   <name>PKCS#11 wrapper</name>
   <description>PKCS#11 wrapper based on sunpkcs11</description>
   <licenses>
