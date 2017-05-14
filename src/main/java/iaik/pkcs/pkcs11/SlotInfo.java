@@ -208,7 +208,7 @@ public class SlotInfo {
 	 * @return the string representation of object
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("Slot Description: ");
 		buffer.append(slotDescription_);

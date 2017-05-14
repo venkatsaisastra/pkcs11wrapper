@@ -770,7 +770,7 @@ public class MechanismInfo implements Cloneable {
 	 * @return the string representation of this object
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer(256);
+		StringBuilder buffer = new StringBuilder(256);
 
 		buffer.append(Constants.INDENT);
 		buffer.append("Minimum Key-Size: ");

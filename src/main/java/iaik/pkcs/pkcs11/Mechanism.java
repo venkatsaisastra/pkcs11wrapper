@@ -1662,7 +1662,7 @@ public class Mechanism implements Cloneable {
 	 * @return the string representation of this object
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer(128);
+		StringBuilder buffer = new StringBuilder(128);
 
 		buffer.append(Constants.INDENT);
 		buffer.append("Mechanism: ");

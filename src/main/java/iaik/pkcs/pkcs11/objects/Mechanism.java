@@ -185,7 +185,7 @@ public class Mechanism extends Object {
 	 * @return A string presentation of this object for debugging output.
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer(32);
+		StringBuilder buffer = new StringBuilder(32);
 
 		buffer.append(super.toString());
 

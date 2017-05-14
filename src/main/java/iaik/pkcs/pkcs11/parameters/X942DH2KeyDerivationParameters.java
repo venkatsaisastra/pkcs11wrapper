@@ -230,7 +230,7 @@ public class X942DH2KeyDerivationParameters extends X942DH1KeyDerivationParamete
 	 * @return A string representation of this object.
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append(super.toString());
 		buffer.append(Constants.NEWLINE);

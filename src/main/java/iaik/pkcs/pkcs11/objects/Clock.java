@@ -239,7 +239,7 @@ public class Clock extends HardwareFeature {
 	 * @postconditions (result <> null)
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer(256);
+		StringBuilder buffer = new StringBuilder(256);
 
 		buffer.append(super.toString());
 

@@ -130,7 +130,7 @@ public class MechanismArrayAttribute extends Attribute {
 	 * @postconditions (result <> null)
 	 */
 	protected String getValueString() {
-		StringBuffer buffer = new StringBuffer(1024);
+		StringBuilder buffer = new StringBuilder(1024);
 		Mechanism[] allowedMechanisms = getMechanismAttributeArrayValue();
 		if (allowedMechanisms != null && allowedMechanisms.length > 0) {
 			for (int i = 0; i < allowedMechanisms.length; i++) {

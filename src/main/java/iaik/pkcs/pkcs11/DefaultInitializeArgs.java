@@ -227,7 +227,7 @@ public class DefaultInitializeArgs implements InitializeArgs {
 	 * @return The string representation of object
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("Mutex Handler: ");
 		buffer.append((mutexHandler_ != null) ? "present" : "not present");

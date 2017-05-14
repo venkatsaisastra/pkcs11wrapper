@@ -217,7 +217,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
 	 * @return A string representation of this object.
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append(super.toString());
 		buffer.append(Constants.NEWLINE);

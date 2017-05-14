@@ -1864,7 +1864,7 @@ public class Session {
 	 * @return the string representation of this object
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("Session Handle: ");
 		buffer.append("0x");

@@ -350,7 +350,7 @@ public class GenericTemplate extends Object {
 	 * @postconditions (result <> null)
 	 */
 	public String toString(boolean newline, boolean withName, String indent) {
-		StringBuffer buffer = new StringBuffer(1024);
+		StringBuilder buffer = new StringBuilder(1024);
 
 		Enumeration attributesEnumeration = attributeTable_.elements();
 		boolean firstAttribute = !newline;

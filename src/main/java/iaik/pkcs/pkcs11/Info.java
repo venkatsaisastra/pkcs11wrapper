@@ -170,7 +170,7 @@ public class Info implements Cloneable {
 	 * @return the string representation of object
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("Cryptoki Version: ");
 		buffer.append(cryptokiVersion_);

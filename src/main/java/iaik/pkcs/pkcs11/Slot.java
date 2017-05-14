@@ -221,7 +221,7 @@ public class Slot {
 	 * @return the string representation of this object
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("Slot ID: ");
 		buffer.append("0x");

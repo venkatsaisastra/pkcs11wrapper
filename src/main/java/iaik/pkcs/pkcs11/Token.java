@@ -403,7 +403,7 @@ public class Token {
 	 * @return the string representation of this object
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("Token in Slot: ");
 		buffer.append(slot_.toString());

@@ -403,7 +403,7 @@ public class DomainParameters extends Storage {
 	 * @postconditions (result <> null)
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer(256);
+		StringBuilder buffer = new StringBuilder(256);
 
 		buffer.append(super.toString());
 

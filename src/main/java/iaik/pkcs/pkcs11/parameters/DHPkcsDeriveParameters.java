@@ -141,7 +141,7 @@ public class DHPkcsDeriveParameters implements Parameters {
 	 * @return A string representation of this object.
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append(Constants.INDENT);
 		buffer.append("Public Value (hex): ");

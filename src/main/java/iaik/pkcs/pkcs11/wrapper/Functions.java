@@ -155,7 +155,7 @@ public class Functions {
 	 */
 	public static String toFullHexString(long value) {
 		long currentValue = value;
-		StringBuffer stringBuffer = new StringBuffer(16);
+		StringBuilder stringBuffer = new StringBuilder(16);
 		for (int j = 0; j < 16; j++) {
 			int currentDigit = (int) currentValue & 0xf;
 			stringBuffer.append(HEX_DIGITS[currentDigit]);
@@ -174,7 +174,7 @@ public class Functions {
 	 */
 	public static String toFullHexString(int value) {
 		int currentValue = value;
-		StringBuffer stringBuffer = new StringBuffer(8);
+		StringBuilder stringBuffer = new StringBuilder(8);
 		for (int i = 0; i < 8; i++) {
 			int currentDigit = currentValue & 0xf;
 			stringBuffer.append(HEX_DIGITS[currentDigit]);
@@ -207,7 +207,7 @@ public class Functions {
 			return null;
 		}
 
-		StringBuffer buffer = new StringBuffer(2 * value.length);
+		StringBuilder buffer = new StringBuilder(2 * value.length);
 		int single;
 
 		for (int i = 0; i < value.length; i++) {
@@ -252,7 +252,7 @@ public class Functions {
 	 * @return The SlotInfoFlag string representation of the flags.
 	 */
 	public static String slotInfoFlagsToString(long flags) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		boolean notFirst = false;
 
 		if ((flags & PKCS11Constants.CKF_TOKEN_PRESENT) != 0L) {
@@ -289,7 +289,7 @@ public class Functions {
 	 * @return The TokenInfoFlag string representation of the flags.
 	 */
 	public static String tokenInfoFlagsToString(long flags) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		boolean notFirst = false;
 
 		if ((flags & PKCS11Constants.CKF_RNG) != 0L) {
@@ -478,7 +478,7 @@ public class Functions {
 	 * @return The SessionInfoFlag string representation of the flags.
 	 */
 	public static String sessionInfoFlagsToString(long flags) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		boolean notFirst = false;
 
 		if ((flags & PKCS11Constants.CKF_RW_SESSION) != 0L) {
@@ -531,7 +531,7 @@ public class Functions {
 	 * @return The MechanismInfoFlag string representation of the flags.
 	 */
 	public static String mechanismInfoFlagsToString(long flags) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		boolean notFirst = false;
 
 		if ((flags & PKCS11Constants.CKF_HW) != 0L) {

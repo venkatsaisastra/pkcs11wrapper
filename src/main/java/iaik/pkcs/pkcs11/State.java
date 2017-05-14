@@ -166,7 +166,7 @@ public class State implements Cloneable {
 	 * @return The string representation of object
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		String name;
 		if (code_ == PKCS11Constants.CKS_RO_PUBLIC_SESSION) {

@@ -307,7 +307,7 @@ public abstract class Attribute implements Cloneable {
 		String name;
 
 		if ((type.longValue() & Attribute.VENDOR_DEFINED.longValue()) != 0L) {
-			StringBuffer nameBuffer = new StringBuffer(36);
+			StringBuilder nameBuffer = new StringBuilder(36);
 			nameBuffer.append("VENDOR_DEFINED [0x");
 			nameBuffer.append(Long.toHexString(type.longValue()));
 			nameBuffer.append(']');
@@ -315,7 +315,7 @@ public abstract class Attribute implements Cloneable {
 		} else {
 			name = (String) attributeNames_.get(type);
 			if (name == null) {
-				StringBuffer nameBuffer = new StringBuffer(25);
+				StringBuilder nameBuffer = new StringBuilder(25);
 				nameBuffer.append("[0x");
 				nameBuffer.append(Long.toHexString(type.longValue()));
 				nameBuffer.append(']');
@@ -589,7 +589,7 @@ public abstract class Attribute implements Cloneable {
 	 * @postconditions (result <> null)
 	 */
 	public String toString(boolean withName) {
-		StringBuffer buffer = new StringBuffer(32);
+		StringBuilder buffer = new StringBuilder(32);
 
 		if (withName) {
 			String typeName = getAttributeName(new Long(ckAttribute_.type));

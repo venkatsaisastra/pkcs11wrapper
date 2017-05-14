@@ -763,7 +763,7 @@ public class TokenInfo implements Cloneable {
 	 * @return the string representation of object
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("Label: ");
 		buffer.append(label_);

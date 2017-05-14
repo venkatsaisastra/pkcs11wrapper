@@ -230,7 +230,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
 	 * @return A string representation of this object.
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append(Constants.INDENT);
 		buffer.append("Key Derivation Function: ");

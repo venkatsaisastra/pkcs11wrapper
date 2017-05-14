@@ -351,7 +351,7 @@ public class UserInterface extends HardwareFeature {
 	 * @return A string presentation of this object for debugging output.
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer(256);
+		StringBuilder buffer = new StringBuilder(256);
 
 		buffer.append(super.toString());
 

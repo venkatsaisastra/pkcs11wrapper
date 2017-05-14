@@ -246,7 +246,7 @@ public class ECDSAPrivateKey extends PrivateKey {
 	 * @postconditions (result <> null)
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer(1024);
+		StringBuilder buffer = new StringBuilder(1024);
 
 		buffer.append(super.toString());
 

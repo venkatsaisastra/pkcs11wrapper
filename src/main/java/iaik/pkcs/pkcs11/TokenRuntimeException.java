@@ -126,7 +126,7 @@ public class TokenRuntimeException extends RuntimeException {
 	 * @return The string representation of exception.
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer(super.toString());
+		StringBuilder buffer = new StringBuilder(super.toString());
 
 		if (encapsulatedException_ != null) {
 			buffer.append(", Encasulated Exception: ");

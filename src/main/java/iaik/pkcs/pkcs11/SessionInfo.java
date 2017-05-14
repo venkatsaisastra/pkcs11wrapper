@@ -184,7 +184,7 @@ public class SessionInfo implements Cloneable {
 	 * @return The string representation of object
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("State: ");
 		buffer.append(state_);

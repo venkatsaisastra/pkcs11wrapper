@@ -127,7 +127,7 @@ public class LongAttribute extends Attribute {
 	 * @postconditions (result <> null)
 	 */
 	public String toString(int radix) {
-		StringBuffer buffer = new StringBuffer(32);
+		StringBuilder buffer = new StringBuilder(32);
 
 		if (present_) {
 			if (sensitive_) {

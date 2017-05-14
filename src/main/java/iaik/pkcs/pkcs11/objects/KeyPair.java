@@ -170,7 +170,7 @@ public class KeyPair implements Cloneable {
 	 * @postconditions (result <> null)
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer(128);
+		StringBuilder buffer = new StringBuilder(128);
 
 		buffer.append(Constants.INDENT);
 		buffer.append(publicKey_);

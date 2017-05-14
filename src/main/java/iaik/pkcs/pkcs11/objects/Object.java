@@ -646,7 +646,7 @@ public class Object implements Cloneable {
 	 * @postconditions (result <> null)
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer(32);
+		StringBuilder buffer = new StringBuilder(32);
 
 		buffer.append(Constants.INDENT);
 		buffer.append("Object Class: ");
@@ -675,7 +675,7 @@ public class Object implements Cloneable {
 	 * @postconditions (result <> null)
 	 */
 	public String toString(boolean newline, boolean withName, String indent) {
-		StringBuffer buffer = new StringBuffer(1024);
+		StringBuilder buffer = new StringBuilder(1024);
 
 		Enumeration attributesEnumeration = attributeTable_.elements();
 		boolean firstAttribute = !newline;

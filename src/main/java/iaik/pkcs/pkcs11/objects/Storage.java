@@ -274,7 +274,7 @@ public class Storage extends Object {
 	 * @postconditions (result <> null)
 	 */
 	public String toString() {
-		StringBuffer buffer = new StringBuffer(128);
+		StringBuilder buffer = new StringBuilder(128);
 
 		buffer.append(super.toString());
 
