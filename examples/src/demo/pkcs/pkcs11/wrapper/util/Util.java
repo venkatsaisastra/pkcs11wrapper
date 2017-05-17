@@ -1,32 +1,32 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this
 //    list of conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
 //    and/or other materials provided with the distribution.
-// 
+//
 // 3. The end-user documentation included with the redistribution, if any, must
 //    include the following acknowledgment:
-// 
+//
 //    "This product includes software developed by IAIK of Graz University of
 //     Technology."
-// 
+//
 //    Alternately, this acknowledgment may appear in the software itself, if and
 //    wherever such third-party acknowledgments normally appear.
-// 
+//
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
 //    Technology" must not be used to endorse or promote products derived from this
 //    software without prior written permission.
-// 
+//
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
 //    Graz University of Technology.
-// 
+//
 // THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED
 // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -68,7 +68,7 @@ import demo.pkcs.pkcs11.wrapper.adapters.KeyAndCertificate;
 /**
  * This class contains only static methods. It is the place for all functions that are used by
  * several classes in this package.
- * 
+ *
  * @author Karl Scheibelhofer
  */
 public class Util {
@@ -80,12 +80,12 @@ public class Util {
 
   /**
    * Converts the names of mechanisms to their long value code.
-   * 
+   *
    * @param mechansimName
    *          The name of the mechanism to get the code; e.g. "CKM_RSA_PKCS".
    * @return The code of the mechanism or null, if this name is unknown.
    * @preconditions (mechansimName <> null)
-   * 
+   *
    */
   public static Long mechanismCodeToString(String mechansimName) {
     if (mechansimName == null) {
@@ -268,7 +268,7 @@ public class Util {
   /**
    * Lists all available tokens of the given module and lets the user select one, if there is more
    * than one available.
-   * 
+   *
    * @param pkcs11Module
    *          The PKCS#11 module to use.
    * @param output
@@ -281,7 +281,7 @@ public class Util {
    * @exception IOException
    *              If writing a user prompt faild or if reading user input failed.
    * @preconditions (pkcs11Module <> null) and (output <> null) and (input <> null)
-   * 
+   *
    */
   public static Token selectToken(Module pkcs11Module, PrintWriter output,
       BufferedReader input) throws TokenException, IOException {
@@ -291,7 +291,7 @@ public class Util {
   /**
    * Lists all available tokens of the given module and lets the user select one, if there is more
    * than one available. Supports token preselection.
-   * 
+   *
    * @param pkcs11Module
    *          The PKCS#11 module to use.
    * @param output
@@ -304,7 +304,7 @@ public class Util {
    * @exception IOException
    *              If writing a user prompt faild or if reading user input failed.
    * @preconditions (pkcs11Module <> null) and (output <> null) and (input <> null)
-   * 
+   *
    */
   public static Token selectToken(Module pkcs11Module, PrintWriter output,
       BufferedReader input, String slot) throws TokenException, IOException {
@@ -390,7 +390,7 @@ public class Util {
   /**
    * Opens an authorized session for the given token. If the token requires the user to login for
    * private operations, the method loggs in the user.
-   * 
+   *
    * @param token
    *          The token to open a session for.
    * @param rwSession
@@ -417,7 +417,7 @@ public class Util {
   /**
    * Opens an authorized session for the given token. If the token requires the user to login for
    * private operations, the method loggs in the user.
-   * 
+   *
    * @param token
    *          The token to open a session for.
    * @param rwSession
@@ -483,7 +483,7 @@ public class Util {
   /**
    * Picks the first suitable key template. If there is a corresponding certificate for a key, this
    * method displays the certificate for this key.
-   * 
+   *
    * @param session
    *          The session to use for key and certificate searching.
    * @param keyTemplate
@@ -513,7 +513,7 @@ public class Util {
    * Lists all keys that match the given key template and lets the user choose one, if there is more
    * than one. If there is a corresponding certificate for a key, this method displays the
    * certificate for this key.
-   * 
+   *
    * @param session
    *          The session to use for key and certificate searching.
    * @param keyTemplate
@@ -696,7 +696,7 @@ public class Util {
 
   /**
    * Gets a string representation of the given PKCS#11 certificate.
-   * 
+   *
    * @param certificate
    *          The PKCS#11 certificate.
    * @return The string representing the certificate.

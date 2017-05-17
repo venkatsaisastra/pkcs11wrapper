@@ -1,32 +1,32 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this
 //    list of conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
 //    and/or other materials provided with the distribution.
-// 
+//
 // 3. The end-user documentation included with the redistribution, if any, must
 //    include the following acknowledgment:
-// 
+//
 //    "This product includes software developed by IAIK of Graz University of
 //     Technology."
-// 
+//
 //    Alternately, this acknowledgment may appear in the software itself, if and
 //    wherever such third-party acknowledgments normally appear.
-// 
+//
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
 //    Technology" must not be used to endorse or promote products derived from this
 //    software without prior written permission.
-// 
+//
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
 //    Graz University of Technology.
-// 
+//
 // THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED
 // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -57,331 +57,331 @@ import sun.security.pkcs11.wrapper.Constants;
  */
 public class Mechanism implements Cloneable {
 
-	/**
-	 * The code of the machanism as defined in PKCS11Constants (or pkcs11t.h
-	 * likewise).
-	 */
-	protected long pkcs11MechanismCode_;
+    /**
+     * The code of the machanism as defined in PKCS11Constants (or pkcs11t.h
+     * likewise).
+     */
+    protected long pkcs11MechanismCode_;
 
-	/**
-	 * The parameters of the mechanism. Not all mechanisms use these parameters.
-	 */
-	protected Parameters parameters_;
+    /**
+     * The parameters of the mechanism. Not all mechanisms use these parameters.
+     */
+    protected Parameters parameters_;
 
-	/**
-	 * Constructor taking just the mechansim code as defined in PKCS11Constants.
-	 *
-	 * @param pkcs11MechanismCode The mechanism code.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public Mechanism(long pkcs11MechanismCode) {
-		pkcs11MechanismCode_ = pkcs11MechanismCode;
-	}
+    /**
+     * Constructor taking just the mechansim code as defined in PKCS11Constants.
+     *
+     * @param pkcs11MechanismCode The mechanism code.
+     * @preconditions
+     * @postconditions
+     */
+    public Mechanism(long pkcs11MechanismCode) {
+        pkcs11MechanismCode_ = pkcs11MechanismCode;
+    }
 
-	/**
-	 * Gets the mechanism specified by the given mechanism code. Helper {@link PKCS11Constants} is available.
-	 *
-	 * @param pkcs11MechanismCode the pkcs11 mechanism code
-	 * @return the mechanism
-	 */
-	public static Mechanism get(long pkcs11MechanismCode) {
-		return new Mechanism(pkcs11MechanismCode);
-	}
+    /**
+     * Gets the mechanism specified by the given mechanism code. Helper {@link PKCS11Constants} is available.
+     *
+     * @param pkcs11MechanismCode the pkcs11 mechanism code
+     * @return the mechanism
+     */
+    public static Mechanism get(long pkcs11MechanismCode) {
+        return new Mechanism(pkcs11MechanismCode);
+    }
 
-	/**
-	 * Makes a clone of this object.
-	 *
-	 * @return A shallow clone of this object.
-	 * @preconditions
-	 * @postconditions (result <> null)
-	 */
-	public Object clone() {
-		Mechanism clone = null;
+    /**
+     * Makes a clone of this object.
+     *
+     * @return A shallow clone of this object.
+     * @preconditions
+     * @postconditions (result <> null)
+     */
+    public Object clone() {
+        Mechanism clone = null;
 
-		try {
-			clone = (Mechanism) super.clone();
-		} catch (CloneNotSupportedException ex) {
-			// this must not happen according to Java specifications
-		}
+        try {
+            clone = (Mechanism) super.clone();
+        } catch (CloneNotSupportedException ex) {
+            // this must not happen according to Java specifications
+        }
 
-		return clone;
-	}
+        return clone;
+    }
 
-	/**
-	 * Override equals to check for the equality of mechanism code and parameter.
-	 *
-	 * @param otherObject The other Mechanism object.
-	 * @return True, if other is an instance of this class and
-	 *         pkcs11MechanismCode_ and parameter_ of both objects are equal.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public boolean equals(Object otherObject) {
-		boolean euqal = false;
+    /**
+     * Override equals to check for the equality of mechanism code and parameter.
+     *
+     * @param otherObject The other Mechanism object.
+     * @return True, if other is an instance of this class and
+     *         pkcs11MechanismCode_ and parameter_ of both objects are equal.
+     * @preconditions
+     * @postconditions
+     */
+    public boolean equals(Object otherObject) {
+        boolean euqal = false;
 
-		if (otherObject instanceof Mechanism) {
-			Mechanism other = (Mechanism) otherObject;
-			euqal = (this == other)
-			    || (this.pkcs11MechanismCode_ == other.pkcs11MechanismCode_)
-			    && (((this.parameters_ == null) && other.parameters_ == null) || ((this.parameters_ != null) && this.parameters_
-			        .equals(other.parameters_)));
-		}
+        if (otherObject instanceof Mechanism) {
+            Mechanism other = (Mechanism) otherObject;
+            euqal = (this == other)
+                || (this.pkcs11MechanismCode_ == other.pkcs11MechanismCode_)
+                && (((this.parameters_ == null) && other.parameters_ == null) || ((this.parameters_ != null) && this.parameters_
+                    .equals(other.parameters_)));
+        }
 
-		return euqal;
-	}
+        return euqal;
+    }
 
-	/**
-	 * Override hashCode to ensure that hashtable still works after overriding
-	 * equals.
-	 *
-	 * @return The hash code of this object. Taken from the mechanism code.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public int hashCode() {
-		return (int) pkcs11MechanismCode_;
-	}
+    /**
+     * Override hashCode to ensure that hashtable still works after overriding
+     * equals.
+     *
+     * @return The hash code of this object. Taken from the mechanism code.
+     * @preconditions
+     * @postconditions
+     */
+    public int hashCode() {
+        return (int) pkcs11MechanismCode_;
+    }
 
-	/**
-	 * This method checks, if this mechanism is a digest mechanism.
-	 * This is the information as provided by the table on page 229
-	 * of the PKCS#11 v2.11 standard.
-	 * If this method returns true, the mechanism can be used with the digest
-	 * functions.
-	 *
-	 * @return True, if this mechanism is a digest mechanism. False,
-	 *         otherwise.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public boolean isDigestMechanism() {
-		return Functions.isDigestMechanism(pkcs11MechanismCode_);
-	}
+    /**
+     * This method checks, if this mechanism is a digest mechanism.
+     * This is the information as provided by the table on page 229
+     * of the PKCS#11 v2.11 standard.
+     * If this method returns true, the mechanism can be used with the digest
+     * functions.
+     *
+     * @return True, if this mechanism is a digest mechanism. False,
+     *         otherwise.
+     * @preconditions
+     * @postconditions
+     */
+    public boolean isDigestMechanism() {
+        return Functions.isDigestMechanism(pkcs11MechanismCode_);
+    }
 
-	/**
-	 * This method checks, if this mechanism is a full
-	 * encrypt/decrypt mechanism; i.e. it supports the encryptUpdate()
-	 * and decryptUpdate() functions.
-	 * This is the information as provided by the table on page 229
-	 * of the PKCS#11 v2.11 standard.
-	 * If this method returns true, the mechanism can be used with the encrypt and
-	 * decrypt functions including encryptUpdate and decryptUpdate.
-	 *
-	 * @return True, if this mechanism is a full encrypt/decrypt
-	 *         mechanism. False, otherwise.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public boolean isFullEncryptDecryptMechanism() {
-		return Functions.isFullEncryptDecryptMechanism(pkcs11MechanismCode_);
-	}
+    /**
+     * This method checks, if this mechanism is a full
+     * encrypt/decrypt mechanism; i.e. it supports the encryptUpdate()
+     * and decryptUpdate() functions.
+     * This is the information as provided by the table on page 229
+     * of the PKCS#11 v2.11 standard.
+     * If this method returns true, the mechanism can be used with the encrypt and
+     * decrypt functions including encryptUpdate and decryptUpdate.
+     *
+     * @return True, if this mechanism is a full encrypt/decrypt
+     *         mechanism. False, otherwise.
+     * @preconditions
+     * @postconditions
+     */
+    public boolean isFullEncryptDecryptMechanism() {
+        return Functions.isFullEncryptDecryptMechanism(pkcs11MechanismCode_);
+    }
 
-	/**
-	 * This method checks, if this mechanism is a full
-	 * sign/verify mechanism; i.e. it supports the signUpdate()
-	 * and verifyUpdate() functions.
-	 * This is the information as provided by the table on page 229
-	 * of the PKCS#11 v2.11 standard.
-	 * If this method returns true, the mechanism can be used with the sign and
-	 * verify functions including signUpdate and verifyUpdate.
-	 *
-	 * @return True, if thï¿½s mechanism is a full sign/verify
-	 *         mechanism. False, otherwise.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public boolean isFullSignVerifyMechanism() {
-		return Functions.isFullSignVerifyMechanism(pkcs11MechanismCode_);
-	}
+    /**
+     * This method checks, if this mechanism is a full
+     * sign/verify mechanism; i.e. it supports the signUpdate()
+     * and verifyUpdate() functions.
+     * This is the information as provided by the table on page 229
+     * of the PKCS#11 v2.11 standard.
+     * If this method returns true, the mechanism can be used with the sign and
+     * verify functions including signUpdate and verifyUpdate.
+     *
+     * @return True, if thï¿½s mechanism is a full sign/verify
+     *         mechanism. False, otherwise.
+     * @preconditions
+     * @postconditions
+     */
+    public boolean isFullSignVerifyMechanism() {
+        return Functions.isFullSignVerifyMechanism(pkcs11MechanismCode_);
+    }
 
-	/**
-	 * This method checks, if this mechanism is a
-	 * key derivation mechanism.
-	 * This is the information as provided by the table on page 229
-	 * of the PKCS#11 v2.11 standard.
-	 * If this method returns true, the mechanism can be used with the deriveKey
-	 * function.
-	 *
-	 * @return True, if this mechanism is a key derivation mechanism.
-	 *         False, otherwise.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public boolean isKeyDerivationMechanism() {
-		return Functions.isKeyDerivationMechanism(pkcs11MechanismCode_);
-	}
+    /**
+     * This method checks, if this mechanism is a
+     * key derivation mechanism.
+     * This is the information as provided by the table on page 229
+     * of the PKCS#11 v2.11 standard.
+     * If this method returns true, the mechanism can be used with the deriveKey
+     * function.
+     *
+     * @return True, if this mechanism is a key derivation mechanism.
+     *         False, otherwise.
+     * @preconditions
+     * @postconditions
+     */
+    public boolean isKeyDerivationMechanism() {
+        return Functions.isKeyDerivationMechanism(pkcs11MechanismCode_);
+    }
 
-	/**
-	 * This method checks, if this mechanism is a key
-	 * generation mechanism for generating symmetric keys.
-	 * This is the information as provided by the table on page 229
-	 * of the PKCS#11 v2.11 standard.
-	 * If this method returns true, the mechanism can be used with the generateKey
-	 * function.
-	 *
-	 * @return True, if this mechanism is a key generation mechanism.
-	 *         False, otherwise.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public boolean isKeyGenerationMechanism() {
-		return Functions.isKeyGenerationMechanism(pkcs11MechanismCode_);
-	}
+    /**
+     * This method checks, if this mechanism is a key
+     * generation mechanism for generating symmetric keys.
+     * This is the information as provided by the table on page 229
+     * of the PKCS#11 v2.11 standard.
+     * If this method returns true, the mechanism can be used with the generateKey
+     * function.
+     *
+     * @return True, if this mechanism is a key generation mechanism.
+     *         False, otherwise.
+     * @preconditions
+     * @postconditions
+     */
+    public boolean isKeyGenerationMechanism() {
+        return Functions.isKeyGenerationMechanism(pkcs11MechanismCode_);
+    }
 
-	/**
-	 * This method checks, if this mechanism is a key-pair
-	 * generation mechanism for generating key-pairs.
-	 * This is the information as provided by the table on page 229
-	 * of the PKCS#11 v2.11 standard.
-	 * If this method returns true, the mechanism can be used with the generateKeyPair
-	 * function.
-	 *
-	 * @return True, if this mechanism is a key-pair generation mechanism.
-	 *         False, otherwise.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public boolean isKeyPairGenerationMechanism() {
-		return Functions.isKeyPairGenerationMechanism(pkcs11MechanismCode_);
-	}
+    /**
+     * This method checks, if this mechanism is a key-pair
+     * generation mechanism for generating key-pairs.
+     * This is the information as provided by the table on page 229
+     * of the PKCS#11 v2.11 standard.
+     * If this method returns true, the mechanism can be used with the generateKeyPair
+     * function.
+     *
+     * @return True, if this mechanism is a key-pair generation mechanism.
+     *         False, otherwise.
+     * @preconditions
+     * @postconditions
+     */
+    public boolean isKeyPairGenerationMechanism() {
+        return Functions.isKeyPairGenerationMechanism(pkcs11MechanismCode_);
+    }
 
-	/**
-	 * This method checks, if this mechanism is a sign/verify
-	 * mechanism with message recovery.
-	 * This is the information as provided by the table on page 229
-	 * of the PKCS#11 v2.11 standard.
-	 * If this method returns true, the mechanism can be used with the signRecover
-	 * and verifyRecover functions.
-	 *
-	 * @return True, if this mechanism is a sign/verify mechanism with
-	 *         message recovery. False, otherwise.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public boolean isSignVerifyRecoverMechanism() {
-		return Functions.isSignVerifyRecoverMechanism(pkcs11MechanismCode_);
-	}
+    /**
+     * This method checks, if this mechanism is a sign/verify
+     * mechanism with message recovery.
+     * This is the information as provided by the table on page 229
+     * of the PKCS#11 v2.11 standard.
+     * If this method returns true, the mechanism can be used with the signRecover
+     * and verifyRecover functions.
+     *
+     * @return True, if this mechanism is a sign/verify mechanism with
+     *         message recovery. False, otherwise.
+     * @preconditions
+     * @postconditions
+     */
+    public boolean isSignVerifyRecoverMechanism() {
+        return Functions.isSignVerifyRecoverMechanism(pkcs11MechanismCode_);
+    }
 
-	/**
-	 * This method checks, if this mechanism is a
-	 * single-operation encrypt/decrypt mechanism; i.e. it does not support the
-	 * encryptUpdate() and decryptUpdate() functions.
-	 * This is the information as provided by the table on page 229
-	 * of the PKCS#11 v2.11 standard.
-	 * If this method returns true, the mechanism can be used with the encrypt and
-	 * decrypt functions excluding encryptUpdate and decryptUpdate.
-	 *
-	 * @return True, if this mechanism is a single-operation
-	 *         encrypt/decrypt mechanism. False, otherwise.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public boolean isSingleOperationEncryptDecryptMechanism() {
-		return Functions.isSingleOperationEncryptDecryptMechanism(pkcs11MechanismCode_);
-	}
+    /**
+     * This method checks, if this mechanism is a
+     * single-operation encrypt/decrypt mechanism; i.e. it does not support the
+     * encryptUpdate() and decryptUpdate() functions.
+     * This is the information as provided by the table on page 229
+     * of the PKCS#11 v2.11 standard.
+     * If this method returns true, the mechanism can be used with the encrypt and
+     * decrypt functions excluding encryptUpdate and decryptUpdate.
+     *
+     * @return True, if this mechanism is a single-operation
+     *         encrypt/decrypt mechanism. False, otherwise.
+     * @preconditions
+     * @postconditions
+     */
+    public boolean isSingleOperationEncryptDecryptMechanism() {
+        return Functions.isSingleOperationEncryptDecryptMechanism(pkcs11MechanismCode_);
+    }
 
-	/**
-	 * This method checks, if this mechanism is a
-	 * single-operation sign/verify mechanism; i.e. it does not support the
-	 * signUpdate() and encryptUpdate() functions.
-	 * This is the information as provided by the table on page 229
-	 * of the PKCS#11 v2.11 standard.
-	 * If this method returns true, the mechanism can be used with the sign and
-	 * verify functions excluding signUpdate and encryptUpdate.
-	 *
-	 * @return True, if this mechanism is a single-operation
-	 *         sign/verify mechanism. False, otherwise.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public boolean isSingleOperationSignVerifyMechanism() {
-		return Functions.isSingleOperationSignVerifyMechanism(pkcs11MechanismCode_);
-	}
+    /**
+     * This method checks, if this mechanism is a
+     * single-operation sign/verify mechanism; i.e. it does not support the
+     * signUpdate() and encryptUpdate() functions.
+     * This is the information as provided by the table on page 229
+     * of the PKCS#11 v2.11 standard.
+     * If this method returns true, the mechanism can be used with the sign and
+     * verify functions excluding signUpdate and encryptUpdate.
+     *
+     * @return True, if this mechanism is a single-operation
+     *         sign/verify mechanism. False, otherwise.
+     * @preconditions
+     * @postconditions
+     */
+    public boolean isSingleOperationSignVerifyMechanism() {
+        return Functions.isSingleOperationSignVerifyMechanism(pkcs11MechanismCode_);
+    }
 
-	/**
-	 * This method checks, if this mechanism is a
-	 * wrap/unwrap mechanism; i.e. it supports the wrapKey()
-	 * and unwrapKey() functions.
-	 * This is the information as provided by the table on page 229
-	 * of the PKCS#11 v2.11 standard.
-	 * If this method returns true, the mechanism can be used with the wrapKey
-	 * and unwrapKey functions.
-	 *
-	 * @return True, if this mechanism is a wrap/unwrap mechanism.
-	 *         False, otherwise.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public boolean isWrapUnwrapMechanism() {
-		return Functions.isWrapUnwrapMechanism(pkcs11MechanismCode_);
-	}
+    /**
+     * This method checks, if this mechanism is a
+     * wrap/unwrap mechanism; i.e. it supports the wrapKey()
+     * and unwrapKey() functions.
+     * This is the information as provided by the table on page 229
+     * of the PKCS#11 v2.11 standard.
+     * If this method returns true, the mechanism can be used with the wrapKey
+     * and unwrapKey functions.
+     *
+     * @return True, if this mechanism is a wrap/unwrap mechanism.
+     *         False, otherwise.
+     * @preconditions
+     * @postconditions
+     */
+    public boolean isWrapUnwrapMechanism() {
+        return Functions.isWrapUnwrapMechanism(pkcs11MechanismCode_);
+    }
 
-	/**
-	 * Get the parameters object of this mechanism.
-	 *
-	 * @return The parameters of this mechansim. May be null.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public Parameters getParameters() {
-		return parameters_;
-	}
+    /**
+     * Get the parameters object of this mechanism.
+     *
+     * @return The parameters of this mechansim. May be null.
+     * @preconditions
+     * @postconditions
+     */
+    public Parameters getParameters() {
+        return parameters_;
+    }
 
-	/**
-	 * Set the parameters for this mechanism.
-	 *
-	 * @param parameters The mechanism parameters to set.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public void setParameters(Parameters parameters) {
-		parameters_ = parameters;
-	}
+    /**
+     * Set the parameters for this mechanism.
+     *
+     * @param parameters The mechanism parameters to set.
+     * @preconditions
+     * @postconditions
+     */
+    public void setParameters(Parameters parameters) {
+        parameters_ = parameters;
+    }
 
-	/**
-	 * Get the code of this mechanism as defined in PKCS11Constants (of pkcs11t.h
-	 * likewise).
-	 *
-	 * @return The code of this mechnism.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public long getMechanismCode() {
-		return pkcs11MechanismCode_;
-	}
+    /**
+     * Get the code of this mechanism as defined in PKCS11Constants (of pkcs11t.h
+     * likewise).
+     *
+     * @return The code of this mechnism.
+     * @preconditions
+     * @postconditions
+     */
+    public long getMechanismCode() {
+        return pkcs11MechanismCode_;
+    }
 
-	/**
-	 * Get the name of this mechanism.
-	 *
-	 * @return The name of this mechnism.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public String getName() {
-		return Functions.mechanismCodeToString(pkcs11MechanismCode_);
-	}
+    /**
+     * Get the name of this mechanism.
+     *
+     * @return The name of this mechnism.
+     * @preconditions
+     * @postconditions
+     */
+    public String getName() {
+        return Functions.mechanismCodeToString(pkcs11MechanismCode_);
+    }
 
-	/**
-	 * Returns the string representation of this object.
-	 *
-	 * @return the string representation of this object
-	 */
-	public String toString() {
-		StringBuilder buffer = new StringBuilder(128);
+    /**
+     * Returns the string representation of this object.
+     *
+     * @return the string representation of this object
+     */
+    public String toString() {
+        StringBuilder buffer = new StringBuilder(128);
 
-		buffer.append(Constants.INDENT);
-		buffer.append("Mechanism: ");
-		buffer.append(Functions.mechanismCodeToString(pkcs11MechanismCode_));
-		buffer.append(Constants.NEWLINE);
+        buffer.append(Constants.INDENT);
+        buffer.append("Mechanism: ");
+        buffer.append(Functions.mechanismCodeToString(pkcs11MechanismCode_));
+        buffer.append(Constants.NEWLINE);
 
-		buffer.append(Constants.INDENT);
-		buffer.append("Parameters: ");
-		buffer.append(Constants.NEWLINE);
-		buffer.append(parameters_);
-		// buffer.append(Constants.NEWLINE);
+        buffer.append(Constants.INDENT);
+        buffer.append("Parameters: ");
+        buffer.append(Constants.NEWLINE);
+        buffer.append(parameters_);
+        // buffer.append(Constants.NEWLINE);
 
-		return buffer.toString();
-	}
+        return buffer.toString();
+    }
 
 }

@@ -1,32 +1,32 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this
 //    list of conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
 //    and/or other materials provided with the distribution.
-// 
+//
 // 3. The end-user documentation included with the redistribution, if any, must
 //    include the following acknowledgment:
-// 
+//
 //    "This product includes software developed by IAIK of Graz University of
 //     Technology."
-// 
+//
 //    Alternately, this acknowledgment may appear in the software itself, if and
 //    wherever such third-party acknowledgments normally appear.
-// 
+//
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
 //    Technology" must not be used to endorse or promote products derived from this
 //    software without prior written permission.
-// 
+//
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
 //    Graz University of Technology.
-// 
+//
 // THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED
 // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -53,33 +53,33 @@ package iaik.pkcs.pkcs11.objects;
  */
 public class ObjectClassAttribute extends LongAttribute {
 
-	/**
-	 * Empty constructor.
-	 * 
-	 * @preconditions
-	 * @postconditions
-	 */
-	public ObjectClassAttribute() {
-		super(Attribute.CLASS);
-	}
+    /**
+     * Empty constructor.
+     *
+     * @preconditions
+     * @postconditions
+     */
+    public ObjectClassAttribute() {
+        super(Attribute.CLASS);
+    }
 
-	/**
-	 * Get a string representation of the value of this attribute.
-	 *
-	 * @return A string representation of the value of this attribute.
-	 * @preconditions
-	 * @postconditions (result <> null)
-	 */
-	protected String getValueString() {
-		String valueString;
+    /**
+     * Get a string representation of the value of this attribute.
+     *
+     * @return A string representation of the value of this attribute.
+     * @preconditions
+     * @postconditions (result <> null)
+     */
+    protected String getValueString() {
+        String valueString;
 
-		if ((ckAttribute_ != null) && (ckAttribute_.pValue != null)) {
-			valueString = Object.getObjectClassName((Long) ckAttribute_.pValue);
-		} else {
-			valueString = "<NULL_PTR>";
-		}
+        if ((ckAttribute_ != null) && (ckAttribute_.pValue != null)) {
+            valueString = Object.getObjectClassName((Long) ckAttribute_.pValue);
+        } else {
+            valueString = "<NULL_PTR>";
+        }
 
-		return valueString;
-	}
+        return valueString;
+    }
 
 }

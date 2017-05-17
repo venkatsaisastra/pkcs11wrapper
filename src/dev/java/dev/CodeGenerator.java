@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 public class CodeGenerator {
-    
+
     private static class CkmInfo {
         String name;
         boolean fullEncryptDecrypt;
@@ -26,7 +26,7 @@ public class CodeGenerator {
         boolean keyGen;
         boolean wrapUnwrap;
         boolean derive;
-        
+
         CkmInfo(String line) {
             int idx1 = 0;
             String[] tokens = new String[9];
@@ -39,9 +39,9 @@ public class CodeGenerator {
                 idx1 = idx2 + 1;
             }
             tokens[8] = line.substring(idx1);
-            
+
             name = tokens[0];
-            
+
             // EncryptDecrypt
             String token = tokens[1];
             if ("2".equals(token)) {
@@ -52,7 +52,7 @@ public class CodeGenerator {
                 throw new IllegalArgumentException("invalid EncryptDecrypt '" + token
                         + "' in line '" + line + "'");
             }
-            
+
             // SignVerify
             token = tokens[2];
             if ("2".equals(token)) {
@@ -63,7 +63,7 @@ public class CodeGenerator {
                 throw new IllegalArgumentException("invalid SignVerify '" + token
                         + "' in line '" + line + "'");
             }
-            
+
             // SRVR
             token = tokens[3];
             if ("1".equals(token)) {
@@ -72,7 +72,7 @@ public class CodeGenerator {
                 throw new IllegalArgumentException("invalid SRVR '" + token
                         + "' in line '" + line + "'");
             }
-            
+
             // Digest
             token = tokens[4];
             if ("1".equals(token)) {
@@ -81,7 +81,7 @@ public class CodeGenerator {
                 throw new IllegalArgumentException("invalid Digest '" + token
                         + "' in line '" + line + "'");
             }
-            
+
             // KeyPairGen
             token = tokens[5];
             if ("1".equals(token)) {
@@ -90,7 +90,7 @@ public class CodeGenerator {
                 throw new IllegalArgumentException("invalid KeypairGen '" + token
                         + "' in line '" + line + "'");
             }
-            
+
             // KeyGen
             token = tokens[6];
             if ("1".equals(token)) {
@@ -99,7 +99,7 @@ public class CodeGenerator {
                 throw new IllegalArgumentException("invalid KeyGen '" + token
                         + "' in line '" + line + "'");
             }
-            
+
             // WrapUnwrap
             token = tokens[7];
             if ("1".equals(token)) {
@@ -108,7 +108,7 @@ public class CodeGenerator {
                 throw new IllegalArgumentException("invalid WrapUnwrap '" + token
                         + "' in line '" + line + "'");
             }
-            
+
             // Derive
             token = tokens[8];
             if ("1".equals(token)) {
@@ -117,55 +117,55 @@ public class CodeGenerator {
                 throw new IllegalArgumentException("invalid Derive '" + token
                         + "' in line '" + line + "'");
             }
-            
+
         }
     }
-    
+
     public static final String DIR_RESOURCES = "src/dev/resources/";
-    
+
     public static final String FILE_PKCS11_HEADER = DIR_RESOURCES + "pkcs11t.h";
-    
+
     public static final String FILE_PKCS11_CKM_META = DIR_RESOURCES + "pkcs11t_ckm.csv";
 
     public static final String DIR_OUTPUT = "target/dev-output/";
 
     public static final String FILE_CONSTANTS = DIR_OUTPUT + "constants.txt";
-    
+
     public static final String FILE_CKM_NAME = DIR_OUTPUT + "ckm.properties";
-    
+
     public static final String FILE_CKR_NAME = DIR_OUTPUT + "ckr.properties";
-    
+
     public static final String FILE_FULL_ENCRYPT_DECRYPT = DIR_OUTPUT + "fullEncryptDecrypt.txt";
-    
+
     public static final String FILE_SINGLE_ENCRYPT_DECRYPT = DIR_OUTPUT + "singleEncryptDecrypt.txt";
 
     public static final String FILE_FULL_SIGN_VERIFY = DIR_OUTPUT + "fullSignVerify.txt";
-    
+
     public static final String FILE_SINGLE_SIGN_VERIFY = DIR_OUTPUT + "singleSignVerify.txt";
-    
+
     public static final String FILE_SIGNRECOVERVERIFY = DIR_OUTPUT + "signVerifyRecover.txt";
-    
+
     public static final String FILE_KEYPAIRGEN = DIR_OUTPUT + "keypairgen.txt";
 
     public static final String FILE_KEYGEN = DIR_OUTPUT + "keygen.txt";
-    
+
     public static final String FILE_DIGEST = DIR_OUTPUT + "digest.txt";
-    
+
     public static final String FILE_WRAPUNWRAP = DIR_OUTPUT + "wrapUnwrap.txt";
 
     public static final String FILE_DERIVE = DIR_OUTPUT + "derive.txt";
 
     public static final String NEWLINE = "\n";
-    
+
     public static void main(String[] args) {
         try {
             File dir = new File(DIR_OUTPUT);
             dir.mkdirs();
-            
+
             generateConstants();
-            
+
             generateCkmInfo();
-            
+
             System.out.println("Generated files are in " + dir.getAbsolutePath());
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -176,10 +176,10 @@ public class CodeGenerator {
     private static void generateConstants() throws Exception {
         BufferedReader reader = new BufferedReader(new FileReader(FILE_PKCS11_HEADER));
         Map<Long, String> ckmCodeNameMap = new HashMap<>();
-        Map<Long, String> ckrCodeNameMap = new HashMap<>();        
+        Map<Long, String> ckrCodeNameMap = new HashMap<>();
         Map<Long, String> ckkCodeNameMap = new HashMap<>();
-        Map<Long, String> ckaCodeNameMap = new HashMap<>();        
-        
+        Map<Long, String> ckaCodeNameMap = new HashMap<>();
+
         String line;
         while ((line = reader.readLine()) != null) {
             if (!line.trim().startsWith("#define")) {
@@ -191,20 +191,20 @@ public class CodeGenerator {
             if (st.countTokens() < 3) {
                 continue;
             }
-            
+
             boolean deprecated = line.toLowerCase().contains("deprecated");
-            
+
             // skip token '#define'
             st.nextToken();
             String name = st.nextToken();
             String value = st.nextToken();
-            
+
             if (value.equals("(~0UL)")) {
                 value = "0xFFFFFFFF";
             } else if (value.endsWith("UL")) {
                 value = value.substring(0, value.length() - 2);
             }
-            
+
             boolean hex = false;
             if (value.startsWith("0x") || value.startsWith("0X")) {
                 value = value.substring(2);
@@ -216,7 +216,7 @@ public class CodeGenerator {
             } catch(NumberFormatException ex) {
                 continue;
             }
-            
+
             if (name.startsWith("CKM_")) {
                 Map<Long, String> map = ckmCodeNameMap;
                 if (deprecated) {
@@ -257,7 +257,7 @@ public class CodeGenerator {
         }
 
         reader.close();
-        
+
         reader = new BufferedReader(new FileReader(FILE_PKCS11_HEADER));
         BufferedWriter constantsWriter = new BufferedWriter(new FileWriter(FILE_CONSTANTS));
         while ((line = reader.readLine()) != null) {
@@ -277,18 +277,18 @@ public class CodeGenerator {
                 System.out.println("Please check line: " + line);
                 continue;
             }
-            
+
             // skip token '#define'
             st.nextToken();
             String name = st.nextToken();
             String value = st.nextToken();
-            
+
             if (value.equals("(~0UL)")) {
                 value = "0xFFFFFFFF";
             } else if (value.endsWith("UL")) {
                 value = value.substring(0, value.length() - 2);
             }
-            
+
             boolean hex = false;
             if (value.startsWith("0x") || value.startsWith("0X")) {
                 value = value.substring(2);
@@ -299,7 +299,6 @@ public class CodeGenerator {
                 longValue = Long.parseLong(value, hex ? 16 : 10);
             } catch(NumberFormatException ex) {
             }
-            
 
             boolean deprecated = line.toLowerCase().contains("deprecated");
             if (deprecated) {
@@ -314,7 +313,7 @@ public class CodeGenerator {
                     } else if (name.startsWith("CKA_")) {
                         name2 = ckaCodeNameMap.get(longValue);
                     }
-                    
+
                     if (name2 != null && !name.equals(name2)) {
                         constantsWriter.write("    /**");
                         constantsWriter.write(NEWLINE);
@@ -328,7 +327,7 @@ public class CodeGenerator {
                 constantsWriter.write("@Deprecated");
                 constantsWriter.write(NEWLINE);
             }
-            
+
             constantsWriter.write("    ");
             constantsWriter.write("public static final long " + formatName(name) + " = ");
             if (longValue != null) {
@@ -341,85 +340,84 @@ public class CodeGenerator {
 
         reader.close();
 
-        
         constantsWriter.close();
 
         writeConstants(FILE_CKM_NAME, ckmCodeNameMap);
         writeConstants(FILE_CKR_NAME, ckrCodeNameMap);
     }
-    
+
     private static void generateCkmInfo() throws Exception {
         BufferedReader reader = new BufferedReader(new FileReader(FILE_PKCS11_CKM_META));
-        
+
         BufferedWriter fullEncryptWriter  = new BufferedWriter(new FileWriter(FILE_FULL_ENCRYPT_DECRYPT));
         BufferedWriter singleEncryptWriter = new BufferedWriter(new FileWriter(FILE_SINGLE_ENCRYPT_DECRYPT));
 
         BufferedWriter fullSignWriter  = new BufferedWriter(new FileWriter(FILE_FULL_SIGN_VERIFY));
         BufferedWriter singleSignWriter = new BufferedWriter(new FileWriter(FILE_SINGLE_SIGN_VERIFY));
-        
+
         BufferedWriter signRecoverWriter = new BufferedWriter(new FileWriter(FILE_SIGNRECOVERVERIFY));
 
         BufferedWriter keypairGenWriter = new BufferedWriter(new FileWriter(FILE_KEYPAIRGEN));
 
         BufferedWriter keyGenWriter = new BufferedWriter(new FileWriter(FILE_KEYGEN));
-        
+
         BufferedWriter digestWriter = new BufferedWriter(new FileWriter(FILE_DIGEST));
-        
+
         BufferedWriter wrapWriter = new BufferedWriter(new FileWriter(FILE_WRAPUNWRAP));
-        
+
         BufferedWriter deriveWriter = new BufferedWriter(new FileWriter(FILE_DERIVE));
-        
+
         String line;
         while ((line = reader.readLine()) != null) {
             line = line.trim();
             if (!line.startsWith("CKM_")) {
                 continue;
             }
-            
+
             CkmInfo ckmInfo = new CkmInfo(line);
             String text = "PKCS11Constants." + ckmInfo.name + "," + NEWLINE;
-           
+
             if (ckmInfo.fullEncryptDecrypt) {
                 fullEncryptWriter.write(text);
             }
-            
+
             if (ckmInfo.singleEncryptDecrypt) {
                 singleEncryptWriter.write(text);
             }
-            
+
             if (ckmInfo.fullSignVerify) {
                 fullSignWriter.write(text);
             }
-            
+
             if (ckmInfo.singleSignVerify) {
                 singleSignWriter.write(text);
             }
-            
+
             if (ckmInfo.signVerifyRecover) {
                 signRecoverWriter.write(text);
             }
-            
+
             if (ckmInfo.keypairGen) {
                 keypairGenWriter.write(text);
             }
-            
+
             if (ckmInfo.keyGen) {
                 keyGenWriter.write(text);
             }
-            
+
             if (ckmInfo.digest) {
                 digestWriter.write(text);
             }
-            
+
             if (ckmInfo.wrapUnwrap) {
                 wrapWriter.write(text);
             }
-            
+
             if (ckmInfo.derive) {
                 deriveWriter.write(text);
             }
         }
-        
+
         reader.close();
         fullEncryptWriter.close();
         singleEncryptWriter.close();
@@ -432,8 +430,8 @@ public class CodeGenerator {
         digestWriter.close();
         deriveWriter.close();
     }
-    
-    private static void writeConstants(String fileName, 
+
+    private static void writeConstants(String fileName,
             Map<Long, String> codeNameMap) throws Exception {
         BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
         List<Long> codes = new ArrayList<>(codeNameMap.keySet());
@@ -446,19 +444,19 @@ public class CodeGenerator {
         }
         writer.close();
     }
-    
+
     private static final String formatValue(long value) {
         String str = String.format("%8X", value);
         str = str.replace(' ', '0');
         return "0x" + str;
     }
-    
+
     private static final String formatName(String name) {
         int suffixLen = 40 - name.length();
         if (suffixLen < 0) {
             System.err.println("negative suffixLen " + suffixLen);
         }
-        
+
         StringBuilder buffer = new StringBuilder(40);
         buffer.append(name);
         for (int i = 0; i < suffixLen; i++) {

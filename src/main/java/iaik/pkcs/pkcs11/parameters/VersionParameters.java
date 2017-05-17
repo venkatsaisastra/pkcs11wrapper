@@ -1,32 +1,32 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
-// 
+//
 // 1. Redistributions of source code must retain the above copyright notice, this
 //    list of conditions and the following disclaimer.
-// 
+//
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
 //    and/or other materials provided with the distribution.
-// 
+//
 // 3. The end-user documentation included with the redistribution, if any, must
 //    include the following acknowledgment:
-// 
+//
 //    "This product includes software developed by IAIK of Graz University of
 //     Technology."
-// 
+//
 //    Alternately, this acknowledgment may appear in the software itself, if and
 //    wherever such third-party acknowledgments normally appear.
-// 
+//
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
 //    Technology" must not be used to endorse or promote products derived from this
 //    software without prior written permission.
-// 
+//
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
 //    Graz University of Technology.
-// 
+//
 // THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED
 // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -54,77 +54,77 @@ import sun.security.pkcs11.wrapper.CK_VERSION;
  */
 public class VersionParameters extends Version implements Parameters {
 
-	/**
-	 * Create a new VersionParameters object with the major and minor
-	 * version set to zero.
-	 *
-	 * @preconditions
-	 * @postconditions
-	 */
-	public VersionParameters() {
-		super();
-	}
+    /**
+     * Create a new VersionParameters object with the major and minor
+     * version set to zero.
+     *
+     * @preconditions
+     * @postconditions
+     */
+    public VersionParameters() {
+        super();
+    }
 
-	/**
-	 * Create a new VersionParameters object with the given major and minor
-	 * version.
-	 *
-	 * @param major The major version number.
-	 * @param minor The minor version number.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public VersionParameters(byte major, byte minor) {
-		super();
-		major_ = major;
-		minor_ = minor;
-	}
+    /**
+     * Create a new VersionParameters object with the given major and minor
+     * version.
+     *
+     * @param major The major version number.
+     * @param minor The minor version number.
+     * @preconditions
+     * @postconditions
+     */
+    public VersionParameters(byte major, byte minor) {
+        super();
+        major_ = major;
+        minor_ = minor;
+    }
 
-	/**
-	 * Get this parameters object as a CK_VERSION object.
-	 *
-	 * @return This object as a CK_VERSION object.
-	 * @preconditions
-	 * @postconditions (result <> null)
-	 */
-	public Object getPKCS11ParamsObject() {
-		CK_VERSION params = new CK_VERSION(major_, minor_);
-		return params;
-	}
+    /**
+     * Get this parameters object as a CK_VERSION object.
+     *
+     * @return This object as a CK_VERSION object.
+     * @preconditions
+     * @postconditions (result <> null)
+     */
+    public Object getPKCS11ParamsObject() {
+        CK_VERSION params = new CK_VERSION(major_, minor_);
+        return params;
+    }
 
-	/**
-	 * This method allows setting the major and minor version numbers using
-	 * a version object of the lower level API.
-	 *
-	 * @param input The version objet providing the major and minor version.
-	 * @preconditions (input <> null)
-	 * @postconditions
-	 */
-	public void setPKCS11ParamsObject(CK_VERSION input) {
-		major_ = input.major;
-		minor_ = input.minor;
-	}
+    /**
+     * This method allows setting the major and minor version numbers using
+     * a version object of the lower level API.
+     *
+     * @param input The version objet providing the major and minor version.
+     * @preconditions (input <> null)
+     * @postconditions
+     */
+    public void setPKCS11ParamsObject(CK_VERSION input) {
+        major_ = input.major;
+        minor_ = input.minor;
+    }
 
-	/**
-	 * Set the major version number.
-	 *
-	 * @param major The major version number.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public void setMajor(byte major) {
-		major_ = major;
-	}
+    /**
+     * Set the major version number.
+     *
+     * @param major The major version number.
+     * @preconditions
+     * @postconditions
+     */
+    public void setMajor(byte major) {
+        major_ = major;
+    }
 
-	/**
-	 * Set the minor version number.
-	 *
-	 * @param minor The minor version number.
-	 * @preconditions
-	 * @postconditions
-	 */
-	public void setMinor(byte minor) {
-		minor_ = minor;
-	}
+    /**
+     * Set the minor version number.
+     *
+     * @param minor The minor version number.
+     * @preconditions
+     * @postconditions
+     */
+    public void setMinor(byte minor) {
+        minor_ = minor;
+    }
 
 }
