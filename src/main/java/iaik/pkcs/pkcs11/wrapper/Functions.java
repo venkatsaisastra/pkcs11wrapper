@@ -48,6 +48,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import sun.security.pkcs11.wrapper.CK_DATE;
 
@@ -75,6 +76,11 @@ public class Functions {
      * Maps mechanism codes as Long to their names as Strings.
      */
     private static Map<Long, String> mechansimNames_;
+
+    /**
+     * Maps mechanism name as String to their code as Long.
+     */
+    private static Map<String, Long> mechansimNameToCodes_;
 
     /**
      * This set contains the mechanisms that are full encrypt/decrypt
@@ -737,35 +743,7 @@ public class Functions {
      * @return The string representation of the mechanism.
      */
     public static String mechanismCodeToString(long mechansimCode) {
-           // if the names of the defined error codes are not yet loaded, load them
-        if (mechansimNames_ == null) { // ensure that another thread has not loaded the codes meanwhile
-            Map<Long, String> codeNamMap = new HashMap<>();
-            Properties props = new Properties();
-            try {
-                props.load(Functions.class.getClassLoader().getResourceAsStream(
-                    CKM_CODE_PROPERTIES));
-                for (String propName : props.stringPropertyNames()) {
-                    String mechName = props.getProperty(propName);
-                    if (mechName == null) {
-                        System.out.println("No name defined for Mechanism code " +
-                                toFullHexString((int) mechansimCode));
-                    }
-                    long code;
-                    if (propName.startsWith("0x") || propName.startsWith("0X")) {
-                        code = Long.parseLong(propName.substring(2), 16);
-                    } else {
-                        code = Long.parseLong(propName);
-                    }
-                    codeNamMap.put(code, mechName);
-                }
-                mechansimNames_ = codeNamMap;
-                mechanismCodeNamesAvailable_ = true;
-            } catch (Exception exception) {
-                System.err.println("Could not read properties for error code names: "
-                    + exception.getMessage());
-            }
-        }
-
+        initMechanismMap();
         String name = mechanismCodeNamesAvailable_ ?
                 mechansimNames_.get(new Long(mechansimCode)) : null;
         if (name == null) {
@@ -773,6 +751,65 @@ public class Functions {
         }
 
         return name;
+    }
+
+    /**
+     * Converts the mechanism name to code value.
+     *
+     * @param mechansimName The name of the mechanism to be converted to a code.
+     * @return The code representation of the mechanism.
+     */
+    public static long mechanismStringToCode(String mechansimName) {
+        initMechanismMap();
+        Long code = mechanismCodeNamesAvailable_ ?
+                mechansimNameToCodes_.get(mechansimName) : null;
+        return (code != null) ? code : -1;
+    }
+
+    private static void initMechanismMap() {
+        if (mechansimNames_ != null) { // ensure that another thread has not loaded the codes meanwhile
+            return;
+        }
+
+        // if the names of the defined error codes are not yet loaded, load them
+        Map<Long, String> codeNameMap = new HashMap<>();
+        Map<String, Long> nameCodeMap = new HashMap<>();
+
+        Properties props = new Properties();
+        try {
+            props.load(Functions.class.getClassLoader().getResourceAsStream(
+                CKM_CODE_PROPERTIES));
+            for (String propName : props.stringPropertyNames()) {
+                String mechNames = props.getProperty(propName);
+                StringTokenizer tokens = new StringTokenizer(mechNames, ",");
+
+                if (!tokens.hasMoreTokens()) {
+                    System.out.println("No name defined for Mechanism code " +
+                            propName);
+                }
+
+                long code;
+                if (propName.startsWith("0x") || propName.startsWith("0X")) {
+                    code = Long.parseLong(propName.substring(2), 16);
+                } else {
+                    code = Long.parseLong(propName);
+                }
+
+                String mainMechName = tokens.nextToken();
+                codeNameMap.put(code, mainMechName);
+                nameCodeMap.put(mainMechName, code);
+
+                if (tokens.hasMoreTokens()) {
+                    nameCodeMap.put(tokens.nextToken(), code);
+                }
+            }
+            mechansimNames_ = codeNameMap;
+            mechansimNameToCodes_ = nameCodeMap;
+            mechanismCodeNamesAvailable_ = true;
+        } catch (Exception exception) {
+            System.err.println("Could not read properties for error code names: "
+                + exception.getMessage());
+        }
     }
 
     /**

@@ -1116,6 +1116,10 @@ public interface PKCS11Constants {
     public static final long CKG_MGF1_SHA384                          = 0x00000003L;
     public static final long CKG_MGF1_SHA512                          = 0x00000004L;
     public static final long CKG_MGF1_SHA224                          = 0x00000005L;
+    public static final long CKG_MGF1_SHA3_224                        = 0x00000006L;
+    public static final long CKG_MGF1_SHA3_256                        = 0x00000007L;
+    public static final long CKG_MGF1_SHA3_384                        = 0x00000008L;
+    public static final long CKG_MGF1_SHA3_512                        = 0x00000009L;
 
     /* The following EC Key Derivation Functions are defined */
     public static final long CKD_NULL                                 = 0x00000001L;

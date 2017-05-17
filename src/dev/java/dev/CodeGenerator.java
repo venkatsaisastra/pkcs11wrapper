@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -159,6 +160,18 @@ public class CodeGenerator {
 
     public static void main(String[] args) {
         try {
+            /*
+            long a1 = PKCS11Constants.CKM_EC_KEY_PAIR_GEN;
+            System.out.println(Functions.mechanismCodeToString(a1));
+            System.out.println(Functions.mechanismCodeToString(PKCS11Constants.CKM_RC2_ECB));
+            long a2 = Functions.mechanismStringToCode("CKM_ECDSA_KEY_PAIR_GEN");
+            System.out.println(a1);
+            System.out.println(a2);
+            if (true) {
+                return;
+            }
+            */
+
             File dir = new File(DIR_OUTPUT);
             dir.mkdirs();
 
@@ -176,6 +189,7 @@ public class CodeGenerator {
     private static void generateConstants() throws Exception {
         BufferedReader reader = new BufferedReader(new FileReader(FILE_PKCS11_HEADER));
         Map<Long, String> ckmCodeNameMap = new HashMap<>();
+        Map<Long, List<String>> deprecatedCkmCodeNamesMap = new HashMap<>();
         Map<Long, String> ckrCodeNameMap = new HashMap<>();
         Map<Long, String> ckkCodeNameMap = new HashMap<>();
         Map<Long, String> ckaCodeNameMap = new HashMap<>();
@@ -220,6 +234,13 @@ public class CodeGenerator {
             if (name.startsWith("CKM_")) {
                 Map<Long, String> map = ckmCodeNameMap;
                 if (deprecated) {
+                    List<String> deprecatedNames = deprecatedCkmCodeNamesMap.get(longValue);
+                    if (deprecatedNames == null) {
+                        deprecatedNames = new LinkedList<>();
+                        deprecatedCkmCodeNamesMap.put(longValue, deprecatedNames);
+                    }
+                    deprecatedNames.add(name);
+
                     if (!map.containsKey(longValue)) {
                         map.put(longValue, name);
                     }
@@ -342,8 +363,8 @@ public class CodeGenerator {
 
         constantsWriter.close();
 
-        writeConstants(FILE_CKM_NAME, ckmCodeNameMap);
-        writeConstants(FILE_CKR_NAME, ckrCodeNameMap);
+        writeCkmConstants(FILE_CKM_NAME, ckmCodeNameMap, deprecatedCkmCodeNamesMap);
+        writeCkrConstants(FILE_CKR_NAME, ckrCodeNameMap);
     }
 
     private static void generateCkmInfo() throws Exception {
@@ -431,7 +452,7 @@ public class CodeGenerator {
         deriveWriter.close();
     }
 
-    private static void writeConstants(String fileName,
+    private static void writeCkrConstants(String fileName,
             Map<Long, String> codeNameMap) throws Exception {
         BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
         List<Long> codes = new ArrayList<>(codeNameMap.keySet());
@@ -440,6 +461,32 @@ public class CodeGenerator {
             writer.write(formatValue(code));
             writer.write(" = ");
             writer.write(codeNameMap.get(code));
+            writer.write(NEWLINE);
+        }
+        writer.close();
+    }
+
+    private static void writeCkmConstants(String fileName,
+            Map<Long, String> codeNameMap, Map<Long, List<String>> deprecatedCodeNamesMap)
+            throws Exception {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+        List<Long> codes = new ArrayList<>(codeNameMap.keySet());
+        Collections.sort(codes);
+        for (Long code : codes) {
+            writer.write(formatValue(code));
+            writer.write(" = ");
+            String name = codeNameMap.get(code);
+            writer.write(name);
+            List<String> deprecatedNames = deprecatedCodeNamesMap.get(code);
+            if (deprecatedNames != null && !deprecatedNames.isEmpty()) {
+                for (int i = 0; i < deprecatedNames.size(); i++) {
+                    String deprecatedName = deprecatedNames.get(i);
+                    if (!name.equals(deprecatedName)) {
+                        writer.write("," + deprecatedName);
+                    }
+                }
+            }
+
             writer.write(NEWLINE);
         }
         writer.close();
