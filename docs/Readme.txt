@@ -22,3 +22,12 @@ browser to view the Readme.html for further information.
 
 
 Your SIC/IAIK JavaSecurity Team
+
+Branch sunpkcs11
+======
+- New features added in the branch sunpkcs11:
+  - Use the constants defined in PKCS#11 v2.40
+  - No native library is required
+
+- Restrictions
+  - Oracle or OpenJDK Java Runtime version 8 or higher is required.
