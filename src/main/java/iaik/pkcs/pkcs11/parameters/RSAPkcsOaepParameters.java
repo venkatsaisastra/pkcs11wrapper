@@ -75,9 +75,9 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
 		static public final long EMPTY = 0L;
 
 		/**
-		 * The indentifier for CKZ_DATA_SPECIFIED.
+		 * The indentifier for CKZ_SALT_SPECIFIED.
 		 */
-		static public final long DATA_SPECIFIED = PKCS11Constants.CKZ_DATA_SPECIFIED;
+		static public final long DATA_SPECIFIED = PKCS11Constants.CKZ_SALT_SPECIFIED;
 
 	}
 

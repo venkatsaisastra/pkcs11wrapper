@@ -45,6 +45,8 @@ package iaik.pkcs.pkcs11.wrapper;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -66,13 +68,13 @@ public class PKCS11Exception extends TokenException {
 	 * The name of the properties file that holds the names of the PKCS#11 error-
 	 * codes.
 	 */
-	protected static final String ERROR_CODE_PROPERTIES = "iaik/pkcs/pkcs11/wrapper/ExceptionMessages.properties";
+	protected static final String ERROR_CODE_PROPERTIES = "iaik/pkcs/pkcs11/wrapper/ckr.properties";
 
 	/**
 	 * The properties object that holds the mapping from error-code to the name
 	 * of the PKCS#11 error.
 	 */
-	protected static Properties errorCodeNames_;
+	protected static Map<Long, String> errorCodeNames_;
 
 	/**
 	 * True, if the mapping of error codes to PKCS#11 error names is available.
@@ -110,26 +112,39 @@ public class PKCS11Exception extends TokenException {
 	 */
 	public synchronized String getMessage() {
 		// if the names of the defined error codes are not yet loaded, load them
-		if (errorCodeNames_ == null) { // ensure that another thread has not loaded the codes meanwhile
-			Properties errorCodeNames = new Properties();
-			try {
-				errorCodeNames.load(getClass().getClassLoader().getResourceAsStream(
-				    ERROR_CODE_PROPERTIES));
-				errorCodeNames_ = errorCodeNames;
-				errorCodeNamesAvailable_ = true;
-			} catch (Exception exception) {
-				System.err.println("Could not read properties for error code names: "
-				    + exception.getMessage());
-			}
-		}
+        if (errorCodeNames_ == null) { // ensure that another thread has not loaded the codes meanwhile
+            Map<Long, String> codeNamMap = new HashMap<>();
+            Properties props = new Properties();
+            try {
+                props.load(Functions.class.getClassLoader().getResourceAsStream(
+                    ERROR_CODE_PROPERTIES));
+                for (String propName : props.stringPropertyNames()) {
+                    String errorName = props.getProperty(propName);
+                    if (errorName == null) {
+                        System.out.println("No name defined for error code " + 
+                                Functions.toFullHexString((int) errorCode_));
+                    }
+                    long code;
+                    if (propName.startsWith("0x") || propName.startsWith("0X")) {
+                        code = Long.parseLong(propName.substring(2), 16);
+                    } else {
+                        code = Long.parseLong(propName);
+                    }
+                    codeNamMap.put(code, errorName);
+                }
+                errorCodeNames_ = codeNamMap;
+                errorCodeNamesAvailable_ = true;
+            } catch (Exception exception) {
+                System.err.println("Could not read properties for error code names: "
+                    + exception.getMessage());
+            }
+        }
 
-		// if we can get the name of the error code, take the name, otherwise return the code
-		String errorCodeHexString = "0x" + Functions.toFullHexString((int) errorCode_);
-		String errorCodeName = errorCodeNamesAvailable_ ? errorCodeNames_
-		    .getProperty(errorCodeHexString) : null;
-		String message = (errorCodeName != null) ? errorCodeName : errorCodeHexString;
+        String name = errorCodeNamesAvailable_ ?
+                errorCodeNames_.get(new Long(errorCode_)) : null;
 
-		return message;
+        // if we can get the name of the error code, take the name, otherwise return the code
+        return (name != null) ? name : "0x" + Functions.toFullHexString((int) errorCode_);
 	}
 
 	/**

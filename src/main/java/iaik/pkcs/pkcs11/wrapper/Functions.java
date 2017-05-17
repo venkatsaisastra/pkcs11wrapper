@@ -43,7 +43,11 @@
 package iaik.pkcs.pkcs11.wrapper;
 
 import java.math.BigInteger;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import sun.security.pkcs11.wrapper.CK_DATE;
 
@@ -52,98 +56,91 @@ import sun.security.pkcs11.wrapper.CK_DATE;
  * that are used by several classes in this package.
  *
  * @author Karl Scheibelhofer <Karl.Scheibelhofer@iaik.at>
- * @author Martin Schlï¿½ffer <schlaeff@sbox.tugraz.at>
+ * @author Martin Schlaeffer <schlaeff@sbox.tugraz.at>
  */
 public class Functions {
 
+    /**
+     * The name of the properties file that holds the names of the PKCS#11 mechanism-
+     * codes.
+     */
+    private static final String CKM_CODE_PROPERTIES = "iaik/pkcs/pkcs11/wrapper/ckm.properties";
+
+    /**
+     * True, if the mapping of mechanism codes to PKCS#11 mechanism names is available.
+     */
+    private static boolean mechanismCodeNamesAvailable_;
+    
 	/**
 	 * Maps mechanism codes as Long to their names as Strings.
 	 */
-	protected static Hashtable mechansimNames_;
+	private static Map<Long, String> mechansimNames_;
 
 	/**
-	 * This table contains the mechanisms that are full encrypt/decrypt
-	 * mechanisms; i.e. mechanisms that support the update functoins.
-	 * The Long values of the mechanisms are the keys, and the mechanism
-	 * names are the values.
+	 * This set contains the mechanisms that are full encrypt/decrypt
+	 * mechanisms; i.e. mechanisms that support the update functions.
 	 */
-	protected static Hashtable fullEncryptDecryptMechanisms_;
+	private static Set<Long> fullEncryptDecryptMechanisms_;
 
 	/**
-	 * This table contains the mechanisms that are single-operation
+	 * This set contains the mechanisms that are single-operation
 	 * encrypt/decrypt mechanisms; i.e. mechanisms that do not support the update
-	 * functoins.
-	 * The Long values of the mechanisms are the keys, and the mechanism
-	 * names are the values.
+	 * functions.
 	 */
-	protected static Hashtable singleOperationEncryptDecryptMechanisms_;
+	private static Set<Long> singleOperationEncryptDecryptMechanisms_;
 
 	/**
-	 * This table contains the mechanisms that are full sign/verify
-	 * mechanisms; i.e. mechanisms that support the update functoins.
-	 * The Long values of the mechanisms are the keys, and the mechanism
-	 * names are the values.
+	 * This set contains the mechanisms that are full sign/verify
+	 * mechanisms; i.e. mechanisms that support the update functions.
 	 */
-	protected static Hashtable fullSignVerifyMechanisms_;
+	private static Set<Long> fullSignVerifyMechanisms_;
 
 	/**
-	 * This table contains the mechanisms that are single-operation
+	 * This set contains the mechanisms that are single-operation
 	 * sign/verify mechanisms; i.e. mechanisms that do not support the update
-	 * functoins.
-	 * The Long values of the mechanisms are the keys, and the mechanism
-	 * names are the values.
+	 * functions.
 	 */
-	protected static Hashtable singleOperationSignVerifyMechanisms_;
+	private static Set<Long> singleOperationSignVerifyMechanisms_;
 
 	/**
 	 * This table contains the mechanisms that are sign/verify mechanisms with
 	 * message recovery.
-	 * The Long values of the mechanisms are the keys, and the mechanism
-	 * names are the values.
 	 */
-	protected static Hashtable signVerifyRecoverMechanisms_;
+	private static Set<Long> signVerifyRecoverMechanisms_;
 
 	/**
-	 * This table contains the mechanisms that are digest mechanisms.
+	 * This set contains the mechanisms that are digest mechanisms.
 	 * The Long values of the mechanisms are the keys, and the mechanism
 	 * names are the values.
 	 */
-	protected static Hashtable digestMechanisms_;
+	private static Set<Long> digestMechanisms_;
 
 	/**
 	 * This table contains the mechanisms that key generation mechanisms; i.e.
 	 * mechanisms for generating symmetric keys.
-	 * The Long values of the mechanisms are the keys, and the mechanism
-	 * names are the values.
 	 */
-	protected static Hashtable keyGenerationMechanisms_;
+	private static Set<Long> keyGenerationMechanisms_;
 
 	/**
 	 * This table contains the mechanisms that key-pair generation mechanisms;
 	 * i.e. mechanisms for generating key-pairs.
-	 * The Long values of the mechanisms are the keys, and the mechanism
-	 * names are the values.
 	 */
-	protected static Hashtable keyPairGenerationMechanisms_;
+	private static Set<Long> keyPairGenerationMechanisms_;
 
 	/**
 	 * This table contains the mechanisms that are wrap/unwrap mechanisms.
-	 * The Long values of the mechanisms are the keys, and the mechanism
-	 * names are the values.
 	 */
-	protected static Hashtable wrapUnwrapMechanisms_;
+	private static Set<Long> wrapUnwrapMechanisms_;
 
 	/**
 	 * This table contains the mechanisms that are key derivation mechanisms.
-	 * The Long values of the mechanisms are the keys, and the mechanism
-	 * names are the values.
 	 */
-	protected static Hashtable keyDerivationMechanisms_;
+	private static Set<Long> keyDerivationMechanisms_;
 
 	/**
 	 * For converting numbers to their hex presentation.
 	 */
-	protected static final char HEX_DIGITS[] = { '0', '1', '2', '3', '4', '5', '6', '7',
+	private static final char HEX_DIGITS[] = { '0', '1', '2', '3', '4', '5', '6', '7',
 	    '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 	/**
@@ -740,480 +737,42 @@ public class Functions {
 	 * @return The string representation of the mechanism.
 	 */
 	public static String mechanismCodeToString(long mechansimCode) {
-		if (mechansimNames_ == null) {
-			Hashtable mechansimNames = new Hashtable(200);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_RSA_PKCS_KEY_PAIR_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_RSA_PKCS);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RSA_9796),
-			    PKCS11Constants.NAME_CKM_RSA_9796);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RSA_X_509),
-			    PKCS11Constants.NAME_CKM_RSA_X_509);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_MD2_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_MD2_RSA_PKCS);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_MD5_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_MD5_RSA_PKCS);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA1_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_SHA1_RSA_PKCS);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RIPEMD128_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_RIPEMD128_RSA_PKCS);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RIPEMD160_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_RIPEMD160_RSA_PKCS);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RSA_PKCS_OAEP),
-			    PKCS11Constants.NAME_CKM_RSA_PKCS_OAEP);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RSA_X9_31_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_RSA_X9_31_KEY_PAIR_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RSA_X9_31),
-			    PKCS11Constants.NAME_CKM_RSA_X9_31);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA1_RSA_X9_31),
-			    PKCS11Constants.NAME_CKM_SHA1_RSA_X9_31);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RSA_PKCS_PSS),
-			    PKCS11Constants.NAME_CKM_RSA_PKCS_PSS);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA1_RSA_PKCS_PSS),
-			    PKCS11Constants.NAME_CKM_SHA1_RSA_PKCS_PSS);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DSA_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_DSA_KEY_PAIR_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DSA), PKCS11Constants.NAME_CKM_DSA);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DSA_SHA1),
-			    PKCS11Constants.NAME_CKM_DSA_SHA1);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DH_PKCS_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_DH_PKCS_KEY_PAIR_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DH_PKCS_DERIVE),
-			    PKCS11Constants.NAME_CKM_DH_PKCS_DERIVE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_X9_42_DH_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_X9_42_DH_KEY_PAIR_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_X9_42_DH_DERIVE),
-			    PKCS11Constants.NAME_CKM_X9_42_DH_DERIVE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_X9_42_DH_HYBRID_DERIVE),
-			    PKCS11Constants.NAME_CKM_X9_42_DH_HYBRID_DERIVE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_X9_42_MQV_DERIVE),
-			    PKCS11Constants.NAME_CKM_X9_42_MQV_DERIVE);
+	       // if the names of the defined error codes are not yet loaded, load them
+        if (mechansimNames_ == null) { // ensure that another thread has not loaded the codes meanwhile
+            Map<Long, String> codeNamMap = new HashMap<>();
+            Properties props = new Properties();
+            try {
+                props.load(Functions.class.getClassLoader().getResourceAsStream(
+                    CKM_CODE_PROPERTIES));
+                for (String propName : props.stringPropertyNames()) {
+                    String mechName = props.getProperty(propName);
+                    if (mechName == null) {
+                        System.out.println("No name defined for Mechanism code " + 
+                                toFullHexString((int) mechansimCode));
+                    }
+                    long code;
+                    if (propName.startsWith("0x") || propName.startsWith("0X")) {
+                        code = Long.parseLong(propName.substring(2), 16);
+                    } else {
+                        code = Long.parseLong(propName);
+                    }
+                    codeNamMap.put(code, mechName);
+                }
+                mechansimNames_ = codeNamMap;
+                mechanismCodeNamesAvailable_ = true;
+            } catch (Exception exception) {
+                System.err.println("Could not read properties for error code names: "
+                    + exception.getMessage());
+            }
+        }
 
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA256_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_SHA256_RSA_PKCS);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA384_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_SHA384_RSA_PKCS);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA512_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_SHA512_RSA_PKCS);
+        String name = mechanismCodeNamesAvailable_ ?
+                mechansimNames_.get(new Long(mechansimCode)) : null;
+        if (name == null) {
+            name = "Unknwon mechanism with code: 0x" + toFullHexString(mechansimCode);
+        }
 
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA256_RSA_PKCS_PSS),
-			    PKCS11Constants.NAME_CKM_SHA256_RSA_PKCS_PSS);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA384_RSA_PKCS_PSS),
-			    PKCS11Constants.NAME_CKM_SHA384_RSA_PKCS_PSS);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA512_RSA_PKCS_PSS),
-			    PKCS11Constants.NAME_CKM_SHA512_RSA_PKCS_PSS);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RC2_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_RC2_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RC2_ECB),
-			    PKCS11Constants.NAME_CKM_RC2_ECB);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RC2_CBC),
-			    PKCS11Constants.NAME_CKM_RC2_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RC2_MAC),
-			    PKCS11Constants.NAME_CKM_RC2_MAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RC2_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_RC2_MAC_GENERAL);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RC2_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_RC2_CBC_PAD);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RC4_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_RC4_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RC4), PKCS11Constants.NAME_CKM_RC4);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_DES_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES_ECB),
-			    PKCS11Constants.NAME_CKM_DES_ECB);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES_CBC),
-			    PKCS11Constants.NAME_CKM_DES_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES_MAC),
-			    PKCS11Constants.NAME_CKM_DES_MAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_DES_MAC_GENERAL);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_DES_CBC_PAD);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES2_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_DES2_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES3_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_DES3_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES3_ECB),
-			    PKCS11Constants.NAME_CKM_DES3_ECB);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES3_CBC),
-			    PKCS11Constants.NAME_CKM_DES3_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES3_MAC),
-			    PKCS11Constants.NAME_CKM_DES3_MAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES3_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_DES3_MAC_GENERAL);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES3_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_DES3_CBC_PAD);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CDMF_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_CDMF_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CDMF_ECB),
-			    PKCS11Constants.NAME_CKM_CDMF_ECB);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CDMF_CBC),
-			    PKCS11Constants.NAME_CKM_CDMF_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CDMF_MAC),
-			    PKCS11Constants.NAME_CKM_CDMF_MAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CDMF_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_CDMF_MAC_GENERAL);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CDMF_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_CDMF_CBC_PAD);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES_OFB64),
-			    PKCS11Constants.NAME_CKM_DES_OFB64);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES_OFB8),
-			    PKCS11Constants.NAME_CKM_DES_OFB8);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES_CFB64),
-			    PKCS11Constants.NAME_CKM_DES_CFB64);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES_CFB8),
-			    PKCS11Constants.NAME_CKM_DES_CFB8);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_MD2), PKCS11Constants.NAME_CKM_MD2);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_MD2_HMAC),
-			    PKCS11Constants.NAME_CKM_MD2_HMAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_MD2_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_MD2_HMAC_GENERAL);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_MD5), PKCS11Constants.NAME_CKM_MD5);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_MD5_HMAC),
-			    PKCS11Constants.NAME_CKM_MD5_HMAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_MD5_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_MD5_HMAC_GENERAL);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA_1),
-			    PKCS11Constants.NAME_CKM_SHA_1);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA_1_HMAC),
-			    PKCS11Constants.NAME_CKM_SHA_1_HMAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA_1_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_SHA_1_HMAC_GENERAL);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RIPEMD128),
-			    PKCS11Constants.NAME_CKM_RIPEMD128);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RIPEMD128_HMAC),
-			    PKCS11Constants.NAME_CKM_RIPEMD128_HMAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RIPEMD128_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_RIPEMD128_HMAC_GENERAL);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RIPEMD160),
-			    PKCS11Constants.NAME_CKM_RIPEMD160);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RIPEMD160_HMAC),
-			    PKCS11Constants.NAME_CKM_RIPEMD160_HMAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RIPEMD160_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_RIPEMD160_HMAC_GENERAL);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA256),
-			    PKCS11Constants.NAME_CKM_SHA256);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA256_HMAC),
-			    PKCS11Constants.NAME_CKM_SHA256_HMAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA256_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_SHA256_HMAC_GENERAL);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA384),
-			    PKCS11Constants.NAME_CKM_SHA384);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA384_HMAC),
-			    PKCS11Constants.NAME_CKM_SHA384_HMAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA384_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_SHA384_HMAC_GENERAL);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA512),
-			    PKCS11Constants.NAME_CKM_SHA512);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA512_HMAC),
-			    PKCS11Constants.NAME_CKM_SHA512_HMAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA512_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_SHA512_HMAC_GENERAL);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_CAST_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST_ECB),
-			    PKCS11Constants.NAME_CKM_CAST_ECB);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST_CBC),
-			    PKCS11Constants.NAME_CKM_CAST_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST_MAC),
-			    PKCS11Constants.NAME_CKM_CAST_MAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_CAST_MAC_GENERAL);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_CAST_CBC_PAD);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST3_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_CAST3_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST3_ECB),
-			    PKCS11Constants.NAME_CKM_CAST3_ECB);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST3_CBC),
-			    PKCS11Constants.NAME_CKM_CAST3_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST3_MAC),
-			    PKCS11Constants.NAME_CKM_CAST3_MAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST3_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_CAST3_MAC_GENERAL);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST3_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_CAST3_CBC_PAD);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST5_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_CAST5_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST128_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_CAST128_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST5_ECB),
-			    PKCS11Constants.NAME_CKM_CAST5_ECB);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST128_ECB),
-			    PKCS11Constants.NAME_CKM_CAST128_ECB);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST5_CBC),
-			    PKCS11Constants.NAME_CKM_CAST5_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST128_CBC),
-			    PKCS11Constants.NAME_CKM_CAST128_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST5_MAC),
-			    PKCS11Constants.NAME_CKM_CAST5_MAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST128_MAC),
-			    PKCS11Constants.NAME_CKM_CAST128_MAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST5_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_CAST5_MAC_GENERAL);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST128_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_CAST128_MAC_GENERAL);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST5_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_CAST5_CBC_PAD);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CAST128_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_CAST128_CBC_PAD);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RC5_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_RC5_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RC5_ECB),
-			    PKCS11Constants.NAME_CKM_RC5_ECB);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RC5_CBC),
-			    PKCS11Constants.NAME_CKM_RC5_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RC5_MAC),
-			    PKCS11Constants.NAME_CKM_RC5_MAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RC5_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_RC5_MAC_GENERAL);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_RC5_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_RC5_CBC_PAD);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_IDEA_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_IDEA_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_IDEA_ECB),
-			    PKCS11Constants.NAME_CKM_IDEA_ECB);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_IDEA_CBC),
-			    PKCS11Constants.NAME_CKM_IDEA_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_IDEA_MAC),
-			    PKCS11Constants.NAME_CKM_IDEA_MAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_IDEA_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_IDEA_MAC_GENERAL);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_IDEA_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_IDEA_CBC_PAD);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_GENERIC_SECRET_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CONCATENATE_BASE_AND_KEY),
-			    PKCS11Constants.NAME_CKM_CONCATENATE_BASE_AND_KEY);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CONCATENATE_BASE_AND_DATA),
-			    PKCS11Constants.NAME_CKM_CONCATENATE_BASE_AND_DATA);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CONCATENATE_DATA_AND_BASE),
-			    PKCS11Constants.NAME_CKM_CONCATENATE_DATA_AND_BASE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_XOR_BASE_AND_DATA),
-			    PKCS11Constants.NAME_CKM_XOR_BASE_AND_DATA);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_EXTRACT_KEY_FROM_KEY),
-			    PKCS11Constants.NAME_CKM_EXTRACT_KEY_FROM_KEY);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SSL3_PRE_MASTER_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_SSL3_PRE_MASTER_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE),
-			    PKCS11Constants.NAME_CKM_SSL3_MASTER_KEY_DERIVE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SSL3_KEY_AND_MAC_DERIVE),
-			    PKCS11Constants.NAME_CKM_SSL3_KEY_AND_MAC_DERIVE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE_DH),
-			    PKCS11Constants.NAME_CKM_SSL3_MASTER_KEY_DERIVE_DH);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_TLS_PRE_MASTER_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_TLS_PRE_MASTER_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_TLS_MASTER_KEY_DERIVE),
-			    PKCS11Constants.NAME_CKM_TLS_MASTER_KEY_DERIVE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_TLS_KEY_AND_MAC_DERIVE),
-			    PKCS11Constants.NAME_CKM_TLS_KEY_AND_MAC_DERIVE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_TLS_MASTER_KEY_DERIVE_DH),
-			    PKCS11Constants.NAME_CKM_TLS_MASTER_KEY_DERIVE_DH);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SSL3_MD5_MAC),
-			    PKCS11Constants.NAME_CKM_SSL3_MD5_MAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SSL3_SHA1_MAC),
-			    PKCS11Constants.NAME_CKM_SSL3_SHA1_MAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_MD5_KEY_DERIVATION),
-			    PKCS11Constants.NAME_CKM_MD5_KEY_DERIVATION);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_MD2_KEY_DERIVATION),
-			    PKCS11Constants.NAME_CKM_MD2_KEY_DERIVATION);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA1_KEY_DERIVATION),
-			    PKCS11Constants.NAME_CKM_SHA1_KEY_DERIVATION);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA256_KEY_DERIVATION),
-			    PKCS11Constants.NAME_CKM_SHA256_KEY_DERIVATION);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA384_KEY_DERIVATION),
-			    PKCS11Constants.NAME_CKM_SHA384_KEY_DERIVATION);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SHA512_KEY_DERIVATION),
-			    PKCS11Constants.NAME_CKM_SHA512_KEY_DERIVATION);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PBE_MD2_DES_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_MD2_DES_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PBE_MD5_DES_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_MD5_DES_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PBE_MD5_CAST_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_MD5_CAST_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PBE_MD5_CAST3_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_MD5_CAST3_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PBE_MD5_CAST5_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_MD5_CAST5_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PBE_MD5_CAST128_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_MD5_CAST128_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PBE_SHA1_CAST5_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_CAST5_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PBE_SHA1_CAST128_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_CAST128_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PBE_SHA1_RC4_128),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_RC4_128);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PBE_SHA1_RC4_40),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_RC4_40);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PBE_SHA1_DES3_EDE_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_DES3_EDE_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PBE_SHA1_DES2_EDE_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_DES2_EDE_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PBE_SHA1_RC2_128_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_RC2_128_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PBE_SHA1_RC2_40_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_RC2_40_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PKCS5_PBKD2),
-			    PKCS11Constants.NAME_CKM_PKCS5_PBKD2);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_PBA_SHA1_WITH_SHA1_HMAC),
-			    PKCS11Constants.NAME_CKM_PBA_SHA1_WITH_SHA1_HMAC);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_WTLS_PRE_MASTER_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_WTLS_PRE_MASTER_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_WTLS_MASTER_KEY_DERIVE),
-			    PKCS11Constants.NAME_CKM_WTLS_MASTER_KEY_DERIVE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_WTLS_MASTER_KEY_DERVIE_DH_ECC),
-			    PKCS11Constants.NAME_CKM_WTLS_MASTER_KEY_DERIVE_DH_ECC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_WTLS_PRF),
-			    PKCS11Constants.NAME_CKM_WTLS_PRF);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_WTLS_SERVER_KEY_AND_MAC_DERIVE),
-			    PKCS11Constants.NAME_CKM_WTLS_SERVER_KEY_AND_MAC_DERIVE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_WTLS_CLIENT_KEY_AND_MAC_DERIVE),
-			    PKCS11Constants.NAME_CKM_WTLS_CLIENT_KEY_AND_MAC_DERIVE);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_KEY_WRAP_LYNKS),
-			    PKCS11Constants.NAME_CKM_KEY_WRAP_LYNKS);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_KEY_WRAP_SET_OAEP),
-			    PKCS11Constants.NAME_CKM_KEY_WRAP_SET_OAEP);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_CMS_SIG),
-			    PKCS11Constants.NAME_CKM_CMS_SIG);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SKIPJACK_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SKIPJACK_ECB64),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_ECB64);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SKIPJACK_CBC64),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_CBC64);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SKIPJACK_OFB64),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_OFB64);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SKIPJACK_CFB64),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_CFB64);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SKIPJACK_CFB32),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_CFB32);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SKIPJACK_CFB16),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_CFB16);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SKIPJACK_CFB8),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_CFB8);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SKIPJACK_WRAP),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_WRAP);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SKIPJACK_PRIVATE_WRAP),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_PRIVATE_WRAP);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_SKIPJACK_RELAYX),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_RELAYX);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_KEA_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_KEA_KEY_PAIR_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_KEA_KEY_DERIVE),
-			    PKCS11Constants.NAME_CKM_KEA_KEY_DERIVE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_FORTEZZA_TIMESTAMP),
-			    PKCS11Constants.NAME_CKM_FORTEZZA_TIMESTAMP);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_BATON_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_BATON_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_BATON_ECB128),
-			    PKCS11Constants.NAME_CKM_BATON_ECB128);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_BATON_ECB96),
-			    PKCS11Constants.NAME_CKM_BATON_ECB96);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_BATON_CBC128),
-			    PKCS11Constants.NAME_CKM_BATON_CBC128);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_BATON_COUNTER),
-			    PKCS11Constants.NAME_CKM_BATON_COUNTER);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_BATON_SHUFFLE),
-			    PKCS11Constants.NAME_CKM_BATON_SHUFFLE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_BATON_WRAP),
-			    PKCS11Constants.NAME_CKM_BATON_WRAP);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_ECDSA_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_ECDSA_KEY_PAIR_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_EC_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_EC_KEY_PAIR_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_ECDSA),
-			    PKCS11Constants.NAME_CKM_ECDSA);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_ECDSA_SHA1),
-			    PKCS11Constants.NAME_CKM_ECDSA_SHA1);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_ECDH1_DERIVE),
-			    PKCS11Constants.NAME_CKM_ECDH1_DERIVE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_ECDH1_COFACTOR_DERIVE),
-			    PKCS11Constants.NAME_CKM_ECDH1_COFACTOR_DERIVE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_ECMQV_DERIVE),
-			    PKCS11Constants.NAME_CKM_ECMQV_DERIVE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_JUNIPER_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_JUNIPER_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_JUNIPER_ECB128),
-			    PKCS11Constants.NAME_CKM_JUNIPER_ECB128);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_JUNIPER_CBC128),
-			    PKCS11Constants.NAME_CKM_JUNIPER_CBC128);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_JUNIPER_COUNTER),
-			    PKCS11Constants.NAME_CKM_JUNIPER_COUNTER);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_JUNIPER_SHUFFLE),
-			    PKCS11Constants.NAME_CKM_JUNIPER_SHUFFLE);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_JUNIPER_WRAP),
-			    PKCS11Constants.NAME_CKM_JUNIPER_WRAP);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_FASTHASH),
-			    PKCS11Constants.NAME_CKM_FASTHASH);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_AES_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_AES_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_AES_ECB),
-			    PKCS11Constants.NAME_CKM_AES_ECB);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_AES_CBC),
-			    PKCS11Constants.NAME_CKM_AES_CBC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_AES_MAC),
-			    PKCS11Constants.NAME_CKM_AES_MAC);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_AES_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_AES_MAC_GENERAL);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_AES_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_AES_CBC_PAD);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_BLOWFISH_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_BLOWFISH_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_BLOWFISH_CBC),
-			    PKCS11Constants.NAME_CKM_BLOWFISH_CBC);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_TWOFISH_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_TWOFISH_KEY_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_TWOFISH_CBC),
-			    PKCS11Constants.NAME_CKM_TWOFISH_CBC);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES_ECB_ENCRYPT_DATA),
-			    PKCS11Constants.NAME_CKM_DES_ECB_ENCRYPT_DATA);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES_CBC_ENCRYPT_DATA),
-			    PKCS11Constants.NAME_CKM_DES_CBC_ENCRYPT_DATA);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES3_ECB_ENCRYPT_DATA),
-			    PKCS11Constants.NAME_CKM_DES3_ECB_ENCRYPT_DATA);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DES3_CBC_ENCRYPT_DATA),
-			    PKCS11Constants.NAME_CKM_DES3_CBC_ENCRYPT_DATA);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_AES_ECB_ENCRYPT_DATA),
-			    PKCS11Constants.NAME_CKM_AES_ECB_ENCRYPT_DATA);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_AES_CBC_ENCRYPT_DATA),
-			    PKCS11Constants.NAME_CKM_AES_CBC_ENCRYPT_DATA);
-
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DSA_PARAMETER_GEN),
-			    PKCS11Constants.NAME_CKM_DSA_PARAMETER_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_DH_PKCS_PARAMETER_GEN),
-			    PKCS11Constants.NAME_CKM_DH_PKCS_PARAMETER_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_X9_42_DH_PARAMETER_GEN),
-			    PKCS11Constants.NAME_CKM_X9_42_DH_PARAMETER_GEN);
-			mechansimNames.put(new Long(PKCS11Constants.CKM_VENDOR_DEFINED),
-			    PKCS11Constants.NAME_CKM_VENDOR_DEFINED);
-			mechansimNames_ = mechansimNames;
-		}
-
-		Long mechansimCodeObject = new Long(mechansimCode);
-		Object entry = mechansimNames_.get(mechansimCodeObject);
-
-		String mechanismName = (entry != null) ? entry.toString()
-		    : "Unknwon mechanism with code: 0x" + toFullHexString(mechansimCode);
-
-		return mechanismName;
+		return name;
 	}
 
 	/**
@@ -1496,127 +1055,49 @@ public class Functions {
 	 */
 	public static boolean isFullEncryptDecryptMechanism(long mechanismCode) {
 		// build the hashtable on demand (=first use)
-		if (fullEncryptDecryptMechanisms_ == null) {
-			Hashtable fullEncryptDecryptMechanisms = new Hashtable();
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_RC2_ECB),
-			    PKCS11Constants.NAME_CKM_RC2_ECB);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_RC2_CBC),
-			    PKCS11Constants.NAME_CKM_RC2_CBC);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_RC2_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_RC2_CBC_PAD);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_RC4),
-			    PKCS11Constants.NAME_CKM_RC4);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_DES_ECB),
-			    PKCS11Constants.NAME_CKM_DES_ECB);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_DES_CBC),
-			    PKCS11Constants.NAME_CKM_DES_CBC);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_DES_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_DES_CBC_PAD);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_DES3_ECB),
-			    PKCS11Constants.NAME_CKM_DES3_ECB);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_DES3_CBC),
-			    PKCS11Constants.NAME_CKM_DES3_CBC);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_DES3_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_DES3_CBC_PAD);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_CDMF_ECB),
-			    PKCS11Constants.NAME_CKM_CDMF_ECB);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_CDMF_CBC),
-			    PKCS11Constants.NAME_CKM_CDMF_CBC);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_CDMF_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_CDMF_CBC_PAD);
+        if (fullEncryptDecryptMechanisms_ == null) {
+            long[] mechs = new long[]{
+                    PKCS11Constants.CKM_AES_ECB,
+                    PKCS11Constants.CKM_AES_CBC,
+                    PKCS11Constants.CKM_AES_CBC_PAD,
+                    PKCS11Constants.CKM_AES_OFB,
+                    PKCS11Constants.CKM_AES_CFB64,
+                    PKCS11Constants.CKM_AES_CFB8,
+                    PKCS11Constants.CKM_AES_CFB128,
+                    PKCS11Constants.CKM_AES_CFB1,
+                    PKCS11Constants.CKM_AES_CTR,
+                    PKCS11Constants.CKM_AES_CTS,
+                    PKCS11Constants.CKM_AES_GCM,
+                    PKCS11Constants.CKM_AES_CCM,
+                    PKCS11Constants.CKM_AES_KEY_WRAP_PAD,
+                    PKCS11Constants.CKM_DES3_ECB,
+                    PKCS11Constants.CKM_DES3_CBC,
+                    PKCS11Constants.CKM_DES3_CBC_PAD,
+                    PKCS11Constants.CKM_DES_OFB64,
+                    PKCS11Constants.CKM_DES_OFB8,
+                    PKCS11Constants.CKM_DES_CFB64,
+                    PKCS11Constants.CKM_DES_CFB8,
+                    PKCS11Constants.CKM_BLOWFISH_CBC,
+                    PKCS11Constants.CKM_BLOWFISH_CBC_PAD,
+                    PKCS11Constants.CKM_CAMELLIA_ECB,
+                    PKCS11Constants.CKM_CAMELLIA_CBC,
+                    PKCS11Constants.CKM_CAMELLIA_CBC_PAD,
+                    PKCS11Constants.CKM_ARIA_ECB,
+                    PKCS11Constants.CKM_ARIA_CBC,
+                    PKCS11Constants.CKM_ARIA_CBC_PAD,
+                    PKCS11Constants.CKM_SEED_CBC_PAD,
+                    PKCS11Constants.CKM_GOST28147_ECB,
+                    PKCS11Constants.CKM_GOST28147,
+            };
+            
+            Set<Long> mechanisms = new HashSet<>();
+            for (Long mech : mechs) {
+                mechanisms.add(mech);
+            }
+            fullEncryptDecryptMechanisms_ = mechanisms;
+        }
 
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_DES_OFB64),
-			    PKCS11Constants.NAME_CKM_DES_OFB64);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_DES_OFB8),
-			    PKCS11Constants.NAME_CKM_DES_OFB8);
-
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_DES_CFB64),
-			    PKCS11Constants.NAME_CKM_DES_CFB64);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_DES_CFB8),
-			    PKCS11Constants.NAME_CKM_DES_CFB8);
-
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_CAST_ECB),
-			    PKCS11Constants.NAME_CKM_CAST_ECB);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_CAST_CBC),
-			    PKCS11Constants.NAME_CKM_CAST_CBC);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_CAST_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_CAST_CBC_PAD);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_CAST3_ECB),
-			    PKCS11Constants.NAME_CKM_CAST3_ECB);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_CAST3_CBC),
-			    PKCS11Constants.NAME_CKM_CAST3_CBC);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_CAST3_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_CAST3_CBC_PAD);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_CAST5_ECB),
-			    PKCS11Constants.NAME_CKM_CAST5_ECB);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_CAST128_ECB),
-			    PKCS11Constants.NAME_CKM_CAST128_ECB);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_CAST5_CBC),
-			    PKCS11Constants.NAME_CKM_CAST5_CBC);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_CAST128_CBC),
-			    PKCS11Constants.NAME_CKM_CAST128_CBC);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_CAST5_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_CAST5_CBC_PAD);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_CAST128_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_CAST128_CBC_PAD);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_RC5_ECB),
-			    PKCS11Constants.NAME_CKM_RC5_ECB);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_RC5_CBC),
-			    PKCS11Constants.NAME_CKM_RC5_CBC);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_RC5_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_RC5_CBC_PAD);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_AES_ECB),
-			    PKCS11Constants.NAME_CKM_AES_ECB);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_AES_CBC),
-			    PKCS11Constants.NAME_CKM_AES_CBC);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_AES_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_AES_CBC_PAD);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_BLOWFISH_CBC),
-			    PKCS11Constants.NAME_CKM_BLOWFISH_CBC);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_TWOFISH_CBC),
-			    PKCS11Constants.NAME_CKM_TWOFISH_CBC);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_IDEA_ECB),
-			    PKCS11Constants.NAME_CKM_IDEA_ECB);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_IDEA_CBC),
-			    PKCS11Constants.NAME_CKM_IDEA_CBC);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_IDEA_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_IDEA_CBC_PAD);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_SKIPJACK_ECB64),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_ECB64);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_SKIPJACK_CBC64),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_CBC64);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_SKIPJACK_OFB64),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_OFB64);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_SKIPJACK_CFB64),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_CFB64);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_SKIPJACK_CFB32),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_CFB32);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_SKIPJACK_CFB16),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_CFB16);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_SKIPJACK_CFB8),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_CFB8);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_BATON_ECB128),
-			    PKCS11Constants.NAME_CKM_BATON_ECB128);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_BATON_ECB96),
-			    PKCS11Constants.NAME_CKM_BATON_ECB96);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_BATON_CBC128),
-			    PKCS11Constants.NAME_CKM_BATON_CBC128);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_BATON_COUNTER),
-			    PKCS11Constants.NAME_CKM_BATON_COUNTER);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_BATON_SHUFFLE),
-			    PKCS11Constants.NAME_CKM_BATON_SHUFFLE);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_JUNIPER_ECB128),
-			    PKCS11Constants.NAME_CKM_JUNIPER_ECB128);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_JUNIPER_CBC128),
-			    PKCS11Constants.NAME_CKM_JUNIPER_CBC128);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_JUNIPER_COUNTER),
-			    PKCS11Constants.NAME_CKM_JUNIPER_COUNTER);
-			fullEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_JUNIPER_SHUFFLE),
-			    PKCS11Constants.NAME_CKM_JUNIPER_SHUFFLE);
-			fullEncryptDecryptMechanisms_ = fullEncryptDecryptMechanisms;
-		}
-
-		return fullEncryptDecryptMechanisms_.containsKey(new Long(mechanismCode));
+        return fullEncryptDecryptMechanisms_.contains(new Long(mechanismCode));
 	}
 
 	/**
@@ -1636,18 +1117,23 @@ public class Functions {
 	 */
 	public static boolean isSingleOperationEncryptDecryptMechanism(long mechanismCode) {
 		// build the hashtable on demand (=first use)
-		if (singleOperationEncryptDecryptMechanisms_ == null) {
-			Hashtable singleOperationEncryptDecryptMechanisms = new Hashtable();
-			singleOperationEncryptDecryptMechanisms.put(new Long(PKCS11Constants.CKM_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_RSA_PKCS);
-			singleOperationEncryptDecryptMechanisms.put(new Long(
-			    PKCS11Constants.CKM_RSA_PKCS_OAEP), PKCS11Constants.NAME_CKM_RSA_PKCS_OAEP);
-			singleOperationEncryptDecryptMechanisms.put(
-			    new Long(PKCS11Constants.CKM_RSA_X_509), PKCS11Constants.NAME_CKM_RSA_X_509);
-			singleOperationEncryptDecryptMechanisms_ = singleOperationEncryptDecryptMechanisms;
-		}
+        if (singleOperationEncryptDecryptMechanisms_ == null) {
+            long[] mechs = new long[]{
+                    PKCS11Constants.CKM_RSA_PKCS,
+                    PKCS11Constants.CKM_RSA_PKCS_OAEP,
+                    PKCS11Constants.CKM_RSA_X_509,
+                    PKCS11Constants.CKM_RSA_PKCS_TPM_1_1,
+                    PKCS11Constants.CKM_RSA_PKCS_OAEP_TPM_1_1
+            };
+            
+            Set<Long> mechanisms = new HashSet<>();
+            for (Long mech : mechs) {
+                mechanisms.add(mech);
+            }
+            singleOperationEncryptDecryptMechanisms_ = mechanisms;
+        }
 
-		return singleOperationEncryptDecryptMechanisms_.containsKey(new Long(mechanismCode));
+        return singleOperationEncryptDecryptMechanisms_.contains(new Long(mechanismCode));
 	}
 
 	/**
@@ -1667,129 +1153,113 @@ public class Functions {
 	 */
 	public static boolean isFullSignVerifyMechanism(long mechanismCode) {
 		// build the hashtable on demand (=first use)
-		if (fullSignVerifyMechanisms_ == null) {
-			Hashtable fullSignVerifyMechanisms = new Hashtable();
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_MD2_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_MD2_RSA_PKCS);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_MD5_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_MD5_RSA_PKCS);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA1_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_SHA1_RSA_PKCS);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_RIPEMD128_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_RIPEMD128_RSA_PKCS);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_RIPEMD160_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_RIPEMD160_RSA_PKCS);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA1_RSA_PKCS_PSS),
-			    PKCS11Constants.NAME_CKM_SHA1_RSA_PKCS_PSS);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA1_RSA_X9_31),
-			    PKCS11Constants.NAME_CKM_SHA1_RSA_X9_31);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_DSA_SHA1),
-			    PKCS11Constants.NAME_CKM_DSA_SHA1);
+        if (fullSignVerifyMechanisms_ == null) {
+            long[] mechs = new long[]{
+                    PKCS11Constants.CKM_SHA1_RSA_PKCS,
+                    PKCS11Constants.CKM_SHA256_RSA_PKCS,
+                    PKCS11Constants.CKM_SHA384_RSA_PKCS,
+                    PKCS11Constants.CKM_SHA512_RSA_PKCS,
+                    PKCS11Constants.CKM_SHA1_RSA_PKCS_PSS,
+                    PKCS11Constants.CKM_SHA256_RSA_PKCS_PSS,
+                    PKCS11Constants.CKM_SHA384_RSA_PKCS_PSS,
+                    PKCS11Constants.CKM_SHA512_RSA_PKCS_PSS,
+                    PKCS11Constants.CKM_SHA1_RSA_X9_31,
+                    PKCS11Constants.CKM_DSA_SHA1,
+                    PKCS11Constants.CKM_DSA_SHA224,
+                    PKCS11Constants.CKM_DSA_SHA256,
+                    PKCS11Constants.CKM_DSA_SHA384,
+                    PKCS11Constants.CKM_DSA_SHA512,
+                    PKCS11Constants.CKM_ECDSA_SHA1,
+                    PKCS11Constants.CKM_AES_MAC_GENERAL,
+                    PKCS11Constants.CKM_AES_MAC,
+                    PKCS11Constants.CKM_AES_XCBC_MAC,
+                    PKCS11Constants.CKM_AES_XCBC_MAC_96,
+                    PKCS11Constants.CKM_AES_GMAC,
+                    PKCS11Constants.CKM_AES_CMAC_GENERAL,
+                    PKCS11Constants.CKM_AES_CMAC,
+                    PKCS11Constants.CKM_DES3_MAC_GENERAL,
+                    PKCS11Constants.CKM_DES3_MAC,
+                    PKCS11Constants.CKM_DES3_CMAC_GENERAL,
+                    PKCS11Constants.CKM_DES3_CMAC,
+                    PKCS11Constants.CKM_SHA_1_HMAC_GENERAL,
+                    PKCS11Constants.CKM_SHA_1_HMAC,
+                    PKCS11Constants.CKM_SHA224_HMAC,
+                    PKCS11Constants.CKM_SHA224_HMAC_GENERAL,
+                    PKCS11Constants.CKM_SHA224_RSA_PKCS,
+                    PKCS11Constants.CKM_SHA224_RSA_PKCS_PSS,
+                    PKCS11Constants.CKM_SHA256_HMAC_GENERAL,
+                    PKCS11Constants.CKM_SHA256_HMAC,
+                    PKCS11Constants.CKM_SHA384_HMAC_GENERAL,
+                    PKCS11Constants.CKM_SHA384_HMAC,
+                    PKCS11Constants.CKM_SHA512_HMAC_GENERAL,
+                    PKCS11Constants.CKM_SHA512_HMAC,
+                    PKCS11Constants.CKM_SHA512_224_HMAC_GENERAL,
+                    PKCS11Constants.CKM_SHA512_224_HMAC,
+                    PKCS11Constants.CKM_SHA512_256_HMAC_GENERAL,
+                    PKCS11Constants.CKM_SHA512_256_HMAC,
+                    PKCS11Constants.CKM_SHA512_T_HMAC_GENERAL,
+                    PKCS11Constants.CKM_SHA512_T_HMAC,
+                    PKCS11Constants.CKM_SSL3_MD5_MAC,
+                    PKCS11Constants.CKM_SSL3_SHA1_MAC,
+                    PKCS11Constants.CKM_TLS10_MAC_SERVER,
+                    PKCS11Constants.CKM_TLS10_MAC_CLIENT,
+                    PKCS11Constants.CKM_TLS12_MAC,
+                    PKCS11Constants.CKM_CMS_SIG,
+                    PKCS11Constants.CKM_CAMELLIA_MAC_GENERAL,
+                    PKCS11Constants.CKM_CAMELLIA_MAC,
+                    PKCS11Constants.CKM_ARIA_MAC_GENERAL,
+                    PKCS11Constants.CKM_ARIA_MAC,
+                    PKCS11Constants.CKM_SECURID,
+                    PKCS11Constants.CKM_HOTP,
+                    PKCS11Constants.CKM_ACTI,
+                    PKCS11Constants.CKM_KIP_MAC,
+                    PKCS11Constants.CKM_GOST28147_MAC,
+                    PKCS11Constants.CKM_GOSTR3411_HMAC,
+                    PKCS11Constants.CKM_GOSTR3410_WITH_GOSTR3411,
+                    PKCS11Constants.CKM_DSA_SHA3_224,
+                    PKCS11Constants.CKM_DSA_SHA3_256,
+                    PKCS11Constants.CKM_DSA_SHA3_384,
+                    PKCS11Constants.CKM_DSA_SHA3_512,
+                    PKCS11Constants.CKM_SHA3_224_RSA_PKCS,
+                    PKCS11Constants.CKM_SHA3_256_RSA_PKCS,
+                    PKCS11Constants.CKM_SHA3_384_RSA_PKCS,
+                    PKCS11Constants.CKM_SHA3_512_RSA_PKCS,
+                    PKCS11Constants.CKM_SHA3_224_RSA_PKCS_PSS,
+                    PKCS11Constants.CKM_SHA3_256_RSA_PKCS_PSS,
+                    PKCS11Constants.CKM_SHA3_384_RSA_PKCS_PSS,
+                    PKCS11Constants.CKM_SHA3_512_RSA_PKCS_PSS,
+                    PKCS11Constants.CKM_SHA3_224_HMAC,
+                    PKCS11Constants.CKM_SHA3_224_HMAC_GENERAL,
+                    PKCS11Constants.CKM_SHA3_256_HMAC,
+                    PKCS11Constants.CKM_SHA3_256_HMAC_GENERAL,
+                    PKCS11Constants.CKM_SHA3_384_HMAC,
+                    PKCS11Constants.CKM_SHA3_384_HMAC_GENERAL,
+                    PKCS11Constants.CKM_SHA3_512_HMAC,
+                    PKCS11Constants.CKM_SHA3_512_HMAC_GENERAL,
+                    PKCS11Constants.CKM_ECDSA_SHA3_224,
+                    PKCS11Constants.CKM_ECDSA_SHA3_256,
+                    PKCS11Constants.CKM_ECDSA_SHA3_384,
+                    PKCS11Constants.CKM_ECDSA_SHA3_512,
+                    PKCS11Constants.CKM_MD2_HMAC_GENERAL,
+                    PKCS11Constants.CKM_MD2_HMAC,
+                    PKCS11Constants.CKM_MD5_HMAC_GENERAL,
+                    PKCS11Constants.CKM_MD5_HMAC,
+                    PKCS11Constants.CKM_RIPEMD128_HMAC_GENERAL,
+                    PKCS11Constants.CKM_RIPEMD128_HMAC,
+                    PKCS11Constants.CKM_RIPEMD160_HMAC_GENERAL,
+                    PKCS11Constants.CKM_RIPEMD160_HMAC,
+                    PKCS11Constants.CKM_RIPEMD128_RSA_PKCS,
+                    PKCS11Constants.CKM_RIPEMD160_RSA_PKCS
+            };
+            
+            Set<Long> mechanisms = new HashSet<>();
+            for (Long mech : mechs) {
+                mechanisms.add(mech);
+            }
+            fullSignVerifyMechanisms_ = mechanisms;
+        }
 
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA256_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_SHA256_RSA_PKCS);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA384_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_SHA384_RSA_PKCS);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA512_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_SHA512_RSA_PKCS);
-
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA256_RSA_PKCS_PSS),
-			    PKCS11Constants.NAME_CKM_SHA256_RSA_PKCS_PSS);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA384_RSA_PKCS_PSS),
-			    PKCS11Constants.NAME_CKM_SHA384_RSA_PKCS_PSS);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA512_RSA_PKCS_PSS),
-			    PKCS11Constants.NAME_CKM_SHA512_RSA_PKCS_PSS);
-
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_RC2_MAC),
-			    PKCS11Constants.NAME_CKM_RC2_MAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_RC2_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_RC2_MAC_GENERAL);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_DES_MAC),
-			    PKCS11Constants.NAME_CKM_DES_MAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_DES_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_DES_MAC_GENERAL);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_DES3_MAC),
-			    PKCS11Constants.NAME_CKM_DES3_MAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_DES3_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_DES3_MAC_GENERAL);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_CDMF_MAC),
-			    PKCS11Constants.NAME_CKM_CDMF_MAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_CDMF_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_CDMF_MAC_GENERAL);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_MD2_HMAC),
-			    PKCS11Constants.NAME_CKM_MD2_HMAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_MD2_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_MD2_HMAC_GENERAL);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_MD5_HMAC),
-			    PKCS11Constants.NAME_CKM_MD5_HMAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_MD5_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_MD5_HMAC_GENERAL);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA_1_HMAC),
-			    PKCS11Constants.NAME_CKM_SHA_1_HMAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA_1_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_SHA_1_HMAC_GENERAL);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_RIPEMD128_HMAC),
-			    PKCS11Constants.NAME_CKM_RIPEMD128_HMAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_RIPEMD128_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_RIPEMD128_HMAC_GENERAL);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_RIPEMD160_HMAC),
-			    PKCS11Constants.NAME_CKM_RIPEMD160_HMAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_RIPEMD160_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_RIPEMD160_HMAC_GENERAL);
-
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA256_HMAC),
-			    PKCS11Constants.NAME_CKM_SHA256_HMAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA256_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_SHA256_HMAC_GENERAL);
-
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA384_HMAC),
-			    PKCS11Constants.NAME_CKM_SHA384_HMAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA384_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_SHA384_HMAC_GENERAL);
-
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA512_HMAC),
-			    PKCS11Constants.NAME_CKM_SHA512_HMAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SHA512_HMAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_SHA512_HMAC_GENERAL);
-
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_CAST_MAC),
-			    PKCS11Constants.NAME_CKM_CAST_MAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_CAST_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_CAST_MAC_GENERAL);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_CAST3_MAC),
-			    PKCS11Constants.NAME_CKM_CAST3_MAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_CAST3_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_CAST3_MAC_GENERAL);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_CAST5_MAC),
-			    PKCS11Constants.NAME_CKM_CAST5_MAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_CAST128_MAC),
-			    PKCS11Constants.NAME_CKM_CAST128_MAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_CAST5_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_CAST5_MAC_GENERAL);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_CAST128_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_CAST128_MAC_GENERAL);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_RC5_MAC),
-			    PKCS11Constants.NAME_CKM_RC5_MAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_RC5_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_RC5_MAC_GENERAL);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_AES_MAC),
-			    PKCS11Constants.NAME_CKM_AES_MAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_AES_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_AES_MAC_GENERAL);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_IDEA_MAC),
-			    PKCS11Constants.NAME_CKM_IDEA_MAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_IDEA_MAC_GENERAL),
-			    PKCS11Constants.NAME_CKM_IDEA_MAC_GENERAL);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SSL3_MD5_MAC),
-			    PKCS11Constants.NAME_CKM_SSL3_MD5_MAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_SSL3_SHA1_MAC),
-			    PKCS11Constants.NAME_CKM_SSL3_SHA1_MAC);
-			fullSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_ECDSA_SHA1),
-			    PKCS11Constants.NAME_CKM_ECDSA_SHA1);
-			fullSignVerifyMechanisms_ = fullSignVerifyMechanisms;
-		}
-
-		return fullSignVerifyMechanisms_.containsKey(new Long(mechanismCode));
+        return fullSignVerifyMechanisms_.contains(new Long(mechanismCode));
 	}
 
 	/**
@@ -1809,29 +1279,26 @@ public class Functions {
 	 */
 	public static boolean isSingleOperationSignVerifyMechanism(long mechanismCode) {
 		// build the hashtable on demand (=first use)
-		if (singleOperationSignVerifyMechanisms_ == null) {
-			Hashtable singleOperationSignVerifyMechanisms = new Hashtable();
-			singleOperationSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_RSA_PKCS);
-			singleOperationSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_RSA_PKCS_PSS),
-			    PKCS11Constants.NAME_CKM_RSA_PKCS_PSS);
-			singleOperationSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_RSA_9796),
-			    PKCS11Constants.NAME_CKM_RSA_9796);
-			singleOperationSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_RSA_X_509),
-			    PKCS11Constants.NAME_CKM_RSA_X_509);
-			singleOperationSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_RSA_X9_31),
-			    PKCS11Constants.NAME_CKM_RSA_X9_31);
-			singleOperationSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_DSA),
-			    PKCS11Constants.NAME_CKM_DSA);
-			singleOperationSignVerifyMechanisms.put(new Long(
-			    PKCS11Constants.CKM_FORTEZZA_TIMESTAMP),
-			    PKCS11Constants.NAME_CKM_FORTEZZA_TIMESTAMP);
-			singleOperationSignVerifyMechanisms.put(new Long(PKCS11Constants.CKM_ECDSA),
-			    PKCS11Constants.NAME_CKM_ECDSA);
-			singleOperationSignVerifyMechanisms_ = singleOperationSignVerifyMechanisms;
-		}
+        if (singleOperationSignVerifyMechanisms_ == null) {
+            long[] mechs = new long[]{
+                    PKCS11Constants.CKM_RSA_PKCS,
+                    PKCS11Constants.CKM_RSA_PKCS_PSS,
+                    PKCS11Constants.CKM_RSA_9796,
+                    PKCS11Constants.CKM_RSA_X_509,
+                    PKCS11Constants.CKM_RSA_X9_31,
+                    PKCS11Constants.CKM_DSA,
+                    PKCS11Constants.CKM_ECDSA,
+                    PKCS11Constants.CKM_GOSTR3410
+            };
+            
+            Set<Long> mechanisms = new HashSet<>();
+            for (Long mech : mechs) {
+                mechanisms.add(mech);
+            }
+            singleOperationSignVerifyMechanisms_ = mechanisms;
+        }
 
-		return singleOperationSignVerifyMechanisms_.containsKey(new Long(mechanismCode));
+        return singleOperationSignVerifyMechanisms_.contains(new Long(mechanismCode));
 	}
 
 	/**
@@ -1850,18 +1317,25 @@ public class Functions {
 	 */
 	public static boolean isSignVerifyRecoverMechanism(long mechanismCode) {
 		// build the hashtable on demand (=first use)
-		if (signVerifyRecoverMechanisms_ == null) {
-			Hashtable signVerifyRecoverMechanisms = new Hashtable();
-			signVerifyRecoverMechanisms.put(new Long(PKCS11Constants.CKM_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_RSA_PKCS);
-			signVerifyRecoverMechanisms.put(new Long(PKCS11Constants.CKM_RSA_9796),
-			    PKCS11Constants.NAME_CKM_RSA_9796);
-			signVerifyRecoverMechanisms.put(new Long(PKCS11Constants.CKM_RSA_X_509),
-			    PKCS11Constants.NAME_CKM_RSA_X_509);
-			signVerifyRecoverMechanisms_ = signVerifyRecoverMechanisms;
-		}
+        if (signVerifyRecoverMechanisms_ == null) {
+            long[] mechs = new long[]{
+                    PKCS11Constants.CKM_RSA_PKCS,
+                    PKCS11Constants.CKM_RSA_9796,
+                    PKCS11Constants.CKM_RSA_X_509,
+                    PKCS11Constants.CKM_CMS_SIG,
+                    PKCS11Constants.CKM_SEED_ECB,
+                    PKCS11Constants.CKM_SEED_CBC,
+                    PKCS11Constants.CKM_SEED_MAC_GENERAL
+            };
+            
+            Set<Long> mechanisms = new HashSet<>();
+            for (Long mech : mechs) {
+                mechanisms.add(mech);
+            }
+            signVerifyRecoverMechanisms_ = mechanisms;
+        }
 
-		return signVerifyRecoverMechanisms_.containsKey(new Long(mechanismCode));
+        return signVerifyRecoverMechanisms_.contains(new Long(mechanismCode));
 	}
 
 	/**
@@ -1881,29 +1355,35 @@ public class Functions {
 	public static boolean isDigestMechanism(long mechanismCode) {
 		// build the hashtable on demand (=first use)
 		if (digestMechanisms_ == null) {
-			Hashtable digestMechanisms = new Hashtable();
-			digestMechanisms.put(new Long(PKCS11Constants.CKM_MD2),
-			    PKCS11Constants.NAME_CKM_MD2);
-			digestMechanisms.put(new Long(PKCS11Constants.CKM_MD5),
-			    PKCS11Constants.NAME_CKM_MD5);
-			digestMechanisms.put(new Long(PKCS11Constants.CKM_SHA_1),
-			    PKCS11Constants.NAME_CKM_SHA_1);
-			digestMechanisms.put(new Long(PKCS11Constants.CKM_RIPEMD128),
-			    PKCS11Constants.NAME_CKM_RIPEMD128);
-			digestMechanisms.put(new Long(PKCS11Constants.CKM_RIPEMD160),
-			    PKCS11Constants.NAME_CKM_RIPEMD160);
-			digestMechanisms.put(new Long(PKCS11Constants.CKM_SHA256),
-			    PKCS11Constants.NAME_CKM_SHA256);
-			digestMechanisms.put(new Long(PKCS11Constants.CKM_SHA384),
-			    PKCS11Constants.NAME_CKM_SHA384);
-			digestMechanisms.put(new Long(PKCS11Constants.CKM_SHA512),
-			    PKCS11Constants.NAME_CKM_SHA512);
-			digestMechanisms.put(new Long(PKCS11Constants.CKM_FASTHASH),
-			    PKCS11Constants.NAME_CKM_FASTHASH);
-			digestMechanisms_ = digestMechanisms;
+		    long[] mechs = new long[]{
+		            PKCS11Constants.CKM_SHA_1,
+		            PKCS11Constants.CKM_SHA224,
+		            PKCS11Constants.CKM_SHA256,
+		            PKCS11Constants.CKM_SHA384,
+		            PKCS11Constants.CKM_SHA512,
+		            PKCS11Constants.CKM_SHA512_224,
+		            PKCS11Constants.CKM_SHA512_256,
+		            PKCS11Constants.CKM_SHA512_T,
+		            PKCS11Constants.CKM_SEED_MAC,
+		            PKCS11Constants.CKM_GOSTR3411,
+		            PKCS11Constants.CKM_SHA3_224,
+		            PKCS11Constants.CKM_SHA3_256,
+		            PKCS11Constants.CKM_SHA3_384,
+		            PKCS11Constants.CKM_SHA3_512,
+		            PKCS11Constants.CKM_MD2,
+		            PKCS11Constants.CKM_MD5,
+		            PKCS11Constants.CKM_RIPEMD128,
+		            PKCS11Constants.CKM_RIPEMD160,
+		    };
+		    
+			Set<Long> mechanisms = new HashSet<>();
+			for (Long mech : mechs) {
+			    mechanisms.add(mech);
+			}
+			digestMechanisms_ = mechanisms;
 		}
 
-		return digestMechanisms_.containsKey(new Long(mechanismCode));
+		return digestMechanisms_.contains(new Long(mechanismCode));
 	}
 
 	/**
@@ -1922,99 +1402,41 @@ public class Functions {
 	 */
 	public static boolean isKeyGenerationMechanism(long mechanismCode) {
 		// build the hashtable on demand (=first use)
-		if (keyGenerationMechanisms_ == null) {
-			Hashtable keyGenerationMechanisms = new Hashtable();
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_DSA_PARAMETER_GEN),
-			    PKCS11Constants.NAME_CKM_DSA_PARAMETER_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_DH_PKCS_PARAMETER_GEN),
-			    PKCS11Constants.NAME_CKM_DH_PKCS_PARAMETER_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_X9_42_DH_PARAMETER_GEN),
-			    PKCS11Constants.NAME_CKM_X9_42_DH_PARAMETER_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_RC2_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_RC2_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_RC4_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_RC4_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_DES_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_DES_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_DES2_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_DES2_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_DES3_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_DES3_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_CDMF_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_CDMF_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_CAST_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_CAST_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_CAST3_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_CAST3_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_CAST5_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_CAST5_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_CAST128_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_CAST128_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_RC5_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_RC5_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_AES_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_AES_KEY_GEN);
+        if (keyGenerationMechanisms_ == null) {
+            long[] mechs = new long[]{
+                    PKCS11Constants.CKM_DSA_PARAMETER_GEN,
+                    PKCS11Constants.CKM_DSA_PROBABLISTIC_PARAMETER_GEN,
+                    PKCS11Constants.CKM_DSA_SHAWE_TAYLOR_PARAMETER_GEN,
+                    //PKCS11Constants.CKM_DSA_FIPS_G_GEN,
+                    PKCS11Constants.CKM_DH_PKCS_PARAMETER_GEN,
+                    PKCS11Constants.CKM_X9_42_DH_PARAMETER_GEN,
+                    PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN,
+                    PKCS11Constants.CKM_AES_KEY_GEN,
+                    PKCS11Constants.CKM_DES2_KEY_GEN,
+                    PKCS11Constants.CKM_DES3_KEY_GEN,
+                    PKCS11Constants.CKM_PBE_SHA1_DES3_EDE_CBC,
+                    PKCS11Constants.CKM_PBE_SHA1_DES2_EDE_CBC,
+                    PKCS11Constants.CKM_PBA_SHA1_WITH_SHA1_HMAC,
+                    PKCS11Constants.CKM_PKCS5_PBKD2,
+                    PKCS11Constants.CKM_SSL3_PRE_MASTER_KEY_GEN,
+                    PKCS11Constants.CKM_WTLS_PRE_MASTER_KEY_GEN,
+                    PKCS11Constants.CKM_CAMELLIA_KEY_GEN,
+                    PKCS11Constants.CKM_ARIA_KEY_GEN,
+                    PKCS11Constants.CKM_SEED_KEY_GEN,
+                    PKCS11Constants.CKM_SECURID_KEY_GEN,
+                    PKCS11Constants.CKM_HOTP_KEY_GEN,
+                    PKCS11Constants.CKM_ACTI_KEY_GEN,
+                    PKCS11Constants.CKM_GOST28147_KEY_GEN
+            };
+            
+            Set<Long> mechanisms = new HashSet<>();
+            for (Long mech : mechs) {
+                mechanisms.add(mech);
+            }
+            keyGenerationMechanisms_ = mechanisms;
+        }
 
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_BLOWFISH_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_BLOWFISH_KEY_GEN);
-
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_TWOFISH_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_TWOFISH_KEY_GEN);
-
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_IDEA_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_IDEA_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_GENERIC_SECRET_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_SSL3_PRE_MASTER_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_SSL3_PRE_MASTER_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_TLS_PRE_MASTER_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_TLS_PRE_MASTER_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PBE_MD2_DES_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_MD2_DES_CBC);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PBE_MD5_DES_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_MD5_DES_CBC);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PBE_MD5_CAST_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_MD5_CAST_CBC);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PBE_MD5_CAST3_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_MD5_CAST3_CBC);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PBE_MD5_CAST5_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_MD5_CAST5_CBC);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PBE_MD5_CAST128_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_MD5_CAST128_CBC);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PBE_SHA1_CAST5_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_CAST5_CBC);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PBE_SHA1_CAST128_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_CAST128_CBC);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PBE_SHA1_RC4_128),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_RC4_128);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PBE_SHA1_RC4_40),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_RC4_40);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PBE_SHA1_DES3_EDE_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_DES3_EDE_CBC);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PBE_SHA1_DES2_EDE_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_DES2_EDE_CBC);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PBE_SHA1_RC2_128_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_RC2_128_CBC);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PBE_SHA1_RC2_40_CBC),
-			    PKCS11Constants.NAME_CKM_PBE_SHA1_RC2_40_CBC);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PKCS5_PBKD2),
-			    PKCS11Constants.NAME_CKM_PKCS5_PBKD2);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_PBA_SHA1_WITH_SHA1_HMAC),
-			    PKCS11Constants.NAME_CKM_PBA_SHA1_WITH_SHA1_HMAC);
-
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_WTLS_PRE_MASTER_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_WTLS_PRE_MASTER_KEY_GEN);
-
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_SKIPJACK_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_BATON_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_BATON_KEY_GEN);
-			keyGenerationMechanisms.put(new Long(PKCS11Constants.CKM_JUNIPER_KEY_GEN),
-			    PKCS11Constants.NAME_CKM_JUNIPER_KEY_GEN);
-			keyGenerationMechanisms_ = keyGenerationMechanisms;
-		}
-
-		return keyGenerationMechanisms_.containsKey(new Long(mechanismCode));
+        return keyGenerationMechanisms_.contains(new Long(mechanismCode));
 	}
 
 	/**
@@ -2033,33 +1455,25 @@ public class Functions {
 	 */
 	public static boolean isKeyPairGenerationMechanism(long mechanismCode) {
 		// build the hashtable on demand (=first use)
-		if (keyPairGenerationMechanisms_ == null) {
-			Hashtable keyPairGenerationMechanisms = new Hashtable();
-			keyPairGenerationMechanisms.put(
-			    new Long(PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_RSA_PKCS_KEY_PAIR_GEN);
-			keyPairGenerationMechanisms.put(
-			    new Long(PKCS11Constants.CKM_RSA_X9_31_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_RSA_X9_31_KEY_PAIR_GEN);
-			keyPairGenerationMechanisms.put(new Long(PKCS11Constants.CKM_DSA_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_DSA_KEY_PAIR_GEN);
-			keyPairGenerationMechanisms.put(new Long(PKCS11Constants.CKM_DH_PKCS_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_DH_PKCS_KEY_PAIR_GEN);
-			keyPairGenerationMechanisms.put(new Long(PKCS11Constants.CKM_KEA_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_KEA_KEY_PAIR_GEN);
-			keyPairGenerationMechanisms.put(new Long(PKCS11Constants.CKM_ECDSA_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_ECDSA_KEY_PAIR_GEN);
-			keyPairGenerationMechanisms.put(new Long(PKCS11Constants.CKM_EC_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_EC_KEY_PAIR_GEN);
-			keyPairGenerationMechanisms.put(new Long(PKCS11Constants.CKM_DH_PKCS_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_DH_PKCS_KEY_PAIR_GEN);
-			keyPairGenerationMechanisms.put(
-			    new Long(PKCS11Constants.CKM_X9_42_DH_KEY_PAIR_GEN),
-			    PKCS11Constants.NAME_CKM_X9_42_DH_KEY_PAIR_GEN);
-			keyPairGenerationMechanisms_ = keyPairGenerationMechanisms;
-		}
+        if (keyPairGenerationMechanisms_ == null) {
+            long[] mechs = new long[]{
+                    PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN,
+                    PKCS11Constants.CKM_RSA_X9_31_KEY_PAIR_GEN,
+                    PKCS11Constants.CKM_DSA_KEY_PAIR_GEN,
+                    PKCS11Constants.CKM_EC_KEY_PAIR_GEN,
+                    PKCS11Constants.CKM_DH_PKCS_KEY_PAIR_GEN,
+                    PKCS11Constants.CKM_X9_42_DH_KEY_PAIR_GEN,
+                    PKCS11Constants.CKM_GOSTR3410_KEY_PAIR_GEN
+            };
+            
+            Set<Long> mechanisms = new HashSet<>();
+            for (Long mech : mechs) {
+                mechanisms.add(mech);
+            }
+            keyPairGenerationMechanisms_ = mechanisms;
+        }
 
-		return keyPairGenerationMechanisms_.containsKey(new Long(mechanismCode));
+        return keyPairGenerationMechanisms_.contains(new Long(mechanismCode));
 	}
 
 	/**
@@ -2080,101 +1494,52 @@ public class Functions {
 	public static boolean isWrapUnwrapMechanism(long mechanismCode) {
 		// build the hashtable on demand (=first use)
 		if (wrapUnwrapMechanisms_ == null) {
-			Hashtable wrapUnwrapMechanisms = new Hashtable();
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_RSA_PKCS),
-			    PKCS11Constants.NAME_CKM_RSA_PKCS);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_RSA_X_509),
-			    PKCS11Constants.NAME_CKM_RSA_X_509);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_RSA_PKCS_OAEP),
-			    PKCS11Constants.NAME_CKM_RSA_PKCS_OAEP);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_RC2_ECB),
-			    PKCS11Constants.NAME_CKM_RC2_ECB);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_RC2_CBC),
-			    PKCS11Constants.NAME_CKM_RC2_CBC);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_RC2_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_RC2_CBC_PAD);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_DES_ECB),
-			    PKCS11Constants.NAME_CKM_DES_ECB);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_DES_CBC),
-			    PKCS11Constants.NAME_CKM_DES_CBC);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_DES_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_DES_CBC_PAD);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_DES3_ECB),
-			    PKCS11Constants.NAME_CKM_DES3_ECB);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_DES3_CBC),
-			    PKCS11Constants.NAME_CKM_DES3_CBC);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_DES3_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_DES3_CBC_PAD);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_CDMF_ECB),
-			    PKCS11Constants.NAME_CKM_CDMF_ECB);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_CDMF_CBC),
-			    PKCS11Constants.NAME_CKM_CDMF_CBC);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_CDMF_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_CDMF_CBC_PAD);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_CAST_ECB),
-			    PKCS11Constants.NAME_CKM_CAST_ECB);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_CAST_CBC),
-			    PKCS11Constants.NAME_CKM_CAST_CBC);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_CAST_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_CAST_CBC_PAD);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_CAST3_ECB),
-			    PKCS11Constants.NAME_CKM_CAST3_ECB);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_CAST3_CBC),
-			    PKCS11Constants.NAME_CKM_CAST3_CBC);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_CAST3_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_CAST3_CBC_PAD);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_CAST5_ECB),
-			    PKCS11Constants.NAME_CKM_CAST5_ECB);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_CAST128_ECB),
-			    PKCS11Constants.NAME_CKM_CAST128_ECB);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_CAST5_CBC),
-			    PKCS11Constants.NAME_CKM_CAST5_CBC);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_CAST128_CBC),
-			    PKCS11Constants.NAME_CKM_CAST128_CBC);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_CAST5_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_CAST5_CBC_PAD);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_CAST128_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_CAST128_CBC_PAD);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_RC5_ECB),
-			    PKCS11Constants.NAME_CKM_RC5_ECB);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_RC5_CBC),
-			    PKCS11Constants.NAME_CKM_RC5_CBC);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_RC5_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_RC5_CBC_PAD);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_IDEA_ECB),
-			    PKCS11Constants.NAME_CKM_IDEA_ECB);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_IDEA_CBC),
-			    PKCS11Constants.NAME_CKM_IDEA_CBC);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_IDEA_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_IDEA_CBC_PAD);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_KEY_WRAP_LYNKS),
-			    PKCS11Constants.NAME_CKM_KEY_WRAP_LYNKS);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_KEY_WRAP_SET_OAEP),
-			    PKCS11Constants.NAME_CKM_KEY_WRAP_SET_OAEP);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_SKIPJACK_WRAP),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_WRAP);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_SKIPJACK_PRIVATE_WRAP),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_PRIVATE_WRAP);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_SKIPJACK_RELAYX),
-			    PKCS11Constants.NAME_CKM_SKIPJACK_RELAYX);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_BATON_WRAP),
-			    PKCS11Constants.NAME_CKM_BATON_WRAP);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_JUNIPER_WRAP),
-			    PKCS11Constants.NAME_CKM_JUNIPER_WRAP);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_AES_ECB),
-			    PKCS11Constants.NAME_CKM_AES_ECB);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_AES_CBC),
-			    PKCS11Constants.NAME_CKM_AES_CBC);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_AES_CBC_PAD),
-			    PKCS11Constants.NAME_CKM_AES_CBC_PAD);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_BLOWFISH_CBC),
-			    PKCS11Constants.NAME_CKM_BLOWFISH_CBC);
-			wrapUnwrapMechanisms.put(new Long(PKCS11Constants.CKM_TWOFISH_CBC),
-			    PKCS11Constants.NAME_CKM_TWOFISH_CBC);
+		    long[] mechs = new long[] {
+		            PKCS11Constants.CKM_RSA_PKCS,
+		            PKCS11Constants.CKM_RSA_PKCS_OAEP,
+		            PKCS11Constants.CKM_RSA_X_509,
+		            PKCS11Constants.CKM_RSA_PKCS_TPM_1_1,
+		            PKCS11Constants.CKM_RSA_PKCS_OAEP_TPM_1_1,
+		            PKCS11Constants.CKM_ECDH_AES_KEY_WRAP,
+		            PKCS11Constants.CKM_AES_ECB,
+		            PKCS11Constants.CKM_AES_CBC,
+		            PKCS11Constants.CKM_AES_CBC_PAD,
+		            PKCS11Constants.CKM_AES_OFB,
+		            PKCS11Constants.CKM_AES_CFB64,
+		            PKCS11Constants.CKM_AES_CFB8,
+		            PKCS11Constants.CKM_AES_CFB128,
+		            PKCS11Constants.CKM_AES_CFB1,
+		            PKCS11Constants.CKM_AES_CTR,
+		            PKCS11Constants.CKM_AES_CTS,
+		            PKCS11Constants.CKM_AES_GCM,
+		            PKCS11Constants.CKM_AES_CCM,
+		            PKCS11Constants.CKM_AES_KEY_WRAP,
+		            PKCS11Constants.CKM_DES3_ECB,
+		            PKCS11Constants.CKM_DES3_CBC,
+		            PKCS11Constants.CKM_DES3_CBC_PAD,
+		            PKCS11Constants.CKM_BLOWFISH_CBC,
+		            PKCS11Constants.CKM_BLOWFISH_CBC_PAD,
+		            PKCS11Constants.CKM_CAMELLIA_ECB,
+		            PKCS11Constants.CKM_CAMELLIA_CBC,
+		            PKCS11Constants.CKM_CAMELLIA_CBC_PAD,
+		            PKCS11Constants.CKM_ARIA_ECB,
+		            PKCS11Constants.CKM_ARIA_CBC,
+		            PKCS11Constants.CKM_ARIA_CBC_PAD,
+		            PKCS11Constants.CKM_SEED_CBC_PAD,
+		            PKCS11Constants.CKM_KIP_WRAP,
+		            PKCS11Constants.CKM_GOST28147_ECB,
+		            PKCS11Constants.CKM_GOST28147,
+		            PKCS11Constants.CKM_GOST28147_KEY_WRAP,
+		            PKCS11Constants.CKM_GOSTR3410_KEY_WRAP
+		    };
+			Set<Long> wrapUnwrapMechanisms = new HashSet<>();
+			for (long m : mechs) {
+			    wrapUnwrapMechanisms.add(m);
+			}
 			wrapUnwrapMechanisms_ = wrapUnwrapMechanisms;
 		}
 
-		return wrapUnwrapMechanisms_.containsKey(new Long(mechanismCode));
+		return wrapUnwrapMechanisms_.contains(mechanismCode);
 	}
 
 	/**
@@ -2193,87 +1558,76 @@ public class Functions {
 	 */
 	public static boolean isKeyDerivationMechanism(long mechanismCode) {
 		// build the hashtable on demand (=first use)
-		if (keyDerivationMechanisms_ == null) {
-			Hashtable keyDerivationMechanisms = new Hashtable();
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_DH_PKCS_DERIVE),
-			    PKCS11Constants.NAME_CKM_DH_PKCS_DERIVE);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_CONCATENATE_BASE_AND_KEY),
-			    PKCS11Constants.NAME_CKM_CONCATENATE_BASE_AND_KEY);
-			keyDerivationMechanisms.put(
-			    new Long(PKCS11Constants.CKM_CONCATENATE_BASE_AND_DATA),
-			    PKCS11Constants.NAME_CKM_CONCATENATE_BASE_AND_DATA);
-			keyDerivationMechanisms.put(
-			    new Long(PKCS11Constants.CKM_CONCATENATE_DATA_AND_BASE),
-			    PKCS11Constants.NAME_CKM_CONCATENATE_DATA_AND_BASE);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_XOR_BASE_AND_DATA),
-			    PKCS11Constants.NAME_CKM_XOR_BASE_AND_DATA);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_EXTRACT_KEY_FROM_KEY),
-			    PKCS11Constants.NAME_CKM_EXTRACT_KEY_FROM_KEY);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE),
-			    PKCS11Constants.NAME_CKM_SSL3_MASTER_KEY_DERIVE);
-			keyDerivationMechanisms.put(
-			    new Long(PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE_DH),
-			    PKCS11Constants.NAME_CKM_SSL3_MASTER_KEY_DERIVE_DH);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_SSL3_KEY_AND_MAC_DERIVE),
-			    PKCS11Constants.NAME_CKM_SSL3_KEY_AND_MAC_DERIVE);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_TLS_MASTER_KEY_DERIVE),
-			    PKCS11Constants.NAME_CKM_TLS_MASTER_KEY_DERIVE);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_TLS_MASTER_KEY_DERIVE_DH),
-			    PKCS11Constants.NAME_CKM_TLS_MASTER_KEY_DERIVE_DH);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_TLS_KEY_AND_MAC_DERIVE),
-			    PKCS11Constants.NAME_CKM_TLS_KEY_AND_MAC_DERIVE);
+        if (keyDerivationMechanisms_ == null) {
+            long[] mechs = new long[]{
+                    PKCS11Constants.CKM_ECDH1_DERIVE,
+                    PKCS11Constants.CKM_ECDH1_COFACTOR_DERIVE,
+                    PKCS11Constants.CKM_ECMQV_DERIVE,
+                    PKCS11Constants.CKM_DH_PKCS_DERIVE,
+                    PKCS11Constants.CKM_X9_42_DH_DERIVE,
+                    PKCS11Constants.CKM_X9_42_DH_HYBRID_DERIVE,
+                    PKCS11Constants.CKM_X9_42_MQV_DERIVE,
+                    PKCS11Constants.CKM_AES_GMAC,
+                    PKCS11Constants.CKM_DES_ECB_ENCRYPT_DATA,
+                    PKCS11Constants.CKM_DES_CBC_ENCRYPT_DATA,
+                    PKCS11Constants.CKM_DES3_ECB_ENCRYPT_DATA,
+                    PKCS11Constants.CKM_DES3_CBC_ENCRYPT_DATA,
+                    PKCS11Constants.CKM_AES_ECB_ENCRYPT_DATA,
+                    PKCS11Constants.CKM_AES_CBC_ENCRYPT_DATA,
+                    PKCS11Constants.CKM_SHA1_KEY_DERIVATION,
+                    PKCS11Constants.CKM_SHA224_KEY_DERIVATION,
+                    PKCS11Constants.CKM_SHA256_KEY_DERIVATION,
+                    PKCS11Constants.CKM_SHA384_KEY_DERIVATION,
+                    PKCS11Constants.CKM_SHA512_KEY_DERIVATION,
+                    PKCS11Constants.CKM_SHA512_224_KEY_DERIVATION,
+                    PKCS11Constants.CKM_SHA512_256_KEY_DERIVATION,
+                    PKCS11Constants.CKM_SHA512_T_KEY_DERIVATION,
+                    PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE,
+                    PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE_DH,
+                    PKCS11Constants.CKM_SSL3_KEY_AND_MAC_DERIVE,
+                    PKCS11Constants.CKM_TLS12_MASTER_KEY_DERIVE,
+                    PKCS11Constants.CKM_TLS12_MASTER_KEY_DERIVE_DH,
+                    PKCS11Constants.CKM_TLS12_KEY_AND_MAC_DERIVE,
+                    PKCS11Constants.CKM_TLS12_KEY_SAFE_DERIVE,
+                    PKCS11Constants.CKM_TLS_KDF,
+                    PKCS11Constants.CKM_WTLS_MASTER_KEY_DERIVE,
+                    PKCS11Constants.CKM_WTLS_MASTER_KEY_DERIVE_DH_ECC,
+                    PKCS11Constants.CKM_WTLS_SERVER_KEY_AND_MAC_DERIVE,
+                    PKCS11Constants.CKM_WTLS_CLIENT_KEY_AND_MAC_DERIVE,
+                    PKCS11Constants.CKM_WTLS_PRF,
+                    PKCS11Constants.CKM_CONCATENATE_BASE_AND_KEY,
+                    PKCS11Constants.CKM_CONCATENATE_BASE_AND_DATA,
+                    PKCS11Constants.CKM_CONCATENATE_DATA_AND_BASE,
+                    PKCS11Constants.CKM_XOR_BASE_AND_DATA,
+                    PKCS11Constants.CKM_EXTRACT_KEY_FROM_KEY,
+                    PKCS11Constants.CKM_CAMELLIA_ECB_ENCRYPT_DATA,
+                    PKCS11Constants.CKM_CAMELLIA_CBC_ENCRYPT_DATA,
+                    PKCS11Constants.CKM_ARIA_ECB_ENCRYPT_DATA,
+                    PKCS11Constants.CKM_ARIA_CBC_ENCRYPT_DATA,
+                    PKCS11Constants.CKM_SEED_ECB_ENCRYPT_DATA,
+                    PKCS11Constants.CKM_SEED_CBC_ENCRYPT_DATA,
+                    PKCS11Constants.CKM_KIP_DERIVE,
+                    PKCS11Constants.CKM_GOSTR3410_DERIVE,
+                    PKCS11Constants.CKM_SHA3_224_KEY_DERIVE,
+                    PKCS11Constants.CKM_SHA3_256_KEY_DERIVE,
+                    PKCS11Constants.CKM_SHA3_384_KEY_DERIVE,
+                    PKCS11Constants.CKM_SHA3_512_KEY_DERIVE,
+                    PKCS11Constants.CKM_SHAKE_128_KEY_DERIVE,
+                    PKCS11Constants.CKM_SHAKE_256_KEY_DERIVE,
+                    PKCS11Constants.CKM_SHA256_KEY_DERIVATION,
+                    PKCS11Constants.CKM_SHA256_KEY_DERIVATION,
+                    PKCS11Constants.CKM_SHA256_KEY_DERIVATION,
+                    PKCS11Constants.CKM_SHA256_KEY_DERIVATION
+            };
+            
+            Set<Long> mechanisms = new HashSet<>();
+            for (Long mech : mechs) {
+                mechanisms.add(mech);
+            }
+            keyDerivationMechanisms_ = mechanisms;
+        }
 
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_TLS_PRF),
-			    PKCS11Constants.NAME_CKM_TLS_PRF);
-
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_MD5_KEY_DERIVATION),
-			    PKCS11Constants.NAME_CKM_MD5_KEY_DERIVATION);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_MD2_KEY_DERIVATION),
-			    PKCS11Constants.NAME_CKM_MD2_KEY_DERIVATION);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_SHA1_KEY_DERIVATION),
-			    PKCS11Constants.NAME_CKM_SHA1_KEY_DERIVATION);
-
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_SHA256_KEY_DERIVATION),
-			    PKCS11Constants.NAME_CKM_SHA256_KEY_DERIVATION);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_SHA384_KEY_DERIVATION),
-			    PKCS11Constants.NAME_CKM_SHA384_KEY_DERIVATION);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_SHA512_KEY_DERIVATION),
-			    PKCS11Constants.NAME_CKM_SHA512_KEY_DERIVATION);
-
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_WTLS_MASTER_KEY_DERIVE),
-			    PKCS11Constants.NAME_CKM_TLS_MASTER_KEY_DERIVE);
-			keyDerivationMechanisms.put(new Long(
-			    PKCS11Constants.CKM_WTLS_MASTER_KEY_DERIVE_DH_ECC),
-			    PKCS11Constants.NAME_CKM_WTLS_MASTER_KEY_DERIVE_DH_ECC);
-			keyDerivationMechanisms.put(new Long(
-			    PKCS11Constants.CKM_WTLS_SERVER_KEY_AND_MAC_DERIVE),
-			    PKCS11Constants.NAME_CKM_WTLS_SERVER_KEY_AND_MAC_DERIVE);
-			keyDerivationMechanisms.put(new Long(
-			    PKCS11Constants.CKM_WTLS_CLIENT_KEY_AND_MAC_DERIVE),
-			    PKCS11Constants.NAME_CKM_WTLS_CLIENT_KEY_AND_MAC_DERIVE);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_WTLS_PRF),
-			    PKCS11Constants.NAME_CKM_WTLS_PRF);
-
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_KEA_KEY_DERIVE),
-			    PKCS11Constants.NAME_CKM_KEA_KEY_DERIVE);
-
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_DES_ECB_ENCRYPT_DATA),
-			    PKCS11Constants.NAME_CKM_DES_ECB_ENCRYPT_DATA);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_DES_CBC_ENCRYPT_DATA),
-			    PKCS11Constants.NAME_CKM_DES_CBC_ENCRYPT_DATA);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_DES3_ECB_ENCRYPT_DATA),
-			    PKCS11Constants.NAME_CKM_DES3_ECB_ENCRYPT_DATA);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_DES3_CBC_ENCRYPT_DATA),
-			    PKCS11Constants.NAME_CKM_DES3_CBC_ENCRYPT_DATA);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_AES_ECB_ENCRYPT_DATA),
-			    PKCS11Constants.NAME_CKM_AES_ECB_ENCRYPT_DATA);
-			keyDerivationMechanisms.put(new Long(PKCS11Constants.CKM_AES_CBC_ENCRYPT_DATA),
-			    PKCS11Constants.NAME_CKM_AES_CBC_ENCRYPT_DATA);
-
-			keyDerivationMechanisms_ = keyDerivationMechanisms;
-		}
-
-		return keyDerivationMechanisms_.containsKey(new Long(mechanismCode));
+        return keyDerivationMechanisms_.contains(new Long(mechanismCode));
 	}
 
 }
