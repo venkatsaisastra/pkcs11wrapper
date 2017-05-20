@@ -804,6 +804,9 @@ public class Session {
     public int encrypt(byte[] in, int inOfs, int inLen,
             byte[] out, int outOfs, int outLen)
         throws TokenException {
+        Util.requireNotNull("in", in);
+        Util.requireNotNull("out", out);
+
         try {
             return pkcs11Module_.C_Encrypt(sessionHandle_, in, inOfs, inLen,
                     out, outOfs, outLen);
@@ -831,6 +834,9 @@ public class Session {
     public int encryptUpdate(byte[] in, int inOfs, int inLen,
             byte[] out, int outOfs, int outLen)
         throws TokenException {
+        Util.requireNotNull("in", in);
+        Util.requireNotNull("out", out);
+
         try {
             return pkcs11Module_.C_EncryptUpdate(sessionHandle_, 0, in, inOfs,
                     inLen, 0, out, outOfs, outLen);
@@ -853,6 +859,8 @@ public class Session {
      */
     public int encryptFinal(byte[] out, int outOfs, int outLen)
         throws TokenException {
+        Util.requireNotNull("out", out);
+
         try {
             return pkcs11Module_.C_EncryptFinal(sessionHandle_, 0,
                     out, outOfs, outLen);
@@ -911,6 +919,9 @@ public class Session {
     public int decrypt(byte[] in, int inOfs, int inLen,
             byte[] out, int outOfs, int outLen)
         throws TokenException {
+        Util.requireNotNull("in", in);
+        Util.requireNotNull("out", out);
+
         try {
             return pkcs11Module_.C_Decrypt(sessionHandle_, in, inOfs, inLen,
                     out, outOfs, outLen);
@@ -938,6 +949,9 @@ public class Session {
     public int decryptUpdate(byte[] in, int inOfs, int inLen, byte[] out,
             int outOfs, int outLen)
         throws TokenException {
+        Util.requireNotNull("in", in);
+        Util.requireNotNull("out", out);
+
         try {
             return pkcs11Module_.C_DecryptUpdate(sessionHandle_, 0, in, inOfs,
                     inLen, 0, out, outOfs, outLen);
@@ -960,6 +974,8 @@ public class Session {
      */
     public int decryptFinal(byte[] out, int outOfs, int outLen)
         throws TokenException {
+        Util.requireNotNull("out", out);
+
         try {
             return pkcs11Module_.C_DecryptFinal(sessionHandle_, 0,
                     out, outOfs, outLen);
@@ -1018,6 +1034,9 @@ public class Session {
     public int digestSingle(Mechanism mechanism, byte[] in, int inOfs,
             int inLen, byte[] digest, int digestOfs, int digestLen)
         throws TokenException {
+        Util.requireNotNull("in", in);
+        Util.requireNotNull("digest", digest);
+
         try {
             return pkcs11Module_.C_DigestSingle(sessionHandle_,
                     getCkMechanism(mechanism),
@@ -1043,6 +1062,8 @@ public class Session {
      */
     public void digestUpdate(byte[] part, int partOfs, int partLen)
         throws TokenException {
+        Util.requireNotNull("part", part);
+
         try {
             pkcs11Module_.C_DigestUpdate(sessionHandle_, 0, part, partOfs,
                     partLen);
@@ -1087,6 +1108,8 @@ public class Session {
      */
     public int digestFinal(byte[] digest, int digestOfs, int digestLen)
         throws TokenException {
+        Util.requireNotNull("digest", digest);
+
         try {
             return pkcs11Module_.C_DigestFinal(sessionHandle_,
                     digest, digestOfs, digestLen);
@@ -1143,6 +1166,8 @@ public class Session {
      */
     public byte[] sign(byte[] data)
         throws TokenException {
+        Util.requireNotNull("data", data);
+
         try {
             return pkcs11Module_.C_Sign(sessionHandle_, data);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
@@ -1166,6 +1191,8 @@ public class Session {
      */
     public void signUpdate(byte[] in, int inOfs, int inLen)
         throws TokenException {
+        Util.requireNotNull("in", in);
+
         try {
             pkcs11Module_.C_SignUpdate(sessionHandle_, 0, in, inOfs, inLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
@@ -1249,6 +1276,9 @@ public class Session {
     public int signRecover(byte[] in, int inOfs,
             int inLen, byte[] out, int outOfs, int outLen)
         throws TokenException {
+        Util.requireNotNull("in", in);
+        Util.requireNotNull("out", out);
+
         try {
             return pkcs11Module_.C_SignRecover(sessionHandle_, in, inOfs, inLen,
                     out, outOfs, outLen);
@@ -1314,6 +1344,8 @@ public class Session {
      */
     public void verify(byte[] data, byte[] signature)
         throws TokenException {
+        Util.requireNotNull("signature", signature);
+
         try {
             pkcs11Module_.C_Verify(sessionHandle_, data, signature);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
@@ -1336,6 +1368,8 @@ public class Session {
      */
     public void verifyUpdate(byte[] in, int inOfs, int inLen)
         throws TokenException {
+        Util.requireNotNull("in", in);
+
         try {
             pkcs11Module_.C_VerifyUpdate(sessionHandle_, 0, in, inOfs, inLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
@@ -1362,6 +1396,8 @@ public class Session {
      */
     public void verifyFinal(byte[] signature)
         throws TokenException {
+        Util.requireNotNull("signature", signature);
+
         try {
             pkcs11Module_.C_VerifyFinal(sessionHandle_, signature);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
@@ -1417,6 +1453,9 @@ public class Session {
     public int verifyRecover(byte[] in, int inOfs,
             int inLen, byte[] out, int outOfs, int outLen)
         throws TokenException {
+        Util.requireNotNull("in", in);
+        Util.requireNotNull("out", out);
+
         try {
             return pkcs11Module_.C_VerifyRecover(sessionHandle_,
                     in, inOfs, inLen, out, outOfs, outLen);
@@ -1661,6 +1700,8 @@ public class Session {
             byte[] wrappedKey,
             Object keyTemplate)
         throws TokenException {
+        Util.requireNotNull("wrappedKey", wrappedKey);
+
         CK_MECHANISM ckMechanism = new CK_MECHANISM();
         ckMechanism.mechanism = mechanism.getMechanismCode();
         Parameters parameters = mechanism.getParameters();
