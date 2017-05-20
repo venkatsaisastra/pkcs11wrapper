@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -44,9 +44,10 @@ package iaik.pkcs.pkcs11.objects;
 
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
-import sun.security.pkcs11.wrapper.PKCS11Exception;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 
 /**
  * This is the base class for hardware feature classes. Objects of this class
@@ -65,7 +66,8 @@ public class HardwareFeature extends Object {
 
     /**
      * This interface defines the available hardware feature types as defined by
-     * PKCS#11 2.20: MONOTONIC_COUNTER, CLOCK, CKH_USER_INTERFAC or VENDOR_DEFINED.
+     * PKCS#11 2.20: MONOTONIC_COUNTER, CLOCK, CKH_USER_INTERFAC or
+     * VENDOR_DEFINED.
      *
      * @author Karl Scheibelhofer
      * @version 1.0
@@ -74,33 +76,35 @@ public class HardwareFeature extends Object {
     public interface FeatureType {
 
         /**
-         * The indentifier for a monotonic counter.
+         * The identifier for a monotonic counter.
          */
-        static public final Long MONOTONIC_COUNTER = new Long(
+        public static final Long MONOTONIC_COUNTER = new Long(
             PKCS11Constants.CKH_MONOTONIC_COUNTER);
 
         /**
-         * The indentifier for a clock.
+         * The identifier for a clock.
          */
-        static public final Long CLOCK = new Long(PKCS11Constants.CKH_CLOCK);
+        public static final Long CLOCK = new Long(PKCS11Constants.CKH_CLOCK);
 
         /**
-         * The indentifier for a user interface.
+         * The identifier for a user interface.
          */
-        static public final Long USER_INTERFACE = new Long(PKCS11Constants.CKH_USER_INTERFACE);
+        public static final Long USER_INTERFACE
+            = new Long(PKCS11Constants.CKH_USER_INTERFACE);
 
         /**
-         * The indentifier for a VENDOR_DEFINED hardware feature. Any Long object
-         * with a value bigger than this one is also a valid vendor-defined hardware
-         * feature type identifier.
+         * The identifier for a VENDOR_DEFINED hardware feature. Any Long object
+         * with a value bigger than this one is also a valid vendor-defined
+         * hardware feature type identifier.
          */
-        static public final Long VENDOR_DEFINED = new Long(PKCS11Constants.CKH_VENDOR_DEFINED);
+        public static final Long VENDOR_DEFINED
+            = new Long(PKCS11Constants.CKH_VENDOR_DEFINED);
 
     }
 
     /**
-     * If an application uses vendor defined hardware features, it must implement
-     * this interface and install such an object handler using
+     * If an application uses vendor defined hardware features, it must
+     * implement this interface and install such an object handler using
      * setVendorDefinedHardwareFeatureBuilder.
      *
      * @author Karl Scheibelhofer
@@ -110,41 +114,46 @@ public class HardwareFeature extends Object {
     public interface VendorDefinedHardwareFeatureBuilder {
 
         /**
-         * This method should instanciate an Object of this class or of any
-         * sub-class. It can use the given handles and PKCS#11 module to retrieve
-         * attributes of the PKCS#11 object from the token.
+         * This method should instantiate an Object of this class or of any
+         * sub-class. It can use the given handles and PKCS#11 module to
+         * retrieve attributes of the PKCS#11 object from the token.
          *
-         * @param session The session to use for reading attributes.
-         *                This session must have the appropriate rights; i.e.
-         *                it must be a user-session, if it is a private object.
-         * @param objectHandle The object handle as given from the PKCS#111 module.
+         * @param session
+     *              The session to use for reading attributes. This session must
+         *          have the appropriate rights; i.e. it must be a user-session,
+         *          if it is a private object.
+         * @param objectHandle
+     *              The object handle as given from the PKCS#111 module.
          * @return The object representing the PKCS#11 object.
          *         The returned object can be casted to the
          *         according sub-class.
-         * @exception PKCS11Exception If getting the attributes failed.
+         * @exception PKCS11Exception
+         *              If getting the attributes failed.
          * @preconditions (session <> null)
          * @postconditions (result <> null)
          */
+        @SuppressWarnings("restriction")
         public Object build(Session session, long objectHandle)
-            throws PKCS11Exception;
+            throws sun.security.pkcs11.wrapper.PKCS11Exception;
 
     }
 
     /**
      * The currently set vendor defined hardware feature builder, or null.
      */
-    protected static VendorDefinedHardwareFeatureBuilder vendorHardwareFeatureBuilder_;
+    protected static VendorDefinedHardwareFeatureBuilder
+        vendorHardwareFeatureBuilder_;
 
     /**
-     * The type of this hardware feature. Its value is one of FeatureType, or one
-     * that has a bigger value than VENDOR_DEFINED.
+     * The type of this hardware feature. Its value is one of FeatureType, or
+     * one that has a bigger value than VENDOR_DEFINED.
      */
     protected HardwareFeatureTypeAttribute hardwareFeatureType_;
 
     /**
-     * The default constructor. An application use this constructor to instanciate
-     * a hardware feature that serves as a template. It may also be useful for
-     * working with vendor-defined hardware features.
+     * The default constructor. An application use this constructor to
+     * instantiate a hardware feature that serves as a template. It may also be
+     * useful for working with vendor-defined hardware features.
      *
      * @preconditions
      * @postconditions
@@ -155,19 +164,22 @@ public class HardwareFeature extends Object {
     }
 
     /**
-     * Called by getInstance to create an instance of a PKCS#11 hardware feature.
+     * Called by getInstance to create an instance of a PKCS#11 hardware
+     * feature.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
     protected HardwareFeature(Session session, long objectHandle)
-        throws TokenException
-    {
+        throws TokenException {
         super(session, objectHandle);
         objectClass_.setLongValue(ObjectClass.HW_FEATURE);
     }
@@ -175,17 +187,15 @@ public class HardwareFeature extends Object {
     /**
      * Get the given hardware feature type as string.
      *
-     * @param hardwareFeatureType The hardware feature type to get as string.
+     * @param hardwareFeatureType
+     *          The hardware feature type to get as string.
      * @return A string denoting the object hardware feature type; e.g. "Clock".
      * @preconditions (hardwareFeatureType <> null)
      * @postconditions (result <> null)
      */
     public static String getHardwareFeatureTypeName(Long hardwareFeatureType) {
+        Util.requireNotNull("hardwareFeatureType", hardwareFeatureType);
         String hardwareFeatureTypeName;
-
-        if (hardwareFeatureType == null) {
-            throw new NullPointerException("Argument \"hardwareFeatureType\" must not be null.");
-        }
 
         if (hardwareFeatureType.equals(FeatureType.MONOTONIC_COUNTER)) {
             hardwareFeatureTypeName = "Monotonic Counter";
@@ -193,7 +203,8 @@ public class HardwareFeature extends Object {
             hardwareFeatureTypeName = "Clock";
         } else if (hardwareFeatureType.equals(FeatureType.USER_INTERFACE)) {
             hardwareFeatureTypeName = "User Interface";
-        } else if ((hardwareFeatureType.longValue() & FeatureType.VENDOR_DEFINED.longValue()) != 0L) {
+        } else if ((hardwareFeatureType.longValue()
+                        & FeatureType.VENDOR_DEFINED.longValue()) != 0L) {
             hardwareFeatureTypeName = "Vendor Defined";
         } else {
             hardwareFeatureTypeName = "<unknown>";
@@ -203,39 +214,41 @@ public class HardwareFeature extends Object {
     }
 
     /**
-     * Called by sub-classes to create an instance of a PKCS#11 hardware feature.
-     * This method reads the hardware feature type attribute and calls the
-     * getInstance method of the according sub-class.
+     * Called by sub-classes to create an instance of a PKCS#11 hardware
+     * feature. This method reads the hardware feature type attribute and calls
+     * the getInstance method of the according sub-class.
      * If the hardware feature type is a vendor defined it uses the
-     * VendorDefinedHardwareFeatureBuilder set by the application. If no hardware
-     * feature could be constructed, this method returns null.
+     * VendorDefinedHardwareFeatureBuilder set by the application. If no
+     * hardware feature could be constructed, this method returns null.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
      * @return The object representing the PKCS#11 object.
      *         The returned object can be casted to the
      *         according sub-class.
-     * @exception TokenException If getting the attributes failed.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
     public static Object getInstance(Session session, long objectHandle)
-        throws TokenException
-    {
-        if (session == null) {
-            throw new NullPointerException("Argument \"session\" must not be null.");
-        }
+        throws TokenException {
+        Util.requireNotNull("session", session);
 
-        HardwareFeatureTypeAttribute hardwareFeatureTypeAttribute = new HardwareFeatureTypeAttribute();
+        HardwareFeatureTypeAttribute hardwareFeatureTypeAttribute
+            = new HardwareFeatureTypeAttribute();
         getAttributeValue(session, objectHandle, hardwareFeatureTypeAttribute);
 
         Long hardwareFeatureType = hardwareFeatureTypeAttribute.getLongValue();
 
         Object newObject;
 
-        if (hardwareFeatureTypeAttribute.isPresent() && (hardwareFeatureType != null)) {
+        if (hardwareFeatureTypeAttribute.isPresent()
+                && (hardwareFeatureType != null)) {
             if (hardwareFeatureType.equals(FeatureType.MONOTONIC_COUNTER)) {
                 newObject = MonotonicCounter.getInstance(session, objectHandle);
             } else if (hardwareFeatureType.equals(FeatureType.CLOCK)) {
@@ -244,8 +257,8 @@ public class HardwareFeature extends Object {
                 // TODO: add user interface object
                 // newObject = UserInterface.getInstance(session, objectHandle);
                 newObject = getUnknownHardwareFeature(session, objectHandle);
-            } else if ((hardwareFeatureType.longValue() & FeatureType.VENDOR_DEFINED
-                .longValue()) != 0L) {
+            } else if ((hardwareFeatureType.longValue()
+                            & FeatureType.VENDOR_DEFINED.longValue()) != 0L) {
                 newObject = getUnknownHardwareFeature(session, objectHandle);
             } else {
                 newObject = getUnknownHardwareFeature(session, objectHandle);
@@ -258,33 +271,37 @@ public class HardwareFeature extends Object {
     }
 
     /**
-     * Try to create a hardware feature which has no or an unkown harware feature
-     * type attribute.
+     * Try to create a hardware feature which has no or an unknown hardware
+     * feature type attribute.
      * This implementation will try to use a vendor defined hardware feature
      * builder, if such has been set.
-     * If this is impossible or fails, it will create just
-     * a simple {@link iaik.pkcs.pkcs11.objects.HardwareFeature HardwareFeature}.
+     * If this is impossible or fails, it will create just a simple
+     * {@link iaik.pkcs.pkcs11.objects.HardwareFeature HardwareFeature}.
      *
-     * @param session The session to use.
-     * @param objectHandle The handle of the object
+     * @param session
+     *          The session to use.
+     * @param objectHandle
+     *          The handle of the object
      * @return A new Object.
-     * @throws TokenException If no object could be created.
+     * @throws TokenException
+     *           If no object could be created.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    protected static Object getUnknownHardwareFeature(Session session, long objectHandle)
-        throws TokenException
-    {
-        if (session == null) {
-            throw new NullPointerException("Argument \"session\" must not be null.");
-        }
+    @SuppressWarnings("restriction")
+    protected static Object getUnknownHardwareFeature(Session session,
+            long objectHandle)
+        throws TokenException {
+        Util.requireNotNull("session", session);
 
         Object newObject;
         if (vendorHardwareFeatureBuilder_ != null) {
             try {
-                newObject = vendorHardwareFeatureBuilder_.build(session, objectHandle);
-            } catch (PKCS11Exception ex) {
-                // we can just treat it like some unknown type of hardware feature
+                newObject = vendorHardwareFeatureBuilder_.build(session,
+                        objectHandle);
+            } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+                // we can just treat it like some unknown type of hardware
+                // feature
                 newObject = new HardwareFeature(session, objectHandle);
             }
         } else {
@@ -300,13 +317,14 @@ public class HardwareFeature extends Object {
      * create an* instance of an vendor-defined PKCS#11 hardware feature; i.e.
      * an instance of a vendor defined sub-class of this class.
      *
-     * @param builder The vendor-defined hardware feature builder. Null to clear
-     *                any previously installed vendor-defined builder.
+     * @param builder
+     *          The vendor-defined hardware feature builder. Null to clear any
+     *          previously installed vendor-defined builder.
      * @preconditions
      * @postconditions
      */
-    public static void setVendorDefinedHardwareFeatureBuilder(VendorDefinedHardwareFeatureBuilder builder)
-    {
+    public static void setVendorDefinedHardwareFeatureBuilder(
+            VendorDefinedHardwareFeatureBuilder builder) {
         vendorHardwareFeatureBuilder_ = builder;
     }
 
@@ -318,8 +336,8 @@ public class HardwareFeature extends Object {
      * @preconditions
      * @postconditions
      */
-    public static VendorDefinedHardwareFeatureBuilder getVendorDefinedHardwareFeatureBuilder()
-    {
+    public static VendorDefinedHardwareFeatureBuilder
+        getVendorDefinedHardwareFeatureBuilder() {
         return vendorHardwareFeatureBuilder_;
     }
 
@@ -329,16 +347,16 @@ public class HardwareFeature extends Object {
      * implementation of this method for each class separately (see use in
      * clone()).
      *
-     * @param object The object to handle.
+     * @param object
+     *          The object to handle.
      * @preconditions (object <> null)
      * @postconditions
      */
     protected static void putAttributesInTable(HardwareFeature object) {
-        if (object == null) {
-            throw new NullPointerException("Argument \"object\" must not be null.");
-        }
+        Util.requireNotNull("object", object);
 
-        object.attributeTable_.put(Attribute.HW_FEATURE_TYPE, object.hardwareFeatureType_);
+        object.attributeTable_.put(Attribute.HW_FEATURE_TYPE,
+            object.hardwareFeatureType_);
     }
 
     /**
@@ -348,6 +366,7 @@ public class HardwareFeature extends Object {
      * @preconditions
      * @postconditions
      */
+    @Override
     protected void allocateAttributes() {
         super.allocateAttributes();
 
@@ -365,13 +384,15 @@ public class HardwareFeature extends Object {
      *                 and (result instanceof HardwareFeature)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         HardwareFeature clone = (HardwareFeature) super.clone();
 
-        clone.hardwareFeatureType_ = (HardwareFeatureTypeAttribute) this.hardwareFeatureType_
-            .clone();
+        clone.hardwareFeatureType_ = (HardwareFeatureTypeAttribute)
+                this.hardwareFeatureType_.clone();
 
-        putAttributesInTable(clone); // put all cloned attributes into the new table
+        // put all cloned attributes into the new table
+        putAttributesInTable(clone);
 
         return clone;
     }
@@ -380,23 +401,26 @@ public class HardwareFeature extends Object {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof HardwareFeature) {
-            HardwareFeature other = (HardwareFeature) otherObject;
-            equal = (this == other)
-                || (super.equals(other) && this.hardwareFeatureType_
-                    .equals(other.hardwareFeatureType_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof HardwareFeature)) {
+            return false;
+        }
+
+        HardwareFeature other = (HardwareFeature) otherObject;
+        return super.equals(other)
+                && this.hardwareFeatureType_.equals(other.hardwareFeatureType_);
     }
 
     /**
@@ -413,13 +437,14 @@ public class HardwareFeature extends Object {
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return hardwareFeatureType_.hashCode();
     }
@@ -433,13 +458,13 @@ public class HardwareFeature extends Object {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder(128);
 
         buffer.append(super.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Hardware Feature Type: ");
         if (hardwareFeatureType_ != null) {
             buffer.append(hardwareFeatureType_.toString());

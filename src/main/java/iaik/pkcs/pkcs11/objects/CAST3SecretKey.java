@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -44,7 +44,8 @@ package iaik.pkcs.pkcs11.objects;
 
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent CAST3 secret keys as specified by PKCS#11
@@ -68,7 +69,7 @@ public class CAST3SecretKey extends SecretKey {
     protected LongAttribute valueLen_;
 
     /**
-     * Deafult Constructor.
+     * Default Constructor.
      *
      * @preconditions
      * @postconditions
@@ -82,17 +83,19 @@ public class CAST3SecretKey extends SecretKey {
      * Called by getInstance to create an instance of a PKCS#11 CAST3 secret
      * key.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
     protected CAST3SecretKey(Session session, long objectHandle)
-        throws TokenException
-    {
+        throws TokenException {
         super(session, objectHandle);
         keyType_.setLongValue(KeyType.CAST3);
     }
@@ -101,20 +104,22 @@ public class CAST3SecretKey extends SecretKey {
      * The getInstance method of the SecretKey class uses this method to create
      * an instance of a PKCS#11 CAST3 secret key.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
      * @return The object representing the PKCS#11 object.
      *         The returned object can be casted to the
      *         according sub-class.
-     * @exception TokenException If getting the attributes failed.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
     public static Object getInstance(Session session, long objectHandle)
-        throws TokenException
-    {
+        throws TokenException {
         return new CAST3SecretKey(session, objectHandle);
     }
 
@@ -124,14 +129,13 @@ public class CAST3SecretKey extends SecretKey {
      * implementation of this method for each class separately (see use in
      * clone()).
      *
-     * @param object The object to handle.
+     * @param object
+     *          The object to handle.
      * @preconditions (object <> null)
      * @postconditions
      */
     protected static void putAttributesInTable(CAST3SecretKey object) {
-        if (object == null) {
-            throw new NullPointerException("Argument \"object\" must not be null.");
-        }
+        Util.requireNotNull("object", object);
 
         object.attributeTable_.put(Attribute.VALUE, object.value_);
         object.attributeTable_.put(Attribute.VALUE_LEN, object.valueLen_);
@@ -144,6 +148,7 @@ public class CAST3SecretKey extends SecretKey {
      * @preconditions
      * @postconditions
      */
+    @Override
     protected void allocateAttributes() {
         super.allocateAttributes();
 
@@ -162,13 +167,14 @@ public class CAST3SecretKey extends SecretKey {
      *                 and (result instanceof CAST3SecretKey)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         CAST3SecretKey clone = (CAST3SecretKey) super.clone();
 
         clone.value_ = (ByteArrayAttribute) this.value_.clone();
         clone.valueLen_ = (LongAttribute) this.valueLen_.clone();
-
-        putAttributesInTable(clone); // put all cloned attributes into the new table
+        // put all cloned attributes into the new table
+        putAttributesInTable(clone);
 
         return clone;
     }
@@ -177,23 +183,27 @@ public class CAST3SecretKey extends SecretKey {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof CAST3SecretKey) {
-            CAST3SecretKey other = (CAST3SecretKey) otherObject;
-            equal = (this == other)
-                || (super.equals(other) && this.value_.equals(other.value_) && this.valueLen_
-                    .equals(other.valueLen_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof CAST3SecretKey)) {
+            return false;
+        }
+
+        CAST3SecretKey other = (CAST3SecretKey) otherObject;
+        return super.equals(other)
+                && this.value_.equals(other.value_)
+                && this.valueLen_.equals(other.valueLen_);
     }
 
     /**
@@ -221,16 +231,18 @@ public class CAST3SecretKey extends SecretKey {
     /**
      * Read the values of the attributes of this object from the token.
      *
-     * @param session The session handle to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
+    @Override
     public void readAttributes(Session session)
-        throws TokenException
-    {
+        throws TokenException {
         super.readAttributes(session);
 
         Object.getAttributeValue(session, objectHandle_, value_);
@@ -246,19 +258,16 @@ public class CAST3SecretKey extends SecretKey {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder(1024);
 
         buffer.append(super.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
-        buffer.append("Value (hex): ");
+        buffer.append(Constants.NEWLINE_INDENT_HEXVALUE);
         buffer.append(value_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
-        buffer.append("Value Length (dec): ");
+        buffer.append(Constants.NEWLINE_INDENT_VALUELEN);
         buffer.append(valueLen_.toString(10));
 
         return buffer.toString();

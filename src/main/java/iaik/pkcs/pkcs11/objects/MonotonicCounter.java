@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -44,12 +44,13 @@ package iaik.pkcs.pkcs11.objects;
 
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent a monotonic counter as specified by PKCS#11
  * v2.11. Remind that this is a snapshot; this means that this object does not
- * get the values from the token on demand it gets them uppon instanciation.
+ * get the values from the token on demand it gets them upon instantiation.
  *
  * @author Karl Scheibelhofer
  * @version 1.0
@@ -60,7 +61,7 @@ import sun.security.pkcs11.wrapper.Constants;
 public class MonotonicCounter extends HardwareFeature {
 
     /**
-     * True, if this counter is reset on token initializatioin.
+     * True, if this counter is reset on token initialization.
      */
     protected BooleanAttribute resetOnInit_;
 
@@ -75,7 +76,7 @@ public class MonotonicCounter extends HardwareFeature {
     protected ByteArrayAttribute value_;
 
     /**
-     * Deafult Constructor.
+     * Default Constructor.
      *
      * @preconditions
      * @postconditions
@@ -86,19 +87,22 @@ public class MonotonicCounter extends HardwareFeature {
     }
 
     /**
-     * Called by getInstance to create an instance of a PKCS#11 monotonic counter.
+     * Called by getInstance to create an instance of a PKCS#11 monotonic
+     * counter.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
     protected MonotonicCounter(Session session, long objectHandle)
-        throws TokenException
-    {
+        throws TokenException {
         super(session, objectHandle);
         hardwareFeatureType_.setLongValue(FeatureType.MONOTONIC_COUNTER);
     }
@@ -107,20 +111,22 @@ public class MonotonicCounter extends HardwareFeature {
      * The getInstance method of the HardwareFeature class uses this method to
      * create an instance of a PKCS#11 monotonic counter.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
      * @return The object representing the PKCS#11 object.
      *         The returned object can be casted to the
      *         according sub-class.
-     * @exception TokenException If getting the attributes failed.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
     public static Object getInstance(Session session, long objectHandle)
-        throws TokenException
-    {
+        throws TokenException {
         return new MonotonicCounter(session, objectHandle);
     }
 
@@ -130,16 +136,15 @@ public class MonotonicCounter extends HardwareFeature {
      * implementation of this method for each class separately (see use in
      * clone()).
      *
-     * @param object The object to handle.
+     * @param object
+     *          The object to handle.
      * @preconditions (object <> null)
      * @postconditions
      */
     protected static void putAttributesInTable(MonotonicCounter object) {
-        if (object == null) {
-            throw new NullPointerException("Argument \"object\" must not be null.");
-        }
-
-        object.attributeTable_.put(Attribute.RESET_ON_INIT, object.resetOnInit_);
+        Util.requireNotNull("object", object);
+        object.attributeTable_.put(Attribute.RESET_ON_INIT,
+                object.resetOnInit_);
         object.attributeTable_.put(Attribute.HAS_RESET, object.hasReset_);
         object.attributeTable_.put(Attribute.VALUE, object.value_);
     }
@@ -151,6 +156,7 @@ public class MonotonicCounter extends HardwareFeature {
      * @preconditions
      * @postconditions
      */
+    @Override
     protected void allocateAttributes() {
         super.allocateAttributes();
 
@@ -170,6 +176,7 @@ public class MonotonicCounter extends HardwareFeature {
      *                 and (result instanceof MonotonicCounter)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         MonotonicCounter clone = (MonotonicCounter) super.clone();
 
@@ -177,7 +184,8 @@ public class MonotonicCounter extends HardwareFeature {
         clone.hasReset_ = (BooleanAttribute) this.hasReset_.clone();
         clone.value_ = (ByteArrayAttribute) this.value_.clone();
 
-        putAttributesInTable(clone); // put all cloned attributes into the new table
+        // put all cloned attributes into the new table
+        putAttributesInTable(clone);
 
         return clone;
     }
@@ -186,24 +194,28 @@ public class MonotonicCounter extends HardwareFeature {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof MonotonicCounter) {
-            MonotonicCounter other = (MonotonicCounter) otherObject;
-            equal = (this == other)
-                || (super.equals(other) && this.resetOnInit_.equals(other.resetOnInit_)
-                    && this.hasReset_.equals(other.hasReset_) && this.value_
-                      .equals(other.value_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof MonotonicCounter)) {
+            return false;
+        }
+
+        MonotonicCounter other = (MonotonicCounter) otherObject;
+        return super.equals(other)
+                && this.resetOnInit_.equals(other.resetOnInit_)
+                && this.hasReset_.equals(other.hasReset_)
+                && this.value_.equals(other.value_);
     }
 
     /**
@@ -218,7 +230,7 @@ public class MonotonicCounter extends HardwareFeature {
     }
 
     /**
-     * Gets the reseet-on-init attribute of this monotonic counter object.
+     * Gets the reset-on-init attribute of this monotonic counter object.
      *
      * @return The reset-on-init attribute.
      * @preconditions
@@ -240,37 +252,38 @@ public class MonotonicCounter extends HardwareFeature {
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
-        return resetOnInit_.hashCode() ^ hasReset_.hashCode() ^ value_.hashCode();
+        return resetOnInit_.hashCode() ^ hasReset_.hashCode()
+                ^ value_.hashCode();
     }
 
     /**
      * Read the values of the attributes of this object from the token.
      *
-     * @param session The session handle to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
+    @Override
     public void readAttributes(Session session)
-        throws TokenException
-    {
+        throws TokenException {
         super.readAttributes(session);
 
-        //    Object.getAttributeValue(session, objectHandle_, resetOnInit_);
-        //    Object.getAttributeValue(session, objectHandle_, hasReset_);
-        //    Object.getAttributeValue(session, objectHandle_, value_);
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] { resetOnInit_,
-            hasReset_, value_ });
+        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
+            resetOnInit_, hasReset_, value_ });
     }
 
     /**
@@ -282,24 +295,21 @@ public class MonotonicCounter extends HardwareFeature {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder(256);
 
         buffer.append(super.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Reset on Initialization: ");
         buffer.append(resetOnInit_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Has been reset: ");
         buffer.append(hasReset_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
-        buffer.append("Value (hex): ");
+        buffer.append(Constants.NEWLINE_INDENT_HEXVALUE);
         buffer.append(value_.toString());
 
         return buffer.toString();

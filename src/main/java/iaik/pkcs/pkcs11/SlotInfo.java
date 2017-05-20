@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -42,13 +42,13 @@
 
 package iaik.pkcs.pkcs11;
 
-import sun.security.pkcs11.wrapper.CK_SLOT_INFO;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import sun.security.pkcs11.wrapper.CK_SLOT_INFO;
 
 /**
  * Objects of this call provide information about a slot. A slot can be a
- * smart card reader, for instancce. Notice that this object is immutable; i.e.
+ * smart card reader, for instance. Notice that this object is immutable; i.e.
  * it gets its state at object creation and does not alter afterwards. Thus,
  * all information this object provides, is a snapshot at the object creation.
  * This is especially important when calling isTokenPresent().
@@ -60,10 +60,11 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *             and (hardwareVersion_ <> null)
  *             and (firmwareVersion_ <> null)
  */
+@SuppressWarnings("restriction")
 public class SlotInfo {
 
     /**
-     * A short descrption of this slot.
+     * A short description of this slot.
      */
     protected String slotDescription_;
 
@@ -94,7 +95,7 @@ public class SlotInfo {
 
     /**
      * Indicate, if this slot is a hardware device or if it is just pure
-     * software; i.e. no hardware involved, e.g. a softtoken.
+     * software; i.e. no hardware involved, e.g. a software token.
      */
     protected boolean hwSlot_;
 
@@ -102,21 +103,21 @@ public class SlotInfo {
      * Constructor that takes the CK_SLOT_INFO object as given by
      * PKCS11.C_GetSlotInfo().
      *
-     * @param ckSlotInfo The CK_SLOT_INFO object as given by
-     *                   PKCS11.C_GetSlotInfo().
+     * @param ckSlotInfo
+     *          The CK_SLOT_INFO object as given by PKCS11.C_GetSlotInfo().
      * @preconditions (ckSlotInfo <> null)
      * @postconditions
      */
     protected SlotInfo(CK_SLOT_INFO ckSlotInfo) {
-        if (ckSlotInfo == null) {
-            throw new NullPointerException("Argument \"ckSlotInfo\" must not be null.");
-        }
+        Util.requireNotNull("ckSlotInfo", ckSlotInfo);
         slotDescription_ = new String(ckSlotInfo.slotDescription);
         manufacturerID_ = new String(ckSlotInfo.manufacturerID);
         hardwareVersion_ = new Version(ckSlotInfo.hardwareVersion);
         firmwareVersion_ = new Version(ckSlotInfo.firmwareVersion);
-        tokenPresent_ = (ckSlotInfo.flags & PKCS11Constants.CKF_TOKEN_PRESENT) != 0L;
-        removableDevice_ = (ckSlotInfo.flags & PKCS11Constants.CKF_REMOVABLE_DEVICE) != 0L;
+        tokenPresent_
+            = (ckSlotInfo.flags & PKCS11Constants.CKF_TOKEN_PRESENT) != 0L;
+        removableDevice_
+            = (ckSlotInfo.flags & PKCS11Constants.CKF_REMOVABLE_DEVICE) != 0L;
         hwSlot_ = (ckSlotInfo.flags & PKCS11Constants.CKF_HW_SLOT) != 0L;
     }
 
@@ -143,7 +144,7 @@ public class SlotInfo {
     }
 
     /**
-     * Get the verion of the slot's hardware.
+     * Get the version of the slot's hardware.
      *
      * @return The version of the hardware of this slot.
      * @preconditions
@@ -179,7 +180,7 @@ public class SlotInfo {
     }
 
     /**
-     * Indicate, if the token is removalbe from this slot or not. In some
+     * Indicate, if the token is removable from this slot or not. In some
      * cases slot and token will be one device.
      *
      * @return True, if the tokens are removable. False, otherwise.
@@ -192,7 +193,7 @@ public class SlotInfo {
 
     /**
      * Indicate, if the token is a hardware device or if it is just a pure
-     * software implementation; e.g. in case of a pure softwaretoken.
+     * software implementation; e.g. in case of a pure software token.
      *
      * @return True, if it is a hardware slot. False, otherwise.
      * @preconditions
@@ -207,6 +208,7 @@ public class SlotInfo {
      *
      * @return the string representation of object
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
@@ -244,38 +246,43 @@ public class SlotInfo {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other SlotInfo object.
+     * @param otherObject
+     *          The other SlotInfo object.
      * @return True, if other is an instance of Info and all member variables of
      *         both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof SlotInfo) {
-            SlotInfo other = (SlotInfo) otherObject;
-            equal = (this == other)
-                || (this.slotDescription_.equals(other.slotDescription_)
-                    && this.manufacturerID_.equals(other.manufacturerID_)
-                    && this.hardwareVersion_.equals(other.hardwareVersion_)
-                    && this.firmwareVersion_.equals(other.firmwareVersion_)
-                    && (this.tokenPresent_ == other.tokenPresent_)
-                    && (this.removableDevice_ == other.removableDevice_) && (this.hwSlot_ == other.hwSlot_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof SlotInfo)) {
+            return false;
+        }
+
+        SlotInfo other = (SlotInfo) otherObject;
+        return this.slotDescription_.equals(other.slotDescription_)
+                && this.manufacturerID_.equals(other.manufacturerID_)
+                && this.hardwareVersion_.equals(other.hardwareVersion_)
+                && this.firmwareVersion_.equals(other.firmwareVersion_)
+                && (this.tokenPresent_ == other.tokenPresent_)
+                && (this.removableDevice_ == other.removableDevice_)
+                && (this.hwSlot_ == other.hwSlot_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object. Gained from the slotDescription_,
      *         manufacturerID_, hardwareVersion_ and firmwareVersion_.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return slotDescription_.hashCode() ^ manufacturerID_.hashCode()
             ^ hardwareVersion_.hashCode() ^ firmwareVersion_.hashCode();

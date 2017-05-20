@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -52,15 +52,17 @@ import sun.security.pkcs11.wrapper.PKCS11Exception;
  * @version 1.0
  * @invariants
  */
+@SuppressWarnings("restriction")
 public interface MutexHandler {
 
     /**
      * Create a new mutex object.
      *
      * @return The new mutex object.
-     * @exception PKCS11Exception If the wrapper should return a differnet value
-     *                            than CKR_OK to the library. It gets the
-     *                            error-code and returns it as CK_RV.
+     * @exception PKCS11Exception
+     *              If the wrapper should return a different value than CKR_OK
+     *              to the library. It gets the error-code and returns it as
+     *              CK_RV.
      * @preconditions
      * @postconditions (result <> null)
      */
@@ -70,10 +72,12 @@ public interface MutexHandler {
     /**
      * Destroy a mutex object.
      *
-     * @param mutex The mutex object to destroy.
-     * @exception PKCS11Exception If the wrapper should return a differnet value
-     *                            than CKR_OK to the library. It gets the
-     *                            error-code and returns it as CK_RV.
+     * @param mutex
+     *          The mutex object to destroy.
+     * @exception PKCS11Exception
+     *              If the wrapper should return a different value than CKR_OK
+     *              to the library. It gets the error-code and returns it as
+     *              CK_RV.
      * @preconditions (mutex <> null)
      * @postconditions
      */
@@ -86,13 +90,15 @@ public interface MutexHandler {
      * If this method is called with a mutex object which is locked by some
      * thread other than the calling thread, the calling thread blocks and waits
      * for that mutex to be unlocked.
-     * If this method is called with a a mutex object which is locked by the calling
-     + thread, the behavior of this method call is undefined.
+     * If this method is called with a a mutex object which is locked by the
+     + calling thread, the behavior of this method call is undefined.
      *
-     * @param mutex The mutex object to lock.
-     * @exception PKCS11Exception If the wrapper should return a differnet value
-     *                            than CKR_OK to the library. It gets the
-     *                            error-code and returns it as CK_RV.
+     * @param mutex
+     *          The mutex object to lock.
+     * @exception PKCS11Exception
+     *              If the wrapper should return a different value than CKR_OK
+     *              to the library. It gets the error-code and returns it as
+     *              CK_RV.
      * @preconditions (mutex <> null)
      * @postconditions
      */
@@ -105,9 +111,9 @@ public interface MutexHandler {
      * returns. Furthermore: If exactly one thread was blocking on that
      * particular mutex object, then that thread stops blocking, obtains a lock
      * on that mutex object, and its lockMutex(Object) call returns.
-     * If more than one thread was blocking on that particular mutex objet, then
-     * exactly one of the blocking threads is selected somehow. That lucky thread
-     * stops blocking, obtains a lock on the mutex object, and its
+     * If more than one thread was blocking on that particular mutex object,
+     * then exactly one of the blocking threads is selected somehow. That lucky
+     * thread stops blocking, obtains a lock on the mutex object, and its
      * lockMutex(Object) call returns. All other threads blocking on that
      * particular mutex object continue to block.
      * If this method is called with a mutex object which is not locked, then
@@ -117,10 +123,12 @@ public interface MutexHandler {
      * thread other than the calling thread, the behavior of this method call is
      * undefined.
      *
-     * @param mutex The mutex object to unlock.
-     * @exception PKCS11Exception If the wrapper should return a differnet value
-     *                            than CKR_OK to the library. It gets the
-     *                            error-code and returns it as CK_RV.
+     * @param mutex
+     *          The mutex object to unlock.
+     * @exception PKCS11Exception
+     *              If the wrapper should return a different value than CKR_OK
+     *              to the library. It gets the error-code and returns it as
+     *              CK_RV.
      * @preconditions (mutex <> null)
      * @postconditions
      */

@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -52,11 +52,12 @@ import sun.security.pkcs11.wrapper.CK_VERSION;
  * @version 1.0
  * @invariants
  */
+@SuppressWarnings("restriction")
 public class VersionParameters extends Version implements Parameters {
 
     /**
-     * Create a new VersionParameters object with the major and minor
-     * version set to zero.
+     * Create a new VersionParameters object with the major and minor version
+     * set to zero.
      *
      * @preconditions
      * @postconditions
@@ -69,8 +70,10 @@ public class VersionParameters extends Version implements Parameters {
      * Create a new VersionParameters object with the given major and minor
      * version.
      *
-     * @param major The major version number.
-     * @param minor The minor version number.
+     * @param major
+     *          The major version number.
+     * @param minor
+     *          The minor version number.
      * @preconditions
      * @postconditions
      */
@@ -87,6 +90,7 @@ public class VersionParameters extends Version implements Parameters {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public Object getPKCS11ParamsObject() {
         CK_VERSION params = new CK_VERSION(major_, minor_);
         return params;
@@ -96,7 +100,8 @@ public class VersionParameters extends Version implements Parameters {
      * This method allows setting the major and minor version numbers using
      * a version object of the lower level API.
      *
-     * @param input The version objet providing the major and minor version.
+     * @param input
+     *          The version object providing the major and minor version.
      * @preconditions (input <> null)
      * @postconditions
      */
@@ -108,7 +113,8 @@ public class VersionParameters extends Version implements Parameters {
     /**
      * Set the major version number.
      *
-     * @param major The major version number.
+     * @param major
+     *          The major version number.
      * @preconditions
      * @postconditions
      */
@@ -119,7 +125,8 @@ public class VersionParameters extends Version implements Parameters {
     /**
      * Set the minor version number.
      *
-     * @param minor The minor version number.
+     * @param minor
+     *          The minor version number.
      * @preconditions
      * @postconditions
      */

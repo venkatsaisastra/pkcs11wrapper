@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -43,7 +43,8 @@
 package iaik.pkcs.pkcs11.objects;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * This class does not correspond to any PKCS#11 object. It is only a pair of
@@ -69,21 +70,17 @@ public class KeyPair implements Cloneable {
     /**
      * Constructor that takes a public and a private key. None can be null.
      *
-     * @param publicKey The public key of the key-pair.
-     * @param privateKey The private key of the key-pair.
+     * @param publicKey
+     *          The public key of the key-pair.
+     * @param privateKey
+     *          The private key of the key-pair.
      * @preconditions (publicKey <> null)
      *                and (privateKey <> null)
      * @postconditions
      */
     public KeyPair(PublicKey publicKey, PrivateKey privateKey) {
-        if (publicKey == null) {
-            throw new NullPointerException("Argument \"publicKey\" must not be null.");
-        }
-        if (privateKey == null) {
-            throw new NullPointerException("Argument \"privateKey\" must not be null.");
-        }
-        publicKey_ = publicKey;
-        privateKey_ = privateKey;
+        publicKey_ = Util.requireNotNull("publicKey", publicKey);
+        privateKey_ = Util.requireNotNull("privateKey", privateKey);
     }
 
     /**
@@ -95,6 +92,7 @@ public class KeyPair implements Cloneable {
      *                 and (result instanceof KeyPair)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         KeyPair clone;
         try {
@@ -104,7 +102,8 @@ public class KeyPair implements Cloneable {
             clone.publicKey_ = (PublicKey) this.publicKey_.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException("An unexpected clone exception occurred.", ex);
+            throw new TokenRuntimeException(
+                    "An unexpected clone exception occurred.", ex);
         }
 
         return clone;
@@ -124,14 +123,13 @@ public class KeyPair implements Cloneable {
     /**
      * Set the public key part of this key-pair.
      *
-     * @param publicKey The public key part of this key-pair.
+     * @param publicKey
+     *          The public key part of this key-pair.
      * @preconditions (publicKey <> null)
      * @postconditions
      */
     public void setPublicKey(PublicKey publicKey) {
-        if (publicKey == null) {
-            throw new NullPointerException("Argument \"publicKey\" must not be null.");
-        }
+        Util.requireNotNull("publicKey", publicKey);
         publicKey_ = publicKey;
     }
 
@@ -149,14 +147,13 @@ public class KeyPair implements Cloneable {
     /**
      * Set the private key part of this key-pair.
      *
-     * @param privateKey The private key part of this key-pair.
+     * @param privateKey
+     *          he private key part of this key-pair.
      * @preconditions (privateKey <> null)
      * @postconditions
      */
     public void setPrivateKey(PrivateKey privateKey) {
-        if (privateKey == null) {
-            throw new NullPointerException("Argument \"privateKey\" must not be null.");
-        }
+        Util.requireNotNull("privateKey", privateKey);
         privateKey_ = privateKey;
     }
 
@@ -169,14 +166,14 @@ public class KeyPair implements Cloneable {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder(128);
 
         buffer.append(Constants.INDENT);
         buffer.append(publicKey_);
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append(privateKey_);
 
         return buffer.toString();
@@ -186,33 +183,37 @@ public class KeyPair implements Cloneable {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof KeyPair) {
-            KeyPair other = (KeyPair) otherObject;
-            equal = (this == other)
-                || (this.publicKey_.equals(other.publicKey_) && this.privateKey_
-                    .equals(other.privateKey_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof KeyPair)) {
+            return false;
+        }
+
+        KeyPair other = (KeyPair) otherObject;
+        return this.publicKey_.equals(other.publicKey_)
+                && this.privateKey_.equals(other.privateKey_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return publicKey_.hashCode() ^ privateKey_.hashCode();
     }

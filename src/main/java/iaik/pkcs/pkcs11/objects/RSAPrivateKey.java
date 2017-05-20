@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -44,7 +44,8 @@ package iaik.pkcs.pkcs11.objects;
 
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent RSA private keys as specified by PKCS#11
@@ -104,7 +105,7 @@ public class RSAPrivateKey extends PrivateKey {
     protected ByteArrayAttribute coefficient_;
 
     /**
-     * Deafult Constructor.
+     * Default Constructor.
      *
      * @preconditions
      * @postconditions
@@ -117,17 +118,19 @@ public class RSAPrivateKey extends PrivateKey {
     /**
      * Called by getInstance to create an instance of a PKCS#11 RSA private key.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
     protected RSAPrivateKey(Session session, long objectHandle)
-        throws TokenException
-    {
+        throws TokenException {
         super(session, objectHandle);
         keyType_.setLongValue(KeyType.RSA);
     }
@@ -136,20 +139,22 @@ public class RSAPrivateKey extends PrivateKey {
      * The getInstance method of the PrivateKey class uses this method to create
      * an instance of a PKCS#11 RSA private key.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
      * @return The object representing the PKCS#11 object.
      *         The returned object can be casted to the
      *         according sub-class.
-     * @exception TokenException If getting the attributes failed.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
     public static Object getInstance(Session session, long objectHandle)
-        throws TokenException
-    {
+        throws TokenException {
         return new RSAPrivateKey(session, objectHandle);
     }
 
@@ -159,18 +164,18 @@ public class RSAPrivateKey extends PrivateKey {
      * implementation of this method for each class separately (see use in
      * clone()).
      *
-     * @param object The object to handle.
+     * @param object
+     *          The object to handle.
      * @preconditions (object <> null)
      * @postconditions
      */
     protected static void putAttributesInTable(RSAPrivateKey object) {
-        if (object == null) {
-            throw new NullPointerException("Argument \"object\" must not be null.");
-        }
-
+        Util.requireNotNull("object", object);
         object.attributeTable_.put(Attribute.MODULUS, object.modulus_);
-        object.attributeTable_.put(Attribute.PUBLIC_EXPONENT, object.publicExponent_);
-        object.attributeTable_.put(Attribute.PRIVATE_EXPONENT, object.privateExponent_);
+        object.attributeTable_.put(Attribute.PUBLIC_EXPONENT,
+                object.publicExponent_);
+        object.attributeTable_.put(Attribute.PRIVATE_EXPONENT,
+                object.privateExponent_);
         object.attributeTable_.put(Attribute.PRIME_1, object.prime1_);
         object.attributeTable_.put(Attribute.PRIME_2, object.prime2_);
         object.attributeTable_.put(Attribute.EXPONENT_1, object.exponent1_);
@@ -185,6 +190,7 @@ public class RSAPrivateKey extends PrivateKey {
      * @preconditions
      * @postconditions
      */
+    @Override
     protected void allocateAttributes() {
         super.allocateAttributes();
 
@@ -209,19 +215,23 @@ public class RSAPrivateKey extends PrivateKey {
      *                 and (result instanceof RSAPrivateKey)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         RSAPrivateKey clone = (RSAPrivateKey) super.clone();
 
         clone.modulus_ = (ByteArrayAttribute) this.modulus_.clone();
-        clone.publicExponent_ = (ByteArrayAttribute) this.publicExponent_.clone();
-        clone.privateExponent_ = (ByteArrayAttribute) this.privateExponent_.clone();
+        clone.publicExponent_
+            = (ByteArrayAttribute) this.publicExponent_.clone();
+        clone.privateExponent_
+            = (ByteArrayAttribute) this.privateExponent_.clone();
         clone.prime1_ = (ByteArrayAttribute) this.prime1_.clone();
         clone.prime2_ = (ByteArrayAttribute) this.prime2_.clone();
         clone.exponent1_ = (ByteArrayAttribute) this.exponent1_.clone();
         clone.exponent2_ = (ByteArrayAttribute) this.exponent2_.clone();
         clone.coefficient_ = (ByteArrayAttribute) this.coefficient_.clone();
 
-        putAttributesInTable(clone); // put all cloned attributes into the new table
+        // put all cloned attributes into the new table
+        putAttributesInTable(clone);
 
         return clone;
     }
@@ -230,28 +240,33 @@ public class RSAPrivateKey extends PrivateKey {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof RSAPrivateKey) {
-            RSAPrivateKey other = (RSAPrivateKey) otherObject;
-            equal = (this == other)
-                || (super.equals(other) && this.modulus_.equals(other.modulus_)
-                    && this.publicExponent_.equals(other.publicExponent_)
-                    && this.privateExponent_.equals(other.privateExponent_)
-                    && this.prime1_.equals(other.prime1_) && this.prime2_.equals(other.prime2_)
-                    && this.exponent1_.equals(other.exponent1_)
-                    && this.exponent2_.equals(other.exponent2_) && this.coefficient_
-                      .equals(other.coefficient_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof RSAPrivateKey)) {
+            return false;
+        }
+
+        RSAPrivateKey other = (RSAPrivateKey) otherObject;
+        return super.equals(other)
+                && this.modulus_.equals(other.modulus_)
+                && this.publicExponent_.equals(other.publicExponent_)
+                && this.privateExponent_.equals(other.privateExponent_)
+                && this.prime1_.equals(other.prime1_)
+                && this.prime2_.equals(other.prime2_)
+                && this.exponent1_.equals(other.exponent1_)
+                && this.exponent2_.equals(other.exponent2_)
+                && this.coefficient_.equals(other.coefficient_);
     }
 
     /**
@@ -345,30 +360,25 @@ public class RSAPrivateKey extends PrivateKey {
     /**
      * Read the values of the attributes of this object from the token.
      *
-     * @param session The session handle to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
+    @Override
     public void readAttributes(Session session)
-        throws TokenException
-    {
+        throws TokenException {
         super.readAttributes(session);
 
-        //    Object.getAttributeValue(session, objectHandle_, modulus_);
-        //    Object.getAttributeValue(session, objectHandle_, publicExponent_);
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] { modulus_,
-            publicExponent_ });
-        //    Object.getAttributeValue(session, objectHandle_, privateExponent_);
-        //    Object.getAttributeValue(session, objectHandle_, prime1_);
-        //    Object.getAttributeValue(session, objectHandle_, prime2_);
-        //    Object.getAttributeValue(session, objectHandle_, exponent1_);
-        //    Object.getAttributeValue(session, objectHandle_, exponent2_);
-        //    Object.getAttributeValue(session, objectHandle_, coefficient_);
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] { privateExponent_,
-            prime1_, prime2_, exponent1_, exponent2_, coefficient_ });
+        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
+            modulus_, publicExponent_ });
+        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
+            privateExponent_, prime1_, prime2_, exponent1_, exponent2_,
+            coefficient_ });
     }
 
     /**
@@ -380,48 +390,41 @@ public class RSAPrivateKey extends PrivateKey {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder(1024);
 
         buffer.append(super.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Modulus (hex): ");
         buffer.append(modulus_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Public Exponent (hex): ");
         buffer.append(publicExponent_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Private Exponent (hex): ");
         buffer.append(privateExponent_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Prime 1 (hex): ");
         buffer.append(prime1_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Prime 2 (hex): ");
         buffer.append(prime2_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Exponent 1 (hex): ");
         buffer.append(exponent1_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Exponent 2 (hex): ");
         buffer.append(exponent2_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Coefficient (hex): ");
         buffer.append(coefficient_.toString());
 

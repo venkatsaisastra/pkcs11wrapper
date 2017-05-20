@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -52,9 +52,11 @@ package iaik.pkcs.pkcs11;
  */
 public class TokenException extends Exception {
 
+    private static final long serialVersionUID = 2259867040069453007L;
+
     /**
      * An encapsulated (inner) exception. Possibly, an exception from a lower
-     * layer that ca be propagated to a higher layer only in wrapped form.
+     * layer that can be propagated to a higher layer only in wrapped form.
      */
     protected Exception encapsulatedException_;
 
@@ -71,8 +73,9 @@ public class TokenException extends Exception {
     /**
      * Constructor taking an exception message.
      *
-     * @param message The message giving details about the exception to ease
-     *                debugging.
+     * @param message
+     *          The message giving details about the exception to ease
+     *          debugging.
      * @preconditions
      * @postconditions
      */
@@ -83,7 +86,8 @@ public class TokenException extends Exception {
     /**
      * Constructor taking an other exception to wrap.
      *
-     * @param encapsulatedException The other exception the wrap into this.
+     * @param encapsulatedException
+     *          The other exception the wrap into this.
      * @preconditions
      * @postconditions
      */
@@ -96,9 +100,11 @@ public class TokenException extends Exception {
      * Constructor taking a message for this exception and an other exception to
      * wrap.
      *
-     * @param message The message giving details about the exception to ease
-     *                debugging.
-     * @param encapsulatedException The other exception the wrap into this.
+     * @param message
+     *          The message giving details about the exception to ease
+     *          debugging.
+     * @param encapsulatedException
+     *          The other exception the wrap into this.
      * @preconditions
      * @postconditions
      */
@@ -110,8 +116,8 @@ public class TokenException extends Exception {
     /**
      * Get the encapsulated (wrapped) exception. May be null.
      *
-     * @return The encasulated (wrapped) exception, or null if there is no inner
-     *         exception.
+     * @return The encapsulated (wrapped) exception, or null if there is no
+     *         inner exception.
      * @preconditions
      * @postconditions
      */
@@ -125,6 +131,7 @@ public class TokenException extends Exception {
      *
      * @return The string representation of exception.
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder(super.toString());
 

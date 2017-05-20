@@ -1,3 +1,45 @@
+// Copyright (c) 2002 Graz University of Technology. All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution.
+//
+// 3. The end-user documentation included with the redistribution, if any, must
+//    include the following acknowledgment:
+//
+//    "This product includes software developed by IAIK of Graz University of
+//     Technology."
+//
+//    Alternately, this acknowledgment may appear in the software itself, if and
+//    wherever such third-party acknowledgments normally appear.
+//
+// 4. The names "Graz University of Technology" and "IAIK of Graz University of
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
+//
+// 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
+//    nor may "IAIK" appear in their name, without prior written permission of
+//    Graz University of Technology.
+//
+// THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE LICENSOR BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+// OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+// OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+// ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
 package dev;
 
 import java.io.BufferedReader;
@@ -34,7 +76,8 @@ public class CodeGenerator {
             for (int i = 0; i < 8; i++) {
                 int idx2 = line.indexOf(',', idx1);
                 if (idx2 == -1) {
-                    throw new IllegalArgumentException("invalid CkmInfo '" + line + "'");
+                    throw new IllegalArgumentException(
+                            "invalid CkmInfo '" + line + "'");
                 }
                 tokens[i] = line.substring(idx1, idx2);
                 idx1 = idx2 + 1;
@@ -49,8 +92,9 @@ public class CodeGenerator {
                 singleEncryptDecrypt = true;
             } else if ("1".equals(token)) {
                 fullEncryptDecrypt = true;
-            } else if (!token.isEmpty()){
-                throw new IllegalArgumentException("invalid EncryptDecrypt '" + token
+            } else if (!token.isEmpty()) {
+                throw new IllegalArgumentException(
+                        "invalid EncryptDecrypt '" + token
                         + "' in line '" + line + "'");
             }
 
@@ -60,8 +104,9 @@ public class CodeGenerator {
                 singleSignVerify = true;
             } else if ("1".equals(token)) {
                 fullSignVerify = true;
-            } else if (!token.isEmpty()){
-                throw new IllegalArgumentException("invalid SignVerify '" + token
+            } else if (!token.isEmpty()) {
+                throw new IllegalArgumentException(
+                        "invalid SignVerify '" + token
                         + "' in line '" + line + "'");
             }
 
@@ -69,8 +114,9 @@ public class CodeGenerator {
             token = tokens[3];
             if ("1".equals(token)) {
                 signVerifyRecover = true;
-            } else if (!token.isEmpty()){
-                throw new IllegalArgumentException("invalid SRVR '" + token
+            } else if (!token.isEmpty()) {
+                throw new IllegalArgumentException(
+                        "invalid SRVR '" + token
                         + "' in line '" + line + "'");
             }
 
@@ -78,8 +124,9 @@ public class CodeGenerator {
             token = tokens[4];
             if ("1".equals(token)) {
                 digest = true;
-            } else if (!token.isEmpty()){
-                throw new IllegalArgumentException("invalid Digest '" + token
+            } else if (!token.isEmpty()) {
+                throw new IllegalArgumentException(
+                        "invalid Digest '" + token
                         + "' in line '" + line + "'");
             }
 
@@ -87,16 +134,16 @@ public class CodeGenerator {
             token = tokens[5];
             if ("1".equals(token)) {
                 keypairGen = true;
-            } else if (!token.isEmpty()){
-                throw new IllegalArgumentException("invalid KeypairGen '" + token
-                        + "' in line '" + line + "'");
+            } else if (!token.isEmpty()) {
+                throw new IllegalArgumentException("invalid KeypairGen '"
+                        + token + "' in line '" + line + "'");
             }
 
             // KeyGen
             token = tokens[6];
             if ("1".equals(token)) {
                 keyGen = true;
-            } else if (!token.isEmpty()){
+            } else if (!token.isEmpty()) {
                 throw new IllegalArgumentException("invalid KeyGen '" + token
                         + "' in line '" + line + "'");
             }
@@ -106,15 +153,15 @@ public class CodeGenerator {
             if ("1".equals(token)) {
                 wrapUnwrap = true;
             } else if (!token.isEmpty()){
-                throw new IllegalArgumentException("invalid WrapUnwrap '" + token
-                        + "' in line '" + line + "'");
+                throw new IllegalArgumentException("invalid WrapUnwrap '"
+                        + token + "' in line '" + line + "'");
             }
 
             // Derive
             token = tokens[8];
             if ("1".equals(token)) {
                 derive = true;
-            } else if (!token.isEmpty()){
+            } else if (!token.isEmpty()) {
                 throw new IllegalArgumentException("invalid Derive '" + token
                         + "' in line '" + line + "'");
             }
@@ -124,9 +171,11 @@ public class CodeGenerator {
 
     public static final String DIR_RESOURCES = "src/dev/resources/";
 
-    public static final String FILE_PKCS11_HEADER = DIR_RESOURCES + "pkcs11t.h";
+    public static final String FILE_PKCS11_HEADER
+            = DIR_RESOURCES + "pkcs11t.h";
 
-    public static final String FILE_PKCS11_CKM_META = DIR_RESOURCES + "pkcs11t_ckm.csv";
+    public static final String FILE_PKCS11_CKM_META
+            = DIR_RESOURCES + "pkcs11t_ckm.csv";
 
     public static final String DIR_OUTPUT = "target/dev-output/";
 
@@ -136,19 +185,26 @@ public class CodeGenerator {
 
     public static final String FILE_CKR_NAME = DIR_OUTPUT + "ckr.properties";
 
-    public static final String FILE_FULL_ENCRYPT_DECRYPT = DIR_OUTPUT + "fullEncryptDecrypt.txt";
+    public static final String FILE_FULL_ENCRYPT_DECRYPT
+            = DIR_OUTPUT + "fullEncryptDecrypt.txt";
 
-    public static final String FILE_SINGLE_ENCRYPT_DECRYPT = DIR_OUTPUT + "singleEncryptDecrypt.txt";
+    public static final String FILE_SINGLE_ENCRYPT_DECRYPT
+            = DIR_OUTPUT + "singleEncryptDecrypt.txt";
 
-    public static final String FILE_FULL_SIGN_VERIFY = DIR_OUTPUT + "fullSignVerify.txt";
+    public static final String FILE_FULL_SIGN_VERIFY
+            = DIR_OUTPUT + "fullSignVerify.txt";
 
-    public static final String FILE_SINGLE_SIGN_VERIFY = DIR_OUTPUT + "singleSignVerify.txt";
+    public static final String FILE_SINGLE_SIGN_VERIFY
+            = DIR_OUTPUT + "singleSignVerify.txt";
 
-    public static final String FILE_SIGNRECOVERVERIFY = DIR_OUTPUT + "signVerifyRecover.txt";
+    public static final String FILE_SIGNRECOVERVERIFY
+            = DIR_OUTPUT + "signVerifyRecover.txt";
 
-    public static final String FILE_KEYPAIRGEN = DIR_OUTPUT + "keypairgen.txt";
+    public static final String FILE_KEYPAIRGEN
+            = DIR_OUTPUT + "keypairgen.txt";
 
-    public static final String FILE_KEYGEN = DIR_OUTPUT + "keygen.txt";
+    public static final String FILE_KEYGEN
+            = DIR_OUTPUT + "keygen.txt";
 
     public static final String FILE_DIGEST = DIR_OUTPUT + "digest.txt";
 
@@ -163,7 +219,8 @@ public class CodeGenerator {
             /*
             long a1 = PKCS11Constants.CKM_EC_KEY_PAIR_GEN;
             System.out.println(Functions.mechanismCodeToString(a1));
-            System.out.println(Functions.mechanismCodeToString(PKCS11Constants.CKM_RC2_ECB));
+            System.out.println(Functions.mechanismCodeToString(
+                    PKCS11Constants.CKM_RC2_ECB));
             long a2 = Functions.mechanismStringToCode("CKM_ECDSA_KEY_PAIR_GEN");
             System.out.println(a1);
             System.out.println(a2);
@@ -179,7 +236,8 @@ public class CodeGenerator {
 
             generateCkmInfo();
 
-            System.out.println("Generated files are in " + dir.getAbsolutePath());
+            System.out.println(
+                    "Generated files are in " + dir.getAbsolutePath());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -187,7 +245,8 @@ public class CodeGenerator {
 
     // CONSIDER THE DUPLICATED / DEPRECATED entries: check them
     private static void generateConstants() throws Exception {
-        BufferedReader reader = new BufferedReader(new FileReader(FILE_PKCS11_HEADER));
+        BufferedReader reader = new BufferedReader(
+                new FileReader(FILE_PKCS11_HEADER));
         Map<Long, String> ckmCodeNameMap = new HashMap<>();
         Map<Long, List<String>> deprecatedCkmCodeNamesMap = new HashMap<>();
         Map<Long, String> ckrCodeNameMap = new HashMap<>();
@@ -234,10 +293,12 @@ public class CodeGenerator {
             if (name.startsWith("CKM_")) {
                 Map<Long, String> map = ckmCodeNameMap;
                 if (deprecated) {
-                    List<String> deprecatedNames = deprecatedCkmCodeNamesMap.get(longValue);
+                    List<String> deprecatedNames =
+                            deprecatedCkmCodeNamesMap.get(longValue);
                     if (deprecatedNames == null) {
                         deprecatedNames = new LinkedList<>();
-                        deprecatedCkmCodeNamesMap.put(longValue, deprecatedNames);
+                        deprecatedCkmCodeNamesMap.put(longValue,
+                                deprecatedNames);
                     }
                     deprecatedNames.add(name);
 
@@ -280,7 +341,8 @@ public class CodeGenerator {
         reader.close();
 
         reader = new BufferedReader(new FileReader(FILE_PKCS11_HEADER));
-        BufferedWriter constantsWriter = new BufferedWriter(new FileWriter(FILE_CONSTANTS));
+        BufferedWriter constantsWriter = new BufferedWriter(
+                new FileWriter(FILE_CONSTANTS));
         while ((line = reader.readLine()) != null) {
             if (!line.trim().startsWith("#define CK")) {
                 constantsWriter.write("    ");
@@ -318,7 +380,7 @@ public class CodeGenerator {
             Long longValue = null;
             try {
                 longValue = Long.parseLong(value, hex ? 16 : 10);
-            } catch(NumberFormatException ex) {
+            } catch (NumberFormatException ex) {
             }
 
             boolean deprecated = line.toLowerCase().contains("deprecated");
@@ -338,7 +400,8 @@ public class CodeGenerator {
                     if (name2 != null && !name.equals(name2)) {
                         constantsWriter.write("    /**");
                         constantsWriter.write(NEWLINE);
-                        constantsWriter.write("     * Use " + name2 + " instead");
+                        constantsWriter.write(
+                                "     * Use " + name2 + " instead.");
                         constantsWriter.write(NEWLINE);
                         constantsWriter.write("     */");
                         constantsWriter.write(NEWLINE);
@@ -350,7 +413,8 @@ public class CodeGenerator {
             }
 
             constantsWriter.write("    ");
-            constantsWriter.write("public static final long " + formatName(name) + " = ");
+            constantsWriter.write(
+                    "public static final long " + formatName(name) + " = ");
             if (longValue != null) {
                 constantsWriter.write("0x" + value + "L;");
             } else {
@@ -363,30 +427,44 @@ public class CodeGenerator {
 
         constantsWriter.close();
 
-        writeCkmConstants(FILE_CKM_NAME, ckmCodeNameMap, deprecatedCkmCodeNamesMap);
+        writeCkmConstants(FILE_CKM_NAME, ckmCodeNameMap,
+                deprecatedCkmCodeNamesMap);
         writeCkrConstants(FILE_CKR_NAME, ckrCodeNameMap);
     }
 
     private static void generateCkmInfo() throws Exception {
-        BufferedReader reader = new BufferedReader(new FileReader(FILE_PKCS11_CKM_META));
+        BufferedReader reader = new BufferedReader(
+                new FileReader(FILE_PKCS11_CKM_META));
 
-        BufferedWriter fullEncryptWriter  = new BufferedWriter(new FileWriter(FILE_FULL_ENCRYPT_DECRYPT));
-        BufferedWriter singleEncryptWriter = new BufferedWriter(new FileWriter(FILE_SINGLE_ENCRYPT_DECRYPT));
+        BufferedWriter fullEncryptWriter
+                = new BufferedWriter(
+                        new FileWriter(FILE_FULL_ENCRYPT_DECRYPT));
+        BufferedWriter singleEncryptWriter
+                = new BufferedWriter(
+                        new FileWriter(FILE_SINGLE_ENCRYPT_DECRYPT));
 
-        BufferedWriter fullSignWriter  = new BufferedWriter(new FileWriter(FILE_FULL_SIGN_VERIFY));
-        BufferedWriter singleSignWriter = new BufferedWriter(new FileWriter(FILE_SINGLE_SIGN_VERIFY));
+        BufferedWriter fullSignWriter
+                = new BufferedWriter(new FileWriter(FILE_FULL_SIGN_VERIFY));
+        BufferedWriter singleSignWriter
+                = new BufferedWriter(new FileWriter(FILE_SINGLE_SIGN_VERIFY));
 
-        BufferedWriter signRecoverWriter = new BufferedWriter(new FileWriter(FILE_SIGNRECOVERVERIFY));
+        BufferedWriter signRecoverWriter
+                = new BufferedWriter(new FileWriter(FILE_SIGNRECOVERVERIFY));
 
-        BufferedWriter keypairGenWriter = new BufferedWriter(new FileWriter(FILE_KEYPAIRGEN));
+        BufferedWriter keypairGenWriter
+                = new BufferedWriter(new FileWriter(FILE_KEYPAIRGEN));
 
-        BufferedWriter keyGenWriter = new BufferedWriter(new FileWriter(FILE_KEYGEN));
+        BufferedWriter keyGenWriter
+                = new BufferedWriter(new FileWriter(FILE_KEYGEN));
 
-        BufferedWriter digestWriter = new BufferedWriter(new FileWriter(FILE_DIGEST));
+        BufferedWriter digestWriter
+                = new BufferedWriter(new FileWriter(FILE_DIGEST));
 
-        BufferedWriter wrapWriter = new BufferedWriter(new FileWriter(FILE_WRAPUNWRAP));
+        BufferedWriter wrapWriter
+                = new BufferedWriter(new FileWriter(FILE_WRAPUNWRAP));
 
-        BufferedWriter deriveWriter = new BufferedWriter(new FileWriter(FILE_DERIVE));
+        BufferedWriter deriveWriter
+                = new BufferedWriter(new FileWriter(FILE_DERIVE));
 
         String line;
         while ((line = reader.readLine()) != null) {
@@ -467,8 +545,9 @@ public class CodeGenerator {
     }
 
     private static void writeCkmConstants(String fileName,
-            Map<Long, String> codeNameMap, Map<Long, List<String>> deprecatedCodeNamesMap)
-            throws Exception {
+            Map<Long, String> codeNameMap,
+            Map<Long, List<String>> deprecatedCodeNamesMap)
+        throws Exception {
         BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
         List<Long> codes = new ArrayList<>(codeNameMap.keySet());
         Collections.sort(codes);

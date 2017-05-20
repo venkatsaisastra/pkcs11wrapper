@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -44,7 +44,8 @@ package iaik.pkcs.pkcs11.objects;
 
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent X9.42 DH public keys as specified by PKCS#11
@@ -79,17 +80,19 @@ public class X942DHPublicKey extends DHPublicKey {
      * Called by getInstance to create an instance of a PKCS#11 X9.42 DH public
      * key.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
     protected X942DHPublicKey(Session session, long objectHandle)
-        throws TokenException
-    {
+        throws TokenException {
         super(session, objectHandle);
         keyType_.setLongValue(KeyType.X9_42_DH);
     }
@@ -98,20 +101,22 @@ public class X942DHPublicKey extends DHPublicKey {
      * The getInstance method of the PublicKey class uses this method to create
      * an instance of a PKCS#11 X9.42 DH public key.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
      * @return The object representing the PKCS#11 object.
      *         The returned object can be casted to the
      *         according sub-class.
-     * @exception TokenException If getting the attributes failed.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
     public static Object getInstance(Session session, long objectHandle)
-        throws TokenException
-    {
+        throws TokenException {
         return new X942DHPublicKey(session, objectHandle);
     }
 
@@ -121,15 +126,13 @@ public class X942DHPublicKey extends DHPublicKey {
      * implementation of this method for each class separately (see use in
      * clone()).
      *
-     * @param object The object to handle.
+     * @param object
+     *          The object to handle.
      * @preconditions (object <> null)
      * @postconditions
      */
     protected static void putAttributesInTable(X942DHPublicKey object) {
-        if (object == null) {
-            throw new NullPointerException("Argument \"object\" must not be null.");
-        }
-
+        Util.requireNotNull("object", object);
         object.attributeTable_.put(Attribute.PRIME, object.prime_);
         object.attributeTable_.put(Attribute.BASE, object.base_);
         object.attributeTable_.put(Attribute.SUBPRIME, object.subprime_);
@@ -143,6 +146,7 @@ public class X942DHPublicKey extends DHPublicKey {
      * @preconditions
      * @postconditions
      */
+    @Override
     protected void allocateAttributes() {
         super.allocateAttributes();
 
@@ -163,6 +167,7 @@ public class X942DHPublicKey extends DHPublicKey {
      *                 and (result instanceof X942DHPublicKey)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         X942DHPublicKey clone = (X942DHPublicKey) super.clone();
 
@@ -171,7 +176,8 @@ public class X942DHPublicKey extends DHPublicKey {
         clone.subprime_ = (ByteArrayAttribute) this.subprime_.clone();
         clone.value_ = (ByteArrayAttribute) this.value_.clone();
 
-        putAttributesInTable(clone); // put all cloned attributes into the new table
+        // put all cloned attributes into the new table
+        putAttributesInTable(clone);
 
         return clone;
     }
@@ -180,24 +186,29 @@ public class X942DHPublicKey extends DHPublicKey {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof X942DHPublicKey) {
-            X942DHPublicKey other = (X942DHPublicKey) otherObject;
-            equal = (this == other)
-                || (super.equals(other) && this.prime_.equals(other.prime_)
-                    && this.base_.equals(other.base_) && this.subprime_.equals(other.subprime_) && this.value_
-                      .equals(other.value_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof X942DHPublicKey)) {
+            return false;
+        }
+
+        X942DHPublicKey other = (X942DHPublicKey) otherObject;
+        return super.equals(other)
+                && this.prime_.equals(other.prime_)
+                && this.base_.equals(other.base_)
+                && this.subprime_.equals(other.subprime_)
+                && this.value_.equals(other.value_);
     }
 
     /**
@@ -207,6 +218,7 @@ public class X942DHPublicKey extends DHPublicKey {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public ByteArrayAttribute getPrime() {
         return prime_;
     }
@@ -218,14 +230,15 @@ public class X942DHPublicKey extends DHPublicKey {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public ByteArrayAttribute getBase() {
         return base_;
     }
 
     /**
-     * Gets the subprime attribute of this X9.42 DH key.
+     * Gets the sub-prime attribute of this X9.42 DH key.
      *
-     * @return The subprime attribute.
+     * @return The sub-prime attribute.
      * @preconditions
      * @postconditions (result <> null)
      */
@@ -240,6 +253,7 @@ public class X942DHPublicKey extends DHPublicKey {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public ByteArrayAttribute getValue() {
         return value_;
     }
@@ -247,24 +261,22 @@ public class X942DHPublicKey extends DHPublicKey {
     /**
      * Read the values of the attributes of this object from the token.
      *
-     * @param session The session handle to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
+    @Override
     public void readAttributes(Session session)
-        throws TokenException
-    {
+        throws TokenException {
         super.readAttributes(session);
 
-        //    Object.getAttributeValue(session, objectHandle_, prime_);
-        //    Object.getAttributeValue(session, objectHandle_, base_);
-        //    Object.getAttributeValue(session, objectHandle_, subprime_);
-        //    Object.getAttributeValue(session, objectHandle_, value_);
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] { prime_, base_,
-            subprime_, value_ });
+        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
+            prime_, base_, subprime_, value_ });
     }
 
     /**
@@ -276,29 +288,25 @@ public class X942DHPublicKey extends DHPublicKey {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder(1024);
 
         buffer.append(super.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Prime (hex): ");
         buffer.append(prime_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Base (hex): ");
         buffer.append(base_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Subprime (hex): ");
         buffer.append(subprime_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
-        buffer.append("Value (hex): ");
+        buffer.append(Constants.NEWLINE_INDENT_HEXVALUE);
         buffer.append(value_.toString());
 
         return buffer.toString();

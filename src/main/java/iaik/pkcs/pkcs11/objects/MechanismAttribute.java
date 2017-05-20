@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -57,7 +57,8 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 public class MechanismAttribute extends LongAttribute {
 
     /**
-     * Default constructor - only for internal use in AttributeArrayAttribute.getValueString().
+     * Default constructor - only for internal use in
+     * AttributeArrayAttribute.getValueString().
      */
     MechanismAttribute() {
         super();
@@ -66,8 +67,9 @@ public class MechanismAttribute extends LongAttribute {
     /**
      * Constructor taking the PKCS#11 type of the attribute.
      *
-     * @param type The PKCS'11 type of this attribute; e.g.
-     *             PKCS11Constants.CKA_VALUE_LEN.
+     * @param type
+     *          The PKCS#11 type of this attribute; e.g.
+     *          PKCS11Constants.CKA_VALUE_LEN.
      * @preconditions (type <> null)
      * @postconditions
      */
@@ -80,13 +82,15 @@ public class MechanismAttribute extends LongAttribute {
      * <code>null</code>, is also valid.
      * A call to this method sets the present flag to true.
      *
-     * @param mechanism The mechanism value to set. May be <code>null</code>.
+     * @param mechanism
+     *          The mechanism value to set. May be <code>null</code>.
      * @preconditions
      * @postconditions
      */
+    @SuppressWarnings("restriction")
     public void setMechanism(Mechanism mechanism) {
-        ckAttribute_.pValue = (mechanism != null) ? new Long(mechanism.getMechanismCode())
-            : null;
+        ckAttribute_.pValue = (mechanism != null)
+                ? new Long(mechanism.getMechanismCode()) : null;
         present_ = true;
     }
 
@@ -97,9 +101,11 @@ public class MechanismAttribute extends LongAttribute {
      * @preconditions
      * @postconditions
      */
+    @SuppressWarnings("restriction")
     public Mechanism getMechanism() {
-        return ((ckAttribute_ != null) && (ckAttribute_.pValue != null)) ? new Mechanism(
-            ((Long) ckAttribute_.pValue).longValue()) : null;
+        return ((ckAttribute_ != null) && (ckAttribute_.pValue != null))
+                ? new Mechanism(((Long) ckAttribute_.pValue).longValue())
+                : null;
     }
 
     /**
@@ -109,13 +115,16 @@ public class MechanismAttribute extends LongAttribute {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @SuppressWarnings("restriction")
+    @Override
     protected String getValueString() {
         String valueString;
 
         if ((ckAttribute_ != null) && (ckAttribute_.pValue != null)) {
-            if (((Long) ckAttribute_.pValue).longValue() != PKCS11Constants.CK_UNAVAILABLE_INFORMATION) {
-                valueString = Functions.mechanismCodeToString(((Long) ckAttribute_.pValue)
-                    .longValue());
+            if (((Long) ckAttribute_.pValue).longValue()
+                    != PKCS11Constants.CK_UNAVAILABLE_INFORMATION) {
+                valueString = Functions.mechanismCodeToString(
+                        ((Long) ckAttribute_.pValue).longValue());
             } else {
                 valueString = "<Information unavailable>";
             }

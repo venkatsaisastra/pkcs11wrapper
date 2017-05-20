@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -53,6 +53,7 @@ import sun.security.pkcs11.wrapper.PKCS11Exception;
  * @version 1.0
  * @invariants
  */
+@SuppressWarnings("restriction")
 public interface Notify {
 
     /**
@@ -65,22 +66,25 @@ public interface Notify {
      * The module calls this method in certain events. 'Surrender' is the only
      * event defined by now. If the application wants to return an error code,
      * it can do this using PKCS11Exceptions. Throwing no exception means a
-     * return value of CKR_OK, and trowing an PKCS11Exception means a return
+     * return value of CKR_OK, and throwing an PKCS11Exception means a return
      * value of the error code of the exception; e.g.<code><br>
      * throw new PKCS11Exception(PKCS11Constants.CKR_CANCEL);<br>
      * </code><br>
      * causes a return value of CKR_CANCEL.
      *
-     * @param session The session performing the callback.
-     * @param surrender See CK_NOTIFICATION in PKCS#11. A return value of CKR_OK
-     *                  is generatd, if this method call returns regularly.
-     *                  CKR_CANCEL can be returned to the module by throwing a
-     *                  PKCS11Exception with the error-code CKR_CANCEL.
-     * @param application The application-object passed to openSession.
-     * @exception PKCS11Exception If the method fails for some reason, or as
-     *                            PKCS11Exception with error-code CKR_CANCEL
-     *                            to signal the module to cancel the ongoing
-     *                            operation.
+     * @param session
+     *          The session performing the callback.
+     * @param surrender
+     *          See CK_NOTIFICATION in PKCS#11. A return value of CKR_OK is
+     *          generated, if this method call returns regularly.
+     *          CKR_CANCEL can be returned to the module by throwing a
+     *          PKCS11Exception with the error-code CKR_CANCEL.
+     * @param application
+     *          The application-object passed to openSession.
+     * @exception PKCS11Exception
+     *              If the method fails for some reason, or as PKCS11Exception
+     *              with error-code CKR_CANCEL to signal the module to cancel
+     *              the ongoing operation.
      * @preconditions (session <> null)
      * @postconditions
      */

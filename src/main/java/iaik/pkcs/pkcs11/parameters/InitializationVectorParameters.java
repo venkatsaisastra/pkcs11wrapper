@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -43,7 +43,8 @@
 package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
@@ -67,16 +68,14 @@ public class InitializationVectorParameters implements Parameters {
      * Create a new InitializationVectorParameters object with the given
      * initialization vector.
      *
-     * @param initializationVector The initialization vector.
+     * @param initializationVector
+     *          The initialization vector.
      * @preconditions (initializationVector <> null)
      * @postconditions
      */
     public InitializationVectorParameters(byte[] initializationVector) {
-        if (initializationVector == null) {
-            throw new NullPointerException(
-                "Argument \"initializationVector\" must not be null.");
-        }
-        initializationVector_ = initializationVector;
+        initializationVector_ = Util.requireNotNull("initializationVector",
+                initializationVector);
     }
 
     /**
@@ -88,16 +87,18 @@ public class InitializationVectorParameters implements Parameters {
      *                 and (result instanceof InitializationVectorParameters)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         InitializationVectorParameters clone;
 
         try {
             clone = (InitializationVectorParameters) super.clone();
-
-            clone.initializationVector_ = (byte[]) this.initializationVector_.clone();
+            clone.initializationVector_
+                    = (byte[]) this.initializationVector_.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException("An unexpected clone exception occurred.", ex);
+            throw new TokenRuntimeException(
+                    "An unexpected clone exception occurred.", ex);
         }
 
         return clone;
@@ -110,6 +111,7 @@ public class InitializationVectorParameters implements Parameters {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public Object getPKCS11ParamsObject() {
         return initializationVector_;
     }
@@ -128,16 +130,14 @@ public class InitializationVectorParameters implements Parameters {
     /**
      * Set the initialization vector.
      *
-     * @param initializationVector The initialization vector.
+     * @param initializationVector
+     *          The initialization vector.
      * @preconditions (initializationVector <> null)
      * @postconditions
      */
     public void setInitializationVector(byte[] initializationVector) {
-        if (initializationVector == null) {
-            throw new NullPointerException(
-                "Argument \"initializationVector\" must not be null.");
-        }
-        initializationVector_ = initializationVector;
+        initializationVector_ = Util.requireNotNull("initializationVector",
+                initializationVector);
     }
 
     /**
@@ -146,13 +146,13 @@ public class InitializationVectorParameters implements Parameters {
      *
      * @return A string representation of this object.
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append(Constants.INDENT);
         buffer.append("Initialization Vector (hex): ");
         buffer.append(Functions.toHexString(initializationVector_));
-        // buffer.append(Constants.NEWLINE);
 
         return buffer.toString();
     }
@@ -161,32 +161,38 @@ public class InitializationVectorParameters implements Parameters {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof InitializationVectorParameters) {
-            InitializationVectorParameters other = (InitializationVectorParameters) otherObject;
-            equal = (this == other)
-                || Functions.equals(this.initializationVector_, other.initializationVector_);
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof InitializationVectorParameters)) {
+            return false;
+        }
+
+        InitializationVectorParameters other
+                = (InitializationVectorParameters) otherObject;
+        return Functions.equals(this.initializationVector_,
+                    other.initializationVector_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return Functions.hashCode(initializationVector_);
     }

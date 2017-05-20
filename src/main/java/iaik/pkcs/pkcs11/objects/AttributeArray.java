@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -42,12 +42,12 @@
 
 package iaik.pkcs.pkcs11.objects;
 
-import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
-import sun.security.pkcs11.wrapper.Constants;
-
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+
+import iaik.pkcs.pkcs11.wrapper.Constants;
+import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
 
 /**
  * Objects of this class represent a attribute array of a PKCS#11 object
@@ -59,11 +59,12 @@ import java.util.List;
  * @version 1.0
  * @invariants
  */
+@SuppressWarnings("restriction")
 public class AttributeArray extends Attribute {
 
     /**
-     * The attributes of this attribute array in their object class representation.
-     * Needed for printing and comparing this attribute array.
+     * The attributes of this attribute array in their object class
+     * representation. Needed for printing and comparing this attribute array.
      */
     protected Object template_;
 
@@ -77,8 +78,9 @@ public class AttributeArray extends Attribute {
     /**
      * Constructor taking the PKCS#11 type of the attribute.
      *
-     * @param type The PKCS#11 type of this attribute; e.g.
-     *             PKCS11Constants.CKA_VALUE.
+     * @param type
+     *          The PKCS#11 type of this attribute; e.g.
+     *          PKCS11Constants.CKA_VALUE.
      * @preconditions (type <> null)
      * @postconditions
      */
@@ -87,27 +89,29 @@ public class AttributeArray extends Attribute {
     }
 
     /**
-     * Set the attributes of this attribute array by specifying a GenericTemplate.
-     * Null, is also valid.
+     * Set the attributes of this attribute array by specifying a
+     * GenericTemplate. Null, is also valid.
      * A call to this method sets the present flag to true.
      *
-     * @param value The AttributeArray value to set. May be null.
+     * @param value
+     *          The AttributeArray value to set. May be null.
      * @preconditions
      * @postconditions
      */
     public void setAttributeArrayValue(Object value) {
-
         template_ = value;
 
-        List attributeList = new ArrayList();
-        Enumeration attributeEnumeration = template_.attributeTable_.elements();
+        List<CK_ATTRIBUTE> attributeList = new ArrayList<>();
+        Enumeration<Attribute> attributeEnumeration
+                = template_.attributeTable_.elements();
         while (attributeEnumeration.hasMoreElements()) {
-            Attribute attribute = (Attribute) attributeEnumeration.nextElement();
+            Attribute attribute = attributeEnumeration.nextElement();
             if (attribute.present_) {
                 attributeList.add(attribute.getCkAttribute());
             }
         }
-        ckAttribute_.pValue = (CK_ATTRIBUTE[]) attributeList.toArray(new CK_ATTRIBUTE[0]);;
+        ckAttribute_.pValue = (CK_ATTRIBUTE[])
+                attributeList.toArray(new CK_ATTRIBUTE[0]);
         present_ = true;
     }
 
@@ -119,40 +123,42 @@ public class AttributeArray extends Attribute {
      * @postconditions
      */
     public Object getAttributeArrayValue() {
-        if (template_ == null) {
-            if (ckAttribute_.pValue != null
-                && ((CK_ATTRIBUTE[]) ckAttribute_.pValue).length > 0) {
-                CK_ATTRIBUTE[] attributesArray = (CK_ATTRIBUTE[]) ckAttribute_.pValue;
-                GenericTemplate template = new GenericTemplate();
-                for (int i = 0; i < attributesArray.length; i++) {
-                    Long type = new Long(attributesArray[i].type);
-                    Class implementation = (Class) Attribute.getAttributeClass(type);
-                    Attribute attribute;
-                    if (implementation == null) {
-                        attribute = new OtherAttribute();
-                        attribute.setType(type);
-                        attribute.setCkAttribute(attributesArray[i]);
-                    } else {
-                        try {
-                            attribute = (Attribute) implementation.newInstance();
-                            attribute.setCkAttribute(attributesArray[i]);
-                            attribute.setPresent(true);
-                            template.addAttribute(attribute);
-                        } catch (Exception ex) {
-                            System.err.println("Error when trying to create a " + implementation
-                                + " instance for " + type + ": " + ex.getMessage());
-                            System.err.flush();
-                            continue;
-                        }
-                    }
-                }
-                return template;
-            } else {
-                return null;
-            }
-        } else {
+        if (template_ != null) {
             return template_;
         }
+
+        if (!(ckAttribute_.pValue != null
+                && ((CK_ATTRIBUTE[]) ckAttribute_.pValue).length > 0)) {
+            return null;
+        }
+
+        CK_ATTRIBUTE[] attributesArray = (CK_ATTRIBUTE[]) ckAttribute_.pValue;
+        GenericTemplate template = new GenericTemplate();
+        for (int i = 0; i < attributesArray.length; i++) {
+            Long type = new Long(attributesArray[i].type);
+            Class<?> implementation
+                    = (Class<?>) Attribute.getAttributeClass(type);
+            Attribute attribute;
+            if (implementation == null) {
+                attribute = new OtherAttribute();
+                attribute.setType(type);
+                attribute.setCkAttribute(attributesArray[i]);
+            } else {
+                try {
+                    attribute = (Attribute) implementation.newInstance();
+                    attribute.setCkAttribute(attributesArray[i]);
+                    attribute.setPresent(true);
+                    template.addAttribute(attribute);
+                } catch (Exception ex) {
+                    System.err.println(
+                        "Error when trying to create a " + implementation
+                        + " instance for " + type + ": " + ex.getMessage());
+                    System.err.flush();
+                    continue;
+                }
+            }
+        }
+        return template;
     }
 
     /**
@@ -164,11 +170,15 @@ public class AttributeArray extends Attribute {
      */
     protected String getValueString() {
         String valueString = "";
-        if (template_ == null) template_ = getAttributeArrayValue();
+        if (template_ == null) {
+            template_ = getAttributeArrayValue();
+        }
+
         if (template_ == null) {
             valueString = "<NULL_PTR>";
         } else {
-            String indent = Constants.INDENT + Constants.INDENT + Constants.INDENT;
+            String indent
+                    = Constants.INDENT + Constants.INDENT + Constants.INDENT;
             valueString += template_.toString(true, true, indent);
         }
         return valueString;
@@ -178,44 +188,68 @@ public class AttributeArray extends Attribute {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof AttributeArray) {
-            AttributeArray other = (AttributeArray) otherObject;
-            if (this.template_ == null) this.template_ = this.getAttributeArrayValue();
-            if (other.template_ == null) other.template_ = other.getAttributeArrayValue();
-            equal = (this == other)
-                || (((this.present_ == false) && (other.present_ == false)) || (((this.present_ == true) && (other.present_ == true)) && ((this.sensitive_ == other.sensitive_) && (this.template_
-                    .equals(other.template_)))));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof AttributeArray)) {
+            return false;
+        }
+
+        AttributeArray other = (AttributeArray) otherObject;
+
+        if (this.template_ == null) {
+            this.template_ = this.getAttributeArrayValue();
+        }
+
+        if (other.template_ == null) {
+            other.template_ = other.getAttributeArrayValue();
+        }
+
+        if (!this.present_ && !other.present_) {
+            return true;
+        }
+
+        if (!(this.present_ && other.present_)) {
+            return false;
+        }
+
+        if (this.sensitive_ != other.sensitive_) {
+            return false;
+        }
+
+        return this.template_.equals(other.template_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
-        if (template_ == null) template_ = getAttributeArrayValue();
+        if (template_ == null) {
+            template_ = getAttributeArrayValue();
+        }
         return template_.hashCode();
     }
 
     /**
      * Create a (deep) clone of this object.
-     * The attributes in the CK_ATTRIBUTE[] need not be cloned, as they can't be set
-     * separately.
+     * The attributes in the CK_ATTRIBUTE[] need not be cloned, as they can't be
+     * set separately.
      *
      * @return A clone of this object.
      * @preconditions
@@ -223,20 +257,23 @@ public class AttributeArray extends Attribute {
      *                 and (result instanceof AttributeArray)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         AttributeArray clone;
 
         clone = (AttributeArray) super.clone();
-        if (template_ == null) template_ = getAttributeArrayValue();
-        if (template_ != null) clone.template_ = (GenericTemplate) this.template_.clone();
+        if (template_ == null) {
+            template_ = getAttributeArrayValue();
+        }
+        if (template_ != null) {
+            clone.template_ = (GenericTemplate) this.template_.clone();
+        }
         return clone;
     }
 
-    /* (non-Javadoc)
-     * @see iaik.pkcs.pkcs11.objects.Attribute#setValue(java.lang.Object) */
+    @Override
     public void setValue(java.lang.Object value)
-        throws UnsupportedOperationException
-    {
+        throws UnsupportedOperationException {
         setAttributeArrayValue((Object) value);
     }
 

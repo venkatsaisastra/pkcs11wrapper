@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -43,12 +43,12 @@
 package iaik.pkcs.pkcs11;
 
 import iaik.pkcs.pkcs11.parameters.Parameters;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
-import sun.security.pkcs11.wrapper.Constants;
 
 /**
- * Objects of this class represent a mechansim as defined in PKCS#11. There are
+ * Objects of this class represent a mechanism as defined in PKCS#11. There are
  * constants defined for all mechanisms that PKCS#11 version 2.11 defines.
  *
  * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
@@ -58,7 +58,7 @@ import sun.security.pkcs11.wrapper.Constants;
 public class Mechanism implements Cloneable {
 
     /**
-     * The code of the machanism as defined in PKCS11Constants (or pkcs11t.h
+     * The code of the mechanism as defined in PKCS11Constants (or pkcs11t.h
      * likewise).
      */
     protected long pkcs11MechanismCode_;
@@ -69,9 +69,10 @@ public class Mechanism implements Cloneable {
     protected Parameters parameters_;
 
     /**
-     * Constructor taking just the mechansim code as defined in PKCS11Constants.
+     * Constructor taking just the mechanism code as defined in PKCS11Constants.
      *
-     * @param pkcs11MechanismCode The mechanism code.
+     * @param pkcs11MechanismCode
+     *          The mechanism code.
      * @preconditions
      * @postconditions
      */
@@ -80,9 +81,11 @@ public class Mechanism implements Cloneable {
     }
 
     /**
-     * Gets the mechanism specified by the given mechanism code. Helper {@link PKCS11Constants} is available.
+     * Gets the mechanism specified by the given mechanism code. Helper
+     * {@link PKCS11Constants} is available.
      *
-     * @param pkcs11MechanismCode the pkcs11 mechanism code
+     * @param pkcs11MechanismCode
+     *          the pkcs11 mechanism code
      * @return the mechanism
      */
     public static Mechanism get(long pkcs11MechanismCode) {
@@ -96,6 +99,7 @@ public class Mechanism implements Cloneable {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public Object clone() {
         Mechanism clone = null;
 
@@ -109,26 +113,32 @@ public class Mechanism implements Cloneable {
     }
 
     /**
-     * Override equals to check for the equality of mechanism code and parameter.
+     * Override equals to check for the equality of mechanism code and
+     * parameter.
      *
-     * @param otherObject The other Mechanism object.
+     * @param otherObject
+     *          The other Mechanism object.
      * @return True, if other is an instance of this class and
      *         pkcs11MechanismCode_ and parameter_ of both objects are equal.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(Object otherObject) {
-        boolean euqal = false;
-
-        if (otherObject instanceof Mechanism) {
-            Mechanism other = (Mechanism) otherObject;
-            euqal = (this == other)
-                || (this.pkcs11MechanismCode_ == other.pkcs11MechanismCode_)
-                && (((this.parameters_ == null) && other.parameters_ == null) || ((this.parameters_ != null) && this.parameters_
-                    .equals(other.parameters_)));
+        if (this == otherObject) {
+            return true;
         }
 
-        return euqal;
+        if (!(otherObject instanceof Mechanism)) {
+            return false;
+        }
+
+        Mechanism other = (Mechanism) otherObject;
+        if  (this.pkcs11MechanismCode_ != other.pkcs11MechanismCode_) {
+            return false;
+        }
+
+        return Util.objEquals(this.parameters_, other.parameters_);
     }
 
     /**
@@ -139,6 +149,7 @@ public class Mechanism implements Cloneable {
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return (int) pkcs11MechanismCode_;
     }
@@ -165,8 +176,8 @@ public class Mechanism implements Cloneable {
      * and decryptUpdate() functions.
      * This is the information as provided by the table on page 229
      * of the PKCS#11 v2.11 standard.
-     * If this method returns true, the mechanism can be used with the encrypt and
-     * decrypt functions including encryptUpdate and decryptUpdate.
+     * If this method returns true, the mechanism can be used with the encrypt
+     * and decrypt functions including encryptUpdate and decryptUpdate.
      *
      * @return True, if this mechanism is a full encrypt/decrypt
      *         mechanism. False, otherwise.
@@ -186,7 +197,7 @@ public class Mechanism implements Cloneable {
      * If this method returns true, the mechanism can be used with the sign and
      * verify functions including signUpdate and verifyUpdate.
      *
-     * @return True, if thï¿½s mechanism is a full sign/verify
+     * @return True, if this mechanism is a full sign/verify
      *         mechanism. False, otherwise.
      * @preconditions
      * @postconditions
@@ -217,8 +228,8 @@ public class Mechanism implements Cloneable {
      * generation mechanism for generating symmetric keys.
      * This is the information as provided by the table on page 229
      * of the PKCS#11 v2.11 standard.
-     * If this method returns true, the mechanism can be used with the generateKey
-     * function.
+     * If this method returns true, the mechanism can be used with the
+     * generateKey function.
      *
      * @return True, if this mechanism is a key generation mechanism.
      *         False, otherwise.
@@ -234,8 +245,8 @@ public class Mechanism implements Cloneable {
      * generation mechanism for generating key-pairs.
      * This is the information as provided by the table on page 229
      * of the PKCS#11 v2.11 standard.
-     * If this method returns true, the mechanism can be used with the generateKeyPair
-     * function.
+     * If this method returns true, the mechanism can be used with the
+     * generateKeyPair function.
      *
      * @return True, if this mechanism is a key-pair generation mechanism.
      *         False, otherwise.
@@ -251,8 +262,8 @@ public class Mechanism implements Cloneable {
      * mechanism with message recovery.
      * This is the information as provided by the table on page 229
      * of the PKCS#11 v2.11 standard.
-     * If this method returns true, the mechanism can be used with the signRecover
-     * and verifyRecover functions.
+     * If this method returns true, the mechanism can be used with the
+     * signRecover and verifyRecover functions.
      *
      * @return True, if this mechanism is a sign/verify mechanism with
      *         message recovery. False, otherwise.
@@ -269,8 +280,8 @@ public class Mechanism implements Cloneable {
      * encryptUpdate() and decryptUpdate() functions.
      * This is the information as provided by the table on page 229
      * of the PKCS#11 v2.11 standard.
-     * If this method returns true, the mechanism can be used with the encrypt and
-     * decrypt functions excluding encryptUpdate and decryptUpdate.
+     * If this method returns true, the mechanism can be used with the encrypt
+     * and decrypt functions excluding encryptUpdate and decryptUpdate.
      *
      * @return True, if this mechanism is a single-operation
      *         encrypt/decrypt mechanism. False, otherwise.
@@ -278,7 +289,8 @@ public class Mechanism implements Cloneable {
      * @postconditions
      */
     public boolean isSingleOperationEncryptDecryptMechanism() {
-        return Functions.isSingleOperationEncryptDecryptMechanism(pkcs11MechanismCode_);
+        return Functions.isSingleOperationEncryptDecryptMechanism(
+                pkcs11MechanismCode_);
     }
 
     /**
@@ -296,7 +308,8 @@ public class Mechanism implements Cloneable {
      * @postconditions
      */
     public boolean isSingleOperationSignVerifyMechanism() {
-        return Functions.isSingleOperationSignVerifyMechanism(pkcs11MechanismCode_);
+        return Functions.isSingleOperationSignVerifyMechanism(
+                pkcs11MechanismCode_);
     }
 
     /**
@@ -320,7 +333,7 @@ public class Mechanism implements Cloneable {
     /**
      * Get the parameters object of this mechanism.
      *
-     * @return The parameters of this mechansim. May be null.
+     * @return The parameters of this mechanism. May be null.
      * @preconditions
      * @postconditions
      */
@@ -331,7 +344,8 @@ public class Mechanism implements Cloneable {
     /**
      * Set the parameters for this mechanism.
      *
-     * @param parameters The mechanism parameters to set.
+     * @param parameters
+     *          The mechanism parameters to set.
      * @preconditions
      * @postconditions
      */
@@ -340,10 +354,10 @@ public class Mechanism implements Cloneable {
     }
 
     /**
-     * Get the code of this mechanism as defined in PKCS11Constants (of pkcs11t.h
-     * likewise).
+     * Get the code of this mechanism as defined in PKCS11Constants (of
+     * pkcs11t.h likewise).
      *
-     * @return The code of this mechnism.
+     * @return The code of this mechanism.
      * @preconditions
      * @postconditions
      */
@@ -354,7 +368,7 @@ public class Mechanism implements Cloneable {
     /**
      * Get the name of this mechanism.
      *
-     * @return The name of this mechnism.
+     * @return The name of this mechanism.
      * @preconditions
      * @postconditions
      */
@@ -367,6 +381,7 @@ public class Mechanism implements Cloneable {
      *
      * @return the string representation of this object
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder(128);
 
@@ -379,7 +394,6 @@ public class Mechanism implements Cloneable {
         buffer.append("Parameters: ");
         buffer.append(Constants.NEWLINE);
         buffer.append(parameters_);
-        // buffer.append(Constants.NEWLINE);
 
         return buffer.toString();
     }

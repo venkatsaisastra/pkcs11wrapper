@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -57,31 +57,31 @@ public class State implements Cloneable {
     /**
      * Constant for a read-only public session.
      */
-    public final static State RO_PUBLIC_SESSION = new State(
+    public static final State RO_PUBLIC_SESSION = new State(
         PKCS11Constants.CKS_RO_PUBLIC_SESSION);
 
     /**
      * Constant for a read-only user session.
      */
-    public final static State RO_USER_FUNCTIONS = new State(
+    public static final State RO_USER_FUNCTIONS = new State(
         PKCS11Constants.CKS_RO_USER_FUNCTIONS);
 
     /**
      * Constant for a read-write public session.
      */
-    public final static State RW_PUBLIC_SESSION = new State(
+    public static final State RW_PUBLIC_SESSION = new State(
         PKCS11Constants.CKS_RW_PUBLIC_SESSION);
 
     /**
      * Constant for a read-write user session.
      */
-    public final static State RW_USER_FUNCTIONS = new State(
+    public static final State RW_USER_FUNCTIONS = new State(
         PKCS11Constants.CKS_RW_USER_FUNCTIONS);
 
     /**
      * Constant for a read-write security officer session.
      */
-    public final static State RW_SO_FUNCTIONS = new State(
+    public static final State RW_SO_FUNCTIONS = new State(
         PKCS11Constants.CKS_RW_SO_FUNCTIONS);
 
     /**
@@ -92,11 +92,12 @@ public class State implements Cloneable {
     /**
      * Constructor that simply takes the status code as defined in PKCS#11.
      *
-     * @param code One of: PKCS11Constants.CKS_RO_PUBLIC_SESSION,
-     *                     PKCS11Constants.CKS_RO_USER_FUNCTIONS,
-     *                     PKCS11Constants.CKS_RW_PUBLIC_SESSION,
-     *                     PKCS11Constants.CKS_RW_USER_FUNCTIONS or
-     *                     PKCS11Constants.CKS_RW_SO_FUNCTIONS.
+     * @param code
+     *          One of: PKCS11Constants.CKS_RO_PUBLIC_SESSION,
+     *                  PKCS11Constants.CKS_RO_USER_FUNCTIONS,
+     *                  PKCS11Constants.CKS_RW_PUBLIC_SESSION,
+     *                  PKCS11Constants.CKS_RW_USER_FUNCTIONS or
+     *                  PKCS11Constants.CKS_RW_SO_FUNCTIONS.
      *
      * @preconditions
      * @postconditions
@@ -114,14 +115,16 @@ public class State implements Cloneable {
      *                 and (result instanceof State)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         State clone;
 
         try {
             clone = (State) super.clone();
         } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException("An unexpected clone exception occurred.", ex);
+            // this must not happen, because this class is clone-able
+            throw new TokenRuntimeException(
+                    "An unexpected clone exception occurred.", ex);
         }
 
         return clone;
@@ -131,31 +134,36 @@ public class State implements Cloneable {
      * Compares the state code of this object with the other
      * object. Returns only true, if those are equal in both objects.
      *
-     * @param otherObject The other State object.
+     * @param otherObject
+     *          The other State object.
      * @return True, if other is an instance of State and the state code
      *         of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof State) {
-            State other = (State) otherObject;
-            equal = (this == other) || (this.code_ == other.code_);
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof State)) {
+            return false;
+        }
+
+        State other = (State) otherObject;
+        return (this.code_ == other.code_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object. Gained from the state code.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return (int) code_;
     }
@@ -165,6 +173,7 @@ public class State implements Cloneable {
      *
      * @return The string representation of object
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 

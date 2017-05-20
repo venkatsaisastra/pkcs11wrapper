@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -42,10 +42,10 @@
 
 package iaik.pkcs.pkcs11;
 
+import iaik.pkcs.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import sun.security.pkcs11.wrapper.CK_SLOT_INFO;
-import sun.security.pkcs11.wrapper.Constants;
-import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
  * Objects of this class represent slots that can accept tokens. The application
@@ -66,6 +66,7 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  * @version 1.0
  * @invariants (module_ <> null)
  */
+@SuppressWarnings("restriction")
 public class Slot {
 
     /**
@@ -79,23 +80,23 @@ public class Slot {
     protected long slotID_;
 
     /**
-     * True, if UTF8 encoding is used as character encoding for character array attributes and PINs.
+     * True, if UTF8 encoding is used as character encoding for character array
+     * attributes and PINs.
      */
     protected boolean useUtf8Encoding_ = true;
 
     /**
      * The constructor that takes a reference to the module and the slot ID.
      *
-     * @param module The reference to the module of this slot.
-     * @param slotID The identifier of the slot.
+     * @param module
+     *          The reference to the module of this slot.
+     * @param slotID
+     *           The identifier of the slot.
      * @preconditions (pkcs11Module <> null)
      * @postconditions
      */
     protected Slot(Module module, long slotID) {
-        if (module == null) {
-            throw new NullPointerException("Argument \"module\" must not be null.");
-        }
-        module_ = module;
+        module_ = Util.requireNotNull("module", module);
         slotID_ = slotID;
     }
 
@@ -103,37 +104,44 @@ public class Slot {
      * Compares the slot ID and the module_ of this object with the slot ID and
      * module_ of the other object. Returns only true, if both are equal.
      *
-     * @param otherObject The other Slot object.
+     * @param otherObject
+     *          The other Slot object.
      * @return True, if other is an instance of Slot and the slot ID and module_
      *         of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof Slot) {
-            Slot other = (Slot) otherObject;
-            equal = (this == other)
-                || ((this.slotID_ == other.slotID_) && this.module_.equals(other.module_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof Slot)) {
+            return false;
+        }
+
+        Slot other = (Slot) otherObject;
+        return (this.slotID_ == other.slotID_)
+                && this.module_.equals(other.module_);
     }
 
     /**
-     * Specify, whether UTF8 character encoding shall be used for character array attributes and PINs.
-     * @param useUtf8Encoding  true, if UTF8 shall be used
+     * Specify, whether UTF8 character encoding shall be used for character
+     * array attributes and PINs.
+     * @param useUtf8Encoding
+     *          true, if UTF8 shall be used
      */
-    public void setUtf8Encoding(boolean useUtf8Encoding){
+    public void setUtf8Encoding(boolean useUtf8Encoding) {
         useUtf8Encoding_ = useUtf8Encoding;
     }
 
     /**
      * Returns whether UTF8 encoding is set.
-     * @return true, if UTF8 is used as character encoding for character array attributes and PINs.
+     * @return true, if UTF8 is used as character encoding for character array
+     *         attributes and PINs.
      */
-    public boolean isSetUtf8Encoding(){
+    public boolean isSetUtf8Encoding() {
         return useUtf8Encoding_;
     }
 
@@ -149,8 +157,7 @@ public class Slot {
     }
 
     /**
-     * Get the ID of this slot. This is the ID returned by the PKCS#11
-     * module.
+     * Get the ID of this slot. This is the ID returned by the PKCS#11 module.
      *
      * @return The ID of this slot.
      * @preconditions
@@ -163,14 +170,14 @@ public class Slot {
     /**
      * Get information about this slot object.
      *
-     * @return An object that contains informatin about this slot.
-     * @exception TokenException If reading the information fails.
+     * @return An object that contains information about this slot.
+     * @exception TokenException
+     *              If reading the information fails.
      * @preconditions
      * @postconditions (result <> null)
      */
     public SlotInfo getSlotInfo()
-        throws TokenException
-    {
+        throws TokenException {
         CK_SLOT_INFO ckSlotInfo;
         try {
             ckSlotInfo = module_.getPKCS11Module().C_GetSlotInfo(slotID_);
@@ -187,13 +194,13 @@ public class Slot {
      *
      * @return The object for accessing the token. Or null, if none is present
      *         in this slot.
-     * @exception TokenException If determining if a token is present fails.
+     * @exception TokenException
+     *              If determining if a token is present fails.
      * @preconditions
      * @postconditions
      */
     public Token getToken()
-        throws TokenException
-    {
+        throws TokenException {
         Token token = null;
 
         if (getSlotInfo().isTokenPresent()) {
@@ -204,13 +211,14 @@ public class Slot {
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object. Gained from the slot ID.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return (int) slotID_;
     }
@@ -220,11 +228,11 @@ public class Slot {
      *
      * @return the string representation of this object
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
-        buffer.append("Slot ID: ");
-        buffer.append("0x");
+        buffer.append("Slot ID: 0x");
         buffer.append(Functions.toHexString(slotID_));
         buffer.append(Constants.NEWLINE);
 

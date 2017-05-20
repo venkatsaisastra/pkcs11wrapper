@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -42,12 +42,12 @@
 
 package iaik.pkcs.pkcs11;
 
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import sun.security.pkcs11.wrapper.CK_INFO;
-import sun.security.pkcs11.wrapper.Constants;
 
 /**
- * Objects of this class provide information about a PKCS#11 moduel; i.e. the
- * driver for a spcific token.
+ * Objects of this class provide information about a PKCS#11 module; i.e. the
+ * driver for a specific token.
  *
  * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
  * @version 1.0
@@ -56,6 +56,7 @@ import sun.security.pkcs11.wrapper.Constants;
  *             and (libraryDescription_ <> null)
  *             and (libraryVersion_ <> null)
  */
+@SuppressWarnings("restriction")
 public class Info implements Cloneable {
 
     /**
@@ -81,14 +82,13 @@ public class Info implements Cloneable {
     /**
      * Constructor taking the CK_INFO object of the token.
      *
-     * @param ckInfo The info object as got from PKCS11.C_GetInfo().
+     * @param ckInfo
+     *          The info object as got from PKCS11.C_GetInfo().
      * @preconditions (ckInfo <> null)
      * @postconditions
      */
     protected Info(CK_INFO ckInfo) {
-        if (ckInfo == null) {
-            throw new NullPointerException("Argument \"ckInfo\" must not be null.");
-        }
+        Util.requireNotNull("ckInfo", ckInfo);
         cryptokiVersion_ = new Version(ckInfo.cryptokiVersion);
         manufacturerID_ = new String(ckInfo.manufacturerID);
         libraryDescription_ = new String(ckInfo.libraryDescription);
@@ -104,6 +104,7 @@ public class Info implements Cloneable {
      *                 and (result instanceof Info)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         Info clone;
 
@@ -113,8 +114,9 @@ public class Info implements Cloneable {
             clone.cryptokiVersion_ = (Version) this.cryptokiVersion_.clone();
             clone.libraryVersion_ = (Version) this.libraryVersion_.clone();
         } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException("An unexpected clone exception occurred.", ex);
+            // this must not happen, because this class is clone-able
+            throw new TokenRuntimeException(
+                    "An unexpected clone exception occurred.", ex);
         }
 
         return clone;
@@ -143,7 +145,7 @@ public class Info implements Cloneable {
     }
 
     /**
-     * Get a short descrption of this module.
+     * Get a short description of this module.
      *
      * @return A string describing the module.
      * @preconditions
@@ -169,6 +171,7 @@ public class Info implements Cloneable {
      *
      * @return the string representation of object
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
@@ -194,35 +197,39 @@ public class Info implements Cloneable {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other Info object.
+     * @param otherObject
+     *          The other Info object.
      * @return True, if other is an instance of Info and all member variables of
      *         both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof Info) {
-            Info other = (Info) otherObject;
-            equal = (this == other)
-                || (this.cryptokiVersion_.equals(other.cryptokiVersion_)
-                    && this.manufacturerID_.equals(other.manufacturerID_)
-                    && this.libraryDescription_.equals(other.libraryDescription_) && this.libraryVersion_
-                      .equals(other.libraryVersion_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof Info)) {
+            return false;
+        }
+
+        Info other = (Info) otherObject;
+        return this.cryptokiVersion_.equals(other.cryptokiVersion_)
+                && this.manufacturerID_.equals(other.manufacturerID_)
+                && this.libraryDescription_.equals(other.libraryDescription_)
+                && this.libraryVersion_.equals(other.libraryVersion_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object. Gained from all member variables.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return cryptokiVersion_.hashCode() ^ manufacturerID_.hashCode()
             ^ libraryDescription_.hashCode() ^ libraryVersion_.hashCode();

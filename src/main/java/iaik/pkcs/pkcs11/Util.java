@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -42,9 +42,6 @@
 
 package iaik.pkcs.pkcs11;
 
-import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
-import sun.security.pkcs11.wrapper.CK_DATE;
-
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,21 +51,34 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.Vector;
 
+import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
+import sun.security.pkcs11.wrapper.CK_DATE;
+
 /**
  * A class consisting of static methods only which provide certain static
- * piecec of code that are used frequently in this project.
+ * pieces of code that are used frequently in this project.
  *
  * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
  * @version 1.0
  * @invariants
  */
+@SuppressWarnings("restriction")
 public class Util {
+
+    public static <T> T requireNotNull(String paramName, T param) {
+        if (param == null) {
+            throw new NullPointerException(
+                    "Argument \"" + paramName + "\" must not be null.");
+        }
+        return param;
+    }
 
     /**
      * Parse a time character array as defined in PKCS#11 and return is as a
      * Date object.
      *
-     * @param timeChars A time encoded as character array as specified in PKCS#11.
+     * @param timeChars
+     *          A time encoded as character array as specified in PKCS#11.
      * @return A Date object set to the time indicated in the given char-array.
      *         null, if the given char array is null or the format is wrong.
      * @preconditions
@@ -83,7 +93,6 @@ public class Util {
                 SimpleDateFormat utc = new SimpleDateFormat("yyyyMMddhhmmss");
                 utc.setTimeZone(TimeZone.getTimeZone("UTC"));
                 time = utc.parse(timeString);
-                //        time = new SimpleDateFormat("yyyyMMddhhmmss").parse(timeString);
             } catch (ParseException ex) { /* nothing else to be done */
             }
         }
@@ -94,7 +103,8 @@ public class Util {
     /**
      * Convert the given CK_DATE object to a Date object.
      *
-     * @param ckDate The object providing the date information.
+     * @param ckDate
+     *          The object providing the date information.
      * @return The new Date object or null, if the given ckDate is null.
      * @preconditions
      * @postconditions
@@ -106,8 +116,10 @@ public class Util {
             int year = Integer.parseInt(new String(ckDate.year));
             int month = Integer.parseInt(new String(ckDate.month));
             int day = Integer.parseInt(new String(ckDate.day));
-            Calendar calendar = new GregorianCalendar(); //poor performance, consider alternatives
-            calendar.set(year, Calendar.JANUARY + (month - 1), day); // calendar starts months with 0
+            // poor performance, consider alternatives
+            Calendar calendar = new GregorianCalendar();
+            // calendar starts months with 0
+            calendar.set(year, Calendar.JANUARY + (month - 1), day);
             date = calendar.getTime();
         }
 
@@ -117,7 +129,8 @@ public class Util {
     /**
      * Convert the given Date object to a CK_DATE object.
      *
-     * @param date The object providing the date information.
+     * @param date
+     *          The object providing the date information.
      * @return The new CK_DATE object or null, if the given date is null.
      * @preconditions
      * @postconditions
@@ -126,10 +139,12 @@ public class Util {
         CK_DATE ckDate = null;
 
         if (date != null) {
-            Calendar calendar = new GregorianCalendar(); //poor memory/performance behavior, consider alternatives
+            //poor memory/performance behavior, consider alternatives
+            Calendar calendar = new GregorianCalendar();
             calendar.setTime(date);
             int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH) + 1; // month counting starts with zero
+            // month counting starts with zero
+            int month = calendar.get(Calendar.MONTH) + 1;
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             ckDate = new CK_DATE(
                     toCharArray(year, 4),
@@ -142,13 +157,15 @@ public class Util {
 
     /**
      * Converts the given number into a char-array. If the length of the array
-     * is shorter than the required exact length, the array is padded with leading
-     * '0' chars. If the array is longer than the wanted length the most
+     * is shorter than the required exact length, the array is padded with
+     * leading '0' chars. If the array is longer than the wanted length the most
      * significant digits are cut off until the array has the exact length.
      *
-     * @param number The number to convert to a char array.
-     * @param exactArrayLength The exact length of the returned array.
-     * @return The numebr as char array, one char for each decimal digit.
+     * @param number
+     *          The number to convert to a char array.
+     * @param exactArrayLength
+     *          The exact length of the returned array.
+     * @return The number as char array, one char for each decimal digit.
      * @preconditions (exactArrayLength >= 0)
      * @postconditions (result <> null)
      *                 and (result.length == exactArrayLength)
@@ -185,9 +202,12 @@ public class Util {
      * padded with trailing padding chars. If the string is longer, the last
      * character are cut off that the string has the wanted size.
      *
-     * @param string The string to convert.
-     * @param exactArrayLength The length of the retirned char-array.
-     * @param paddingChar The character to use for padding, if necessary.
+     * @param string
+     *          The string to convert.
+     * @param exactArrayLength
+     *          The length of the returned char-array.
+     * @param paddingChar
+     *          The character to use for padding, if necessary.
      * @return The string as char array, padded or cut off, if necessary.
      *         The array will have length exactArrayLength. null, if the
      *         given string is null.
@@ -197,16 +217,17 @@ public class Util {
      *                    and (result.length == exactArrayLength)
      */
     public static char[] toPaddedCharArray(String string,
-                                           int exactArrayLength,
-                                           char paddingChar)
-    {
+            int exactArrayLength,
+            char paddingChar) {
         char[] charArray = null;
 
         if (string != null) {
             int stringLength = string.length();
             charArray = new char[exactArrayLength];
-            string.getChars(0, Math.min(stringLength, exactArrayLength), charArray, 0);
-            for (int i = stringLength; i < charArray.length; i++) { // fill the rest of the array with padding char
+            string.getChars(0, Math.min(stringLength, exactArrayLength),
+                    charArray, 0);
+            // fill the rest of the array with padding char
+            for (int i = stringLength; i < charArray.length; i++) {
                 charArray[i] = paddingChar;
             }
         }
@@ -220,7 +241,8 @@ public class Util {
      * 1024 bit integer with its highest bit set will result in an 128 byte
      * array.
      *
-     * @param bigInteger The BigInteger to convert.
+     * @param bigInteger
+     *          The BigInteger to convert.
      * @return The byte-array representation of the BigInterger without
      *         signum-bit. null, if the BigInteger is null.
      * @preconditions
@@ -245,30 +267,38 @@ public class Util {
     }
 
     /**
-     * Converts the given vector into an array of CK_ATTRIBUTE elements. Elements
-     * not of type CK_ATTRIBUTE will not be present in the resulting array and
-     * be set to null.
+     * Converts the given vector into an array of CK_ATTRIBUTE elements.
+     * Elements not of type CK_ATTRIBUTE will not be present in the resulting
+     * array and be set to null.
      *
-     * @param attributes The vector which contains the attributes.
+     * @param attributes
+     *          The vector which contains the attributes.
      * @return The array of the attributes.
      * @preconditions
-     * @postconditions (attributes <> null) implies (result.length == attributes.size())
+     * @postconditions (attributes <> null) implies
+     *                 (result.length == attributes.size())
      */
-    public static CK_ATTRIBUTE[] convertAttributesVectorToArray(Vector attributes) {
+    public static CK_ATTRIBUTE[] convertAttributesVectorToArray(
+            Vector<CK_ATTRIBUTE> attributes) {
         if (attributes == null) {
             return null;
         }
         int numberOfAttributes = attributes.size();
         CK_ATTRIBUTE[] attributeArray = new CK_ATTRIBUTE[numberOfAttributes];
-        Object currentVectorEntry;
 
         for (int i = 0; i < numberOfAttributes; i++) {
-            currentVectorEntry = attributes.elementAt(i);
-            attributeArray[i] = (currentVectorEntry instanceof CK_ATTRIBUTE) ? (CK_ATTRIBUTE) currentVectorEntry
-                : null;
+            attributeArray[i] = attributes.elementAt(i);
         }
 
         return attributeArray;
+    }
+
+    public static boolean objEquals(Object obj1, Object obj2) {
+        if (obj1 == null) {
+            return obj2 == null;
+        } else {
+            return obj1.equals(obj2);
+        }
     }
 
 }

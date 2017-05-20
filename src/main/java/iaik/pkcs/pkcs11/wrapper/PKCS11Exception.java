@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -42,12 +42,11 @@
 
 package iaik.pkcs.pkcs11.wrapper;
 
-import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.wrapper.Functions;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import iaik.pkcs.pkcs11.TokenException;
 
 /**
  * This is the superclass of all checked exceptions used by this package. An
@@ -64,11 +63,14 @@ import java.util.Properties;
  */
 public class PKCS11Exception extends TokenException {
 
+    private static final long serialVersionUID = -5193259612747392211L;
+
     /**
-     * The name of the properties file that holds the names of the PKCS#11 error-
-     * codes.
+     * The name of the properties file that holds the names of the PKCS#11
+     * error-codes.
      */
-    protected static final String ERROR_CODE_PROPERTIES = "iaik/pkcs/pkcs11/wrapper/ckr.properties";
+    protected static final String ERROR_CODE_PROPERTIES
+            = "iaik/pkcs/pkcs11/wrapper/ckr.properties";
 
     /**
      * The properties object that holds the mapping from error-code to the name
@@ -90,12 +92,14 @@ public class PKCS11Exception extends TokenException {
      * Constructor taking the error code as defined for the CKR_* constants
      * in PKCS#11.
      *
-     * @param errorCode The PKCS#11 error code (return value).
+     * @param errorCode
+     *          The PKCS#11 error code (return value).
      */
     public PKCS11Exception(long errorCode) {
         errorCode_ = errorCode;
     }
 
+    @SuppressWarnings("restriction")
     public PKCS11Exception(sun.security.pkcs11.wrapper.PKCS11Exception ex) {
         this(ex.getErrorCode());
     }
@@ -112,7 +116,8 @@ public class PKCS11Exception extends TokenException {
      */
     public synchronized String getMessage() {
         // if the names of the defined error codes are not yet loaded, load them
-        if (errorCodeNames_ == null) { // ensure that another thread has not loaded the codes meanwhile
+        if (errorCodeNames_ == null) {
+            // ensure that another thread has not loaded the codes meanwhile
             Map<Long, String> codeNamMap = new HashMap<>();
             Properties props = new Properties();
             try {
@@ -121,11 +126,12 @@ public class PKCS11Exception extends TokenException {
                 for (String propName : props.stringPropertyNames()) {
                     String errorName = props.getProperty(propName);
                     if (errorName == null) {
-                        System.out.println("No name defined for error code " +
-                                Functions.toFullHexString((int) errorCode_));
+                        System.out.println("No name defined for error code "
+                                + Functions.toFullHexString((int) errorCode_));
                     }
                     long code;
-                    if (propName.startsWith("0x") || propName.startsWith("0X")) {
+                    if (propName.startsWith("0x")
+                            || propName.startsWith("0X")) {
                         code = Long.parseLong(propName.substring(2), 16);
                     } else {
                         code = Long.parseLong(propName);
@@ -135,16 +141,19 @@ public class PKCS11Exception extends TokenException {
                 errorCodeNames_ = codeNamMap;
                 errorCodeNamesAvailable_ = true;
             } catch (Exception exception) {
-                System.err.println("Could not read properties for error code names: "
+                System.err.println(
+                    "Could not read properties for error code names: "
                     + exception.getMessage());
             }
         }
 
-        String name = errorCodeNamesAvailable_ ?
-                errorCodeNames_.get(new Long(errorCode_)) : null;
+        String name = errorCodeNamesAvailable_
+                ? errorCodeNames_.get(new Long(errorCode_)) : null;
 
-        // if we can get the name of the error code, take the name, otherwise return the code
-        return (name != null) ? name : "0x" + Functions.toFullHexString((int) errorCode_);
+        // if we can get the name of the error code, take the name, otherwise
+        // return the code
+        return (name != null)
+                ? name : "0x" + Functions.toFullHexString((int) errorCode_);
     }
 
     /**

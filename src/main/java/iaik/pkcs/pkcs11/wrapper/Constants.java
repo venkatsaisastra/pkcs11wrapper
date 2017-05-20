@@ -40,49 +40,26 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.objects;
+package iaik.pkcs.pkcs11.wrapper;
 
 /**
- * This is a special version of a long attribute for the type
- * of a certificate type.
- * It provides a better <code>toString()</code> implementation.
+ * This class holds only final static member variables that are constants
+ * in this package.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
- * @version 1.0
- * @invariants
+ * @author Karl Scheibelhofer <Karl.Scheibelhofer@iaik.at>
+ * @author Martin Schläffer <schlaeff@sbox.tugraz.at>
  */
-public class CertificateTypeAttribute extends LongAttribute {
+public class Constants {
 
-    /**
-     * Empty constructor.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    public CertificateTypeAttribute() {
-        super(Attribute.CERTIFICATE_TYPE);
-    }
+    public static final String NEWLINE = System.getProperty("line.separator");
 
-    /**
-     * Get a string representation of the value of this attribute.
-     *
-     * @return A string representation of the value of this attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @SuppressWarnings("restriction")
-    @Override
-    protected String getValueString() {
-        String valueString;
+    public static final String INDENT = "  ";
 
-        if ((ckAttribute_ != null) && (ckAttribute_.pValue != null)) {
-            valueString = Certificate.getCertificateTypeName(
-                (Long) ckAttribute_.pValue);
-        } else {
-            valueString = "<NULL_PTR>";
-        }
+    public static final String NEWLINE_INDENT = NEWLINE + INDENT;
 
-        return valueString;
-    }
+    public static final String NEWLINE_INDENT_HEXVALUE
+            = NEWLINE_INDENT + "Value (hex): ";
 
+    public static final String NEWLINE_INDENT_VALUELEN
+            = NEWLINE_INDENT + "Value Length (dec): ";
 }

@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -42,13 +42,14 @@
 
 package iaik.pkcs.pkcs11.objects;
 
+import java.util.Hashtable;
+
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
-import sun.security.pkcs11.wrapper.PKCS11Exception;
-
-import java.util.Hashtable;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 
 /**
  * An object of this class represents a key as defined by PKCS#11 2.11.
@@ -71,10 +72,11 @@ import java.util.Hashtable;
 public class Key extends Storage {
 
     /**
-     * This interface defines the available key types as defined by PKCS#11 2.11:
-     * RSA, DSA, DH, ECDSA, KEA, GENERIC_SECRET, RC2, RC4, DES, DES2, DES3, CAST,
-     * CAST3, CAST5, CAST128, RC5, IDEA, SKIPJACK, BATON, JUNIPER, CDMF, AES,
-     * EC, X9_42_DH or VENDOR_DEFINED.
+     * This interface defines the available key types as defined by PKCS#11
+     * v2.11:
+     * RSA, DSA, DH, ECDSA, KEA, GENERIC_SECRET, RC2, RC4, DES, DES2, DES3,
+     * CAST, CAST3, CAST5, CAST128, RC5, IDEA, SKIPJACK, BATON, JUNIPER, CDMF,
+     * AES, EC, X9_42_DH or VENDOR_DEFINED.
      *
      * @author Karl Scheibelhofer
      * @version 1.0
@@ -85,139 +87,137 @@ public class Key extends Storage {
         /**
          * The identifier for a RSA key.
          */
-        static public final Long RSA = new Long(PKCS11Constants.CKK_RSA);
+        public static final Long RSA = new Long(PKCS11Constants.CKK_RSA);
 
         /**
          * The identifier for a DSA key.
          */
-        static public final Long DSA = new Long(PKCS11Constants.CKK_DSA);
+        public static final Long DSA = new Long(PKCS11Constants.CKK_DSA);
 
         /**
          * The identifier for a Diffi-Hellman key.
          */
-        static public final Long DH = new Long(PKCS11Constants.CKK_DH);
-
-        /**
-         * The identifier for a ECDSA key.
-         */
-        static public final Long ECDSA = new Long(PKCS11Constants.CKK_ECDSA);
+        public static final Long DH = new Long(PKCS11Constants.CKK_DH);
 
         /**
          * The identifier for a EC key.
          */
-        static public final Long EC = new Long(PKCS11Constants.CKK_EC);
+        public static final Long EC = new Long(PKCS11Constants.CKK_EC);
 
         /**
          * The identifier for a EC key.
          */
-        static public final Long X9_42_DH = new Long(PKCS11Constants.CKK_X9_42_DH);
+        public static final Long X9_42_DH
+            = new Long(PKCS11Constants.CKK_X9_42_DH);
 
         /**
          * The identifier for a KEA key.
          */
-        static public final Long KEA = new Long(PKCS11Constants.CKK_KEA);
+        public static final Long KEA = new Long(PKCS11Constants.CKK_KEA);
 
         /**
          * The identifier for a generic secret key.
          */
-        static public final Long GENERIC_SECRET = new Long(PKCS11Constants.CKK_GENERIC_SECRET);
+        public static final Long GENERIC_SECRET
+            = new Long(PKCS11Constants.CKK_GENERIC_SECRET);
 
         /**
          * The identifier for a RC2 key.
          */
-        static public final Long RC2 = new Long(PKCS11Constants.CKK_RC2);
+        public static final Long RC2 = new Long(PKCS11Constants.CKK_RC2);
 
         /**
          * The identifier for a RC4 key.
          */
-        static public final Long RC4 = new Long(PKCS11Constants.CKK_RC4);
+        public static final Long RC4 = new Long(PKCS11Constants.CKK_RC4);
 
         /**
          * The identifier for a DES key.
          */
-        static public final Long DES = new Long(PKCS11Constants.CKK_DES);
+        public static final Long DES = new Long(PKCS11Constants.CKK_DES);
 
         /**
          * The identifier for a double-length DES key.
          */
-        static public final Long DES2 = new Long(PKCS11Constants.CKK_DES2);
+        public static final Long DES2 = new Long(PKCS11Constants.CKK_DES2);
 
         /**
          * The identifier for a trible-length DES key (Trible-DES).
          */
-        static public final Long DES3 = new Long(PKCS11Constants.CKK_DES3);
+        public static final Long DES3 = new Long(PKCS11Constants.CKK_DES3);
 
         /**
          * The identifier for a CAST key.
          */
-        static public final Long CAST = new Long(PKCS11Constants.CKK_CAST);
+        public static final Long CAST = new Long(PKCS11Constants.CKK_CAST);
 
         /**
          * The identifier for a CAST3 key.
          */
-        static public final Long CAST3 = new Long(PKCS11Constants.CKK_CAST3);
-
-        /**
-         * The identifier for a CAST5 key; CAST5 is the same as CAST128.
-         */
-        static public final Long CAST5 = new Long(PKCS11Constants.CKK_CAST5);
+        public static final Long CAST3 = new Long(PKCS11Constants.CKK_CAST3);
 
         /**
          * The identifier for a CAST128 key.
          */
-        static public final Long CAST128 = new Long(PKCS11Constants.CKK_CAST128);
+        public static final Long CAST128
+            = new Long(PKCS11Constants.CKK_CAST128);
 
         /**
          * The identifier for a RC5 key.
          */
-        static public final Long RC5 = new Long(PKCS11Constants.CKK_RC5);
+        public static final Long RC5 = new Long(PKCS11Constants.CKK_RC5);
 
         /**
          * The identifier for a IDEA key.
          */
-        static public final Long IDEA = new Long(PKCS11Constants.CKK_IDEA);
+        public static final Long IDEA = new Long(PKCS11Constants.CKK_IDEA);
 
         /**
          * The identifier for a SKIPJACK key.
          */
-        static public final Long SKIPJACK = new Long(PKCS11Constants.CKK_SKIPJACK);
+        public static final Long SKIPJACK
+            = new Long(PKCS11Constants.CKK_SKIPJACK);
 
         /**
          * The identifier for a BATON key.
          */
-        static public final Long BATON = new Long(PKCS11Constants.CKK_BATON);
+        public static final Long BATON = new Long(PKCS11Constants.CKK_BATON);
 
         /**
          * The identifier for a JUNIPER key.
          */
-        static public final Long JUNIPER = new Long(PKCS11Constants.CKK_JUNIPER);
+        public static final Long JUNIPER
+            = new Long(PKCS11Constants.CKK_JUNIPER);
 
         /**
          * The identifier for a CDMF key.
          */
-        static public final Long CDMF = new Long(PKCS11Constants.CKK_CDMF);
+        public static final Long CDMF = new Long(PKCS11Constants.CKK_CDMF);
 
         /**
          * The identifier for a AES key.
          */
-        static public final Long AES = new Long(PKCS11Constants.CKK_AES);
+        public static final Long AES = new Long(PKCS11Constants.CKK_AES);
 
         /**
          * The identifier for a Blowfish key.
          */
-        static public final Long BLOWFISH = new Long(PKCS11Constants.CKK_BLOWFISH);
+        public static final Long BLOWFISH
+            = new Long(PKCS11Constants.CKK_BLOWFISH);
 
         /**
          * The identifier for a Twofish key.
          */
-        static public final Long TWOFISH = new Long(PKCS11Constants.CKK_TWOFISH);
+        public static final Long TWOFISH
+            = new Long(PKCS11Constants.CKK_TWOFISH);
 
         /**
          * The identifier for a VENDOR_DEFINED key. Any Long object with a
          * value bigger than this one is also a valid vendor-defined key
          * type identifier.
          */
-        static public final Long VENDOR_DEFINED = new Long(PKCS11Constants.CKK_VENDOR_DEFINED);
+        public static final Long VENDOR_DEFINED
+            = new Long(PKCS11Constants.CKK_VENDOR_DEFINED);
 
     }
 
@@ -233,23 +233,27 @@ public class Key extends Storage {
     public interface VendorDefinedKeyBuilder {
 
         /**
-         * This method should instanciate an Object of this class or of any
-         * sub-class. It can use the given handles and PKCS#11 module to retrieve
-         * attributes of the PKCS#11 object from the token.
+         * This method should instantiate an Object of this class or of any
+         * sub-class. It can use the given handles and PKCS#11 module to
+         * retrieve attributes of the PKCS#11 object from the token.
          *
-         * @param session The session to use for reading attributes.
-         *                This session must have the appropriate rights; i.e.
-         *                it must be a user-session, if it is a private object.
-         * @param objectHandle The object handle as given from the PKCS#111 module.
+         * @param session
+         *          The session to use for reading attributes. This session must
+         *          have the appropriate rights; i.e. it must be a user-session,
+         *          if it is a private object.
+         * @param objectHandle
+         *          The object handle as given from the PKCS#111 module.
          * @return The object representing the PKCS#11 object.
          *         The returned object can be casted to the
          *         according sub-class.
-         * @exception PKCS11Exception If getting the attributes failed.
+         * @exception PKCS11Exception
+         *              If getting the attributes failed.
          * @preconditions (session <> null)
          * @postconditions (result <> null)
          */
+        @SuppressWarnings("restriction")
         public Object build(Session session, long objectHandle)
-            throws PKCS11Exception;
+            throws sun.security.pkcs11.wrapper.PKCS11Exception;
 
     }
 
@@ -262,7 +266,7 @@ public class Key extends Storage {
      * A table holding string representations for all known key types. Table key
      * is the key type as Long object.
      */
-    protected static Hashtable keyTypeNames_;
+    protected static Hashtable<Long, String> keyTypeNames_;
 
     /**
      * The type of this key. Its value is one of KeyType, or one that has a
@@ -291,8 +295,8 @@ public class Key extends Storage {
     protected BooleanAttribute derive_;
 
     /**
-     * True, if this key was created (generated or copied from a different key) on
-     * the token.
+     * True, if this key was created (generated or copied from a different key)
+     * on the token.
      */
     protected BooleanAttribute local_;
 
@@ -307,9 +311,9 @@ public class Key extends Storage {
     protected MechanismArrayAttribute allowedMechanisms_;
 
     /**
-     * The default constructor. An application use this constructor to instanciate
-     * a key that serves as a template. It may also be useful for working with
-     * vendor-defined keys.
+     * The default constructor. An application use this constructor to
+     * instantiate a key that serves as a template. It may also be useful for
+     * working with vendor-defined keys.
      *
      * @preconditions
      * @postconditions
@@ -321,17 +325,19 @@ public class Key extends Storage {
     /**
      * Called by sub-classes to create an instance of a PKCS#11 key.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
     protected Key(Session session, long objectHandle)
-        throws TokenException
-    {
+        throws TokenException {
         super(session, objectHandle);
     }
 
@@ -340,12 +346,14 @@ public class Key extends Storage {
      * instance of an vendor-defined PKCS#11 key; i.e. an instance of a
      * vendor defined sub-class of this class.
      *
-     * @param builder The vendor-defined key builder. Null to clear any
-     *                previously installed vendor-defined builder.
+     * @param builder
+     *          The vendor-defined key builder. Null to clear any previously
+     *          installed vendor-defined builder.
      * @preconditions
      * @postconditions
      */
-    public static void setVendorDefinedKeyBuilder(VendorDefinedKeyBuilder builder) {
+    public static void setVendorDefinedKeyBuilder(
+            VendorDefinedKeyBuilder builder) {
         vendorKeyBuilder_ = builder;
     }
 
@@ -364,28 +372,25 @@ public class Key extends Storage {
     /**
      * Get the given key type as string.
      *
-     * @param keyType The key type to get as string.
+     * @param keyType
+     *          The key type to get as string.
      * @return A string denoting the key type; e.g. "RSA".
      * @preconditions (keyType <> null)
      * @postconditions (result <> null)
      */
     public static String getKeyTypeName(Long keyType) {
+        Util.requireNotNull("keyType", keyType);
+
         String keyTypeName;
-
-        if (keyType == null) {
-            throw new NullPointerException("Argument \"keyType\" must not be null.");
-        }
-
         if ((keyType.longValue() & PKCS11Constants.CKK_VENDOR_DEFINED) != 0L) {
             keyTypeName = "Vendor Defined";
         } else {
             if (keyTypeNames_ == null) {
                 // setup key type names table
-                Hashtable keyTypeNames = new Hashtable(24);
+                Hashtable<Long, String> keyTypeNames = new Hashtable<>(24);
                 keyTypeNames.put(KeyType.RSA, "RSA");
                 keyTypeNames.put(KeyType.DSA, "DSA");
                 keyTypeNames.put(KeyType.DH, "DH");
-                keyTypeNames.put(KeyType.ECDSA, "ECDSA");
                 keyTypeNames.put(KeyType.EC, "EC");
                 keyTypeNames.put(KeyType.X9_42_DH, "X9_42_DH");
                 keyTypeNames.put(KeyType.KEA, "KEA");
@@ -397,7 +402,6 @@ public class Key extends Storage {
                 keyTypeNames.put(KeyType.DES3, "DES3");
                 keyTypeNames.put(KeyType.CAST, "CAST");
                 keyTypeNames.put(KeyType.CAST3, "CAST3");
-                keyTypeNames.put(KeyType.CAST5, "CAST5");
                 keyTypeNames.put(KeyType.CAST128, "CAST128");
                 keyTypeNames.put(KeyType.RC5, "RC5");
                 keyTypeNames.put(KeyType.IDEA, "IDEA");
@@ -426,23 +430,23 @@ public class Key extends Storage {
      * implementation of this method for each class separately (see use in
      * clone()).
      *
-     * @param object The object to handle.
+     * @param object
+     *          The object to handle.
      * @preconditions (object <> null)
      * @postconditions
      */
     protected static void putAttributesInTable(Key object) {
-        if (object == null) {
-            throw new NullPointerException("Argument \"object\" must not be null.");
-        }
-
+        Util.requireNotNull("object", object);
         object.attributeTable_.put(Attribute.KEY_TYPE, object.keyType_);
         object.attributeTable_.put(Attribute.ID, object.id_);
         object.attributeTable_.put(Attribute.START_DATE, object.startDate_);
         object.attributeTable_.put(Attribute.END_DATE, object.endDate_);
         object.attributeTable_.put(Attribute.DERIVE, object.derive_);
         object.attributeTable_.put(Attribute.LOCAL, object.local_);
-        object.attributeTable_.put(Attribute.KEY_GEN_MECHANISM, object.keyGenMechanism_);
-        object.attributeTable_.put(Attribute.ALLOWED_MECHANISMS, object.allowedMechanisms_);
+        object.attributeTable_.put(Attribute.KEY_GEN_MECHANISM,
+                object.keyGenMechanism_);
+        object.attributeTable_.put(Attribute.ALLOWED_MECHANISMS,
+                object.allowedMechanisms_);
     }
 
     /**
@@ -452,6 +456,7 @@ public class Key extends Storage {
      * @preconditions
      * @postconditions
      */
+    @Override
     protected void allocateAttributes() {
         super.allocateAttributes();
 
@@ -461,8 +466,10 @@ public class Key extends Storage {
         endDate_ = new DateAttribute(Attribute.END_DATE);
         derive_ = new BooleanAttribute(Attribute.DERIVE);
         local_ = new BooleanAttribute(Attribute.LOCAL);
-        keyGenMechanism_ = new MechanismAttribute(Attribute.KEY_GEN_MECHANISM);
-        allowedMechanisms_ = new MechanismArrayAttribute(Attribute.ALLOWED_MECHANISMS);
+        keyGenMechanism_ = new MechanismAttribute(
+                Attribute.KEY_GEN_MECHANISM);
+        allowedMechanisms_ = new MechanismArrayAttribute(
+                Attribute.ALLOWED_MECHANISMS);
 
         putAttributesInTable(this);
     }
@@ -476,6 +483,7 @@ public class Key extends Storage {
      *                 and (result instanceof Key)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         Key clone = (Key) super.clone();
 
@@ -485,10 +493,13 @@ public class Key extends Storage {
         clone.endDate_ = (DateAttribute) this.endDate_.clone();
         clone.derive_ = (BooleanAttribute) this.derive_.clone();
         clone.local_ = (BooleanAttribute) this.local_.clone();
-        clone.keyGenMechanism_ = (MechanismAttribute) this.keyGenMechanism_.clone();
-        clone.allowedMechanisms_ = (MechanismArrayAttribute) this.allowedMechanisms_.clone();
+        clone.keyGenMechanism_ = (MechanismAttribute)
+                this.keyGenMechanism_.clone();
+        clone.allowedMechanisms_ = (MechanismArrayAttribute)
+                this.allowedMechanisms_.clone();
 
-        putAttributesInTable(clone); // put all cloned attributes into the new table
+        // put all cloned attributes into the new table
+        putAttributesInTable(clone);
 
         return clone;
     }
@@ -497,27 +508,33 @@ public class Key extends Storage {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof Key) {
-            Key other = (Key) otherObject;
-            equal = (this == other)
-                || (super.equals(other) && this.keyType_.equals(other.keyType_)
-                    && this.id_.equals(other.id_) && this.startDate_.equals(other.startDate_)
-                    && this.endDate_.equals(other.endDate_)
-                    && this.derive_.equals(other.derive_) && this.local_.equals(other.local_)
-                    && this.keyGenMechanism_.equals(other.keyGenMechanism_) && this.allowedMechanisms_
-                      .equals(other.allowedMechanisms_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof Key)) {
+            return false;
+        }
+
+        Key other = (Key) otherObject;
+        return super.equals(other)
+                && this.keyType_.equals(other.keyType_)
+                && this.id_.equals(other.id_)
+                && this.startDate_.equals(other.startDate_)
+                && this.endDate_.equals(other.endDate_)
+                && this.derive_.equals(other.derive_)
+                && this.local_.equals(other.local_)
+                && this.keyGenMechanism_.equals(other.keyGenMechanism_)
+                && this.allowedMechanisms_.equals(other.allowedMechanisms_);
     }
 
     /**
@@ -592,8 +609,8 @@ public class Key extends Storage {
     /**
      * Get the mechanism used to generate the key material for this key.
      *
-     * @return The mechanism attribute used to generate the key material for this
-     *         key.
+     * @return The mechanism attribute used to generate the key material for
+     *         this key.
      * @preconditions
      * @postconditions (result <> null)
      */
@@ -615,13 +632,14 @@ public class Key extends Storage {
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return keyType_.hashCode() ^ id_.hashCode();
     }
@@ -629,26 +647,22 @@ public class Key extends Storage {
     /**
      * Read the values of the attributes of this object from the token.
      *
-     * @param session The session handle to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
+    @Override
     public void readAttributes(Session session)
-        throws TokenException
-    {
+        throws TokenException {
         super.readAttributes(session);
 
-        //    Object.getAttributeValue(session, objectHandle_, id_);
-        //    Object.getAttributeValue(session, objectHandle_, startDate_);
-        //    Object.getAttributeValue(session, objectHandle_, endDate_);
-        //    Object.getAttributeValue(session, objectHandle_, derive_);
-        //    Object.getAttributeValue(session, objectHandle_, local_);
-        //    Object.getAttributeValue(session, objectHandle_, keyGenMechanism_);
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] { id_, startDate_,
-            endDate_, derive_, local_, keyGenMechanism_ });
+        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
+            id_, startDate_, endDate_, derive_, local_, keyGenMechanism_ });
         Object.getAttributeValue(session, objectHandle_, allowedMechanisms_);
     }
 
@@ -661,13 +675,13 @@ public class Key extends Storage {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder(256);
 
         buffer.append(super.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Key Type: ");
         if (keyType_ != null) {
             buffer.append(keyType_.toString());
@@ -675,38 +689,31 @@ public class Key extends Storage {
             buffer.append("<unavailable>");
         }
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("ID: ");
         buffer.append(id_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Start Date: ");
         buffer.append(startDate_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("End Date: ");
         buffer.append(endDate_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Derive: ");
         buffer.append(derive_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Local: ");
         buffer.append(local_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Key Generation Mechanism: ");
         buffer.append(keyGenMechanism_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Allowed Mechanisms: ");
         buffer.append(allowedMechanisms_.toString());
 

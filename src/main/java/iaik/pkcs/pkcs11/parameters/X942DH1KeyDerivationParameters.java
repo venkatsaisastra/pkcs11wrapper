@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -42,9 +42,9 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import sun.security.pkcs11.wrapper.CK_X9_42_DH1_DERIVE_PARAMS;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
+import sun.security.pkcs11.wrapper.CK_X9_42_DH1_DERIVE_PARAMS;
 
 /**
  * This abstract class encapsulates parameters for the X9.42 DH mechanism
@@ -54,6 +54,7 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  * @version 1.0
  * @invariants
  */
+@SuppressWarnings("restriction")
 public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
 
     /**
@@ -62,25 +63,29 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
     protected byte[] otherInfo_;
 
     /**
-     * Create a new X942DH1KeyDerivationParameters object with the given attributes.
+     * Create a new X942DH1KeyDerivationParameters object with the given
+     * attributes.
      *
-     * @param keyDerivationFunction The key derivation function used on the shared
-     *                              secret value.
-     *                              One of the values defined in
-     *                              KeyDerivationFunctionType.
-     * @param otherInfo The data shared between the two parties.
-     * @param publicData The other partie's public key value.
+     * @param keyDerivationFunction
+     *          The key derivation function used on the shared secret value.
+     *          One of the values defined in KeyDerivationFunctionType.
+     * @param otherInfo
+     *          The data shared between the two parties.
+     * @param publicData
+     *          The other partie's public key value.
      * @preconditions ((keyDerivationFunction == KeyDerivationFunctionType.NULL)
-     *                 or (keyDerivationFunction == KeyDerivationFunctionType.SHA1_KDF)
-     *                 or (keyDerivationFunction == KeyDerivationFunctionType.SHA1_KDF_ASN1)
-     *                 or (keyDerivationFunction == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
+     *                 or (keyDerivationFunction
+     *                      == KeyDerivationFunctionType.SHA1_KDF)
+     *                 or (keyDerivationFunction
+     *                      == KeyDerivationFunctionType.SHA1_KDF_ASN1)
+     *                 or (keyDerivationFunction
+     *                      == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
      *                and (publicData <> null)
      * @postconditions
      */
     public X942DH1KeyDerivationParameters(long keyDerivationFunction,
-                                          byte[] otherInfo,
-                                          byte[] publicData)
-    {
+            byte[] otherInfo,
+            byte[] publicData) {
         super(keyDerivationFunction, publicData);
         otherInfo_ = otherInfo;
     }
@@ -94,11 +99,12 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
      *                 and (result instanceof X942DH1KeyDerivationParameters)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
-        X942DH1KeyDerivationParameters clone = (X942DH1KeyDerivationParameters) super.clone();
+        X942DH1KeyDerivationParameters clone
+                = (X942DH1KeyDerivationParameters) super.clone();
 
         clone.otherInfo_ = (byte[]) this.otherInfo_.clone();
-
         return clone;
     }
 
@@ -110,6 +116,7 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public Object getPKCS11ParamsObject() {
         CK_X9_42_DH1_DERIVE_PARAMS params = new CK_X9_42_DH1_DERIVE_PARAMS();
 
@@ -134,7 +141,8 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
     /**
      * Set the data shared between the two parties.
      *
-     * @param otherInfo The data shared between the two parties.
+     * @param otherInfo
+     *          The data shared between the two parties.
      * @preconditions (otherInfo <> null)
      * @postconditions
      */
@@ -148,16 +156,15 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
      *
      * @return A string representation of this object.
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append(super.toString());
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Other Info: ");
         buffer.append(Functions.toHexString(otherInfo_));
-        // buffer.append(Constants.NEWLINE);
 
         return buffer.toString();
     }
@@ -166,32 +173,38 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof X942DH1KeyDerivationParameters) {
-            X942DH1KeyDerivationParameters other = (X942DH1KeyDerivationParameters) otherObject;
-            equal = (this == other)
-                || (super.equals(other) && Functions.equals(this.otherInfo_, other.otherInfo_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof X942DH1KeyDerivationParameters)) {
+            return false;
+        }
+
+        X942DH1KeyDerivationParameters other
+                = (X942DH1KeyDerivationParameters) otherObject;
+        return super.equals(other)
+                && Functions.equals(this.otherInfo_, other.otherInfo_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return super.hashCode() ^ Functions.hashCode(otherInfo_);
     }

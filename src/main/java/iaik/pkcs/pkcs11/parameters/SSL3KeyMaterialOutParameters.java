@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -45,10 +45,11 @@ package iaik.pkcs.pkcs11.parameters;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.TokenRuntimeException;
+import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.objects.SecretKey;
-import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
+import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
 
 /**
  * Objects of this class encapsulates key material output for the mechanism
@@ -58,6 +59,7 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  * @version 1.0
  * @invariants
  */
+@SuppressWarnings("restriction")
 public class SSL3KeyMaterialOutParameters implements Parameters {
 
     /**
@@ -97,22 +99,17 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      * Mechanism.SSL3_KEY_AND_MAC_DERIVE. After the call to deriveKey, the
      * members of this object will hold the generated keys and IVs.
      *
-     * @param clientIV The buffer for the client initialization vector.
-     * @param serverIV The buffer for the server initialization vector.
+     * @param clientIV
+     *          The buffer for the client initialization vector.
+     * @param serverIV
+     *          The buffer for the server initialization vector.
      * @preconditions (clientIV <> null)
      *                and (serverIV <> null)
      * @postconditions
      */
     public SSL3KeyMaterialOutParameters(byte[] clientIV, byte[] serverIV) {
-        if (clientIV == null) {
-            throw new NullPointerException("Argument \"clientIV\" must not be null.");
-        }
-        if (serverIV == null) {
-            throw new NullPointerException("Argument \"serverIV\" must not be null.");
-        }
-
-        clientIV_ = clientIV;
-        serverIV_ = serverIV;
+        clientIV_ = Util.requireNotNull("clientIV", clientIV);
+        serverIV_ = Util.requireNotNull("serverIV", serverIV);
     }
 
     /**
@@ -124,6 +121,7 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      *                 and (result instanceof SSL3KeyMaterialOutParameters)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         SSL3KeyMaterialOutParameters clone;
 
@@ -138,7 +136,8 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
             clone.serverIV_ = (byte[]) this.serverIV_.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException("An unexpected clone exception occurred.", ex);
+            throw new TokenRuntimeException(
+                    "An unexpected clone exception occurred.", ex);
         }
 
         return clone;
@@ -152,15 +151,18 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public Object getPKCS11ParamsObject() {
         CK_SSL3_KEY_MAT_OUT params = new CK_SSL3_KEY_MAT_OUT();
 
-        params.hClientMacSecret = (clientMacSecret_ != null) ? clientMacSecret_
-            .getObjectHandle() : 0L;
-        params.hServerMacSecret = (serverMacSecret_ != null) ? serverMacSecret_
-            .getObjectHandle() : 0L;
-        params.hClientKey = (clientKey_ != null) ? clientKey_.getObjectHandle() : 0L;
-        params.hServerKey = (serverKey_ != null) ? serverKey_.getObjectHandle() : 0L;
+        params.hClientMacSecret = (clientMacSecret_ != null)
+                ? clientMacSecret_.getObjectHandle() : 0L;
+        params.hServerMacSecret = (serverMacSecret_ != null)
+                ? serverMacSecret_.getObjectHandle() : 0L;
+        params.hClientKey = (clientKey_ != null)
+                ? clientKey_.getObjectHandle() : 0L;
+        params.hServerKey = (serverKey_ != null)
+                ? serverKey_.getObjectHandle() : 0L;
         params.pIVClient = clientIV_;
         params.pIVServer = serverIV_;
 
@@ -172,26 +174,33 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      * will be the result after a call to DeriveKey, and creates the SecretKey
      * objects for this object. It also reads the IVs.
      *
-     * @param input The structure that holds the necessary key handles and IVs.
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @exception TokenException If reading the secret key object attributes fails.
+     * @param input
+     *          The structure that holds the necessary key handles and IVs.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @exception TokenException
+     *              If reading the secret key object attributes fails.
      * @preconditions (input <> null)
      *                and (session <> null)
      * @postconditions
      */
-    public void setPKCS11ParamsObject(CK_SSL3_KEY_MAT_OUT input, Session session)
-        throws TokenException
-    {
-        clientMacSecret_ = (SecretKey) iaik.pkcs.pkcs11.objects.Object.getInstance(session,
-            input.hClientMacSecret);
-        serverMacSecret_ = (SecretKey) iaik.pkcs.pkcs11.objects.Object.getInstance(session,
-            input.hServerMacSecret);
-        clientKey_ = (SecretKey) iaik.pkcs.pkcs11.objects.Object.getInstance(session,
-            input.hClientKey);
-        serverKey_ = (SecretKey) iaik.pkcs.pkcs11.objects.Object.getInstance(session,
-            input.hServerKey);
+    public void setPKCS11ParamsObject(CK_SSL3_KEY_MAT_OUT input,
+            Session session)
+        throws TokenException {
+        clientMacSecret_ = (SecretKey)
+                iaik.pkcs.pkcs11.objects.Object.getInstance(session,
+                        input.hClientMacSecret);
+        serverMacSecret_ = (SecretKey)
+                iaik.pkcs.pkcs11.objects.Object.getInstance(session,
+                        input.hServerMacSecret);
+        clientKey_ = (SecretKey)
+                iaik.pkcs.pkcs11.objects.Object.getInstance(session,
+                        input.hClientKey);
+        serverKey_ = (SecretKey)
+                iaik.pkcs.pkcs11.objects.Object.getInstance(session,
+                        input.hServerKey);
         clientIV_ = input.pIVClient;
         serverIV_ = input.pIVServer;
     }
@@ -268,46 +277,37 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      *
      * @return A string representation of this object.
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
-
+        final String prefix = Constants.NEWLINE + Constants.NEWLINE_INDENT;
         buffer.append(Constants.INDENT);
         buffer.append("Client MAC Secret key: ");
         buffer.append(Constants.NEWLINE);
         buffer.append(clientMacSecret_);
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(prefix);
         buffer.append("Server MAC Secret key: ");
         buffer.append(Constants.NEWLINE);
         buffer.append(serverMacSecret_);
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(prefix);
         buffer.append("Client Secret key: ");
         buffer.append(Constants.NEWLINE);
         buffer.append(clientKey_);
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(prefix);
         buffer.append("Server Secret key: ");
         buffer.append(Constants.NEWLINE);
         buffer.append(serverKey_);
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(prefix);
         buffer.append("Client Initializatin Vector (hex): ");
         buffer.append(Functions.toHexString(clientIV_));
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Server Initializatin Vector (hex): ");
         buffer.append(Functions.toHexString(serverIV_));
-        // buffer.append(Constants.NEWLINE);
 
         return buffer.toString();
     }
@@ -316,41 +316,42 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof SSL3KeyMaterialOutParameters) {
-            SSL3KeyMaterialOutParameters other = (SSL3KeyMaterialOutParameters) otherObject;
-            equal = (this == other)
-                || ((((this.clientMacSecret_ == null) && (other.clientMacSecret_ == null)) || ((this.clientMacSecret_ != null) && this.clientMacSecret_
-                    .equals(other.clientMacSecret_)))
-                    && (((this.serverMacSecret_ == null) && (other.serverMacSecret_ == null)) || ((this.serverMacSecret_ != null) && this.serverMacSecret_
-                        .equals(other.serverMacSecret_)))
-                    && (((this.clientKey_ == null) && (other.clientKey_ == null)) || ((this.clientKey_ != null) && this.clientKey_
-                        .equals(other.clientKey_)))
-                    && (((this.serverKey_ == null) && (other.serverKey_ == null)) || ((this.serverKey_ != null) && this.serverKey_
-                        .equals(other.serverKey_)))
-                    && Functions.equals(this.clientIV_, other.clientIV_) && Functions.equals(
-                    this.serverIV_, other.serverIV_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof SSL3KeyMaterialOutParameters)) {
+            return false;
+        }
+
+        SSL3KeyMaterialOutParameters other
+                = (SSL3KeyMaterialOutParameters) otherObject;
+        return Util.objEquals(this.clientMacSecret_, other.clientMacSecret_)
+                && Util.objEquals(this.serverMacSecret_, other.serverMacSecret_)
+                && Util.objEquals(this.clientKey_, other.clientKey_)
+                && Util.objEquals(this.serverKey_, other.serverKey_)
+                && Functions.equals(this.clientIV_, other.clientIV_)
+                && Functions.equals(this.serverIV_, other.serverIV_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return ((clientMacSecret_ != null) ? clientMacSecret_.hashCode() : 0)
             ^ ((serverMacSecret_ != null) ? serverMacSecret_.hashCode() : 0)

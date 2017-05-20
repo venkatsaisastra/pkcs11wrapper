@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -44,8 +44,8 @@ package iaik.pkcs.pkcs11.objects;
 
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
-import sun.security.pkcs11.wrapper.Constants;
-import sun.security.pkcs11.wrapper.PKCS11Exception;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * This is the base class for public (asymmetric) keys. Objects of this class
@@ -97,7 +97,7 @@ public class PublicKey extends Key {
     protected AttributeArray wrapTemplate_;
 
     /**
-     * Deafult Constructor.
+     * Default Constructor.
      *
      * @preconditions
      * @postconditions
@@ -110,17 +110,19 @@ public class PublicKey extends Key {
     /**
      * Called by sub-classes to create an instance of a PKCS#11 public key.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
     protected PublicKey(Session session, long objectHandle)
-        throws TokenException
-    {
+        throws TokenException {
         super(session, objectHandle);
         objectClass_.setLongValue(ObjectClass.PUBLIC_KEY);
     }
@@ -128,28 +130,28 @@ public class PublicKey extends Key {
     /**
      * The getInstance method of the Object class uses this method to create
      * an instance of a PKCS#11 public key. This method reads the key
-     * type attribute and calls the getInstance method of the according sub-class.
-     * If the key type is a vendor defined it uses the
+     * type attribute and calls the getInstance method of the according
+     * sub-class. If the key type is a vendor defined it uses the
      * VendorDefinedKeyBuilder set by the application. If no public key
      * could be constructed, this method returns null.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
      * @return The object representing the PKCS#11 object.
      *         The returned object can be casted to the
      *         according sub-class.
-     * @exception TokenException If getting the attributes failed.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
     public static Object getInstance(Session session, long objectHandle)
-        throws TokenException
-    {
-        if (session == null) {
-            throw new NullPointerException("Argument \"session\" must not be null.");
-        }
+        throws TokenException {
+        Util.requireNotNull("session", session);
 
         KeyTypeAttribute keyTypeAttribute = new KeyTypeAttribute();
         getAttributeValue(session, objectHandle, keyTypeAttribute);
@@ -163,7 +165,7 @@ public class PublicKey extends Key {
                 newObject = RSAPublicKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.DSA)) {
                 newObject = DSAPublicKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.ECDSA)) {
+            } else if (keyType.equals(Key.KeyType.EC)) {
                 newObject = ECDSAPublicKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.DH)) {
                 newObject = DHPublicKey.getInstance(session, objectHandle);
@@ -171,7 +173,8 @@ public class PublicKey extends Key {
                 newObject = KEAPublicKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.X9_42_DH)) {
                 newObject = X942DHPublicKey.getInstance(session, objectHandle);
-            } else if ((keyType.longValue() & KeyType.VENDOR_DEFINED.longValue()) != 0L) {
+            } else if ((keyType.longValue()
+                            & KeyType.VENDOR_DEFINED.longValue()) != 0L) {
                 newObject = getUnknownPublicKey(session, objectHandle);
             } else {
                 newObject = getUnknownPublicKey(session, objectHandle);
@@ -184,32 +187,32 @@ public class PublicKey extends Key {
     }
 
     /**
-     * Try to create a key which has no or an unkown public key type
-     * type attribute.
-     * This implementation will try to use a vendor defined key
-     * builder, if such has been set.
-     * If this is impossible or fails, it will create just
-     * a simple {@link iaik.pkcs.pkcs11.objects.PublicKey PublicKey }.
+     * Try to create a key which has no or an unknown public key type attribute.
+     * This implementation will try to use a vendor defined key builder, if such
+     * has been set. If this is impossible or fails, it will create just a
+     * simple {@link iaik.pkcs.pkcs11.objects.PublicKey PublicKey }.
      *
-     * @param session The session to use.
-     * @param objectHandle The handle of the object
+     * @param session
+     *          The session to use.
+     * @param objectHandle
+     *          The handle of the object
      * @return A new Object.
-     * @throws TokenException If no object could be created.
+     * @throws TokenException
+     *           If no object could be created.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    protected static Object getUnknownPublicKey(Session session, long objectHandle)
-        throws TokenException
-    {
-        if (session == null) {
-            throw new NullPointerException("Argument \"session\" must not be null.");
-        }
+    @SuppressWarnings("restriction")
+    protected static Object getUnknownPublicKey(Session session,
+            long objectHandle)
+        throws TokenException {
+        Util.requireNotNull("session", session);
 
         Object newObject;
         if (Key.vendorKeyBuilder_ != null) {
             try {
                 newObject = Key.vendorKeyBuilder_.build(session, objectHandle);
-            } catch (PKCS11Exception ex) {
+            } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
                 // we can just treat it like some unknown type of public key
                 newObject = new PublicKey(session, objectHandle);
             }
@@ -227,22 +230,22 @@ public class PublicKey extends Key {
      * implementation of this method for each class separately (see use in
      * clone()).
      *
-     * @param object The object to handle.
+     * @param object
+     *          The object to handle.
      * @preconditions (object <> null)
      * @postconditions
      */
     protected static void putAttributesInTable(PublicKey object) {
-        if (object == null) {
-            throw new NullPointerException("Argument \"object\" must not be null.");
-        }
-
+        Util.requireNotNull("object", object);
         object.attributeTable_.put(Attribute.SUBJECT, object.subject_);
         object.attributeTable_.put(Attribute.ENCRYPT, object.encrypt_);
         object.attributeTable_.put(Attribute.VERIFY, object.verify_);
-        object.attributeTable_.put(Attribute.VERIFY_RECOVER, object.verifyRecover_);
+        object.attributeTable_.put(Attribute.VERIFY_RECOVER,
+                object.verifyRecover_);
         object.attributeTable_.put(Attribute.WRAP, object.wrap_);
         object.attributeTable_.put(Attribute.TRUSTED, object.trusted_);
-        object.attributeTable_.put(Attribute.WRAP_TEMPLATE, object.wrapTemplate_);
+        object.attributeTable_.put(Attribute.WRAP_TEMPLATE,
+                object.wrapTemplate_);
     }
 
     /**
@@ -252,6 +255,7 @@ public class PublicKey extends Key {
      * @preconditions
      * @postconditions
      */
+    @Override
     protected void allocateAttributes() {
         super.allocateAttributes();
 
@@ -275,6 +279,7 @@ public class PublicKey extends Key {
      *                 and (result instanceof PublicKey)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         PublicKey clone = (PublicKey) super.clone();
 
@@ -286,7 +291,8 @@ public class PublicKey extends Key {
         clone.trusted_ = (BooleanAttribute) this.trusted_.clone();
         clone.wrapTemplate_ = (AttributeArray) this.wrapTemplate_.clone();
 
-        putAttributesInTable(clone); // put all cloned attributes into the new table
+        // put all cloned attributes into the new table
+        putAttributesInTable(clone);
 
         return clone;
     }
@@ -295,27 +301,32 @@ public class PublicKey extends Key {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof PublicKey) {
-            PublicKey other = (PublicKey) otherObject;
-            equal = (this == other)
-                || (super.equals(other) && this.subject_.equals(other.subject_)
-                    && this.encrypt_.equals(other.encrypt_)
-                    && this.verify_.equals(other.verify_)
-                    && this.verifyRecover_.equals(other.verifyRecover_)
-                    && this.wrap_.equals(other.wrap_) && this.trusted_.equals(other.trusted_) && this.wrapTemplate_
-                      .equals(other.wrapTemplate_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof PublicKey)) {
+            return false;
+        }
+
+        PublicKey other = (PublicKey) otherObject;
+        return super.equals(other)
+                && this.subject_.equals(other.subject_)
+                && this.encrypt_.equals(other.encrypt_)
+                && this.verify_.equals(other.verify_)
+                && this.verifyRecover_.equals(other.verifyRecover_)
+                && this.wrap_.equals(other.wrap_)
+                && this.trusted_.equals(other.trusted_)
+                && this.wrapTemplate_.equals(other.wrapTemplate_);
     }
 
     /**
@@ -400,25 +411,22 @@ public class PublicKey extends Key {
     /**
      * Read the values of the attributes of this object from the token.
      *
-     * @param session The session handle to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
+    @Override
     public void readAttributes(Session session)
-        throws TokenException
-    {
+        throws TokenException {
         super.readAttributes(session);
 
-        //    Object.getAttributeValue(session, objectHandle_, subject_);
-        //    Object.getAttributeValue(session, objectHandle_, encrypt_);
-        //    Object.getAttributeValue(session, objectHandle_, verify_);
-        //    Object.getAttributeValue(session, objectHandle_, verifyRecover_);
-        //    Object.getAttributeValue(session, objectHandle_, wrap_);
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] { subject_,
-            encrypt_, verify_, verifyRecover_, wrap_, trusted_ });
+        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
+            subject_, encrypt_, verify_, verifyRecover_, wrap_, trusted_ });
         Object.getAttributeValue(session, objectHandle_, wrapTemplate_);
     }
 
@@ -431,43 +439,37 @@ public class PublicKey extends Key {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder(256);
 
         buffer.append(super.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Subject (DER, hex): ");
         buffer.append(subject_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Encrypt: ");
         buffer.append(encrypt_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Verify: ");
         buffer.append(verify_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Verify Recover: ");
         buffer.append(verifyRecover_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Wrap: ");
         buffer.append(wrap_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Trusted: ");
         buffer.append(trusted_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Wrap Template: ");
         buffer.append(wrapTemplate_.toString());
 

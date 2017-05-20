@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -43,9 +43,10 @@
 package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
-import sun.security.pkcs11.wrapper.CK_PBE_PARAMS;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
+import sun.security.pkcs11.wrapper.CK_PBE_PARAMS;
 
 /**
  * This class encapsulates parameters for the Mechanism.PBA_* and
@@ -59,6 +60,7 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  *             and (password_ <> null)
  *             and (salt_ <> null)
  */
+@SuppressWarnings("restriction")
 public class PBEParameters implements Parameters {
 
     /**
@@ -84,11 +86,14 @@ public class PBEParameters implements Parameters {
     /**
      * Create a new PBEDeriveParameters object with the given attributes.
      *
-     * @param initializationVector The 8-byte initialization vector (IV), if an
-     *                             IV is required.
-     * @param password The password to be used in the PBE key generation.
-     * @param salt The salt to be used in the PBE key generation.
-     * @param iterations The number of iterations required for the generation.
+     * @param initializationVector
+     *          The 8-byte initialization vector (IV), if an IV is required.
+     * @param password
+     *          The password to be used in the PBE key generation.
+     * @param salt
+     *          The salt to be used in the PBE key generation.
+     * @param iterations
+     *          The number of iterations required for the generation.
      * @preconditions (initializationVector == null)
      *                or ((initializationVector <> null)
      *                    and (initializationVector.length == 8))
@@ -97,24 +102,18 @@ public class PBEParameters implements Parameters {
      * @postconditions
      */
     public PBEParameters(char[] initializationVector,
-                         char[] password,
-                         char[] salt,
-                         long iterations)
-    {
-        if ((initializationVector != null) && (initializationVector.length != 8)) {
+            char[] password,
+            char[] salt,
+            long iterations) {
+        if ((initializationVector != null)
+                && (initializationVector.length != 8)) {
             throw new IllegalArgumentException(
-                "Argument \"initializationVector\" must be null or must have length "
-                    + "8, if it is not null.");
-        }
-        if (password == null) {
-            throw new NullPointerException("Argument \"password\" must not be null.");
-        }
-        if (salt == null) {
-            throw new NullPointerException("Argument \"salt\" must not be null.");
+                "Argument \"initializationVector\" must be null or must have"
+                + " length 8, if it is not null.");
         }
         initializationVector_ = initializationVector;
-        password_ = password;
-        salt_ = salt;
+        password_ = Util.requireNotNull("password", password);
+        salt_ = Util.requireNotNull("salt", salt);
         iterations_ = iterations;
     }
 
@@ -127,31 +126,34 @@ public class PBEParameters implements Parameters {
      *                 and (result instanceof PBEParameters)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         PBEParameters clone;
 
         try {
             clone = (PBEParameters) super.clone();
 
-            clone.initializationVector_ = (char[]) this.initializationVector_.clone();
+            clone.initializationVector_
+                    = (char[]) this.initializationVector_.clone();
             clone.password_ = (char[]) this.password_.clone();
             clone.salt_ = (char[]) this.salt_.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException("An unexpected clone exception occurred.", ex);
+            throw new TokenRuntimeException(
+                    "An unexpected clone exception occurred.", ex);
         }
 
         return clone;
     }
 
     /**
-     * Get this parameters object as an object of the CK_PBE_PARAMS
-     * class.
+     * Get this parameters object as an object of the CK_PBE_PARAMS class.
      *
      * @return This object as a CK_PBE_PARAMS object.
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public Object getPKCS11ParamsObject() {
         CK_PBE_PARAMS params = new CK_PBE_PARAMS();
 
@@ -212,18 +214,19 @@ public class PBEParameters implements Parameters {
     /**
      * Set the 8-byte initialization vector (IV), if an IV is required.
      *
-     * @param initializationVector The 8-byte initialization vector (IV), if an
-     *                             IV is required.
+     * @param initializationVector
+     *          The 8-byte initialization vector (IV), if an IV is required.
      * @preconditions (initializationVector == null)
      *                or ((initializationVector <> null)
      *                    and (initializationVector.length == 8))
      * @postconditions
      */
     public void setInitializationVector(char[] initializationVector) {
-        if ((initializationVector != null) && (initializationVector.length != 8)) {
+        if ((initializationVector != null)
+                && (initializationVector.length != 8)) {
             throw new IllegalArgumentException(
-                "Argument \"initializationVector\" must be null or must have length "
-                    + "8, if it is not null.");
+                "Argument \"initializationVector\" must be null or must have "
+                + "length 8, if it is not null.");
         }
         initializationVector_ = initializationVector;
     }
@@ -231,35 +234,32 @@ public class PBEParameters implements Parameters {
     /**
      * Set the password to be used in the PBE key generation.
      *
-     * @param password The password to be used in the PBE key generation.
+     * @param password
+     *          The password to be used in the PBE key generation.
      * @preconditions (password <> null)
      * @postconditions
      */
     public void setPassword(char[] password) {
-        if (password == null) {
-            throw new NullPointerException("Argument \"password\" must not be null.");
-        }
-        password_ = password;
+        password_ = Util.requireNotNull("password", password);
     }
 
     /**
      * Set the salt to be used in the PBE key generation.
      *
-     * @param salt The salt to be used in the PBE key generation.
+     * @param salt
+     *          The salt to be used in the PBE key generation.
      * @preconditions (salt <> null)
      * @postconditions
      */
     public void setSalt(char[] salt) {
-        if (salt == null) {
-            throw new NullPointerException("Argument \"salt\" must not be null.");
-        }
-        salt_ = salt;
+        salt_ = Util.requireNotNull("salt", salt);;
     }
 
     /**
      * Set the number of iterations required for the generation.
      *
-     * @param iterations The number of iterations required for the generation.
+     * @param iterations
+     *          The number of iterations required for the generation.
      * @preconditions
      * @postconditions
      */
@@ -273,29 +273,26 @@ public class PBEParameters implements Parameters {
      *
      * @return A string representation of this object.
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append(Constants.INDENT);
         buffer.append("Initialization Vector: ");
-        buffer.append((initializationVector_ != null) ? new String(initializationVector_)
-            : null);
-        buffer.append(Constants.NEWLINE);
+        buffer.append((initializationVector_ != null)
+                ? new String(initializationVector_) : null);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Password: ");
         buffer.append((password_ != null) ? new String(password_) : null);
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Salt: ");
         buffer.append((salt_ != null) ? new String(salt_) : null);
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Iterations (dec): ");
         buffer.append(iterations_);
-        // buffer.append(Constants.NEWLINE);
 
         return buffer.toString();
     }
@@ -304,37 +301,45 @@ public class PBEParameters implements Parameters {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof PBEParameters) {
-            PBEParameters other = (PBEParameters) otherObject;
-            equal = (this == other)
-                || ((Functions.equals(this.initializationVector_, other.initializationVector_)
-                    && Functions.equals(this.password_, other.password_)
-                    && Functions.equals(this.salt_, other.salt_) && this.iterations_ == other.iterations_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof PBEParameters)) {
+            return false;
+        }
+
+        PBEParameters other = (PBEParameters) otherObject;
+        return Functions.equals(this.initializationVector_,
+                    other.initializationVector_)
+               && Functions.equals(this.password_, other.password_)
+               && Functions.equals(this.salt_, other.salt_)
+               && (this.iterations_ == other.iterations_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
-        return Functions.hashCode(initializationVector_) ^ Functions.hashCode(password_)
-            ^ Functions.hashCode(salt_) ^ ((int) iterations_);
+        return Functions.hashCode(initializationVector_)
+                ^ Functions.hashCode(password_)
+                ^ Functions.hashCode(salt_)
+                ^ ((int) iterations_);
     }
 
 }

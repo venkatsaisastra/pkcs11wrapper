@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -43,7 +43,8 @@
 package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
@@ -76,27 +77,29 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      * Create a new CbcEncryptDataParameters object with the given IV and
      * data.
      *
-     * @param blockSize The block size of the cipher.
-     * @param iv The initialization vector which's length must be block size.
-     * @param data The key derivation data which's length must be multiple of the block size.
+     * @param blockSize
+     *          The block size of the cipher.
+     * @param iv
+     *          The initialization vector which's length must be block size.
+     * @param data
+     *          The key derivation data which's length must be multiple of the
+     *          block size.
      * @preconditions (blockSize > 0)
      *                and (iv <> null) and (iv.length == blockSize)
      *                and (data <> null) and (data.length%blockSize == 0)
      * @postconditions
      */
     protected CbcEncryptDataParameters(int blockSize, byte[] iv, byte[] data) {
-        if (iv == null) {
-            throw new NullPointerException("Argument \"iv\" must not be null.");
-        }
+        Util.requireNotNull("iv", iv);
         if (iv.length != blockSize) {
-            throw new IllegalArgumentException("Argument \"iv\" must have length blockSize.");
+            throw new IllegalArgumentException(
+                    "Argument \"iv\" must have length blockSize.");
         }
-        if (data == null) {
-            throw new NullPointerException("Argument \"data\" must not be null.");
-        }
+        Util.requireNotNull("data", data);
         if (data.length % blockSize != 0) {
             throw new IllegalArgumentException(
-                "Argument \"data\" must have a length that is a multiple of blockSize.");
+                "Argument \"data\" must have a length that is a multiple of"
+                + " blockSize.");
         }
         blockSize_ = blockSize;
         iv_ = iv;
@@ -112,12 +115,14 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      *                 and (result instanceof DesCbcEncryptDataParameters)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         try {
             return super.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException("An unexpected clone exception occurred.", ex);
+            throw new TokenRuntimeException(
+                    "An unexpected clone exception occurred.", ex);
         }
     }
 
@@ -144,14 +149,13 @@ public abstract class CbcEncryptDataParameters implements Parameters {
     /**
      * Set the initialization vector for CBC mode.
      *
-     * @param iv The initialization vector.
+     * @param iv
+     *          The initialization vector.
      * @preconditions (iv <> null) and (iv.length == getBlockSize())
      * @postconditions
      */
     public void setInitializationVector(byte[] iv) {
-        if (iv == null) {
-            throw new NullPointerException("Argument \"iv\" must not be null.");
-        }
+        Util.requireNotNull("iv", iv);
         if (iv.length != blockSize_) {
             throw new IllegalArgumentException(
                 "Argument \"iv\" must have length getBlockSize().");
@@ -173,17 +177,17 @@ public abstract class CbcEncryptDataParameters implements Parameters {
     /**
      * Set the key derivation data.
      *
-     * @param data The key derivation data.
+     * @param data
+     *          The key derivation data.
      * @preconditions (data <> null) and (data.length%getBlockSize() == 0)
      * @postconditions
      */
     public void setData(byte[] data) {
-        if (data == null) {
-            throw new NullPointerException("Argument \"data\" must not be null.");
-        }
+        Util.requireNotNull("data", data);
         if (data.length % blockSize_ != 0) {
             throw new IllegalArgumentException(
-                "Argument \"data\" must have a length that is a multiple of getBlockSize().");
+                "Argument \"data\" must have a length that is a multiple of"
+                + " getBlockSize().");
         }
         data_ = data;
     }
@@ -194,18 +198,17 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      *
      * @return A string representation of this object.
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append(Constants.INDENT);
         buffer.append("Initialization Vector (hex): ");
         buffer.append(Functions.toHexString(iv_));
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Data (hex): ");
         buffer.append(Functions.toHexString(data_));
-        //buffer.append(Constants.NEWLINE);
 
         return buffer.toString();
     }
@@ -214,34 +217,38 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof CbcEncryptDataParameters) {
-            CbcEncryptDataParameters other = (CbcEncryptDataParameters) otherObject;
-            equal = (this == other)
-                || ((this.blockSize_ == other.blockSize_)
-                    && Functions.equals(this.iv_, other.iv_) && Functions.equals(this.data_,
-                    other.data_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof CbcEncryptDataParameters)) {
+            return false;
+        }
+
+        CbcEncryptDataParameters other = (CbcEncryptDataParameters) otherObject;
+        return (this.blockSize_ == other.blockSize_)
+                && Functions.equals(this.iv_, other.iv_)
+                && Functions.equals(this.data_, other.data_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return Functions.hashCode(iv_) ^ Functions.hashCode(data_);
     }

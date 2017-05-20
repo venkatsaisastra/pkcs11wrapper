@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -64,7 +64,7 @@ import sun.security.pkcs11.wrapper.PKCS11;
  * must give the full path of the PKCS#11 module unless the module is in the
  * system's search path or in the path of the java.library.path system
  * property.
- * By default, it is assumed that the required pkcs#11-wrapper-library
+ * By default, it is assumed that the required PKCS#11-wrapper-library
  * is named "pkcs11wrapper" and is located in the system path. The name of the
  * library with the absolute path can also be passed as parameter.
  * According to the specification, the application must call the initialize
@@ -91,7 +91,8 @@ import sun.security.pkcs11.wrapper.PKCS11;
  * </code></pre>
  * to get a list of all available slots or
  * <pre><code>
- * Slot[] slotsWithToken = pkcs11Module.getSlotList(Module.SlotRequirement.TOKEN_PRESENT);
+ * Slot[] slotsWithToken = pkcs11Module.getSlotList(
+ *                             Module.SlotRequirement.TOKEN_PRESENT);
  * </code></pre>
  * to get a list of all those slots in which there is a currently a token
  * present.
@@ -99,7 +100,8 @@ import sun.security.pkcs11.wrapper.PKCS11;
  * To wait for the insertion of a token, the application can use the
  * <code>waitForSlotEvent</code> method. For example, the method call
  * <pre><code>
- * Slot eventSlot = pkcs11Module.waitForSlotEvent(Module.WaitingBehavior.DONT_BLOCK, null);
+ * Slot eventSlot = pkcs11Module.waitForSlotEvent(
+ *                      Module.WaitingBehavior.DONT_BLOCK, null);
  * </code></pre>
  * will block until an event for any slot of this module occurred. Usually such
  * an event is the insertion of a token. However, the application should check
@@ -112,27 +114,32 @@ import sun.security.pkcs11.wrapper.PKCS11;
  * @version 1.0
  * @invariants (pkcs11Module_ <> null)
  */
+
+@SuppressWarnings("restriction")
 public class Module {
 
     /**
-     * This interface defines the required properties for a slot. The application
-     * uses one of the defined constants as parameter when calling getSlotList.
+     * This interface defines the required properties for a slot. The
+     * application uses one of the defined constants as parameter when calling
+     * getSlotList.
      *
-     * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+     * @author <a href="mailto:Karl.Scheibelhofer@iaik.at">Karl
+     *         Scheibelhofer</a>
      * @version 1.0
      * @invariants
      */
     public interface SlotRequirement {
 
         /**
-         * Causes getSlotList to return all slots of the system that the respective
-         * module supports.
+         * Causes getSlotList to return all slots of the system that the
+         * respective module supports.
          */
         public static boolean ALL_SLOTS = false;
 
         /**
-         * Causes getSlotList to return only those slots in which there is currently
-         * a token present; e.g. there is a smart card in the reader's slot.
+         * Causes getSlotList to return only those slots in which there is
+         * currently a token present; e.g. there is a smart card in the reader's
+         * slot.
          */
         public static boolean TOKEN_PRESENT = true;
 
@@ -142,7 +149,8 @@ public class Module {
      * This interface defines the allowed constants for the wanted waiting
      * behavior when calling waitForSlotEvent.
      *
-     * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+     * @author <a href="mailto:Karl.Scheibelhofer@iaik.at">Karl
+     *         Scheibelhofer</a>
      * @version 1.0
      * @invariants
      */
@@ -171,7 +179,8 @@ public class Module {
      * Create a new module that uses the given PKCS11 interface to interact with
      * the token.
      *
-     * @param pkcs11Module The interface to interact with the token.
+     * @param pkcs11Module
+     *          The interface to interact with the token.
      * @preconditions
      * @postconditions
      */
@@ -183,23 +192,23 @@ public class Module {
      * Get an instance of this class by giving the name of the PKCS#11 module;
      * e.g. "slbck.dll".
      *
-     * @param pkcs11ModuleName The name of the module; e.g. "slbck.dll".
+     * @param pkcs11ModuleName
+     *          The name of the module; e.g. "slbck.dll".
      * @return An instance of Module that is connected to the given PKCS#11
      *         module.
-     * @exception IOException If connecting to the named module fails.
+     * @exception IOException
+     *              If connecting to the named module fails.
      * @preconditions (pkcs11ModuleName <> null)
      *                and (pkcs11ModuleName is a valid PKCS#11 module name)
      * @postconditions
      */
     public static Module getInstance(String pkcs11ModuleName)
-        throws IOException
-    {
-        if (pkcs11ModuleName == null) {
-            throw new NullPointerException("Argument \"pkcs11ModuleName\" must not be null.");
-        }
+        throws IOException {
+        Util.requireNotNull("pkcs11ModuleName", pkcs11ModuleName);
         File file = new File(pkcs11ModuleName);
         if (!file.exists()) {
-            throw new FileNotFoundException("File " + pkcs11ModuleName + " does not exist");
+            throw new FileNotFoundException(
+                    "File " + pkcs11ModuleName + " does not exist");
         }
         if (!file.isFile()) {
             throw new IOException(pkcs11ModuleName + " is not not a file");
@@ -211,27 +220,29 @@ public class Module {
     }
 
     /**
-     * Get an instance of this class by giving the name of the PKCS#11 module, e.g. "slbck.dll"
-     * and the absolute path to the PKCS#11-wrapper native library.
+     * Get an instance of this class by giving the name of the PKCS#11 module,
+     * e.g. "slbck.dll" and the absolute path to the PKCS#11-wrapper native
+     * library.
      *
-     * @param pkcs11ModuleName The name of the module; e.g. "slbck.dll".
-     * @param pkcs11WrapperPath The absolute path to the PKCS#11-wrapper native library.
+     * @param pkcs11ModuleName
+     *          The name of the module; e.g. "slbck.dll".
+     * @param pkcs11WrapperPath
+     *          The absolute path to the PKCS#11-wrapper native library.
      * @return An instance of Module that is connected to the given PKCS#11
      *         module using the specified PKCS#11-wrapper native library.
-     * @exception IOException If connecting to the named module fails.
+     * @exception IOException
+     *              If connecting to the named module fails.
      * @preconditions (pkcs11ModuleName <> null)
      *                and (pkcs11ModuleName is a valid PKCS#11 module name)
      * @postconditions
      */
     /*
-    public static Module getInstance(String pkcs11ModuleName, String pkcs11WrapperPath)
-        throws IOException
-    {
-        if (pkcs11ModuleName == null) {
-            throw new NullPointerException("Argument \"pkcs11ModuleName\" must not be null.");
-        }
-        PKCS11 pkcs11Module = PKCS11Connector.connectToPKCS11Module(pkcs11ModuleName,
-            pkcs11WrapperPath);
+    public static Module getInstance(String pkcs11ModuleName,
+            String pkcs11WrapperPath)
+        throws IOException {
+        Util.requireNotNull("pkcs11ModuleName", pkcs11ModuleName);
+        PKCS11 pkcs11Module = PKCS11Connector.connectToPKCS11Module(
+            pkcs11ModuleName, pkcs11WrapperPath);
 
         return new Module(pkcs11Module);
     }*/
@@ -240,13 +251,13 @@ public class Module {
      * Gets information about the module; i.e. the PKCS#11 module behind.
      *
      * @return A object holding information about the module.
-     * @exception TokenException If getting the information fails.
+     * @exception TokenException
+     *              If getting the information fails.
      * @preconditions
      * @postconditions (result <> null)
      */
     public Info getInfo()
-        throws TokenException
-    {
+        throws TokenException {
         CK_INFO ckInfo;
         try {
             ckInfo = pkcs11Module_.C_GetInfo();
@@ -261,15 +272,16 @@ public class Module {
      * Initializes the module. The application must call this method before
      * calling any other method of the module.
      *
-     * @param initArgs The initialization arguments for the module as defined
-     *                 in PKCS#11. May be null.
-     * @exception TokenException If initialization fails.
+     * @param initArgs
+     *          The initialization arguments for the module as defined in
+     *          PKCS#11. May be null.
+     * @exception TokenException
+     *              If initialization fails.
      * @preconditions
      * @postconditions
      */
     public void initialize(InitializeArgs initArgs)
-        throws TokenException
-    {
+        throws TokenException {
         CK_C_INITIALIZE_ARGS wrapperInitArgs = null;
         if (initArgs != null) {
             InitializeArgs castedInitArgs = initArgs;
@@ -278,15 +290,13 @@ public class Module {
             if (mutexHandler != null) {
                 wrapperInitArgs.CreateMutex = new CK_CREATEMUTEX() {
                     public Object CK_CREATEMUTEX()
-                        throws sun.security.pkcs11.wrapper.PKCS11Exception
-                    {
+                        throws sun.security.pkcs11.wrapper.PKCS11Exception {
                         return mutexHandler.createMutex();
                     }
                 };
                 wrapperInitArgs.DestroyMutex = new CK_DESTROYMUTEX() {
                     public void CK_DESTROYMUTEX(Object pMutex)
-                        throws sun.security.pkcs11.wrapper.PKCS11Exception
-                    {
+                        throws sun.security.pkcs11.wrapper.PKCS11Exception {
                         mutexHandler.destroyMutex(pMutex);
                     }
                 };
@@ -312,20 +322,22 @@ public class Module {
             }
 
             if (castedInitArgs.isLibraryCantCreateOsThreads()) {
-                wrapperInitArgs.flags |= PKCS11Constants.CKF_LIBRARY_CANT_CREATE_OS_THREADS;
+                wrapperInitArgs.flags |=
+                        PKCS11Constants.CKF_LIBRARY_CANT_CREATE_OS_THREADS;
             }
             if (castedInitArgs.isOsLockingOk()) {
                 wrapperInitArgs.flags |= PKCS11Constants.CKF_OS_LOCKING_OK;
             }
             wrapperInitArgs.pReserved = castedInitArgs.getReserved();
         }
-        //pReserved of CK_C_INITIALIZE_ARGS not used yet, just set to standard conform UTF8
+        // pReserved of CK_C_INITIALIZE_ARGS not used yet, just set to standard
+        // conform UTF8
 
         final String functionList = "C_GetFunctionList";
         final boolean omitInitialize = false;
         try {
-            pkcs11Module_ = PKCS11.getInstance(pkcs11ModuleName_, functionList, wrapperInitArgs,
-                    omitInitialize);
+            pkcs11Module_ = PKCS11.getInstance(pkcs11ModuleName_, functionList,
+                    wrapperInitArgs, omitInitialize);
         } catch (IOException ex) {
             throw new TokenException(ex.getMessage(), ex);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
@@ -341,14 +353,15 @@ public class Module {
      * This method calls the <code>C_Finalize(Object)</code> method of the
      * underlying PKCS11 module.
      *
-     * @param args Must be null in version 2.x of PKCS#11.
-     * @exception TokenException If finalization fails.
+     * @param args
+     *          Must be null in version 2.x of PKCS#11.
+     * @exception TokenException
+     *              If finalization fails.
      * @preconditions (args == null)
      * @postconditions
      */
     public void finalize(Object args)
-        throws TokenException
-    {
+        throws TokenException {
         try {
             pkcs11Module_.C_Finalize(args);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
@@ -359,19 +372,20 @@ public class Module {
     /**
      * Gets a list of slots that can accept tokens that are compatible with this
      * module; e.g. a list of PC/SC smart card readers. The parameter determines
-     * if the method returns all compatible slots or only those in which there is
-     * a compatible token present.
+     * if the method returns all compatible slots or only those in which there
+     * is a compatible token present.
      *
-     * @param tokenPresent Can be SlotRequirement.ALL_SLOTS or
-     *                     SlotRequirement.TOKEN_PRESENT.
+     * @param tokenPresent
+     *          Can be SlotRequirement.ALL_SLOTS or
+     *          SlotRequirement.TOKEN_PRESENT.
      * @return An array of Slot objects. May be an empty array but not null.
-     * @exception TokenException If .
+     * @exception TokenException
+     *              If .
      * @preconditions
      * @postconditions (result <> null)
      */
     public Slot[] getSlotList(boolean tokenPresent)
-        throws TokenException
-    {
+        throws TokenException {
         long[] slotIDs;
         try {
             slotIDs = pkcs11Module_.C_GetSlotList(tokenPresent);
@@ -387,27 +401,28 @@ public class Module {
     }
 
     /**
-     * Waits for an slot event. That can be that a token was inserted or removed.
-     * It returns the Slot for which an event occured. The dontBlock parameter can
-     * have the value WaitingBehavior.BLOCK or WaitingBehavior.DONT_BLOCK.
+     * Waits for an slot event. That can be that a token was inserted or
+     * removed. It returns the Slot for which an event occurred. The dontBlock
+     * parameter can have the value WaitingBehavior.BLOCK or
+     * WaitingBehavior.DONT_BLOCK.
      * If there is no event present and the method is called with
      * WaitingBehavior.DONT_BLOCK this method throws an exception with the error
      * code PKCS11Constants.CKR_NO_EVENT (0x00000008).
      *
-     * @param dontBlock Can be WaitingBehavior.BLOCK or
-     *                  WaitingBehavior.DONT_BLOCK.
-     * @param reserved Should be null for this version.
-     * @return The slot for which an event occured.
-     * @exception TokenException If the method was called with
-     *                           WaitingBehavior.DONT_BLOCK but there was no event
-     *                           available, or if an error occured.
+     * @param dontBlock
+     *          Can be WaitingBehavior.BLOCK or WaitingBehavior.DONT_BLOCK.
+     * @param reserved
+     *          Should be null for this version.
+     * @return The slot for which an event occurred.
+     * @exception TokenException
+     *              If the method was called with WaitingBehavior.DONT_BLOCK but
+     *              there was no event available, or if an error occurred.
      * @preconditions (reserved == null)
      * @postconditions (result <> null)
      */
     /*
     public Slot waitForSlotEvent(boolean dontBlock, Object reserved)
-        throws TokenException
-    {
+        throws TokenException {
         long flags = (dontBlock) ? PKCS11Constants.CKF_DONT_BLOCK : 0L;
         long slotID = pkcs11Module_.C_WaitForSlotEvent(flags, reserved);
 
@@ -438,18 +453,18 @@ public class Module {
      * This finalize method tries to finalize the module by calling
      * <code>finalize()</code> of the Java object of the PKCS11 module.
      * Note that this method does not call the <code>finalize(Object)</code>
-     * (<code>C_Finalize(Objet)</code>) method of the PKCS11 module!
+     * (<code>C_Finalize(Object)</code>) method of the PKCS11 module!
      * This method is the reserved Java method called by the garbage collector.
      * Don't get confused by the same name.
      *
-     * @exception Throwable If finalization fails.
+     * @exception Throwable
+     *              If finalization fails.
      * @preconditions
      * @postconditions
      * @see #finalize(Object)
      */
     public void finalize()
-        throws Throwable
-    {
+        throws Throwable {
         // pkcs11Module_.finalize();
         Method method = PKCS11.class.getDeclaredMethod("finalize");
         method.setAccessible(true);
@@ -462,31 +477,36 @@ public class Module {
      * Compares the pkcs11Module_ this object with the other object.
      * Returns only true, if those are equal in both objects.
      *
-     * @param otherObject The other Module object.
+     * @param otherObject
+     *          The other Module object.
      * @return True, if other is an instance of Module and the pkcs11Module_ of
      *         both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof Module) {
-            Module other = (Module) otherObject;
-            equal = (this == other) || this.pkcs11Module_.equals(other.pkcs11Module_);
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof Module)) {
+            return false;
+        }
+
+        Module other = (Module) otherObject;
+        return Util.objEquals(this.pkcs11Module_, other.pkcs11Module_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object. Gained from the sessionHandle.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return pkcs11Module_.hashCode();
     }

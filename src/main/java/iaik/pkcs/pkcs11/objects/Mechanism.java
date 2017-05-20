@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -44,7 +44,8 @@ package iaik.pkcs.pkcs11.objects;
 
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent Mechanism Objects as introduced in
@@ -60,9 +61,9 @@ public class Mechanism extends Object {
     protected LongAttribute mechanismType_;
 
     /**
-     * The default constructor. An application use this constructor to instantiate
-     * an object that serves as a template. It may also be useful for working with
-     * vendor-defined objects.
+     * The default constructor. An application use this constructor to
+     * instantiate an object that serves as a template. It may also be useful
+     * for working with vendor-defined objects.
      */
     public Mechanism() {
         super();
@@ -73,15 +74,17 @@ public class Mechanism extends Object {
      * object's attributes, the session handle to use for reading the attribute
      * values and the object handle.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
+     * @exception TokenException
+     *              If getting the attributes failed.
      */
     protected Mechanism(Session session, long objectHandle)
-        throws TokenException
-    {
+        throws TokenException {
         super(session, objectHandle);
     }
 
@@ -91,22 +94,22 @@ public class Mechanism extends Object {
      * implementation of this method for each class separately (see use in
      * clone()).
      *
-     * @param object The object to handle.
+     * @param object
+     *          The object to handle.
      * @preconditions (object <> null)
      * @postconditions
      */
     protected static void putAttributesInTable(Mechanism object) {
-        if (object == null) {
-            throw new NullPointerException("Argument \"object\" must not be null.");
-        }
-
-        object.attributeTable_.put(Attribute.MECHANISM_TYPE, object.mechanismType_);
+        Util.requireNotNull("object", object);
+        object.attributeTable_.put(Attribute.MECHANISM_TYPE,
+                object.mechanismType_);
     }
 
     /**
      * Allocates the attribute objects for this class and adds them to the
      * attribute table.
      */
+    @Override
     protected void allocateAttributes() {
         super.allocateAttributes();
 
@@ -120,12 +123,14 @@ public class Mechanism extends Object {
      *
      * @return A clone of this object.
      */
+    @Override
     public java.lang.Object clone() {
         Mechanism clone = (Mechanism) super.clone();
 
         clone.mechanismType_ = (LongAttribute) this.mechanismType_.clone();
 
-        putAttributesInTable(clone); // put all cloned attributes into the new table
+        // put all cloned attributes into the new table
+        putAttributesInTable(clone);
 
         return clone;
     }
@@ -134,31 +139,39 @@ public class Mechanism extends Object {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        if (otherObject instanceof Mechanism) {
-            Mechanism other = (Mechanism) otherObject;
-            return (this == other)
-                || (super.equals(other) && this.mechanismType_.equals(other.mechanismType_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return false;
+        if (!(otherObject instanceof Mechanism)) {
+            return false;
+        }
+
+        Mechanism other = (Mechanism) otherObject;
+        return super.equals(other)
+                && this.mechanismType_.equals(other.mechanismType_);
     }
 
     /**
      * Read the values of the attributes of this object from the token.
      *
-     * @param session The session handle to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @exception TokenException
+     *              If getting the attributes failed.
      */
+    @Override
     public void readAttributes(Session session)
-        throws TokenException
-    {
+        throws TokenException {
         super.readAttributes(session);
 
         /*
@@ -166,8 +179,6 @@ public class Mechanism extends Object {
          * but we only have one attribute here.
          */
         Object.getAttributeValue(session, objectHandle_, mechanismType_);
-        //    Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-        //        mechanismType_});
     }
 
     /**
@@ -184,13 +195,13 @@ public class Mechanism extends Object {
      *
      * @return A string presentation of this object for debugging output.
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder(32);
 
         buffer.append(super.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Mechanism Type: ");
         buffer.append(mechanismType_.toString());
 
@@ -198,11 +209,12 @@ public class Mechanism extends Object {
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      */
+    @Override
     public int hashCode() {
         return mechanismType_.hashCode();
     }

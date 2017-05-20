@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -44,7 +44,8 @@ package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.TokenRuntimeException;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
@@ -55,7 +56,8 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants (hashAlgorithm_ <> null)
- *             and (maskGenerationFunction_ == MessageGenerationFunctionType.Sha1)
+ *             and (maskGenerationFunction_
+ *                  == MessageGenerationFunctionType.Sha1)
  */
 abstract public class RSAPkcsParameters implements Parameters {
 
@@ -71,24 +73,24 @@ abstract public class RSAPkcsParameters implements Parameters {
     public interface MessageGenerationFunctionType {
 
         /**
-         * The indentifier for CKG_MGF1_SHA1.
+         * The identifier for CKG_MGF1_SHA1.
          */
-        static public final long SHA1 = PKCS11Constants.CKG_MGF1_SHA1;
+        public static final long SHA1 = PKCS11Constants.CKG_MGF1_SHA1;
 
         /**
-         * The indentifier for CKG_MGF1_SHA256.
+         * The identifier for CKG_MGF1_SHA256.
          */
-        static public final long SHA256 = PKCS11Constants.CKG_MGF1_SHA256;
+        public static final long SHA256 = PKCS11Constants.CKG_MGF1_SHA256;
 
         /**
-         * The indentifier for CKG_MGF1_SHA384.
+         * The identifier for CKG_MGF1_SHA384.
          */
-        static public final long SHA384 = PKCS11Constants.CKG_MGF1_SHA384;
+        public static final long SHA384 = PKCS11Constants.CKG_MGF1_SHA384;
 
         /**
-         * The indentifier for CKG_MGF1_SHA512.
+         * The identifier for CKG_MGF1_SHA512.
          */
-        static public final long SHA512 = PKCS11Constants.CKG_MGF1_SHA512;
+        public static final long SHA512 = PKCS11Constants.CKG_MGF1_SHA512;
 
     }
 
@@ -106,28 +108,29 @@ abstract public class RSAPkcsParameters implements Parameters {
     /**
      * Create a new RSAPkcsarameters object with the given attributes.
      *
-     * @param hashAlgorithm The message digest algorithm used to calculate the
-     *                      digest of the encoding parameter.
-     * @param maskGenerationFunction The mask to apply to the encoded block. One
-     *                               of the constants defined in the
-     *                               MessageGenerationFunctionType interface.
+     * @param hashAlgorithm
+     *          The message digest algorithm used to calculate the digest of the
+     *          encoding parameter.
+     * @param maskGenerationFunction
+     *          The mask to apply to the encoded block. One of the constants
+     *          defined in the MessageGenerationFunctionType interface.
      * @preconditions (hashAlgorithm <> null)
-     *                and (maskGenerationFunction == MessageGenerationFunctionType.Sha1)
+     *                and (maskGenerationFunction
+     *                      == MessageGenerationFunctionType.Sha1)
      * @postconditions
      */
-    protected RSAPkcsParameters(Mechanism hashAlgorithm, long maskGenerationFunction) {
-        if (hashAlgorithm == null) {
-            throw new NullPointerException("Argument \"hashAlgorithm\" must not be null.");
-        }
+    protected RSAPkcsParameters(Mechanism hashAlgorithm,
+            long maskGenerationFunction) {
         if ((maskGenerationFunction != MessageGenerationFunctionType.SHA1)
             && (maskGenerationFunction != MessageGenerationFunctionType.SHA256)
             && (maskGenerationFunction != MessageGenerationFunctionType.SHA384)
-            && (maskGenerationFunction != MessageGenerationFunctionType.SHA512)) {
+            && (maskGenerationFunction
+                    != MessageGenerationFunctionType.SHA512)) {
             throw new IllegalArgumentException(
                 "Illegal value for argument\"maskGenerationFunction\": "
                     + Functions.toHexString(maskGenerationFunction));
         }
-        hashAlgorithm_ = hashAlgorithm;
+        hashAlgorithm_ = Util.requireNotNull("hashAlgorithm", hashAlgorithm);
         maskGenerationFunction_ = maskGenerationFunction;
     }
 
@@ -140,6 +143,7 @@ abstract public class RSAPkcsParameters implements Parameters {
      *                 and (result instanceof RSAPkcsParameters)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         RSAPkcsParameters clone;
 
@@ -149,7 +153,8 @@ abstract public class RSAPkcsParameters implements Parameters {
             clone.hashAlgorithm_ = (Mechanism) this.hashAlgorithm_.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException("An unexpected clone exception occurred.", ex);
+            throw new TokenRuntimeException(
+                    "An unexpected clone exception occurred.", ex);
         }
 
         return clone;
@@ -183,31 +188,32 @@ abstract public class RSAPkcsParameters implements Parameters {
      * Set the message digest algorithm used to calculate the digest of the
      * encoding parameter.
      *
-     * @param hashAlgorithm The message digest algorithm used to calculate the
-     *                      digest of the encoding parameter.
+     * @param hashAlgorithm
+     *          The message digest algorithm used to calculate the digest of the
+     *          encoding parameter.
      * @preconditions (hashAlgorithm <> null)
      * @postconditions
      */
     public void setHashAlgorithm(Mechanism hashAlgorithm) {
-        if (hashAlgorithm == null) {
-            throw new NullPointerException("Argument \"hashAlgorithm\" must not be null.");
-        }
-        hashAlgorithm_ = hashAlgorithm;
+        hashAlgorithm_ = Util.requireNotNull("hashAlgorithm", hashAlgorithm);
     }
 
     /**
      * Set the mask function to apply to the encoded block. One of the constants
      * defined in the MessageGenerationFunctionType interface.
      *
-     * @param maskGenerationFunction The mask to apply to the encoded block.
-     * @preconditions (maskGenerationFunction == MessageGenerationFunctionType.Sha1)
+     * @param maskGenerationFunction
+     *          The mask to apply to the encoded block.
+     * @preconditions (maskGenerationFunction
+     *                  == MessageGenerationFunctionType.Sha1)
      * @postconditions
      */
     public void setMaskGenerationFunction(long maskGenerationFunction) {
         if ((maskGenerationFunction != MessageGenerationFunctionType.SHA1)
             && (maskGenerationFunction != MessageGenerationFunctionType.SHA256)
             && (maskGenerationFunction != MessageGenerationFunctionType.SHA384)
-            && (maskGenerationFunction != MessageGenerationFunctionType.SHA512)) {
+            && (maskGenerationFunction
+                    != MessageGenerationFunctionType.SHA512)) {
             throw new IllegalArgumentException(
                 "Illegal value for argument\"maskGenerationFunction\": "
                     + Functions.toHexString(maskGenerationFunction));
@@ -221,28 +227,30 @@ abstract public class RSAPkcsParameters implements Parameters {
      *
      * @return A string representation of this object.
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append(Constants.INDENT);
         buffer.append("Hash Algorithm: ");
         buffer.append(hashAlgorithm_.toString());
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Mask Generation Function: ");
         if (maskGenerationFunction_ == MessageGenerationFunctionType.SHA1) {
             buffer.append("SHA-1");
-        } else if (maskGenerationFunction_ == MessageGenerationFunctionType.SHA256) {
+        } else if (maskGenerationFunction_
+                    == MessageGenerationFunctionType.SHA256) {
             buffer.append("SHA-256");
-        } else if (maskGenerationFunction_ == MessageGenerationFunctionType.SHA384) {
+        } else if (maskGenerationFunction_
+                    == MessageGenerationFunctionType.SHA384) {
             buffer.append("SHA-384");
-        } else if (maskGenerationFunction_ == MessageGenerationFunctionType.SHA512) {
+        } else if (maskGenerationFunction_
+                    == MessageGenerationFunctionType.SHA512) {
             buffer.append("SHA-512");
         } else {
             buffer.append("<unknown>");
         }
-        //buffer.append(Constants.NEWLINE);
 
         return buffer.toString();
     }
@@ -251,32 +259,38 @@ abstract public class RSAPkcsParameters implements Parameters {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof RSAPkcsParameters) {
-            RSAPkcsParameters other = (RSAPkcsParameters) otherObject;
-            equal = (this == other)
-                || (this.hashAlgorithm_.equals(other.hashAlgorithm_) && (this.maskGenerationFunction_ == other.maskGenerationFunction_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof RSAPkcsParameters)) {
+            return false;
+        }
+
+        RSAPkcsParameters other = (RSAPkcsParameters) otherObject;
+        return this.hashAlgorithm_.equals(other.hashAlgorithm_)
+                && (this.maskGenerationFunction_
+                        == other.maskGenerationFunction_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return hashAlgorithm_.hashCode() ^ ((int) maskGenerationFunction_);
     }

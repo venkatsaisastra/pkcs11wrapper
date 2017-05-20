@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -43,9 +43,10 @@
 package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
-import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
+import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
 
 /**
  * This class encapsulates parameters for the Mechanism.SSL3_MASTER_KEY_DERIVE
@@ -56,6 +57,7 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  * @invariants (clientRandom_ <> null)
  *             and (serverRandom_ <> null)
  */
+@SuppressWarnings("restriction")
 public class SSL3RandomDataParameters implements Parameters {
 
     /**
@@ -69,24 +71,20 @@ public class SSL3RandomDataParameters implements Parameters {
     protected byte[] serverRandom_;
 
     /**
-     * Create a new SSL3RandomDataParameters object with the given
-     * cleint and server random.
+     * Create a new SSL3RandomDataParameters object with the given client and
+     * server random.
      *
-     * @param clientRandom The client's random data.
-     * @param serverRandom The server's random data.
+     * @param clientRandom
+     *          The client's random data.
+     * @param serverRandom
+     *          The server's random data.
      * @preconditions (clientRandom <> null)
      *                and (serverRandom <> null)
      * @postconditions
      */
     public SSL3RandomDataParameters(byte[] clientRandom, byte[] serverRandom) {
-        if (clientRandom == null) {
-            throw new NullPointerException("Argument \"clientRandom\" must not be null.");
-        }
-        if (serverRandom == null) {
-            throw new NullPointerException("Argument \"serverRandom\" must not be null.");
-        }
-        clientRandom_ = clientRandom;
-        serverRandom_ = serverRandom;
+        clientRandom_ = Util.requireNotNull("clientRandom", clientRandom);
+        serverRandom_ = Util.requireNotNull("serverRandom", serverRandom);
     }
 
     /**
@@ -98,6 +96,7 @@ public class SSL3RandomDataParameters implements Parameters {
      *                 and (result instanceof SSL3RandomDataParameters)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         SSL3RandomDataParameters clone;
 
@@ -108,7 +107,8 @@ public class SSL3RandomDataParameters implements Parameters {
             clone.serverRandom_ = (byte[]) this.serverRandom_.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException("An unexpected clone exception occurred.", ex);
+            throw new TokenRuntimeException(
+                    "An unexpected clone exception occurred.", ex);
         }
 
         return clone;
@@ -121,9 +121,9 @@ public class SSL3RandomDataParameters implements Parameters {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public Object getPKCS11ParamsObject() {
-        CK_SSL3_RANDOM_DATA params = new CK_SSL3_RANDOM_DATA(clientRandom_, serverRandom_);
-        return params;
+        return new CK_SSL3_RANDOM_DATA(clientRandom_, serverRandom_);
     }
 
     /**
@@ -151,29 +151,25 @@ public class SSL3RandomDataParameters implements Parameters {
     /**
      * Set the client's random data.
      *
-     * @param clientRandom The client's random data.
+     * @param clientRandom
+     *          The client's random data.
      * @preconditions (clientRandom <> null)
      * @postconditions
      */
     public void setClientRandom(byte[] clientRandom) {
-        if (clientRandom == null) {
-            throw new NullPointerException("Argument \"clientRandom\" must not be null.");
-        }
-        clientRandom_ = clientRandom;
+        clientRandom_ = Util.requireNotNull("clientRandom", clientRandom);
     }
 
     /**
      * Set the server's random data.
      *
-     * @param serverRandom The server's random data.
+     * @param serverRandom
+     *          The server's random data.
      * @preconditions (serverRandom <> null)
      * @postconditions
      */
     public void setServerRandom(byte[] serverRandom) {
-        if (serverRandom == null) {
-            throw new NullPointerException("Argument \"serverRandom\" must not be null.");
-        }
-        serverRandom_ = serverRandom;
+        serverRandom_ = Util.requireNotNull("serverRandom", serverRandom);
     }
 
     /**
@@ -182,18 +178,17 @@ public class SSL3RandomDataParameters implements Parameters {
      *
      * @return A string representation of this object.
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append(Constants.INDENT);
         buffer.append("Client Random (hex): ");
         buffer.append(Functions.toHexString(clientRandom_));
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Server Random (hex): ");
         buffer.append(Functions.toHexString(serverRandom_));
-        // buffer.append(Constants.NEWLINE);
 
         return buffer.toString();
     }
@@ -202,35 +197,40 @@ public class SSL3RandomDataParameters implements Parameters {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof SSL3RandomDataParameters) {
-            SSL3RandomDataParameters other = (SSL3RandomDataParameters) otherObject;
-            equal = (this == other)
-                || (Functions.equals(this.clientRandom_, other.clientRandom_) && Functions
-                    .equals(this.serverRandom_, other.serverRandom_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof SSL3RandomDataParameters)) {
+            return false;
+        }
+
+        SSL3RandomDataParameters other = (SSL3RandomDataParameters) otherObject;
+        return Functions.equals(this.clientRandom_, other.clientRandom_)
+                && Functions.equals(this.serverRandom_, other.serverRandom_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
-        return Functions.hashCode(clientRandom_) ^ Functions.hashCode(serverRandom_);
+        return Functions.hashCode(clientRandom_)
+                ^ Functions.hashCode(serverRandom_);
     }
 
 }

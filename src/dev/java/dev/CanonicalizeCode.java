@@ -1,36 +1,44 @@
-/*
- *
- * Copyright (c) 2013 - 2017 Lijun Liao
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License version 3
- * as published by the Free Software Foundation with the addition of the
- * following permission added to Section 15 as permitted in Section 7(a):
- *
- * FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
- * THE AUTHOR LIJUN LIAO. LIJUN LIAO DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
- * OF THIRD PARTY RIGHTS.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- * The interactive user interfaces in modified source and object code versions
- * of this program must display Appropriate Legal Notices, as required under
- * Section 5 of the GNU Affero General Public License.
- *
- * You can be released from the requirements of the license by purchasing
- * a commercial license. Buying such a license is mandatory as soon as you
- * develop commercial activities involving the XiPKI software without
- * disclosing the source code of your own applications.
- *
- * For more information, please contact Lijun Liao at this
- * address: lijun.liao@gmail.com
- */
+// Copyright (c) 2002 Graz University of Technology. All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution.
+//
+// 3. The end-user documentation included with the redistribution, if any, must
+//    include the following acknowledgment:
+//
+//    "This product includes software developed by IAIK of Graz University of
+//     Technology."
+//
+//    Alternately, this acknowledgment may appear in the software itself, if and
+//    wherever such third-party acknowledgments normally appear.
+//
+// 4. The names "Graz University of Technology" and "IAIK of Graz University of
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
+//
+// 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
+//    nor may "IAIK" appear in their name, without prior written permission of
+//    Graz University of Technology.
+//
+// THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE LICENSOR BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+// OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+// OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+// ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
 
 package dev;
 
@@ -44,6 +52,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * This class do the following tasks
@@ -72,6 +83,7 @@ public class CanonicalizeCode {
             String baseDir = args[0];
             CanonicalizeCode canonicalizer = new CanonicalizeCode(baseDir);
             canonicalizer.canonicalize();
+            canonicalizer.checkWarnings();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -115,9 +127,23 @@ public class CanonicalizeCode {
         try {
             String line;
             boolean lastLineEmpty = false;
+            boolean licenseTextAdded = false;
+            boolean skip = true;
 
             while ((line = reader.readLine()) != null) {
-                String canonicalizedLine = canonicalizeLine(line);
+                if (line.trim().startsWith("package ") || line.trim().startsWith("import ")) {
+                    if (!licenseTextAdded) {
+                        writeLicenseHeader(writer, newLine);
+                        licenseTextAdded = true;
+                    }
+                    skip = false;
+                }
+
+                if (skip) {
+                    continue;
+                }
+
+                String canonicalizedLine = canonicalizeLine(line, newLine);
                 boolean addThisLine = true;
                 if (canonicalizedLine.isEmpty()) {
                     if (!lastLineEmpty) {
@@ -140,6 +166,19 @@ public class CanonicalizeCode {
 
         byte[] oldBytes = read(new FileInputStream(file));
         byte[] newBytes = writer.toByteArray();
+
+        // TODO: delete me
+        String newLineStr = new String(newLine);
+        String fullText = new String(newBytes, "UTF-8");
+        String oldText = "Exception" + newLineStr + "    {";
+        String newText = "Exception {";
+        fullText = fullText.replace(oldText, newText);
+
+        fullText = replaceParamCheck(fullText, newLineStr, "session", "object",
+                "attribute", "keyType", "publicKey", "privateKey");
+
+        newBytes = fullText.getBytes("UTF-8");
+
         if (!Arrays.equals(oldBytes, newBytes)) {
             File newFile = new File(file.getPath() + "-new");
             save(file, newBytes);
@@ -148,10 +187,31 @@ public class CanonicalizeCode {
         }
     } // method canonicalizeFile
 
+    private static String replaceParamCheck(String text, String newLineStr,
+            String... paramNames) {
+        for (String name : paramNames) {
+            String oldText =
+                    "        if (" + name + " == null) {" + newLineStr
+                    + "            throw new NullPointerException(\"Argument \\\""
+                    + name
+                    + "\\\" must not be null.\");" + newLineStr
+                    + "        }";
+            String newText =
+                    "        Util.requireNotNull(\""
+                    + name
+                    + "\", "
+                    + name
+                    + ");";
+            text = text.replace(oldText, newText);
+        }
+
+        return text;
+    }
+
     /**
      * replace tab by 4 spaces, delete white spaces at the end.
      */
-    private static String canonicalizeLine(final String line) {
+    private static String canonicalizeLine(String line, byte[] newLine) {
         if (line.trim().startsWith("//")) {
             // comments
             String nline = line.replace("\t", "    ");
@@ -183,7 +243,86 @@ public class CanonicalizeCode {
             sb.delete(lastNonSpaceCharIndex, sb.length());
         }
 
-        return sb.toString();
+        // TODO: delete from here
+        line = sb.toString();
+
+        String newLineStr = new String(newLine);
+        String oldStr = "     * @param objectHandle The object handle as"
+                + " given from the PKCS#111 module.";
+        String newStr = "     * @param objectHandle" + newLineStr
+                      + "     *          The object handle as given from the PKCS#111 module.";
+        if (line.endsWith(oldStr)) {
+            return line.replace(oldStr, newStr);
+        }
+
+        oldStr = "     * @param object The object"
+                    + " to handle.";
+        newStr = "     * @param object" + newLineStr
+               + "     *          The object to handle.";
+        if (line.endsWith(oldStr)) {
+            return line.replace(oldStr, newStr);
+        }
+
+        oldStr = "     * @param keyType The key type to get as string.";
+        newStr = "     * @param keyType" + newLineStr
+               + "     *          The key type to get as string.";
+        if (line.endsWith(oldStr)) {
+            return line.replace(oldStr, newStr);
+        }
+
+        oldStr = "     * @exception TokenException If getting the"
+                + " attributes failed.";
+        newStr = "     * @exception TokenException" + newLineStr
+               + "     *              If getting the attributes failed.";
+        if (line.endsWith(oldStr)) {
+            return line.replace(oldStr, newStr);
+        }
+
+        oldStr = "     * @param otherObject The other object to"
+                + " compare to.";
+        newStr = "     * @param otherObject" + newLineStr
+               + "     *          The other object to compare to.";
+        if (line.endsWith(oldStr)) {
+            return line.replace(oldStr, newStr);
+        }
+
+        oldStr = "     * @param session The session to use for"
+                + " reading attributes.";
+        newStr = "     * @param session" + newLineStr
+               + "     *          The session to use for reading attributes. This session must";
+        if (line.endsWith(oldStr)) {
+            line = line.replace(oldStr, newStr);
+        }
+
+        oldStr = "     * @param session The session handle to use for"
+                + " reading attributes.";
+        if (line.endsWith(oldStr)) {
+            line = line.replace(oldStr, newStr);
+        }
+
+        oldStr = "*                This session must have the appropriate rights;"
+                + " i.e.";
+        newStr = "*          have the appropriate rights; i.e. it must be a user-session, if";
+        if (line.endsWith(oldStr)) {
+            line = line.replace(oldStr, newStr);
+        }
+
+        oldStr = "        putAttributesInTable(clone); // put all cloned attributes into the new table";
+        newStr = "        // put all cloned attributes into the new table" + newLineStr
+               + "        putAttributesInTable(clone);";
+        if (line.endsWith(oldStr)) {
+            line = line.replace(oldStr, newStr);
+        }
+
+        oldStr = "*                it must be a user-session, if it is a private"
+                + " object.";
+        newStr = "*          it is a private object.";
+        if (line.endsWith(oldStr)) {
+            line = line.replace(oldStr, newStr);
+            return line;
+        }
+
+        return line;
     }
 
     private static String removeTrailingSpaces(final String line) {
@@ -225,7 +364,7 @@ public class CanonicalizeCode {
     }
 
     private static void writeLine(OutputStream out, byte[] newLine, String line)
-            throws IOException {
+        throws IOException {
         if (line != null && !line.isEmpty()) {
             out.write(line.getBytes());
         }
@@ -255,8 +394,179 @@ public class CanonicalizeCode {
             try {
                 in.close();
             } catch (IOException ex) {
+                // Do nothing
             }
         }
     }
+
+    private static void writeLicenseHeader(OutputStream out, byte[] newLine) throws IOException {
+        writeLine(out, newLine,
+            "// Copyright (c) 2002 Graz University of Technology. All rights reserved.");
+        writeLine(out, newLine,
+            "//");
+        writeLine(out, newLine,
+            "// Redistribution and use in source and binary forms, with or without");
+        writeLine(out, newLine,
+            "// modification, are permitted provided that the following conditions are met:");
+        writeLine(out, newLine,
+                "//");
+        writeLine(out, newLine,
+                "// 1. Redistributions of source code must retain the above copyright notice,");
+        writeLine(out, newLine,
+                "//    this list of conditions and the following disclaimer.");
+        writeLine(out, newLine,
+                "//");
+        writeLine(out, newLine,
+                "// 2. Redistributions in binary form must reproduce the above copyright notice,");
+        writeLine(out, newLine,
+                "//    this list of conditions and the following disclaimer in the documentation");
+        writeLine(out, newLine,
+                "//    and/or other materials provided with the distribution.");
+        writeLine(out, newLine,
+                "//");
+        writeLine(out, newLine,
+                "// 3. The end-user documentation included with the redistribution, if any, must");
+        writeLine(out, newLine,
+                "//    include the following acknowledgment:");
+        writeLine(out, newLine,
+                "//");
+        writeLine(out, newLine,
+                "//    \"This product includes software developed by IAIK of Graz University of");
+        writeLine(out, newLine,
+                "//     Technology.\"");
+        writeLine(out, newLine,
+                "//");
+        writeLine(out, newLine,
+                "//    Alternately, this acknowledgment may appear in the software itself, if and");
+        writeLine(out, newLine,
+                "//    wherever such third-party acknowledgments normally appear.");
+        writeLine(out, newLine,
+                "//");
+        writeLine(out, newLine,
+                "// 4. The names \"Graz University of Technology\" and \"IAIK of Graz University of");
+        writeLine(out, newLine,
+                "//    Technology\" must not be used to endorse or promote products derived from");
+        writeLine(out, newLine,
+                "//    this software without prior written permission.");
+        writeLine(out, newLine,
+                "//");
+        writeLine(out, newLine,
+                "// 5. Products derived from this software may not be called \"IAIK PKCS Wrapper\",");
+        writeLine(out, newLine,
+                "//    nor may \"IAIK\" appear in their name, without prior written permission of");
+        writeLine(out, newLine,
+                "//    Graz University of Technology.");
+        writeLine(out, newLine,
+                "//");
+        writeLine(out, newLine,
+                "// THIS SOFTWARE IS PROVIDED \"AS IS\" AND ANY EXPRESSED OR IMPLIED");
+        writeLine(out, newLine,
+                "// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED");
+        writeLine(out, newLine,
+                "// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR");
+        writeLine(out, newLine,
+                "// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE LICENSOR BE");
+        writeLine(out, newLine,
+                "// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,");
+        writeLine(out, newLine,
+                "// OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,");
+        writeLine(out, newLine,
+                "// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,");
+        writeLine(out, newLine,
+                "// OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON");
+        writeLine(out, newLine,
+                "// ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,");
+        writeLine(out, newLine,
+                "// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY");
+        writeLine(out, newLine,
+                "// OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE");
+        writeLine(out, newLine,
+                "// POSSIBILITY OF SUCH DAMAGE.");
+
+        writeLine(out, newLine,
+            "");
+    }
+
+    private void checkWarnings() throws Exception {
+        checkWarningsInDir(new File(baseDir));
+    }
+
+    private void checkWarningsInDir(final File dir) throws Exception {
+        File[] files = dir.listFiles();
+        if (files == null) {
+            return;
+        }
+
+        for (File file : files) {
+            if (file.isDirectory()) {
+                if (!file.getName().equals("target")
+                        && !file.getName().equals("tbd")) {
+                    checkWarningsInDir(file);
+                }
+
+                continue;
+            } else {
+                String filename = file.getName();
+                int idx = filename.lastIndexOf('.');
+                String extension = (idx == -1) ? filename : filename.substring(idx + 1);
+                extension = extension.toLowerCase();
+
+                if ("java".equals(extension)) {
+                    checkWarningsInFile(file);
+                }
+            }
+        }
+    } // method checkWarningsInDir
+
+    private void checkWarningsInFile(final File file) throws Exception {
+        if (file.getName().equals("package-info.java")) {
+            return;
+        }
+
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+
+        List<Integer> lineNumbers = new LinkedList<>();
+
+        int lineNumber = 0;
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lineNumber++;
+                if (lineNumber == 1 && line.startsWith("// #THIRDPARTY")) {
+                    return;
+                }
+
+                if (line.length() > 80 && !line.contains("http")) {
+                    lineNumbers.add(lineNumber);
+                    continue;
+                }
+
+                String trimmedLine = line.trim();
+                if (trimmedLine.startsWith("* @param ")) {
+                    StringTokenizer tokenizer = new StringTokenizer(trimmedLine, " ");
+                    if (tokenizer.countTokens() != 3) {
+                        lineNumbers.add(lineNumber);
+                        continue;
+                    }
+                }
+
+                if (trimmedLine.startsWith("* @exception ")) {
+                    StringTokenizer tokenizer = new StringTokenizer(trimmedLine, " ");
+                    if (tokenizer.countTokens() != 3) {
+                        lineNumbers.add(lineNumber);
+                        continue;
+                    }
+                }
+
+            } // end while
+        } finally {
+            reader.close();
+        }
+
+        if (!lineNumbers.isEmpty()) {
+            System.out.println("Please check file " + file.getPath().substring(baseDirLen)
+                + ": lines " + Arrays.toString(lineNumbers.toArray(new Integer[0])));
+        }
+    } // method checkWarningsInFile
 
 }

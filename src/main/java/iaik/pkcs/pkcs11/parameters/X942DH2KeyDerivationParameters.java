@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -42,9 +42,10 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import sun.security.pkcs11.wrapper.CK_X9_42_DH2_DERIVE_PARAMS;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
+import sun.security.pkcs11.wrapper.CK_X9_42_DH2_DERIVE_PARAMS;
 
 /**
  * This abstract class encapsulates parameters for the X9.42 DH mechanisms
@@ -55,7 +56,9 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  * @invariants (privateData <> null)
  *             and (publicData2 <> null)
  */
-public class X942DH2KeyDerivationParameters extends X942DH1KeyDerivationParameters {
+@SuppressWarnings("restriction")
+public class X942DH2KeyDerivationParameters
+extends X942DH1KeyDerivationParameters {
 
     /**
      * The length in bytes of the second EC private key.
@@ -68,48 +71,49 @@ public class X942DH2KeyDerivationParameters extends X942DH1KeyDerivationParamete
     protected iaik.pkcs.pkcs11.objects.Object privateData_;
 
     /**
-     * The other partys second EC public key value.
+     * The other party's second EC public key value.
      */
     protected byte[] publicData2_;
 
     /**
-     * Create a new X942DH1KeyDerivationParameters object with the given attributes.
+     * Create a new X942DH1KeyDerivationParameters object with the given
+     * attributes.
      *
-     * @param keyDerivationFunction The key derivation function used on the shared
-     *                              secret value.
-     *                              One of the values defined in
-     *                              KeyDerivationFunctionType.
-     * @param sharedData The data shared between the two parties.
-     * @param publicData The other partie's public key value.
-     * @param privateDataLength The length in bytes of the second EC private key.
-     * @param privateData The key for the second X9.42 private key value.
-     * @param publicData2 The other partys second X9.42 public key value.
+     * @param keyDerivationFunction
+     *          The key derivation function used on the shared secret value.
+     *          One of the values defined in KeyDerivationFunctionType.
+     * @param sharedData
+     *          The data shared between the two parties.
+     * @param publicData
+     *          The other partie's public key value.
+     * @param privateDataLength
+     *          The length in bytes of the second EC private key.
+     * @param privateData
+     *          The key for the second X9.42 private key value.
+     * @param publicData2
+     *          The other party's second X9.42 public key value.
      * @preconditions ((keyDerivationFunction == KeyDerivationFunctionType.NULL)
-     *                 or (keyDerivationFunction == KeyDerivationFunctionType.SHA1_KDF)
-     *                 or (keyDerivationFunction == KeyDerivationFunctionType.SHA1_KDF_ASN1)
-     *                 or (keyDerivationFunction == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
+     *                 or (keyDerivationFunction
+     *                      == KeyDerivationFunctionType.SHA1_KDF)
+     *                 or (keyDerivationFunction
+     *                      == KeyDerivationFunctionType.SHA1_KDF_ASN1)
+     *                 or (keyDerivationFunction
+     *                      == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
      *                and (publicData <> null)
      *                and (privateData <> null)
      *                and (publicData2 <> null)
      * @postconditions
      */
     public X942DH2KeyDerivationParameters(long keyDerivationFunction,
-                                          byte[] sharedData,
-                                          byte[] publicData,
-                                          long privateDataLength,
-                                          iaik.pkcs.pkcs11.objects.Object privateData,
-                                          byte[] publicData2)
-    {
+            byte[] sharedData,
+            byte[] publicData,
+            long privateDataLength,
+            iaik.pkcs.pkcs11.objects.Object privateData,
+            byte[] publicData2) {
         super(keyDerivationFunction, sharedData, publicData);
-        if (privateData == null) {
-            throw new NullPointerException("Argument \"privateData\" must not be null.");
-        }
-        if (publicData2 == null) {
-            throw new NullPointerException("Argument \"publicData2\" must not be null.");
-        }
         privateDataLength_ = privateDataLength;
-        privateData_ = privateData;
-        publicData2_ = publicData2;
+        privateData_ = Util.requireNotNull("privateData", privateData);
+        publicData2_ = Util.requireNotNull("publicData2", publicData2);
     }
 
     /**
@@ -121,10 +125,13 @@ public class X942DH2KeyDerivationParameters extends X942DH1KeyDerivationParamete
      *                 and (result instanceof X942DH2KeyDerivationParameters)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
-        X942DH2KeyDerivationParameters clone = (X942DH2KeyDerivationParameters) super.clone();
+        X942DH2KeyDerivationParameters clone
+                = (X942DH2KeyDerivationParameters) super.clone();
 
-        clone.privateData_ = (iaik.pkcs.pkcs11.objects.Object) this.privateData_.clone();
+        clone.privateData_
+                = (iaik.pkcs.pkcs11.objects.Object) this.privateData_.clone();
         clone.publicData2_ = (byte[]) this.publicData2_.clone();
 
         return clone;
@@ -138,6 +145,7 @@ public class X942DH2KeyDerivationParameters extends X942DH1KeyDerivationParamete
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public Object getPKCS11ParamsObject() {
         CK_X9_42_DH2_DERIVE_PARAMS params = new CK_X9_42_DH2_DERIVE_PARAMS();
 
@@ -174,9 +182,9 @@ public class X942DH2KeyDerivationParameters extends X942DH1KeyDerivationParamete
     }
 
     /**
-     * Get the other partys second X9.42 public key value.
+     * Get the other party's second X9.42 public key value.
      *
-     * @return The other partys second X9.42 public key value.
+     * @return The other party's second X9.42 public key value.
      * @preconditions
      * @postconditions (result <> null)
      */
@@ -187,21 +195,20 @@ public class X942DH2KeyDerivationParameters extends X942DH1KeyDerivationParamete
     /**
      * Set the key for the second X9.42 private key value.
      *
-     * @param privateData The key for the second X9.42 private key value.
+     * @param privateData
+     *          The key for the second X9.42 private key value.
      * @preconditions (privateData <> null)
      * @postconditions
      */
     public void setPrivateData(iaik.pkcs.pkcs11.objects.Object privateData) {
-        if (privateData == null) {
-            throw new NullPointerException("Argument \"privateData\" must not be null.");
-        }
-        privateData_ = privateData;
+        privateData_ = Util.requireNotNull("privateData", privateData);
     }
 
     /**
      * Set the length in bytes of the second X9.42 private key.
      *
-     * @param privateDataLength The length in bytes of the second X9.42 private key.
+     * @param privateDataLength
+     *          The length in bytes of the second X9.42 private key.
      * @preconditions
      * @postconditions
      */
@@ -210,17 +217,15 @@ public class X942DH2KeyDerivationParameters extends X942DH1KeyDerivationParamete
     }
 
     /**
-     * Set the other partys second X9.42 public key value.
+     * Set the other party's second X9.42 public key value.
      *
-     * @param publicData2 The other partys second X9.42 public key value.
+     * @param publicData2
+     *          The other party's second X9.42 public key value.
      * @preconditions (publicData2 <> null)
      * @postconditions
      */
     public void setPublicData2(byte[] publicData2) {
-        if (publicData2 == null) {
-            throw new NullPointerException("Argument \"publicData2\" must not be null.");
-        }
-        publicData2_ = publicData2;
+        publicData2_ = Util.requireNotNull("publicData2", publicData2);
     }
 
     /**
@@ -229,26 +234,23 @@ public class X942DH2KeyDerivationParameters extends X942DH1KeyDerivationParamete
      *
      * @return A string representation of this object.
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append(super.toString());
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Private Data Length (dec): ");
         buffer.append(privateDataLength_);
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Private Data: ");
         buffer.append(privateData_);
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Public Data 2: ");
         buffer.append(Functions.toHexString(publicData2_));
-        // buffer.append(Constants.NEWLINE);
 
         return buffer.toString();
     }
@@ -257,38 +259,44 @@ public class X942DH2KeyDerivationParameters extends X942DH1KeyDerivationParamete
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof X942DH2KeyDerivationParameters) {
-            X942DH2KeyDerivationParameters other = (X942DH2KeyDerivationParameters) otherObject;
-            equal = (this == other)
-                || (super.equals(other)
-                    && (this.privateDataLength_ == other.privateDataLength_)
-                    && this.privateData_.equals(other.privateData_) && Functions.equals(
-                    this.publicData2_, other.publicData2_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof X942DH2KeyDerivationParameters)) {
+            return false;
+        }
+
+        X942DH2KeyDerivationParameters other
+                = (X942DH2KeyDerivationParameters) otherObject;
+        return super.equals(other)
+                && (this.privateDataLength_ == other.privateDataLength_)
+                && this.privateData_.equals(other.privateData_)
+                && Functions.equals(this.publicData2_, other.publicData2_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
-        return super.hashCode() ^ ((int) privateDataLength_) ^ privateData_.hashCode()
-            ^ Functions.hashCode(publicData2_);
+        return super.hashCode() ^ ((int) privateDataLength_)
+                ^ privateData_.hashCode()
+                ^ Functions.hashCode(publicData2_);
     }
 
 }

@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -44,8 +44,8 @@ package iaik.pkcs.pkcs11.objects;
 
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
-import sun.security.pkcs11.wrapper.Constants;
-import sun.security.pkcs11.wrapper.PKCS11Exception;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * This is the base class for secret (symmetric) keys. Objects of this class
@@ -156,46 +156,48 @@ public class SecretKey extends Key {
     /**
      * Called by sub-classes to create an instance of a PKCS#11 secret key.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
     protected SecretKey(Session session, long objectHandle)
-        throws TokenException
-    {
+        throws TokenException {
         super(session, objectHandle);
         objectClass_.setLongValue(ObjectClass.SECRET_KEY);
     }
 
     /**
      * The getInstance method of the Object class uses this method to create
-     * an instance of a PKCS#11 secret key. This method reads the key
-     * type attribute and calls the getInstance method of the according sub-class.
+     * an instance of a PKCS#11 secret key. This method reads the key type
+     * attribute and calls the getInstance method of the according sub-class.
      * If the key type is a vendor defined it uses the
      * VendorDefinedKeyBuilder set by the application. If no secret key
      * could be constructed, this method returns null.
      *
-     * @param session The session to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @param objectHandle The object handle as given from the PKCS#111 module.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @param objectHandle
+     *          The object handle as given from the PKCS#111 module.
      * @return The object representing the PKCS#11 object.
      *         The returned object can be casted to the
      *         according sub-class.
-     * @exception TokenException If getting the attributes failed.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
     public static Object getInstance(Session session, long objectHandle)
-        throws TokenException
-    {
-        if (session == null) {
-            throw new NullPointerException("Argument \"session\" must not be null.");
-        }
+        throws TokenException {
+        Util.requireNotNull("session", session);
 
         KeyTypeAttribute keyTypeAttribute = new KeyTypeAttribute();
         getAttributeValue(session, objectHandle, keyTypeAttribute);
@@ -227,23 +229,25 @@ public class SecretKey extends Key {
                 newObject = CASTSecretKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.CAST3)) {
                 newObject = CAST3SecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.CAST5)) {
-                newObject = CAST5SecretKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.CAST128)) {
-                newObject = CAST128SecretKey.getInstance(session, objectHandle);
+                newObject = CAST128SecretKey.getInstance(session,
+                        objectHandle);
             } else if (keyType.equals(Key.KeyType.BLOWFISH)) {
-                newObject = BlowfishSecretKey.getInstance(session, objectHandle);
+                newObject = BlowfishSecretKey.getInstance(session,
+                        objectHandle);
             } else if (keyType.equals(Key.KeyType.TWOFISH)) {
                 newObject = TwofishSecretKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.SKIPJACK)) {
-                newObject = SkipJackSecretKey.getInstance(session, objectHandle);
+                newObject = SkipJackSecretKey.getInstance(session,
+                        objectHandle);
             } else if (keyType.equals(Key.KeyType.BATON)) {
                 newObject = BatonSecretKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.JUNIPER)) {
                 newObject = JuniperSecretKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.CDMF)) {
                 newObject = CDMFSecretKey.getInstance(session, objectHandle);
-            } else if ((keyType.longValue() & KeyType.VENDOR_DEFINED.longValue()) != 0L) {
+            } else if ((keyType.longValue()
+                            & KeyType.VENDOR_DEFINED.longValue()) != 0L) {
                 newObject = getUnknownSecretKey(session, objectHandle);
             } else {
                 newObject = getUnknownSecretKey(session, objectHandle);
@@ -263,25 +267,27 @@ public class SecretKey extends Key {
      * If this is impossible or fails, it will create just
      * a simple {@link iaik.pkcs.pkcs11.objects.SecretKey SecretKey }.
      *
-     * @param session The session to use.
-     * @param objectHandle The handle of the object
+     * @param session
+     *          The session to use.
+     * @param objectHandle
+     *          The handle of the object
      * @return A new Object.
-     * @throws TokenException If no object could be created.
+     * @throws TokenException
+     *           If no object could be created.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    protected static Object getUnknownSecretKey(Session session, long objectHandle)
-        throws TokenException
-    {
-        if (session == null) {
-            throw new NullPointerException("Argument \"session\" must not be null.");
-        }
+    @SuppressWarnings("restriction")
+    protected static Object getUnknownSecretKey(Session session,
+            long objectHandle)
+        throws TokenException {
+        Util.requireNotNull("session", session);
 
         Object newObject;
         if (Key.vendorKeyBuilder_ != null) {
             try {
                 newObject = Key.vendorKeyBuilder_.build(session, objectHandle);
-            } catch (PKCS11Exception ex) {
+            } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
                 // we can just treat it like some unknown type of secret key
                 newObject = new SecretKey(session, objectHandle);
             }
@@ -299,15 +305,13 @@ public class SecretKey extends Key {
      * implementation of this method for each class separately (see use in
      * clone()).
      *
-     * @param object The object to handle.
+     * @param object
+     *          The object to handle.
      * @preconditions (object <> null)
      * @postconditions
      */
     protected static void putAttributesInTable(SecretKey object) {
-        if (object == null) {
-            throw new NullPointerException("Argument \"object\" must not be null.");
-        }
-
+        Util.requireNotNull("object", object);
         object.attributeTable_.put(Attribute.SENSITIVE, object.sensitive_);
         object.attributeTable_.put(Attribute.ENCRYPT, object.encrypt_);
         object.attributeTable_.put(Attribute.DECRYPT, object.decrypt_);
@@ -316,13 +320,18 @@ public class SecretKey extends Key {
         object.attributeTable_.put(Attribute.WRAP, object.wrap_);
         object.attributeTable_.put(Attribute.UNWRAP, object.unwrap_);
         object.attributeTable_.put(Attribute.EXTRACTABLE, object.extractable_);
-        object.attributeTable_.put(Attribute.ALWAYS_SENSITIVE, object.alwaysSensitive_);
-        object.attributeTable_.put(Attribute.NEVER_EXTRACTABLE, object.neverExtractable_);
+        object.attributeTable_.put(Attribute.ALWAYS_SENSITIVE,
+                object.alwaysSensitive_);
+        object.attributeTable_.put(Attribute.NEVER_EXTRACTABLE,
+                object.neverExtractable_);
         object.attributeTable_.put(Attribute.CHECK_VALUE, object.checkValue_);
-        object.attributeTable_.put(Attribute.WRAP_WITH_TRUSTED, object.wrapWithTrusted_);
+        object.attributeTable_.put(Attribute.WRAP_WITH_TRUSTED,
+                object.wrapWithTrusted_);
         object.attributeTable_.put(Attribute.TRUSTED, object.trusted_);
-        object.attributeTable_.put(Attribute.WRAP_TEMPLATE, object.wrapTemplate_);
-        object.attributeTable_.put(Attribute.UNWRAP_TEMPLATE, object.unwrapTemplate_);
+        object.attributeTable_.put(Attribute.WRAP_TEMPLATE,
+                object.wrapTemplate_);
+        object.attributeTable_.put(Attribute.UNWRAP_TEMPLATE,
+                object.unwrapTemplate_);
     }
 
     /**
@@ -332,6 +341,7 @@ public class SecretKey extends Key {
      * @preconditions
      * @postconditions
      */
+    @Override
     protected void allocateAttributes() {
         super.allocateAttributes();
 
@@ -363,6 +373,7 @@ public class SecretKey extends Key {
      *                 and (result instanceof SecretKey)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         SecretKey clone = (SecretKey) super.clone();
 
@@ -374,15 +385,19 @@ public class SecretKey extends Key {
         clone.wrap_ = (BooleanAttribute) this.wrap_.clone();
         clone.unwrap_ = (BooleanAttribute) this.unwrap_.clone();
         clone.extractable_ = (BooleanAttribute) this.extractable_.clone();
-        clone.alwaysSensitive_ = (BooleanAttribute) this.alwaysSensitive_.clone();
-        clone.neverExtractable_ = (BooleanAttribute) this.neverExtractable_.clone();
+        clone.alwaysSensitive_
+            = (BooleanAttribute) this.alwaysSensitive_.clone();
+        clone.neverExtractable_
+            = (BooleanAttribute) this.neverExtractable_.clone();
         clone.checkValue_ = (ByteArrayAttribute) this.checkValue_.clone();
-        clone.wrapWithTrusted_ = (BooleanAttribute) this.wrapWithTrusted_.clone();
+        clone.wrapWithTrusted_
+            = (BooleanAttribute) this.wrapWithTrusted_.clone();
         clone.trusted_ = (BooleanAttribute) this.trusted_.clone();
         clone.wrapTemplate_ = (AttributeArray) this.wrapTemplate_.clone();
         clone.unwrapTemplate_ = (AttributeArray) this.unwrapTemplate_.clone();
 
-        putAttributesInTable(clone); // put all cloned attributes into the new table
+        // put all cloned attributes into the new table
+        putAttributesInTable(clone);
 
         return clone;
     }
@@ -391,34 +406,40 @@ public class SecretKey extends Key {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof SecretKey) {
-            SecretKey other = (SecretKey) otherObject;
-            equal = (this == other)
-                || (super.equals(other) && this.sensitive_.equals(other.sensitive_)
-                    && this.encrypt_.equals(other.encrypt_)
-                    && this.decrypt_.equals(other.decrypt_) && this.sign_.equals(other.sign_)
-                    && this.verify_.equals(other.verify_) && this.wrap_.equals(other.wrap_)
-                    && this.unwrap_.equals(other.unwrap_)
-                    && this.extractable_.equals(other.extractable_)
-                    && this.alwaysSensitive_.equals(other.alwaysSensitive_)
-                    && this.neverExtractable_.equals(other.neverExtractable_)
-                    && this.checkValue_.equals(other.checkValue_)
-                    && this.wrapWithTrusted_.equals(other.wrapWithTrusted_)
-                    && this.trusted_.equals(other.trusted_)
-                    && this.wrapTemplate_.equals(other.wrapTemplate_) && this.unwrapTemplate_
-                      .equals(other.unwrapTemplate_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof SecretKey)) {
+            return false;
+        }
+
+        SecretKey other = (SecretKey) otherObject;
+        return super.equals(other)
+                && this.sensitive_.equals(other.sensitive_)
+                && this.encrypt_.equals(other.encrypt_)
+                && this.decrypt_.equals(other.decrypt_)
+                && this.sign_.equals(other.sign_)
+                && this.verify_.equals(other.verify_)
+                && this.wrap_.equals(other.wrap_)
+                && this.unwrap_.equals(other.unwrap_)
+                && this.extractable_.equals(other.extractable_)
+                && this.alwaysSensitive_.equals(other.alwaysSensitive_)
+                && this.neverExtractable_.equals(other.neverExtractable_)
+                && this.checkValue_.equals(other.checkValue_)
+                && this.wrapWithTrusted_.equals(other.wrapWithTrusted_)
+                && this.trusted_.equals(other.trusted_)
+                && this.wrapTemplate_.equals(other.wrapTemplate_)
+                && this.unwrapTemplate_.equals(other.unwrapTemplate_);
     }
 
     /**
@@ -593,35 +614,26 @@ public class SecretKey extends Key {
     /**
      * Read the values of the attributes of this object from the token.
      *
-     * @param session The session handle to use for reading attributes.
-     *                This session must have the appropriate rights; i.e.
-     *                it must be a user-session, if it is a private object.
-     * @exception TokenException If getting the attributes failed.
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @exception TokenException
+     *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
+    @Override
     public void readAttributes(Session session)
-        throws TokenException
-    {
+        throws TokenException {
         super.readAttributes(session);
 
-        //    Object.getAttributeValue(session, objectHandle_, sensitive_);
-        //    Object.getAttributeValue(session, objectHandle_, encrypt_);
-        //    Object.getAttributeValue(session, objectHandle_, decrypt_);
-        //    Object.getAttributeValue(session, objectHandle_, sign_);
-        //    Object.getAttributeValue(session, objectHandle_, verify_);
-        //    Object.getAttributeValue(session, objectHandle_, wrap_);
-        //    Object.getAttributeValue(session, objectHandle_, unwrap_);
-        //    Object.getAttributeValue(session, objectHandle_, extractable_);
-        //    Object.getAttributeValue(session, objectHandle_, alwaysSensitive_);
-        //    Object.getAttributeValue(session, objectHandle_, neverExtractable_);
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] { sensitive_,
-            encrypt_, decrypt_, sign_, verify_, wrap_, unwrap_, extractable_,
-            alwaysSensitive_, neverExtractable_, checkValue_, wrapWithTrusted_, trusted_ });
+        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
+            sensitive_, encrypt_, decrypt_, sign_, verify_, wrap_, unwrap_,
+            extractable_, alwaysSensitive_, neverExtractable_, checkValue_,
+            wrapWithTrusted_, trusted_ });
         Object.getAttributeValue(session, objectHandle_, wrapTemplate_);
         Object.getAttributeValue(session, objectHandle_, unwrapTemplate_);
-        //    Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-        //        wrapTemplate_, unwrapTemplate_ });
     }
 
     /**
@@ -633,83 +645,69 @@ public class SecretKey extends Key {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder(1024);
 
         buffer.append(super.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Sensitive: ");
         buffer.append(sensitive_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Encrypt: ");
         buffer.append(encrypt_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Decrypt: ");
         buffer.append(decrypt_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Sign: ");
         buffer.append(sign_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Verify: ");
         buffer.append(verify_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Wrap: ");
         buffer.append(wrap_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Unwrap: ");
         buffer.append(unwrap_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Extractable: ");
         buffer.append(extractable_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Always Sensitive: ");
         buffer.append(alwaysSensitive_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Never Extractable: ");
         buffer.append(neverExtractable_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Check Value: ");
         buffer.append(checkValue_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Wrap With Trusted: ");
         buffer.append(wrapWithTrusted_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Trusted: ");
         buffer.append(trusted_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Wrap Template: ");
         buffer.append(wrapTemplate_.toString());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Unwrap Template: ");
         buffer.append(unwrapTemplate_.toString());
 

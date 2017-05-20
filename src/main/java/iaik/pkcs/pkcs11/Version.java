@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -52,6 +52,7 @@ import sun.security.pkcs11.wrapper.CK_VERSION;
  * @version 1.0
  * @invariants
  */
+@SuppressWarnings("restriction")
 public class Version implements Cloneable {
 
     /**
@@ -76,14 +77,13 @@ public class Version implements Cloneable {
     /**
      * Constructor taking a CK_VERSION object.
      *
-     * @param ckVersion A CK_VERSION object.
+     * @param ckVersion
+     *          A CK_VERSION object.
      * @preconditions (ckVersion <> null)
      * @postconditions
      */
     protected Version(CK_VERSION ckVersion) {
-        if (ckVersion == null) {
-            throw new NullPointerException("Argument \"ckVersion\" must not be null.");
-        }
+        Util.requireNotNull("ckVersion", ckVersion);
         major_ = ckVersion.major;
         minor_ = ckVersion.minor;
     }
@@ -97,14 +97,16 @@ public class Version implements Cloneable {
      *                 and (result instanceof Version)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         Version clone;
 
         try {
             clone = (Version) super.clone();
         } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException("An unexpected clone exception occurred.", ex);
+            // this must not happen, because this class is clone-able
+            throw new TokenRuntimeException(
+                    "An unexpected clone exception occurred.", ex);
         }
 
         return clone;
@@ -137,6 +139,7 @@ public class Version implements Cloneable {
      *
      * @return the string representation of this object
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
@@ -154,33 +157,38 @@ public class Version implements Cloneable {
      * Compares major and minor version number of this objects with the other
      * object. Returns only true, if both are equal in both objects.
      *
-     * @param otherObject The other Version object.
+     * @param otherObject
+     *          The other Version object.
      * @return True, if other is an instance of Info and all member variables of
      *         both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof Version) {
-            Version other = (Version) otherObject;
-            equal = (this == other)
-                || ((this.major_ == other.major_) && (this.minor_ == other.minor_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof Version)) {
+            return false;
+        }
+
+        Version other = (Version) otherObject;
+        return (this.major_ == other.major_)
+                && (this.minor_ == other.minor_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object. Gained from the slotID_, state_ and
      *         deviceError_.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return major_ ^ minor_;
     }

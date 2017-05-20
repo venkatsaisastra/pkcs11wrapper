@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -45,14 +45,17 @@ package iaik.pkcs.pkcs11.wrapper;
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 
 /**
- * This is the superclass of all runtime exception used by this library. For instance, Runtime
- * exceptions occur, if an internal error in the native part of the wrapper occurs.
+ * This is the superclass of all runtime exception used by this library. For
+ * instance, Runtime exceptions occur, if an internal error in the native part
+ * of the wrapper occurs.
  *
  * @author Karl Scheibelhofer
  * @version 1.0
  *
  */
 public class PKCS11RuntimeException extends TokenRuntimeException {
+
+  private static final long serialVersionUID = 592472650470600711L;
 
   /**
    * Empty constructor.
@@ -63,10 +66,11 @@ public class PKCS11RuntimeException extends TokenRuntimeException {
   }
 
   /**
-   * Constructor taking a string that describes the reason of the exception in more detail.
+   * Constructor taking a string that describes the reason of the exception in
+   * more detail.
    *
    * @param message
-   *          A descrption of the reason for this exception.
+   *          A description of the reason for this exception.
    */
   public PKCS11RuntimeException(String message) {
     super(message);
@@ -83,14 +87,16 @@ public class PKCS11RuntimeException extends TokenRuntimeException {
   }
 
   /**
-   * Constructor taking a message for this exception and an other exception to wrap.
+   * Constructor taking a message for this exception and an other exception to
+   * wrap.
    *
    * @param message
    *          The message giving details about the exception to ease debugging.
    * @param encapsulatedException
    *          The other exception the wrap into this.
    */
-  public PKCS11RuntimeException(String message, Exception encapsulatedException) {
+  public PKCS11RuntimeException(String message,
+          Exception encapsulatedException) {
     super(message, encapsulatedException);
   }
 

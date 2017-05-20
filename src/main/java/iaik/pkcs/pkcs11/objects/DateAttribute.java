@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -42,11 +42,11 @@
 
 package iaik.pkcs.pkcs11.objects;
 
+import java.util.Date;
+
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_DATE;
-
-import java.util.Date;
 
 /**
  * Objects of this class represent a date attribute of an PKCS#11 object
@@ -56,10 +56,12 @@ import java.util.Date;
  * @version 1.0
  * @invariants
  */
+@SuppressWarnings("restriction")
 public class DateAttribute extends Attribute {
 
     /**
-     * Default constructor - only for internal use in AttributeArrayAttribute.getValueString().
+     * Default constructor - only for internal use in
+     * AttributeArrayAttribute.getValueString().
      */
     DateAttribute() {
         super();
@@ -68,8 +70,9 @@ public class DateAttribute extends Attribute {
     /**
      * Constructor taking the PKCS#11 type of the attribute.
      *
-     * @param type The PKCS'11 type of this attribute; e.g.
-     *             PKCS11Constants.CKA_START_DATE.
+     * @param type
+     *          The PKCS#11 type of this attribute; e.g.
+     *          PKCS11Constants.CKA_START_DATE.
      * @preconditions (type <> null)
      * @postconditions
      */
@@ -81,7 +84,8 @@ public class DateAttribute extends Attribute {
      * Set the date value of this attribute. Null, is also valid.
      * A call to this method sets the present flag to true.
      *
-     * @param value The date value to set. May be null.
+     * @param value
+     *          The date value to set. May be null.
      * @preconditions
      * @postconditions
      */
@@ -105,45 +109,62 @@ public class DateAttribute extends Attribute {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof DateAttribute) {
-            DateAttribute other = (DateAttribute) otherObject;
-            equal = (this == other)
-                || (((this.present_ == false) && (other.present_ == false)) || (((this.present_ == true) && (other.present_ == true)) && ((this.sensitive_ == other.sensitive_)
-                    && (this.ckAttribute_.type == other.ckAttribute_.type) && Functions.equals(
-                    (CK_DATE) this.ckAttribute_.pValue, (CK_DATE) other.ckAttribute_.pValue))));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof DateAttribute)) {
+            return false;
+        }
+
+        DateAttribute other = (DateAttribute) otherObject;
+        if (!this.present_ && !other.present_) {
+            return true;
+        }
+
+        if (!(this.present_ && other.present_)) {
+            return false;
+        }
+
+        if (this.sensitive_ != other.sensitive_) {
+            return false;
+        }
+
+        if (this.ckAttribute_.type != other.ckAttribute_.type) {
+            return false;
+        }
+
+        return Functions.equals((CK_DATE) this.ckAttribute_.pValue,
+                (CK_DATE) other.ckAttribute_.pValue);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return ((int) ckAttribute_.type)
             ^ ((ckAttribute_.pValue != null) ? Functions
                 .hashCode((CK_DATE) ckAttribute_.pValue) : 0);
     }
 
-    /* (non-Javadoc)
-     * @see iaik.pkcs.pkcs11.objects.Attribute#setValue(java.lang.Object) */
+    @Override
     public void setValue(java.lang.Object value)
-        throws UnsupportedOperationException
-    {
+        throws UnsupportedOperationException {
         setDateValue((Date) value);
     }
 

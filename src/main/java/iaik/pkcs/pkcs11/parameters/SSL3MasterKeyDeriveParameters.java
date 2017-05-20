@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -43,10 +43,11 @@
 package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import sun.security.pkcs11.wrapper.CK_SSL3_MASTER_KEY_DERIVE_PARAMS;
 import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
 import sun.security.pkcs11.wrapper.CK_VERSION;
-import sun.security.pkcs11.wrapper.Constants;
 
 /**
  * This class encapsulates parameters for the Mechanism.SSL3_MASTER_KEY_DERIVE
@@ -57,6 +58,7 @@ import sun.security.pkcs11.wrapper.Constants;
  * @invariants (randomInfo_ <> null)
  *             and (version_ <> null)
  */
+@SuppressWarnings("restriction")
 public class SSL3MasterKeyDeriveParameters implements Parameters {
 
     /**
@@ -73,23 +75,18 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      * Create a new SSL3MasterKeyDeriveParameters object with the given
      * random info and version.
      *
-     * @param randomInfo The client's and server's random data information.
-     * @param version The SSL protocol version information.
+     * @param randomInfo
+     *          The client's and server's random data information.
+     * @param version
+     *          The SSL protocol version information.
      * @preconditions (randomInfo <> null)
      *                and (version <> null)
      * @postconditions
      */
     public SSL3MasterKeyDeriveParameters(SSL3RandomDataParameters randomInfo,
-                                         VersionParameters version)
-    {
-        if (randomInfo == null) {
-            throw new NullPointerException("Argument \"randomInfo\" must not be null.");
-        }
-        if (version == null) {
-            throw new NullPointerException("Argument \"version\" must not be null.");
-        }
-        randomInfo_ = randomInfo;
-        version_ = version;
+            VersionParameters version) {
+        randomInfo_ = Util.requireNotNull("randomInfo", randomInfo);
+        version_ = Util.requireNotNull("version", version);
     }
 
     /**
@@ -101,17 +98,20 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      *                 and (result instanceof SSL3MasterKeyDeriveParameters)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         SSL3MasterKeyDeriveParameters clone;
 
         try {
             clone = (SSL3MasterKeyDeriveParameters) super.clone();
 
-            clone.randomInfo_ = (SSL3RandomDataParameters) this.randomInfo_.clone();
+            clone.randomInfo_
+                = (SSL3RandomDataParameters)this.randomInfo_.clone();
             clone.version_ = (VersionParameters) this.version_.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException("An unexpected clone exception occurred.", ex);
+            throw new TokenRuntimeException(
+                    "An unexpected clone exception occurred.", ex);
         }
 
         return clone;
@@ -124,8 +124,10 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public Object getPKCS11ParamsObject() {
-        CK_SSL3_MASTER_KEY_DERIVE_PARAMS params = new CK_SSL3_MASTER_KEY_DERIVE_PARAMS(
+        CK_SSL3_MASTER_KEY_DERIVE_PARAMS params
+            = new CK_SSL3_MASTER_KEY_DERIVE_PARAMS(
                 (CK_SSL3_RANDOM_DATA) randomInfo_.getPKCS11ParamsObject(),
                 (CK_VERSION) version_.getPKCS11ParamsObject());
 
@@ -157,29 +159,25 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
     /**
      * Set the client's and server's random data information.
      *
-     * @param randomInfo The client's and server's random data information.
+     * @param randomInfo
+     *          The client's and server's random data information.
      * @preconditions (randomInfo <> null)
      * @postconditions
      */
     public void setRandomInfo(SSL3RandomDataParameters randomInfo) {
-        if (randomInfo == null) {
-            throw new NullPointerException("Argument \"randomInfo\" must not be null.");
-        }
-        randomInfo_ = randomInfo;
+        randomInfo_ = Util.requireNotNull("randomInfo", randomInfo);
     }
 
     /**
      * Set the SSL protocol version information.
      *
-     * @param version The SSL protocol version information.
+     * @param version
+     *          The SSL protocol version information.
      * @preconditions (version <> null)
      * @postconditions
      */
     public void setVersion(VersionParameters version) {
-        if (version == null) {
-            throw new NullPointerException("Argument \"version\" must not be null.");
-        }
-        version_ = version;
+        version_ = Util.requireNotNull("version", version);
     }
 
     /**
@@ -188,6 +186,7 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      *
      * @return A string representation of this object.
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
@@ -195,12 +194,10 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
         buffer.append("Random Information:");
         buffer.append(Constants.NEWLINE);
         buffer.append(randomInfo_);
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Version: ");
         buffer.append(version_);
-        // buffer.append(Constants.NEWLINE);
 
         return buffer.toString();
     }
@@ -209,33 +206,38 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof SSL3MasterKeyDeriveParameters) {
-            SSL3MasterKeyDeriveParameters other = (SSL3MasterKeyDeriveParameters) otherObject;
-            equal = (this == other)
-                || (this.randomInfo_.equals(other.randomInfo_) && this.version_
-                    .equals(other.version_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof SSL3MasterKeyDeriveParameters)) {
+            return false;
+        }
+
+        SSL3MasterKeyDeriveParameters other
+                = (SSL3MasterKeyDeriveParameters) otherObject;
+        return this.randomInfo_.equals(other.randomInfo_)
+                && this.version_.equals(other.version_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return randomInfo_.hashCode() ^ version_.hashCode();
     }

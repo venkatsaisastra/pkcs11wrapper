@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -42,9 +42,9 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import sun.security.pkcs11.wrapper.CK_ECDH1_DERIVE_PARAMS;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
+import sun.security.pkcs11.wrapper.CK_ECDH1_DERIVE_PARAMS;
 
 /**
  * This abstract class encapsulates parameters for the DH mechanisms
@@ -54,6 +54,7 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  * @version 1.0
  * @invariants
  */
+@SuppressWarnings("restriction")
 public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
 
     /**
@@ -62,25 +63,29 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
     protected byte[] sharedData_;
 
     /**
-     * Create a new EcDH1KeyDerivationParameters object with the given attributes.
+     * Create a new EcDH1KeyDerivationParameters object with the given
+     * attributes.
      *
-     * @param keyDerivationFunction The key derivation function used on the shared
-     *                              secret value.
-     *                              One of the values defined in
-     *                              KeyDerivationFunctionType.
-     * @param sharedData The data shared between the two parties.
-     * @param publicData The other partie's public key value.
+     * @param keyDerivationFunction
+     *          The key derivation function used on the shared secret value.
+     *          One of the values defined in KeyDerivationFunctionType.
+     * @param sharedData
+     *          The data shared between the two parties.
+     * @param publicData
+     *          The other partie's public key value.
      * @preconditions ((keyDerivationFunction == KeyDerivationFunctionType.NULL)
-     *                 or (keyDerivationFunction == KeyDerivationFunctionType.SHA1_KDF)
-     *                 or (keyDerivationFunction == KeyDerivationFunctionType.SHA1_KDF_ASN1)
-     *                 or (keyDerivationFunction == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
+     *                 or (keyDerivationFunction
+     *                      == KeyDerivationFunctionType.SHA1_KDF)
+     *                 or (keyDerivationFunction
+     *                      == KeyDerivationFunctionType.SHA1_KDF_ASN1)
+     *                 or (keyDerivationFunction
+     *                      == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
      *                and (publicData <> null)
      * @postconditions
      */
     public EcDH1KeyDerivationParameters(long keyDerivationFunction,
-                                        byte[] sharedData,
-                                        byte[] publicData)
-    {
+            byte[] sharedData,
+            byte[] publicData) {
         super(keyDerivationFunction, publicData);
         sharedData_ = sharedData;
     }
@@ -94,8 +99,10 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
      *                 and (result instanceof EcDH1KeyDerivationParameters)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
-        EcDH1KeyDerivationParameters clone = (EcDH1KeyDerivationParameters) super.clone();
+        EcDH1KeyDerivationParameters clone
+                = (EcDH1KeyDerivationParameters) super.clone();
 
         clone.sharedData_ = (byte[]) this.sharedData_.clone();
 
@@ -110,10 +117,10 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     public Object getPKCS11ParamsObject() {
-        CK_ECDH1_DERIVE_PARAMS params = new CK_ECDH1_DERIVE_PARAMS(keyDerivationFunction_,
-                sharedData_, publicData_);
-        return params;
+        return new CK_ECDH1_DERIVE_PARAMS(keyDerivationFunction_, sharedData_,
+                publicData_);
     }
 
     /**
@@ -130,7 +137,8 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
     /**
      * Set the data shared between the two parties.
      *
-     * @param sharedData The data shared between the two parties.
+     * @param sharedData
+     *          The data shared between the two parties.
      * @preconditions (sharedData <> null)
      * @postconditions
      */
@@ -144,16 +152,15 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
      *
      * @return A string representation of this object.
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append(super.toString());
-        buffer.append(Constants.NEWLINE);
 
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Shared Data: ");
         buffer.append(Functions.toHexString(sharedData_));
-        // buffer.append(Constants.NEWLINE);
 
         return buffer.toString();
     }
@@ -162,33 +169,38 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof EcDH1KeyDerivationParameters) {
-            EcDH1KeyDerivationParameters other = (EcDH1KeyDerivationParameters) otherObject;
-            equal = (this == other)
-                || (super.equals(other) && Functions
-                    .equals(this.sharedData_, other.sharedData_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof EcDH1KeyDerivationParameters)) {
+            return false;
+        }
+
+        EcDH1KeyDerivationParameters other
+                = (EcDH1KeyDerivationParameters) otherObject;
+        return super.equals(other)
+                && Functions.equals(this.sharedData_, other.sharedData_);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return super.hashCode() ^ Functions.hashCode(sharedData_);
     }

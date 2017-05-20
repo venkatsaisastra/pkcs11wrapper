@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -43,12 +43,12 @@
 package iaik.pkcs.pkcs11.objects;
 
 import iaik.pkcs.pkcs11.Mechanism;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
- * Objects of this class represent a mechanism array attribute of a PKCS#11 object
- * as specified by PKCS#11. This attribute is available since
+ * Objects of this class represent a mechanism array attribute of a PKCS#11
+ * object as specified by PKCS#11. This attribute is available since
  * cryptoki version 2.20.
  *
  * @author <a href="mailto:Birgit.Haas@iaik.tugraz.at"> Birgit Haas </a>
@@ -67,8 +67,9 @@ public class MechanismArrayAttribute extends Attribute {
     /**
      * Constructor taking the PKCS#11 type of the attribute.
      *
-     * @param type The PKCS#11 type of this attribute; e.g.
-     *             PKCS11Constants.CKA_VALUE.
+     * @param type
+     *          The PKCS#11 type of this attribute; e.g.
+     *          PKCS11Constants.CKA_VALUE.
      * @preconditions (type <> null)
      * @postconditions
      */
@@ -77,15 +78,16 @@ public class MechanismArrayAttribute extends Attribute {
     }
 
     /**
-     * Set the attributes of this mechanism attribute array by
-     * specifying a Mechanism[].
-     * Null, is also valid.
+     * Set the attributes of this mechanism attribute array by specifying a
+     * Mechanism[]. Null, is also valid.
      * A call to this method sets the present flag to true.
      *
-     * @param value The MechanismArrayAttribute value to set. May be null.
+     * @param value
+     *          The MechanismArrayAttribute value to set. May be null.
      * @preconditions
      * @postconditions
      */
+    @SuppressWarnings("restriction")
     public void setMechanismAttributeArrayValue(Mechanism[] value) {
 
         long[] values = null;
@@ -107,6 +109,7 @@ public class MechanismArrayAttribute extends Attribute {
      * @preconditions
      * @postconditions
      */
+    @SuppressWarnings("restriction")
     public Mechanism[] getMechanismAttributeArrayValue() {
         Mechanism[] mechanisms = null;
         if (ckAttribute_.pValue != null) {
@@ -129,13 +132,15 @@ public class MechanismArrayAttribute extends Attribute {
      * @preconditions
      * @postconditions (result <> null)
      */
+    @Override
     protected String getValueString() {
         StringBuilder buffer = new StringBuilder(1024);
         Mechanism[] allowedMechanisms = getMechanismAttributeArrayValue();
         if (allowedMechanisms != null && allowedMechanisms.length > 0) {
             for (int i = 0; i < allowedMechanisms.length; i++) {
-                buffer.append(Constants.NEWLINE);
-                buffer.append(Constants.INDENT + Constants.INDENT + Constants.INDENT);
+                buffer.append(Constants.NEWLINE_INDENT);
+                buffer.append(Constants.INDENT);
+                buffer.append(Constants.INDENT);
                 buffer.append(allowedMechanisms[i].getName());
             }
             return buffer.toString();
@@ -148,34 +153,51 @@ public class MechanismArrayAttribute extends Attribute {
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
-     * @param otherObject The other object to compare to.
+     * @param otherObject
+     *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
      */
+    @SuppressWarnings("restriction")
+    @Override
     public boolean equals(java.lang.Object otherObject) {
-        boolean equal = false;
-
-        if (otherObject instanceof MechanismArrayAttribute) {
-            MechanismArrayAttribute other = (MechanismArrayAttribute) otherObject;
-            equal = (this == other)
-                || (((this.present_ == false) && (other.present_ == false)) || (((this.present_ == true) && (other.present_ == true)) && ((this.sensitive_ == other.sensitive_) && Functions
-                    .equals((long[]) this.ckAttribute_.pValue,
-                        (long[]) other.ckAttribute_.pValue))));
+        if (this == otherObject) {
+            return true;
         }
 
-        return equal;
+        if (!(otherObject instanceof MechanismArrayAttribute)) {
+            return false;
+        }
+
+        MechanismArrayAttribute other = (MechanismArrayAttribute) otherObject;
+        if (!this.present_ && !other.present_) {
+            return true;
+        }
+
+        if (!(this.present_ && other.present_)) {
+            return false;
+        }
+
+        if (this.sensitive_ != other.sensitive_) {
+            return false;
+        }
+
+        return Functions.equals((long[]) this.ckAttribute_.pValue,
+                (long[]) other.ckAttribute_.pValue);
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this class
-     * work correctly in a hashtable.
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
      *
      * @return The hash code of this object.
      * @preconditions
      * @postconditions
      */
+    @SuppressWarnings("restriction")
+    @Override
     public int hashCode() {
         return (ckAttribute_.pValue != null) ? Functions
             .hashCode((long[]) ckAttribute_.pValue) : 0;
@@ -183,8 +205,8 @@ public class MechanismArrayAttribute extends Attribute {
 
     /**
      * Create a (deep) clone of this object.
-     * The attributes in the CK_ATTRIBUTE[] need not be cloned, as they can't be set
-     * separately.
+     * The attributes in the CK_ATTRIBUTE[] need not be cloned, as they can't be
+     * set separately.
      *
      * @return A clone of this object.
      * @preconditions
@@ -192,23 +214,24 @@ public class MechanismArrayAttribute extends Attribute {
      *                 and (result instanceof MechanismAttributeArray)
      *                 and (result.equals(this))
      */
+    @SuppressWarnings("restriction")
+    @Override
     public java.lang.Object clone() {
         MechanismArrayAttribute clone;
 
         clone = (MechanismArrayAttribute) super.clone();
         if (this.ckAttribute_.pValue != null) {
-            clone.ckAttribute_.pValue = ((long[]) this.ckAttribute_.pValue).clone();
+            clone.ckAttribute_.pValue
+                = ((long[]) this.ckAttribute_.pValue).clone();
         } else {
             clone.ckAttribute_.pValue = null;
         }
         return clone;
     }
 
-    /* (non-Javadoc)
-     * @see iaik.pkcs.pkcs11.objects.Attribute#setValue(java.lang.Object) */
+    @Override
     public void setValue(java.lang.Object value)
-        throws UnsupportedOperationException
-    {
+        throws UnsupportedOperationException {
         setMechanismAttributeArrayValue((Mechanism[]) value);
     }
 

@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -42,9 +42,9 @@
 
 package iaik.pkcs.pkcs11;
 
-import sun.security.pkcs11.wrapper.CK_MECHANISM_INFO;
-import sun.security.pkcs11.wrapper.Constants;
+import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import sun.security.pkcs11.wrapper.CK_MECHANISM_INFO;
 
 /**
  * Objects of this class provide information about a certain mechanism that a
@@ -54,6 +54,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  * @version 1.0
  * @invariants
  */
+@SuppressWarnings("restriction")
 public class MechanismInfo implements Cloneable {
 
     /**
@@ -72,8 +73,8 @@ public class MechanismInfo implements Cloneable {
     protected long flags_;
 
     /**
-     * Default constructor. All memeber variables get the defualt value for their
-     * tpye.
+     * Default constructor. All member variables get the default value for their
+     * type.
      *
      * @preconditions
      * @postconditions
@@ -84,14 +85,13 @@ public class MechanismInfo implements Cloneable {
     /**
      * Constructor taking a CK_MECHANISM_INFO object as data source.
      *
-     * @param ckMechanismInfo The CK_MECHANISM_INFO object that provides the data.
+     * @param ckMechanismInfo
+     *          The CK_MECHANISM_INFO object that provides the data.
      * @preconditions (ckMechanismInfo <> null)
      * @postconditions
      */
     public MechanismInfo(CK_MECHANISM_INFO ckMechanismInfo) {
-        if (ckMechanismInfo == null) {
-            throw new NullPointerException("Argument \"ckMechanismInfo\" must not be null.");
-        }
+        Util.requireNotNull("ckMechanismInfo", ckMechanismInfo);
         minKeySize_ = ckMechanismInfo.ulMinKeySize;
         maxKeySize_ = ckMechanismInfo.ulMaxKeySize;
         flags_ = ckMechanismInfo.flags;
@@ -106,39 +106,45 @@ public class MechanismInfo implements Cloneable {
      *                 and (result instanceof MechanismInfo)
      *                 and (result.equals(this))
      */
+    @Override
     public java.lang.Object clone() {
         MechanismInfo clone;
 
         try {
             clone = (MechanismInfo) super.clone();
         } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException("An unexpected clone exception occurred.", ex);
+            // this must not happen, because this class is clone-able
+            throw new TokenRuntimeException(
+                    "An unexpected clone exception occurred.", ex);
         }
 
         return clone;
     }
 
     /**
-     * Override equals to check for the equality of mechanism infos.
+     * Override equals to check for the equality of mechanism information.
      *
-     * @param otherObject The other MechanismInfo object.
+     * @param otherObject
+     *          The other MechanismInfo object.
      * @return True, if other is an instance of this class and
      *         all member variables are equal.
      * @preconditions
      * @postconditions
      */
+    @Override
     public boolean equals(Object otherObject) {
-        boolean euqal = false;
-
-        if (otherObject instanceof MechanismInfo) {
-            MechanismInfo other = (MechanismInfo) otherObject;
-            euqal = (this == other)
-                || ((this.minKeySize_ == other.minKeySize_)
-                    && (this.maxKeySize_ == other.maxKeySize_) && (this.flags_ == other.flags_));
+        if (this == otherObject) {
+            return true;
         }
 
-        return euqal;
+        if (!(otherObject instanceof MechanismInfo)) {
+            return false;
+        }
+
+        MechanismInfo other = (MechanismInfo) otherObject;
+        return (this.minKeySize_ == other.minKeySize_)
+                && (this.maxKeySize_ == other.maxKeySize_)
+                && (this.flags_ == other.flags_);
     }
 
     /**
@@ -149,6 +155,7 @@ public class MechanismInfo implements Cloneable {
      * @preconditions
      * @postconditions
      */
+    @Override
     public int hashCode() {
         return (int) (minKeySize_ ^ maxKeySize_ ^ flags_);
     }
@@ -189,7 +196,7 @@ public class MechanismInfo implements Cloneable {
     /**
      * Check, if this mechanism can be used for encryption.
      *
-     * @return True, if this mechanism can be used for encrpytion.
+     * @return True, if this mechanism can be used for encryption.
      * @preconditions
      * @postconditions
      */
@@ -200,7 +207,7 @@ public class MechanismInfo implements Cloneable {
     /**
      * Check, if this mechanism can be used for decryption.
      *
-     * @return True, if this mechanism can be used for decrpytion.
+     * @return True, if this mechanism can be used for decryption.
      * @preconditions
      * @postconditions
      */
@@ -233,7 +240,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Check, if this mechanism can be used for signing with data recovery.
      *
-     * @return True, if this mechanism can be used for signing with data recovery.
+     * @return True, if this mechanism can be used for signing with data
+     *         recovery.
      * @preconditions
      * @postconditions
      */
@@ -255,7 +263,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Check, if this mechanism can be used for verification with data recovery.
      *
-     * @return True, if this mechanism can be used for verification with data recovery.
+     * @return True, if this mechanism can be used for verification with data
+     *         recovery.
      * @preconditions
      * @postconditions
      */
@@ -321,8 +330,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Check, if this mechanism can be used with EC domain parameters over Fp.
      *
-     * @return True, if this mechanism can be used with EC domain parameters over
-     *         Fp.
+     * @return True, if this mechanism can be used with EC domain parameters
+     *         over Fp.
      * @preconditions
      * @postconditions
      */
@@ -333,8 +342,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Check, if this mechanism can be used with EC domain parameters over F2m.
      *
-     * @return True, if this mechanism can be used with EC domain parameters over
-     *         F2m.
+     * @return True, if this mechanism can be used with EC domain parameters
+     *         over F2m.
      * @preconditions
      * @postconditions
      */
@@ -382,7 +391,8 @@ public class MechanismInfo implements Cloneable {
     }
 
     /**
-     * Check, if this mechanism can be used with elliptic curve point compressed.
+     * Check, if this mechanism can be used with elliptic curve point
+     * compressed.
      *
      * @return True, if this mechanism can be used with elliptic curve point
      *         compressed.
@@ -406,13 +416,15 @@ public class MechanismInfo implements Cloneable {
     }
 
     /**
-     * Create a new MechanismInfo objects whichs flags are a logical OR of this
+     * Create a new MechanismInfo objects whose flags are a logical OR of this
      * object's flags and the other object's flags. The minimum key size is set
      * to the lower of both key sizes and the maximum key size is set to the
      * higher of both key sizes.
-     * If the other is null, the new object has the same contents as this object.
+     * If the other is null, the new object has the same contents as this
+     * object.
      *
-     * @param other The other MechanismInfo object.
+     * @param other
+     *          The other MechanismInfo object.
      * @return A new MechanismInfo that is a logical OR of this and other.
      * @preconditions
      * @postconditions
@@ -423,10 +435,10 @@ public class MechanismInfo implements Cloneable {
         if (other != null) {
             result = new MechanismInfo();
             result.flags_ = this.flags_ | other.flags_;
-            result.minKeySize_ = (this.minKeySize_ < other.minKeySize_) ? this.minKeySize_
-                : other.minKeySize_;
-            result.maxKeySize_ = (this.maxKeySize_ > other.maxKeySize_) ? this.maxKeySize_
-                : other.maxKeySize_;
+            result.minKeySize_ = (this.minKeySize_ < other.minKeySize_)
+                    ? this.minKeySize_ : other.minKeySize_;
+            result.maxKeySize_ = (this.maxKeySize_ > other.maxKeySize_)
+                    ? this.maxKeySize_ : other.maxKeySize_;
         } else {
             result = (MechanismInfo) this.clone();
         }
@@ -435,14 +447,15 @@ public class MechanismInfo implements Cloneable {
     }
 
     /**
-     * Create a new MechanismInfo objects whichs flags are a logical AND of this
+     * Create a new MechanismInfo objects whose flags are a logical AND of this
      * object's flags and the other object's flags. The minimum key size is set
      * to the higher of both key sizes and the maximum key size is set to the
      * lower of both key sizes.
      * If the other is null, the new object has no flags set and its key sizes
      * set to zero.
      *
-     * @param other The other MechanismInfo object.
+     * @param other
+     *          The other MechanismInfo object.
      * @return A new MechanismInfo that is a logical AND of this and other.
      * @preconditions
      * @postconditions
@@ -452,17 +465,17 @@ public class MechanismInfo implements Cloneable {
 
         if (other != null) {
             result.flags_ = this.flags_ & other.flags_;
-            result.minKeySize_ = (this.minKeySize_ > other.minKeySize_) ? this.minKeySize_
-                : other.minKeySize_;
-            result.maxKeySize_ = (this.maxKeySize_ < other.maxKeySize_) ? this.maxKeySize_
-                : other.maxKeySize_;
+            result.minKeySize_ = (this.minKeySize_ > other.minKeySize_)
+                    ? this.minKeySize_ : other.minKeySize_;
+            result.maxKeySize_ = (this.maxKeySize_ < other.maxKeySize_)
+                    ? this.maxKeySize_ : other.maxKeySize_;
         }
 
         return result;
     }
 
     /**
-     * Create a new MechanismInfo objects whichs flags are a logical NOT of this
+     * Create a new MechanismInfo objects whose flags are a logical NOT of this
      * object's flags. The key sizes remain the same.
      *
      * @return A new MechanismInfo that is a logical NOT of this object.
@@ -480,7 +493,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set the minimum key length supported by this mechanism.
      *
-     * @param minKeySize The minimum key length supported by this mechanism.
+     * @param minKeySize
+     *          The minimum key length supported by this mechanism.
      * @preconditions
      * @postconditions
      */
@@ -492,7 +506,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set the maximum key length supported by this mechanism.
      *
-     * @param maxKeySize The maximum key length supported by this mechanism.
+     * @param maxKeySize
+     *          The maximum key length supported by this mechanism.
      * @preconditions
      * @postconditions
      */
@@ -503,7 +518,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set, if this mechanism is performed in hardware.
      *
-     * @param hw True, if this mechanism is performed in hardware.
+     * @param hw
+     *          True, if this mechanism is performed in hardware.
      * @preconditions
      * @postconditions
      */
@@ -514,7 +530,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set if this mechanism can be used for encryption.
      *
-     * @param encrypt True, if this mechanism can be used for encrpytion.
+     * @param encrypt
+     *          True, if this mechanism can be used for encryption.
      * @preconditions
      * @postconditions
      */
@@ -525,7 +542,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set if this mechanism can be used for decryption.
      *
-     * @param decrypt True, if this mechanism can be used for decrpytion.
+     * @param decrypt
+     *          True, if this mechanism can be used for decryption.
      * @preconditions
      * @postconditions
      */
@@ -536,7 +554,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set if this mechanism can be used for digesting.
      *
-     * @param digest True, if this mechanism can be used for digesting.
+     * @param digest
+     *          True, if this mechanism can be used for digesting.
      * @preconditions
      * @postconditions
      */
@@ -547,7 +566,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set if this mechanism can be used for signing.
      *
-     * @param sign True, if this mechanism can be used for signing.
+     * @param sign
+     *          True, if this mechanism can be used for signing.
      * @preconditions
      * @postconditions
      */
@@ -558,7 +578,9 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set if this mechanism can be used for signing with data recovery.
      *
-     * @param signRecover True, if this mechanism can be used for signing with data recovery.
+     * @param signRecover
+     *          True, if this mechanism can be used for signing with data
+     *          recovery.
      * @preconditions
      * @postconditions
      */
@@ -569,7 +591,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set if this mechanism can be used for verification.
      *
-     * @param verfy True, if this mechanism can be used for verification.
+     * @param verfy
+     *          True, if this mechanism can be used for verification.
      * @preconditions
      * @postconditions
      */
@@ -580,7 +603,9 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set if this mechanism can be used for verification with data recovery.
      *
-     * @param verifyRecover True, if this mechanism can be used for verification with data recovery.
+     * @param verifyRecover
+     *          True, if this mechanism can be used for verification with data
+     *          recovery.
      * @preconditions
      * @postconditions
      */
@@ -591,7 +616,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set if this mechanism can be used for secret key generation.
      *
-     * @param generate True, if this mechanism can be used for secret key generation.
+     * @param generate
+     *          True, if this mechanism can be used for secret key generation.
      * @preconditions
      * @postconditions
      */
@@ -602,7 +628,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set if this mechanism can be used for key-pair generation.
      *
-     * @param generateKeyPair True, if this mechanism can be used for key-pair generation.
+     * @param generateKeyPair
+     *          True, if this mechanism can be used for key-pair generation.
      * @preconditions
      * @postconditions
      */
@@ -613,7 +640,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set if this mechanism can be used for key wrapping.
      *
-     * @param wrap True, if this mechanism can be used for key wrapping.
+     * @param wrap
+     *          True, if this mechanism can be used for key wrapping.
      * @preconditions
      * @postconditions
      */
@@ -624,7 +652,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set if this mechanism can be used for key unwrapping.
      *
-     * @param unwrap True, if this mechanism can be used for key unwrapping.
+     * @param unwrap
+     *          True, if this mechanism can be used for key unwrapping.
      * @preconditions
      * @postconditions
      */
@@ -635,7 +664,8 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set if this mechanism can be used for key derivation.
      *
-     * @param derive True, if this mechanism can be used for key derivation.
+     * @param derive
+     *          True, if this mechanism can be used for key derivation.
      * @preconditions
      * @postconditions
      */
@@ -646,8 +676,9 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set if this mechanism can be used with EC domain parameters over Fp.
      *
-     * @param ecFp True, if this mechanism can be used with EC domain parameters
-     *             over Fp.
+     * @param ecFp
+     *          True, if this mechanism can be used with EC domain parameters
+     *          over Fp.
      * @preconditions
      * @postconditions
      */
@@ -658,8 +689,9 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set if this mechanism can be used with EC domain parameters over F2m.
      *
-     * @param ecF2m True, if this mechanism can be used with EC domain parameters
-     *              over F2m.
+     * @param ecF2m
+     *          True, if this mechanism can be used with EC domain parameters
+     *          over F2m.
      * @preconditions
      * @postconditions
      */
@@ -671,8 +703,9 @@ public class MechanismInfo implements Cloneable {
      * Set if this mechanism can be used with EC domain parameters of the
      * choice ecParameters.
      *
-     * @param ecEcParameters True, if this mechanism can be used with EC domain
-     *                       parameters of the choice ecParameters.
+     * @param ecEcParameters
+     *          True, if this mechanism can be used with EC domain parameters of
+     *          the choice ecParameters.
      * @preconditions
      * @postconditions
      */
@@ -684,8 +717,9 @@ public class MechanismInfo implements Cloneable {
      * Set if this mechanism can be used with EC domain parameters of the
      * choice namedCurve.
      *
-     * @param ecNamedCurve True, if this mechanism can be used with EC domain
-     *                     parameters of the choice namedCurve.
+     * @param ecNamedCurve
+     *          True, if this mechanism can be used with EC domain parameters of
+     *          the choice namedCurve.
      * @preconditions
      * @postconditions
      */
@@ -697,8 +731,9 @@ public class MechanismInfo implements Cloneable {
      * Set if this mechanism can be used with elliptic curve point
      * uncompressed.
      *
-     * @param ecUncompress True, if this mechanism can be used with elliptic
-     *                     curve point uncompressed.
+     * @param ecUncompress
+     *          True, if this mechanism can be used with elliptic curve point
+     *          uncompressed.
      * @preconditions
      * @postconditions
      */
@@ -709,8 +744,9 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set if this mechanism can be used with elliptic curve point compressed.
      *
-     * @param ecCompress True, if this mechanism can be used with elliptic curve
-     *                   point compressed.
+     * @param ecCompress
+     *          True, if this mechanism can be used with elliptic curve point
+     *          compressed.
      * @preconditions
      * @postconditions
      */
@@ -722,7 +758,8 @@ public class MechanismInfo implements Cloneable {
      * Set if there is an extension to the flags; false, if no extensions.
      * Must be false for this version.
      *
-     * @param extension False for this version.
+     * @param extension
+     *          False for this version.
      * @preconditions
      * @postconditions
      */
@@ -735,17 +772,16 @@ public class MechanismInfo implements Cloneable {
      * in the given mechanism info. This may be used as a simple check, if some
      * operations are supported.
      * This also checks the key length range, if they are specified in the given
-     * mechaism object; i.e. if they are not zero.
+     * mechanism object; i.e. if they are not zero.
      *
-     * @param requiredFeatures The required features.
+     * @param requiredFeatures
+     *          The required features.
      * @return True, if the required features are supported.
      * @preconditions (requiredFeatures <> null)
      * @postconditions
      */
     public boolean supports(MechanismInfo requiredFeatures) {
-        if (requiredFeatures == null) {
-            throw new NullPointerException("Argument \"requiredFeatures\" must not be null.");
-        }
+        Util.requireNotNull("requiredFeatures", requiredFeatures);
 
         long requiredMaxKeySize = requiredFeatures.getMaxKeySize();
         if ((requiredMaxKeySize != 0) && (requiredMaxKeySize > maxKeySize_)) {
@@ -769,6 +805,7 @@ public class MechanismInfo implements Cloneable {
      *
      * @return the string representation of this object
      */
+    @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder(256);
 
@@ -776,108 +813,87 @@ public class MechanismInfo implements Cloneable {
         buffer.append("Minimum Key-Size: ");
         buffer.append(minKeySize_);
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Maximum Key-Size: ");
         buffer.append(maxKeySize_);
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Hardware: ");
         buffer.append(isHw());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Encrypt: ");
         buffer.append(isEncrypt());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Decrypt: ");
         buffer.append(isDecrypt());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Digest: ");
         buffer.append(isDigest());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Sign: ");
         buffer.append(isSign());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Sign Recover: ");
         buffer.append(isSignRecover());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Verify: ");
         buffer.append(isVerify());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Verify Recover: ");
         buffer.append(isVerifyRecover());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Generate: ");
         buffer.append(isGenerate());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Generate Key-Pair: ");
         buffer.append(isGenerateKeyPair());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Wrap: ");
         buffer.append(isWrap());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Unwrap: ");
         buffer.append(isUnwrap());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Derive: ");
         buffer.append(isDerive());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("EC F(p): ");
         buffer.append(isEcFp());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("EC F(2^m): ");
         buffer.append(isEcF2m());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("EC Parameters: ");
         buffer.append(isEcEcParameters());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("EC Named Curve: ");
         buffer.append(isEcNamedCurve());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("EC Uncompress: ");
         buffer.append(isEcUncompress());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("EC Compress: ");
         buffer.append(isEcCompress());
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append(Constants.INDENT);
+        buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Extension: ");
         buffer.append(isExtension());
 
@@ -887,8 +903,10 @@ public class MechanismInfo implements Cloneable {
     /**
      * Set the given feature flag(s) to the given value.
      *
-     * @param flagMask The mask of the flag bit(s).
-     * @param value True to set the flag(s), false to clear the flag(s).
+     * @param flagMask
+     *          The mask of the flag bit(s).
+     * @param value
+     *          True to set the flag(s), false to clear the flag(s).
      * @preconditions
      * @postconditions
      */
