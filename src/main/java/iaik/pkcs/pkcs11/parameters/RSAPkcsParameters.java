@@ -78,6 +78,11 @@ abstract public class RSAPkcsParameters implements Parameters {
         public static final long SHA1 = PKCS11Constants.CKG_MGF1_SHA1;
 
         /**
+         * The identifier for CKG_MGF1_SHA224.
+         */
+        public static final long SHA224 = PKCS11Constants.CKG_MGF1_SHA224;
+
+        /**
          * The identifier for CKG_MGF1_SHA256.
          */
         public static final long SHA256 = PKCS11Constants.CKG_MGF1_SHA256;
@@ -91,6 +96,26 @@ abstract public class RSAPkcsParameters implements Parameters {
          * The identifier for CKG_MGF1_SHA512.
          */
         public static final long SHA512 = PKCS11Constants.CKG_MGF1_SHA512;
+
+        /**
+         * The identifier for CKG_MGF1_SHA3_224.
+         */
+        public static final long SHA3_224 = PKCS11Constants.CKG_MGF1_SHA3_224;
+
+        /**
+         * The identifier for CKG_MGF1_SHA3_256.
+         */
+        public static final long SHA3_256 = PKCS11Constants.CKG_MGF1_SHA3_256;
+
+        /**
+         * The identifier for CKG_MGF1_SHA3_384.
+         */
+        public static final long SHA3_384 = PKCS11Constants.CKG_MGF1_SHA3_384;
+
+        /**
+         * The identifier for CKG_MGF1_SHA3_512.
+         */
+        public static final long SHA3_512 = PKCS11Constants.CKG_MGF1_SHA3_512;
 
     }
 
@@ -122,10 +147,18 @@ abstract public class RSAPkcsParameters implements Parameters {
     protected RSAPkcsParameters(Mechanism hashAlgorithm,
             long maskGenerationFunction) {
         if ((maskGenerationFunction != MessageGenerationFunctionType.SHA1)
+            && (maskGenerationFunction != MessageGenerationFunctionType.SHA224)
             && (maskGenerationFunction != MessageGenerationFunctionType.SHA256)
             && (maskGenerationFunction != MessageGenerationFunctionType.SHA384)
+            && (maskGenerationFunction != MessageGenerationFunctionType.SHA512)
             && (maskGenerationFunction
-                    != MessageGenerationFunctionType.SHA512)) {
+                    != MessageGenerationFunctionType.SHA3_224)
+            && (maskGenerationFunction
+                    != MessageGenerationFunctionType.SHA3_256)
+            && (maskGenerationFunction
+                    != MessageGenerationFunctionType.SHA3_384)
+            && (maskGenerationFunction
+                    != MessageGenerationFunctionType.SHA3_512)) {
             throw new IllegalArgumentException(
                 "Illegal value for argument\"maskGenerationFunction\": "
                     + Functions.toHexString(maskGenerationFunction));
@@ -240,6 +273,9 @@ abstract public class RSAPkcsParameters implements Parameters {
         if (maskGenerationFunction_ == MessageGenerationFunctionType.SHA1) {
             buffer.append("SHA-1");
         } else if (maskGenerationFunction_
+                == MessageGenerationFunctionType.SHA224) {
+            buffer.append("SHA-224");
+        } else if (maskGenerationFunction_
                     == MessageGenerationFunctionType.SHA256) {
             buffer.append("SHA-256");
         } else if (maskGenerationFunction_
@@ -248,6 +284,18 @@ abstract public class RSAPkcsParameters implements Parameters {
         } else if (maskGenerationFunction_
                     == MessageGenerationFunctionType.SHA512) {
             buffer.append("SHA-512");
+        } else if (maskGenerationFunction_
+                == MessageGenerationFunctionType.SHA3_224) {
+            buffer.append("SHA3-224");
+        } else if (maskGenerationFunction_
+                    == MessageGenerationFunctionType.SHA3_256) {
+            buffer.append("SHA3-256");
+        } else if (maskGenerationFunction_
+                    == MessageGenerationFunctionType.SHA3_384) {
+            buffer.append("SHA3-384");
+        } else if (maskGenerationFunction_
+                    == MessageGenerationFunctionType.SHA3_512) {
+            buffer.append("SHA3-512");
         } else {
             buffer.append("<unknown>");
         }
