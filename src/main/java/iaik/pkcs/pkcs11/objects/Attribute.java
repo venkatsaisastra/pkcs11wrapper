@@ -244,7 +244,7 @@ public abstract class Attribute implements Cloneable {
      * @postconditions
      */
     protected Attribute(Long type) {
-        Util.requireNotNull("type", type);
+        Util.requireNonNull("type", type);
         present_ = false;
         sensitive_ = false;
         ckAttribute_ = new CK_ATTRIBUTE();
@@ -261,7 +261,7 @@ public abstract class Attribute implements Cloneable {
      * @postconditions
      */
     protected static synchronized String getAttributeName(Long type) {
-        Util.requireNotNull("type", type);
+        Util.requireNonNull("type", type);
 
         if (attributeNames_ == null) {
             attributeNames_ = new Hashtable<>(85);
@@ -396,7 +396,7 @@ public abstract class Attribute implements Cloneable {
      * @postconditions
      */
     protected static synchronized Class<?> getAttributeClass(Long type) {
-        Util.requireNotNull("type", type);
+        Util.requireNonNull("type", type);
 
         if (attributeClasses_ == null) {
             attributeClasses_ = new Hashtable<>(85);
@@ -621,7 +621,7 @@ public abstract class Attribute implements Cloneable {
      * @postconditions
      */
     protected void setCkAttribute(CK_ATTRIBUTE ckAttribute) {
-        ckAttribute_ = Util.requireNotNull("ckAttribute", ckAttribute);
+        ckAttribute_ = Util.requireNonNull("ckAttribute", ckAttribute);
     }
 
     /**
@@ -735,7 +735,7 @@ public abstract class Attribute implements Cloneable {
      * @postconditions
      */
     protected void setType(Long type) {
-        Util.requireNotNull("type", type);
+        Util.requireNonNull("type", type);
         ckAttribute_.type = type.longValue();
     }
 

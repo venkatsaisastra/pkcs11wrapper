@@ -97,7 +97,7 @@ public class SessionInfo implements Cloneable {
      * @postconditions
      */
     protected SessionInfo(CK_SESSION_INFO ckSessionInfo) {
-        Util.requireNotNull("ckSessionInfo", ckSessionInfo);
+        Util.requireNonNull("ckSessionInfo", ckSessionInfo);
         slotID_ = ckSessionInfo.slotID;
         state_ = new State(ckSessionInfo.state);
         deviceError_ = ckSessionInfo.ulDeviceError;

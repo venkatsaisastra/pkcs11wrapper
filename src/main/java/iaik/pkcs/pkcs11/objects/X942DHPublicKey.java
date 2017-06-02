@@ -132,7 +132,7 @@ public class X942DHPublicKey extends DHPublicKey {
      * @postconditions
      */
     protected static void putAttributesInTable(X942DHPublicKey object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.PRIME, object.prime_);
         object.attributeTable_.put(Attribute.BASE, object.base_);
         object.attributeTable_.put(Attribute.SUBPRIME, object.subprime_);

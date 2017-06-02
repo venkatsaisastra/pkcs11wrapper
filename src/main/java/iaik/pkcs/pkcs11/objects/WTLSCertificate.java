@@ -154,7 +154,7 @@ public class WTLSCertificate extends Certificate {
      * @postconditions
      */
     protected static void putAttributesInTable(WTLSCertificate object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.SUBJECT, object.subject_);
         object.attributeTable_.put(Attribute.ISSUER, object.issuer_);
         object.attributeTable_.put(Attribute.VALUE, object.value_);

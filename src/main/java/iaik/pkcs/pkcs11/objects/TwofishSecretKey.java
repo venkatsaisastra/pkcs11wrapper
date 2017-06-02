@@ -135,7 +135,7 @@ public class TwofishSecretKey extends SecretKey {
      * @postconditions
      */
     protected static void putAttributesInTable(TwofishSecretKey object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.VALUE, object.value_);
         object.attributeTable_.put(Attribute.VALUE_LEN, object.valueLen_);
     }

@@ -96,7 +96,7 @@ public class Slot {
      * @postconditions
      */
     protected Slot(Module module, long slotID) {
-        module_ = Util.requireNotNull("module", module);
+        module_ = Util.requireNonNull("module", module);
         slotID_ = slotID;
     }
 

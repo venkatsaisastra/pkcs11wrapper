@@ -163,7 +163,7 @@ abstract public class RSAPkcsParameters implements Parameters {
                 "Illegal value for argument\"maskGenerationFunction\": "
                     + Functions.toHexString(maskGenerationFunction));
         }
-        hashAlgorithm_ = Util.requireNotNull("hashAlgorithm", hashAlgorithm);
+        hashAlgorithm_ = Util.requireNonNull("hashAlgorithm", hashAlgorithm);
         maskGenerationFunction_ = maskGenerationFunction;
     }
 
@@ -228,7 +228,7 @@ abstract public class RSAPkcsParameters implements Parameters {
      * @postconditions
      */
     public void setHashAlgorithm(Mechanism hashAlgorithm) {
-        hashAlgorithm_ = Util.requireNotNull("hashAlgorithm", hashAlgorithm);
+        hashAlgorithm_ = Util.requireNonNull("hashAlgorithm", hashAlgorithm);
     }
 
     /**

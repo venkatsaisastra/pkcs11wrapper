@@ -165,10 +165,10 @@ public class PKCS5PBKD2Parameters implements Parameters {
                     + Functions.toHexString(pseudoRandomFunction));
         }
         saltSource_ = saltSource;
-        saltSourceData_ = Util.requireNotNull("saltSourceData", saltSourceData);
+        saltSourceData_ = Util.requireNonNull("saltSourceData", saltSourceData);
         iterations_ = iterations;
         pseudoRandomFunction_ = pseudoRandomFunction;
-        pseudoRandomFunctionData_ = Util.requireNotNull(
+        pseudoRandomFunctionData_ = Util.requireNonNull(
                 "pseudoRandomFunctionData", pseudoRandomFunctionData);
     }
 
@@ -305,7 +305,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
      * @postconditions
      */
     public void setSaltSourceData(byte[] saltSourceData) {
-        saltSourceData_ = Util.requireNotNull("saltSourceData", saltSourceData);
+        saltSourceData_ = Util.requireNonNull("saltSourceData", saltSourceData);
     }
 
     /**
@@ -352,7 +352,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
      * @postconditions
      */
     public void setPseudoRandomFunctionData(byte[] pseudoRandomFunctionData) {
-        pseudoRandomFunctionData_ = Util.requireNotNull(
+        pseudoRandomFunctionData_ = Util.requireNonNull(
                 "pseudoRandomFunctionData", pseudoRandomFunctionData);
     }
 

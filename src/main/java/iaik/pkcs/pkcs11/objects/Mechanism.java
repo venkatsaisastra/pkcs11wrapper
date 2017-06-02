@@ -100,7 +100,7 @@ public class Mechanism extends Object {
      * @postconditions
      */
     protected static void putAttributesInTable(Mechanism object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.MECHANISM_TYPE,
                 object.mechanismType_);
     }

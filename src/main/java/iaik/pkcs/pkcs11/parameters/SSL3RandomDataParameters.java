@@ -83,8 +83,8 @@ public class SSL3RandomDataParameters implements Parameters {
      * @postconditions
      */
     public SSL3RandomDataParameters(byte[] clientRandom, byte[] serverRandom) {
-        clientRandom_ = Util.requireNotNull("clientRandom", clientRandom);
-        serverRandom_ = Util.requireNotNull("serverRandom", serverRandom);
+        clientRandom_ = Util.requireNonNull("clientRandom", clientRandom);
+        serverRandom_ = Util.requireNonNull("serverRandom", serverRandom);
     }
 
     /**
@@ -157,7 +157,7 @@ public class SSL3RandomDataParameters implements Parameters {
      * @postconditions
      */
     public void setClientRandom(byte[] clientRandom) {
-        clientRandom_ = Util.requireNotNull("clientRandom", clientRandom);
+        clientRandom_ = Util.requireNonNull("clientRandom", clientRandom);
     }
 
     /**
@@ -169,7 +169,7 @@ public class SSL3RandomDataParameters implements Parameters {
      * @postconditions
      */
     public void setServerRandom(byte[] serverRandom) {
-        serverRandom_ = Util.requireNotNull("serverRandom", serverRandom);
+        serverRandom_ = Util.requireNonNull("serverRandom", serverRandom);
     }
 
     /**

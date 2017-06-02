@@ -140,7 +140,7 @@ public class RSAPublicKey extends PublicKey {
      * @postconditions
      */
     protected static void putAttributesInTable(RSAPublicKey object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.MODULUS, object.modulus_);
         object.attributeTable_.put(Attribute.PUBLIC_EXPONENT,
                 object.publicExponent_);

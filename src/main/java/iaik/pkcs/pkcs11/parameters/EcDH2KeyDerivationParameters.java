@@ -111,8 +111,8 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
             byte[] publicData2) {
         super(keyDerivationFunction, sharedData, publicData);
         privateDataLength_ = privateDataLength;
-        privateData_ = Util.requireNotNull("privateData", privateData);
-        publicData2_ = Util.requireNotNull("publicData2", publicData2);
+        privateData_ = Util.requireNonNull("privateData", privateData);
+        publicData2_ = Util.requireNonNull("publicData2", publicData2);
     }
 
     /**
@@ -200,7 +200,7 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
      * @postconditions
      */
     public void setPrivateData(iaik.pkcs.pkcs11.objects.Object privateData) {
-        privateData_ = Util.requireNotNull("privateData", privateData);
+        privateData_ = Util.requireNonNull("privateData", privateData);
     }
 
     /**
@@ -224,7 +224,7 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
      * @postconditions
      */
     public void setPublicData2(byte[] publicData2) {
-        publicData2_ = Util.requireNotNull("publicData2", publicData2);
+        publicData2_ = Util.requireNonNull("publicData2", publicData2);
     }
 
     /**

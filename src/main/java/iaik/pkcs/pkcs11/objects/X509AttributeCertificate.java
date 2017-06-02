@@ -154,7 +154,7 @@ public class X509AttributeCertificate extends Certificate {
      */
     protected static void putAttributesInTable(
             X509AttributeCertificate object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.OWNER, object.owner_);
         object.attributeTable_.put(Attribute.AC_ISSUER, object.acIssuer_);
         object.attributeTable_.put(Attribute.SERIAL_NUMBER,

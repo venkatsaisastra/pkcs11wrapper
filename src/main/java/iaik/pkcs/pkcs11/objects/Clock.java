@@ -132,7 +132,7 @@ public class Clock extends HardwareFeature {
      * @postconditions
      */
     protected static void putAttributesInTable(Clock object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.VALUE, object.value_);
     }
 

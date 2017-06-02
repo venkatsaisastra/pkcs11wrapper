@@ -204,7 +204,7 @@ public class DomainParameters extends Storage {
      */
     public static Object getInstance(Session session, long objectHandle)
         throws TokenException {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
 
         KeyTypeAttribute keyTypeAttribute = new KeyTypeAttribute();
         getAttributeValue(session, objectHandle, keyTypeAttribute);
@@ -255,7 +255,7 @@ public class DomainParameters extends Storage {
     protected static Object getUnknownDomainParameters(Session session,
             long objectHandle)
         throws TokenException {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
 
         Object newObject;
         if (vendorDomainParametersBuilder_ != null) {
@@ -287,7 +287,7 @@ public class DomainParameters extends Storage {
      * @postconditions
      */
     protected static void putAttributesInTable(DomainParameters object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.KEY_TYPE, object.keyType_);
         object.attributeTable_.put(Attribute.LOCAL, object.local_);
     }

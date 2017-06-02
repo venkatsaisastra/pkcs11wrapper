@@ -142,7 +142,7 @@ public class MonotonicCounter extends HardwareFeature {
      * @postconditions
      */
     protected static void putAttributesInTable(MonotonicCounter object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.RESET_ON_INIT,
                 object.resetOnInit_);
         object.attributeTable_.put(Attribute.HAS_RESET, object.hasReset_);

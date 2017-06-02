@@ -194,7 +194,7 @@ public class HardwareFeature extends Object {
      * @postconditions (result <> null)
      */
     public static String getHardwareFeatureTypeName(Long hardwareFeatureType) {
-        Util.requireNotNull("hardwareFeatureType", hardwareFeatureType);
+        Util.requireNonNull("hardwareFeatureType", hardwareFeatureType);
         String hardwareFeatureTypeName;
 
         if (hardwareFeatureType.equals(FeatureType.MONOTONIC_COUNTER)) {
@@ -237,7 +237,7 @@ public class HardwareFeature extends Object {
      */
     public static Object getInstance(Session session, long objectHandle)
         throws TokenException {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
 
         HardwareFeatureTypeAttribute hardwareFeatureTypeAttribute
             = new HardwareFeatureTypeAttribute();
@@ -292,7 +292,7 @@ public class HardwareFeature extends Object {
     protected static Object getUnknownHardwareFeature(Session session,
             long objectHandle)
         throws TokenException {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
 
         Object newObject;
         if (vendorHardwareFeatureBuilder_ != null) {
@@ -353,7 +353,7 @@ public class HardwareFeature extends Object {
      * @postconditions
      */
     protected static void putAttributesInTable(HardwareFeature object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
 
         object.attributeTable_.put(Attribute.HW_FEATURE_TYPE,
             object.hardwareFeatureType_);

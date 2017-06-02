@@ -180,7 +180,7 @@ public class X509PublicKeyCertificate extends Certificate {
      */
     protected static void putAttributesInTable(
             X509PublicKeyCertificate object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.SUBJECT, object.subject_);
         object.attributeTable_.put(Attribute.ID, object.id_);
         object.attributeTable_.put(Attribute.ISSUER, object.issuer_);

@@ -204,7 +204,7 @@ public class Module {
      */
     public static Module getInstance(String pkcs11ModuleName)
         throws IOException {
-        Util.requireNotNull("pkcs11ModuleName", pkcs11ModuleName);
+        Util.requireNonNull("pkcs11ModuleName", pkcs11ModuleName);
         File file = new File(pkcs11ModuleName);
         if (!file.exists()) {
             throw new FileNotFoundException(

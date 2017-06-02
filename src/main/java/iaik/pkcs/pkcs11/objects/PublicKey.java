@@ -151,7 +151,7 @@ public class PublicKey extends Key {
      */
     public static Object getInstance(Session session, long objectHandle)
         throws TokenException {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
 
         KeyTypeAttribute keyTypeAttribute = new KeyTypeAttribute();
         getAttributeValue(session, objectHandle, keyTypeAttribute);
@@ -206,7 +206,7 @@ public class PublicKey extends Key {
     protected static Object getUnknownPublicKey(Session session,
             long objectHandle)
         throws TokenException {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
 
         Object newObject;
         if (Key.vendorKeyBuilder_ != null) {
@@ -236,7 +236,7 @@ public class PublicKey extends Key {
      * @postconditions
      */
     protected static void putAttributesInTable(PublicKey object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.SUBJECT, object.subject_);
         object.attributeTable_.put(Attribute.ENCRYPT, object.encrypt_);
         object.attributeTable_.put(Attribute.VERIFY, object.verify_);

@@ -117,7 +117,7 @@ public class Data extends Storage {
      * @postconditions
      */
     protected static void putAttributesInTable(Data object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
 
         object.attributeTable_.put(Attribute.APPLICATION, object.application_);
         object.attributeTable_.put(Attribute.OBJECT_ID, object.objectID_);

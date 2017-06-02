@@ -129,7 +129,7 @@ public class IDEASecretKey extends SecretKey {
      * @postconditions
      */
     protected static void putAttributesInTable(IDEASecretKey object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.VALUE, object.value_);
     }
 

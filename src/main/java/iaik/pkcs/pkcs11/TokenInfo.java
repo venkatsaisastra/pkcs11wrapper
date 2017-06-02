@@ -279,7 +279,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     protected TokenInfo(CK_TOKEN_INFO ckTokenInfo) {
-        Util.requireNotNull("ckTokenInfo", ckTokenInfo);
+        Util.requireNonNull("ckTokenInfo", ckTokenInfo);
         label_ = new String(ckTokenInfo.label);
         manufacturerID_ = new String(ckTokenInfo.manufacturerID);
         model_ = new String(ckTokenInfo.model);

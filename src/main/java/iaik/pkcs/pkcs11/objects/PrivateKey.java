@@ -197,7 +197,7 @@ public class PrivateKey extends Key {
      */
     public static Object getInstance(Session session, long objectHandle)
         throws TokenException {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
 
         KeyTypeAttribute keyTypeAttribute = new KeyTypeAttribute();
         getAttributeValue(session, objectHandle, keyTypeAttribute);
@@ -254,7 +254,7 @@ public class PrivateKey extends Key {
     protected static Object getUnknownPrivateKey(Session session,
             long objectHandle)
         throws TokenException {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
 
         Object newObject;
         if (Key.vendorKeyBuilder_ != null) {
@@ -284,7 +284,7 @@ public class PrivateKey extends Key {
      * @postconditions
      */
     protected static void putAttributesInTable(PrivateKey object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.SUBJECT, object.subject_);
         object.attributeTable_.put(Attribute.SENSITIVE, object.sensitive_);
         object.attributeTable_.put(Attribute.SECONDARY_AUTH,

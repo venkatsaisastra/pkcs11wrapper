@@ -168,7 +168,7 @@ public class Token {
      * @postconditions
      */
     protected Token(Slot slot) {
-        slot_ = Util.requireNotNull("slot", slot);
+        slot_ = Util.requireNonNull("slot", slot);
         useUtf8Encoding_ = slot.useUtf8Encoding_;
     }
 

@@ -129,7 +129,7 @@ public class DES3SecretKey extends SecretKey {
      * @postconditions
      */
     protected static void putAttributesInTable(DES3SecretKey object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.VALUE, object.value_);
     }
 

@@ -85,8 +85,8 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      */
     public SSL3MasterKeyDeriveParameters(SSL3RandomDataParameters randomInfo,
             VersionParameters version) {
-        randomInfo_ = Util.requireNotNull("randomInfo", randomInfo);
-        version_ = Util.requireNotNull("version", version);
+        randomInfo_ = Util.requireNonNull("randomInfo", randomInfo);
+        version_ = Util.requireNonNull("version", version);
     }
 
     /**
@@ -165,7 +165,7 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      * @postconditions
      */
     public void setRandomInfo(SSL3RandomDataParameters randomInfo) {
-        randomInfo_ = Util.requireNotNull("randomInfo", randomInfo);
+        randomInfo_ = Util.requireNonNull("randomInfo", randomInfo);
     }
 
     /**
@@ -177,7 +177,7 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      * @postconditions
      */
     public void setVersion(VersionParameters version) {
-        version_ = Util.requireNotNull("version", version);
+        version_ = Util.requireNonNull("version", version);
     }
 
     /**

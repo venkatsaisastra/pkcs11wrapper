@@ -65,7 +65,7 @@ import sun.security.pkcs11.wrapper.CK_DATE;
 @SuppressWarnings("restriction")
 public class Util {
 
-    public static <T> T requireNotNull(String paramName, T param) {
+    public static <T> T requireNonNull(String paramName, T param) {
         if (param == null) {
             throw new NullPointerException(
                     "Argument \"" + paramName + "\" must not be null.");

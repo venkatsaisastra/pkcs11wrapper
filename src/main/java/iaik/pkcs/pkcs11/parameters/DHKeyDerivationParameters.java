@@ -145,7 +145,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
                     + Functions.toHexString(keyDerivationFunction));
         }
 
-        publicData_ = Util.requireNotNull("publicData", publicData);
+        publicData_ = Util.requireNonNull("publicData", publicData);
         keyDerivationFunction_ = keyDerivationFunction;
     }
 
@@ -237,7 +237,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
      * @postconditions
      */
     public void setPublicData(byte[] publicData) {
-        publicData_ = Util.requireNotNull("publicData", publicData);
+        publicData_ = Util.requireNonNull("publicData", publicData);
     }
 
     /**

@@ -135,7 +135,7 @@ public class DHPkcsDeriveParameters implements Parameters {
      * @postconditions
      */
     public void setPublicValue(byte[] publicValue) {
-        publicValue_ = Util.requireNotNull("publicValue", publicValue);
+        publicValue_ = Util.requireNonNull("publicValue", publicValue);
     }
 
     /**

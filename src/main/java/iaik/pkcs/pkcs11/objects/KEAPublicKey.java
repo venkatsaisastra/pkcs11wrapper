@@ -146,7 +146,7 @@ public class KEAPublicKey extends PublicKey {
      * @postconditions
      */
     protected static void putAttributesInTable(KEAPublicKey object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.PRIME, object.prime_);
         object.attributeTable_.put(Attribute.SUBPRIME, object.subprime_);
         object.attributeTable_.put(Attribute.BASE, object.base_);

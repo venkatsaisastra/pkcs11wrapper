@@ -112,8 +112,8 @@ public class PBEParameters implements Parameters {
                 + " length 8, if it is not null.");
         }
         initializationVector_ = initializationVector;
-        password_ = Util.requireNotNull("password", password);
-        salt_ = Util.requireNotNull("salt", salt);
+        password_ = Util.requireNonNull("password", password);
+        salt_ = Util.requireNonNull("salt", salt);
         iterations_ = iterations;
     }
 
@@ -240,7 +240,7 @@ public class PBEParameters implements Parameters {
      * @postconditions
      */
     public void setPassword(char[] password) {
-        password_ = Util.requireNotNull("password", password);
+        password_ = Util.requireNonNull("password", password);
     }
 
     /**
@@ -252,7 +252,7 @@ public class PBEParameters implements Parameters {
      * @postconditions
      */
     public void setSalt(char[] salt) {
-        salt_ = Util.requireNotNull("salt", salt);;
+        salt_ = Util.requireNonNull("salt", salt);;
     }
 
     /**

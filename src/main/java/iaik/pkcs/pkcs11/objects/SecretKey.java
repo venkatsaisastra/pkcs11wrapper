@@ -197,7 +197,7 @@ public class SecretKey extends Key {
      */
     public static Object getInstance(Session session, long objectHandle)
         throws TokenException {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
 
         KeyTypeAttribute keyTypeAttribute = new KeyTypeAttribute();
         getAttributeValue(session, objectHandle, keyTypeAttribute);
@@ -281,7 +281,7 @@ public class SecretKey extends Key {
     protected static Object getUnknownSecretKey(Session session,
             long objectHandle)
         throws TokenException {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
 
         Object newObject;
         if (Key.vendorKeyBuilder_ != null) {
@@ -311,7 +311,7 @@ public class SecretKey extends Key {
      * @postconditions
      */
     protected static void putAttributesInTable(SecretKey object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.SENSITIVE, object.sensitive_);
         object.attributeTable_.put(Attribute.ENCRYPT, object.encrypt_);
         object.attributeTable_.put(Attribute.DECRYPT, object.decrypt_);

@@ -87,7 +87,7 @@ public class GenericTemplate extends Object {
      * @postconditions
      */
     public void addAttribute(Attribute attribute) {
-        Util.requireNotNull("attribute", attribute);
+        Util.requireNonNull("attribute", attribute);
         //attributes_.addElement(attribute);
         attributeTable_.put(attribute.getType(), attribute);
     }
@@ -103,7 +103,7 @@ public class GenericTemplate extends Object {
      * @postconditions
      */
     public void addAllAttributes(Object object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         Enumeration<Long> newAttributeKeysEnumeration
             = object.attributeTable_.keys();
         while (newAttributeKeysEnumeration.hasMoreElements()) {
@@ -125,7 +125,7 @@ public class GenericTemplate extends Object {
      * @postconditions
      */
     public void addAllPresentAttributes(Object object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         Enumeration<Attribute> attributeEnumaeration
             = object.attributeTable_.elements();
         while (attributeEnumaeration.hasMoreElements()) {
@@ -177,7 +177,7 @@ public class GenericTemplate extends Object {
      * @postconditions
      */
     public boolean containsAttribute(Attribute attribute) {
-        Util.requireNotNull("attribute", attribute);
+        Util.requireNonNull("attribute", attribute);
         return attributeTable_.containsKey(attribute.getType());
     }
 
@@ -265,7 +265,7 @@ public class GenericTemplate extends Object {
      * @postconditions
      */
     public Attribute removeAttribute(Attribute attribute) {
-        Util.requireNotNull("attribute", attribute);
+        Util.requireNonNull("attribute", attribute);
 
         return (Attribute) attributeTable_.remove(attribute.getType());
     }
@@ -284,7 +284,7 @@ public class GenericTemplate extends Object {
      * @postconditions
      */
     public void removeAllAttributes(Object object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         Enumeration<Long> keysToRemove = object.attributeTable_.keys();
         while (keysToRemove.hasMoreElements()) {
             attributeTable_.remove(keysToRemove.nextElement());
@@ -306,7 +306,7 @@ public class GenericTemplate extends Object {
      * @postconditions
      */
     public void removeAllPresentAttributes(Object object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         Enumeration<Long> keysToRemove = object.attributeTable_.keys();
         while (keysToRemove.hasMoreElements()) {
             Attribute attribute = object.attributeTable_.get(keysToRemove

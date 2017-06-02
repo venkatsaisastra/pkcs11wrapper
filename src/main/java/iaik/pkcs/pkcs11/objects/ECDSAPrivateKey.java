@@ -135,7 +135,7 @@ public class ECDSAPrivateKey extends PrivateKey {
      * @postconditions
      */
     protected static void putAttributesInTable(ECDSAPrivateKey object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.EC_PARAMS, object.ecdsaParams_);
         object.attributeTable_.put(Attribute.VALUE, object.value_);
     }

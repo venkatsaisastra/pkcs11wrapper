@@ -135,7 +135,7 @@ public class RC5SecretKey extends SecretKey {
      * @postconditions
      */
     protected static void putAttributesInTable(RC5SecretKey object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.VALUE, object.value_);
         object.attributeTable_.put(Attribute.VALUE_LEN, object.valueLen_);
     }

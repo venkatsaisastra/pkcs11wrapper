@@ -74,7 +74,7 @@ public class InitializationVectorParameters implements Parameters {
      * @postconditions
      */
     public InitializationVectorParameters(byte[] initializationVector) {
-        initializationVector_ = Util.requireNotNull("initializationVector",
+        initializationVector_ = Util.requireNonNull("initializationVector",
                 initializationVector);
     }
 
@@ -136,7 +136,7 @@ public class InitializationVectorParameters implements Parameters {
      * @postconditions
      */
     public void setInitializationVector(byte[] initializationVector) {
-        initializationVector_ = Util.requireNotNull("initializationVector",
+        initializationVector_ = Util.requireNonNull("initializationVector",
                 initializationVector);
     }
 

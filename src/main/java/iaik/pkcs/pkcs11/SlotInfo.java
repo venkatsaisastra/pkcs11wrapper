@@ -109,7 +109,7 @@ public class SlotInfo {
      * @postconditions
      */
     protected SlotInfo(CK_SLOT_INFO ckSlotInfo) {
-        Util.requireNotNull("ckSlotInfo", ckSlotInfo);
+        Util.requireNonNull("ckSlotInfo", ckSlotInfo);
         slotDescription_ = new String(ckSlotInfo.slotDescription);
         manufacturerID_ = new String(ckSlotInfo.manufacturerID);
         hardwareVersion_ = new Version(ckSlotInfo.hardwareVersion);

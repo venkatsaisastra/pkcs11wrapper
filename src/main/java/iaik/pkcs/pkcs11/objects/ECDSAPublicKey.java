@@ -135,7 +135,7 @@ public class ECDSAPublicKey extends PublicKey {
      * @postconditions
      */
     protected static void putAttributesInTable(ECDSAPublicKey object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.EC_PARAMS, object.ecdsaParams_);
         object.attributeTable_.put(Attribute.EC_POINT, object.ecPoint_);
     }

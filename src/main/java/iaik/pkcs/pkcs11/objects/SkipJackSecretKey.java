@@ -129,7 +129,7 @@ public class SkipJackSecretKey extends SecretKey {
      * @postconditions
      */
     protected static void putAttributesInTable(SkipJackSecretKey object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.VALUE, object.value_);
     }
 

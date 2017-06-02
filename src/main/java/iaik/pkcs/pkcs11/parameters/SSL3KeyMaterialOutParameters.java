@@ -108,8 +108,8 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      * @postconditions
      */
     public SSL3KeyMaterialOutParameters(byte[] clientIV, byte[] serverIV) {
-        clientIV_ = Util.requireNotNull("clientIV", clientIV);
-        serverIV_ = Util.requireNotNull("serverIV", serverIV);
+        clientIV_ = Util.requireNonNull("clientIV", clientIV);
+        serverIV_ = Util.requireNonNull("serverIV", serverIV);
     }
 
     /**

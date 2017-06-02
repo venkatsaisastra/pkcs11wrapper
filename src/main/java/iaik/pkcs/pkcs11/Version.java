@@ -83,7 +83,7 @@ public class Version implements Cloneable {
      * @postconditions
      */
     protected Version(CK_VERSION ckVersion) {
-        Util.requireNotNull("ckVersion", ckVersion);
+        Util.requireNonNull("ckVersion", ckVersion);
         major_ = ckVersion.major;
         minor_ = ckVersion.minor;
     }

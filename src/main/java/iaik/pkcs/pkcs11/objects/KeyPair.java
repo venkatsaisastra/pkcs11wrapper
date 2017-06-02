@@ -79,8 +79,8 @@ public class KeyPair implements Cloneable {
      * @postconditions
      */
     public KeyPair(PublicKey publicKey, PrivateKey privateKey) {
-        publicKey_ = Util.requireNotNull("publicKey", publicKey);
-        privateKey_ = Util.requireNotNull("privateKey", privateKey);
+        publicKey_ = Util.requireNonNull("publicKey", publicKey);
+        privateKey_ = Util.requireNonNull("privateKey", privateKey);
     }
 
     /**
@@ -129,7 +129,7 @@ public class KeyPair implements Cloneable {
      * @postconditions
      */
     public void setPublicKey(PublicKey publicKey) {
-        Util.requireNotNull("publicKey", publicKey);
+        Util.requireNonNull("publicKey", publicKey);
         publicKey_ = publicKey;
     }
 
@@ -153,7 +153,7 @@ public class KeyPair implements Cloneable {
      * @postconditions
      */
     public void setPrivateKey(PrivateKey privateKey) {
-        Util.requireNotNull("privateKey", privateKey);
+        Util.requireNonNull("privateKey", privateKey);
         privateKey_ = privateKey;
     }
 

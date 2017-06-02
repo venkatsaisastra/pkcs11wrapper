@@ -140,7 +140,7 @@ public class DHParams extends DomainParameters {
      * @postconditions
      */
     protected static void putAttributesInTable(DHParams object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.PRIME, object.prime_);
         object.attributeTable_.put(Attribute.BASE, object.base_);
         object.attributeTable_.put(Attribute.PRIME_BITS, object.primeBits_);

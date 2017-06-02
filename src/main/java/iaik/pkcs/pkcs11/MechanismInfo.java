@@ -91,7 +91,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public MechanismInfo(CK_MECHANISM_INFO ckMechanismInfo) {
-        Util.requireNotNull("ckMechanismInfo", ckMechanismInfo);
+        Util.requireNonNull("ckMechanismInfo", ckMechanismInfo);
         minKeySize_ = ckMechanismInfo.ulMinKeySize;
         maxKeySize_ = ckMechanismInfo.ulMaxKeySize;
         flags_ = ckMechanismInfo.flags;
@@ -781,7 +781,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean supports(MechanismInfo requiredFeatures) {
-        Util.requireNotNull("requiredFeatures", requiredFeatures);
+        Util.requireNonNull("requiredFeatures", requiredFeatures);
 
         long requiredMaxKeySize = requiredFeatures.getMaxKeySize();
         if ((requiredMaxKeySize != 0) && (requiredMaxKeySize > maxKeySize_)) {

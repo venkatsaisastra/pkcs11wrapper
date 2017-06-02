@@ -223,7 +223,7 @@ public class Certificate extends Storage {
      * @postconditions (result <> null)
      */
     public static String getCertificateTypeName(Long certificateType) {
-        Util.requireNotNull("certificateType", certificateType);
+        Util.requireNonNull("certificateType", certificateType);
         String certificateTypeName;
 
         if (certificateType.equals(CertificateType.X_509_PUBLIC_KEY)) {
@@ -265,7 +265,7 @@ public class Certificate extends Storage {
      */
     public static Object getInstance(Session session, long objectHandle)
         throws TokenException {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
 
         CertificateTypeAttribute certificateTypeAttribute
                 = new CertificateTypeAttribute();
@@ -321,7 +321,7 @@ public class Certificate extends Storage {
     protected static Object getUnknownCertificate(Session session,
             long objectHandle)
         throws TokenException {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
 
         Object newObject;
         if (vendorCertificateBuilder_ != null) {
@@ -381,7 +381,7 @@ public class Certificate extends Storage {
      * @postconditions
      */
     protected static void putAttributesInTable(Certificate object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
 
         object.attributeTable_.put(Attribute.CERTIFICATE_TYPE,
             object.certificateType_);

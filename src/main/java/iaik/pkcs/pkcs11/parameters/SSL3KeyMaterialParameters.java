@@ -130,8 +130,8 @@ public class SSL3KeyMaterialParameters implements Parameters {
         keySizeInBits_ = keySizeInBits;
         initializationVectorSizeInBits_ = initializationVectorSizeInBits;
         export_ = export;
-        randomInfo_ = Util.requireNotNull("randomInfo", randomInfo);
-        returnedKeyMaterial_ = Util.requireNotNull("returnedKeyMaterial",
+        randomInfo_ = Util.requireNonNull("randomInfo", randomInfo);
+        returnedKeyMaterial_ = Util.requireNonNull("returnedKeyMaterial",
                 returnedKeyMaterial);
     }
 
@@ -329,7 +329,7 @@ public class SSL3KeyMaterialParameters implements Parameters {
      * @postconditions
      */
     public void setRandomInfo(SSL3RandomDataParameters randomInfo) {
-        randomInfo_ = Util.requireNotNull("randomInfo", randomInfo);
+        randomInfo_ = Util.requireNonNull("randomInfo", randomInfo);
     }
 
     /**
@@ -344,7 +344,7 @@ public class SSL3KeyMaterialParameters implements Parameters {
      */
     public void setReturnedKeyMaterial(
             SSL3KeyMaterialOutParameters returnedKeyMaterial) {
-        returnedKeyMaterial_ = Util.requireNotNull("returnedKeyMaterial",
+        returnedKeyMaterial_ = Util.requireNonNull("returnedKeyMaterial",
                 returnedKeyMaterial);
     }
 

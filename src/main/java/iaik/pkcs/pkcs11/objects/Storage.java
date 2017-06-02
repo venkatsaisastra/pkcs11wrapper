@@ -126,7 +126,7 @@ public class Storage extends Object {
      * @postconditions
      */
     protected static void putAttributesInTable(Storage object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.TOKEN, object.token_);
         object.attributeTable_.put(Attribute.PRIVATE, object.private_);
         object.attributeTable_.put(Attribute.MODIFIABLE, object.modifiable_);

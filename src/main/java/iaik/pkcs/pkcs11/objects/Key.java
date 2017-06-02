@@ -379,7 +379,7 @@ public class Key extends Storage {
      * @postconditions (result <> null)
      */
     public static String getKeyTypeName(Long keyType) {
-        Util.requireNotNull("keyType", keyType);
+        Util.requireNonNull("keyType", keyType);
 
         String keyTypeName;
         if ((keyType.longValue() & PKCS11Constants.CKK_VENDOR_DEFINED) != 0L) {
@@ -436,7 +436,7 @@ public class Key extends Storage {
      * @postconditions
      */
     protected static void putAttributesInTable(Key object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.KEY_TYPE, object.keyType_);
         object.attributeTable_.put(Attribute.ID, object.id_);
         object.attributeTable_.put(Attribute.START_DATE, object.startDate_);

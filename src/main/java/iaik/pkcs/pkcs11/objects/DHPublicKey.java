@@ -140,7 +140,7 @@ public class DHPublicKey extends PublicKey {
      * @postconditions
      */
     protected static void putAttributesInTable(DHPublicKey object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.PRIME, object.prime_);
         object.attributeTable_.put(Attribute.BASE, object.base_);
         object.attributeTable_.put(Attribute.VALUE, object.value_);

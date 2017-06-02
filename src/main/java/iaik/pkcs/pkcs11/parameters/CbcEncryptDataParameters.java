@@ -90,12 +90,12 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      * @postconditions
      */
     protected CbcEncryptDataParameters(int blockSize, byte[] iv, byte[] data) {
-        Util.requireNotNull("iv", iv);
+        Util.requireNonNull("iv", iv);
         if (iv.length != blockSize) {
             throw new IllegalArgumentException(
                     "Argument \"iv\" must have length blockSize.");
         }
-        Util.requireNotNull("data", data);
+        Util.requireNonNull("data", data);
         if (data.length % blockSize != 0) {
             throw new IllegalArgumentException(
                 "Argument \"data\" must have a length that is a multiple of"
@@ -155,7 +155,7 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      * @postconditions
      */
     public void setInitializationVector(byte[] iv) {
-        Util.requireNotNull("iv", iv);
+        Util.requireNonNull("iv", iv);
         if (iv.length != blockSize_) {
             throw new IllegalArgumentException(
                 "Argument \"iv\" must have length getBlockSize().");
@@ -183,7 +183,7 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      * @postconditions
      */
     public void setData(byte[] data) {
-        Util.requireNotNull("data", data);
+        Util.requireNonNull("data", data);
         if (data.length % blockSize_ != 0) {
             throw new IllegalArgumentException(
                 "Argument \"data\" must have a length that is a multiple of"

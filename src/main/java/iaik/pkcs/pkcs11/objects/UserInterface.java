@@ -126,7 +126,7 @@ public class UserInterface extends HardwareFeature {
      *          The object to handle.
      */
     protected static void putAttributesInTable(UserInterface object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.PIXEL_X, object.pixelX_);
         object.attributeTable_.put(Attribute.PIXEL_Y, object.pixelY_);
         object.attributeTable_.put(Attribute.RESOLUTION, object.resolution_);

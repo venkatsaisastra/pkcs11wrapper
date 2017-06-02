@@ -273,7 +273,7 @@ public class Object implements Cloneable {
      */
     public static Object getInstance(Session session, long objectHandle)
         throws TokenException {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
 
         ObjectClassAttribute objectClassAttribute = new ObjectClassAttribute();
         getAttributeValue(session, objectHandle, objectClassAttribute);
@@ -330,7 +330,7 @@ public class Object implements Cloneable {
      */
     protected static Object getUnknownObject(Session session, long objectHandle)
         throws TokenException {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
 
         Object newObject;
         if (vendorObjectBuilder_ != null) {
@@ -374,7 +374,7 @@ public class Object implements Cloneable {
      * @postconditions (result <> null)
      */
     public static String getObjectClassName(Long objectClass) {
-        Util.requireNotNull("objectClass", objectClass);
+        Util.requireNonNull("objectClass", objectClass);
 
         String objectClassName;
         if ((objectClass.longValue()
@@ -429,7 +429,7 @@ public class Object implements Cloneable {
      * @postconditions
      */
     protected static void putAttributesInTable(Object object) {
-        Util.requireNotNull("object", object);
+        Util.requireNonNull("object", object);
         object.attributeTable_.put(Attribute.CLASS, object.objectClass_);
     }
 
@@ -661,7 +661,7 @@ public class Object implements Cloneable {
      */
     public void readAttributes(Session session)
         throws TokenException {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
         // no attributes that we need to read, subclasses set the CLASS
         // attribute
     }
@@ -786,7 +786,7 @@ public class Object implements Cloneable {
             long objectHandle,
             Attribute attribute)
         throws PKCS11Exception {
-        Util.requireNotNull("session", session);
+        Util.requireNonNull("session", session);
 
         PKCS11 pkcs11Module = session.getModule().getPKCS11Module();
         long sessionHandle = session.getSessionHandle();
@@ -846,8 +846,8 @@ public class Object implements Cloneable {
             long objectHandle,
             Attribute[] attributes)
         throws PKCS11Exception {
-        Util.requireNotNull("session", session);
-        Util.requireNotNull("attributes", attributes);
+        Util.requireNonNull("session", session);
+        Util.requireNonNull("attributes", attributes);
 
         PKCS11 pkcs11Module = session.getModule().getPKCS11Module();
         long sessionHandle = session.getSessionHandle();

@@ -88,7 +88,7 @@ public class Info implements Cloneable {
      * @postconditions
      */
     protected Info(CK_INFO ckInfo) {
-        Util.requireNotNull("ckInfo", ckInfo);
+        Util.requireNonNull("ckInfo", ckInfo);
         cryptokiVersion_ = new Version(ckInfo.cryptokiVersion);
         manufacturerID_ = new String(ckInfo.manufacturerID);
         libraryDescription_ = new String(ckInfo.libraryDescription);
