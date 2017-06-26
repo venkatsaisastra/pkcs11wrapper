@@ -152,7 +152,7 @@ public class CodeGenerator {
             token = tokens[7];
             if ("1".equals(token)) {
                 wrapUnwrap = true;
-            } else if (!token.isEmpty()){
+            } else if (!token.isEmpty()) {
                 throw new IllegalArgumentException("invalid WrapUnwrap '"
                         + token + "' in line '" + line + "'");
             }
@@ -269,6 +269,7 @@ public class CodeGenerator {
 
             // skip token '#define'
             st.nextToken();
+            // CHECKSTYLE:SKIP
             String name = st.nextToken();
             String value = st.nextToken();
 
@@ -286,7 +287,7 @@ public class CodeGenerator {
             Long longValue;
             try {
                 longValue = Long.parseLong(value, hex ? 16 : 10);
-            } catch(NumberFormatException ex) {
+            } catch (NumberFormatException ex) {
                 continue;
             }
 
@@ -377,10 +378,11 @@ public class CodeGenerator {
                 value = value.substring(2);
                 hex = true;
             }
-            Long longValue = null;
+            Long longValue;
             try {
                 longValue = Long.parseLong(value, hex ? 16 : 10);
             } catch (NumberFormatException ex) {
+                longValue = null;
             }
 
             boolean deprecated = line.toLowerCase().contains("deprecated");
