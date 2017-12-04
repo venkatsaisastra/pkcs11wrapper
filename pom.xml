@@ -128,8 +128,7 @@
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>2.9.1</version>
             <configuration>
-              <!-- just be able to create a dummy javadoc file to pass the OSSRH check -->
-              <excludePackageNames>iaik.pkcs.pkcs11:iaik.pkcs.pkcs11.*</excludePackageNames>
+              <failOnError>false</failOnError>
             </configuration>
             <executions>
               <execution>
