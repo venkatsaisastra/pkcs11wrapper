@@ -219,6 +219,8 @@ public class PrivateKey extends Key {
                 newObject = KEAPrivateKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.X9_42_DH)) {
                 newObject = X942DHPrivateKey.getInstance(session, objectHandle);
+            } else if (keyType.equals(Key.KeyType.VENDOR_SM2)) {
+                newObject = SM2PrivateKey.getInstance(session, objectHandle);
             } else if ((keyType.longValue()
                             & KeyType.VENDOR_DEFINED.longValue()) != 0L) {
                 newObject = getUnknownPrivateKey(session, objectHandle);

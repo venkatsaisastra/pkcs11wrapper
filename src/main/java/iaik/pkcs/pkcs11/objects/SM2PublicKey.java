@@ -46,19 +46,27 @@ import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 
 /**
- * 
- * @deprecated Use {@link ECPrivateKey} instead.
+ * Objects of this class represent SM2 public keys as specified by PKCS#11
+ * v2.11.
  *
+ * @author Lijun Liao
+ * @version 1.4.1
+ * @invariants (ecdsaParams_ <> null)
+ *             and (ecPoint_ <> null)
  */
-public class ECDSAPrivateKey extends ECPrivateKey {
+public class SM2PublicKey extends ECPublicKey {
 
-    public ECDSAPrivateKey() {
+    public SM2PublicKey() {
         super();
     }
 
-    protected ECDSAPrivateKey(Session session, long objectHandle)
+    protected SM2PublicKey(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
     }
 
+    @Override
+    protected Long thisKeyType() {
+        return KeyType.VENDOR_SM2;
+    }
 }

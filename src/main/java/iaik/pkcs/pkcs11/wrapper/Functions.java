@@ -67,7 +67,7 @@ public class Functions {
      * mechanism-codes.
      */
     private static final String CKM_CODE_PROPERTIES
-            = "iaik/pkcs/pkcs11/wrapper/ckm.properties";
+            = "/iaik/pkcs/pkcs11/wrapper/ckm.properties";
 
     /**
      * True, if the mapping of mechanism codes to PKCS#11 mechanism names is
@@ -763,6 +763,10 @@ public class Functions {
         String name = mechanismCodeNamesAvailable_
                 ? mechanismNames_.get(new Long(mechanismCode)) : null;
         if (name == null) {
+            name = PKCS11VendorConstants.mechanismCodeToString(mechanismCode);
+        }
+
+        if (name == null) {
             name = "Unknwon mechanism with code: 0x"
                     + toFullHexString(mechanismCode);
         }
@@ -781,6 +785,9 @@ public class Functions {
         initMechanismMap();
         Long code = mechanismCodeNamesAvailable_
                 ? mechanismNameToCodes_.get(mechanismName) : null;
+        if (code == null) {
+            code = PKCS11VendorConstants.mechanismStringToCode(mechanismName);
+        }
         return (code != null) ? code : -1;
     }
 
@@ -796,7 +803,7 @@ public class Functions {
 
         Properties props = new Properties();
         try {
-            props.load(Functions.class.getClassLoader().getResourceAsStream(
+            props.load(Functions.class.getResourceAsStream(
                 CKM_CODE_PROPERTIES));
             for (String propName : props.stringPropertyNames()) {
                 String mechNames = props.getProperty(propName);
@@ -1170,7 +1177,13 @@ public class Functions {
             fullEncryptDecryptMechanisms_ = mechanisms;
         }
 
-        return fullEncryptDecryptMechanisms_.contains(new Long(mechanismCode));
+        boolean contained = fullEncryptDecryptMechanisms_.contains(
+                new Long(mechanismCode));
+        if (!contained) {
+            contained = PKCS11VendorConstants.isFullEncryptDecryptMechanism(
+                    mechanismCode);
+        }
+        return contained;
     }
 
     /**
@@ -1206,8 +1219,13 @@ public class Functions {
             singleOperationEncryptDecryptMechanisms_ = mechanisms;
         }
 
-        return singleOperationEncryptDecryptMechanisms_.contains(
+        boolean contained = singleOperationEncryptDecryptMechanisms_.contains(
                 new Long(mechanismCode));
+        if (!contained) {
+            contained = PKCS11VendorConstants
+                    .isSingleOperationEncryptDecryptMechanism(mechanismCode);
+        }
+        return contained;
     }
 
     /**
@@ -1332,7 +1350,13 @@ public class Functions {
             fullSignVerifyMechanisms_ = mechanisms;
         }
 
-        return fullSignVerifyMechanisms_.contains(new Long(mechanismCode));
+        boolean contained = fullSignVerifyMechanisms_.contains(
+                new Long(mechanismCode));
+        if (!contained) {
+            contained = PKCS11VendorConstants.isFullEncryptDecryptMechanism(
+                    mechanismCode);
+        }
+        return contained;
     }
 
     /**
@@ -1371,8 +1395,13 @@ public class Functions {
             singleOperationSignVerifyMechanisms_ = mechanisms;
         }
 
-        return singleOperationSignVerifyMechanisms_.contains(
+        boolean contained = singleOperationSignVerifyMechanisms_.contains(
                 new Long(mechanismCode));
+        if (!contained) {
+            contained = PKCS11VendorConstants
+                    .isSingleOperationSignVerifyMechanism(mechanismCode);
+        }
+        return contained;
     }
 
     /**
@@ -1408,7 +1437,13 @@ public class Functions {
             signVerifyRecoverMechanisms_ = mechanisms;
         }
 
-        return signVerifyRecoverMechanisms_.contains(new Long(mechanismCode));
+        boolean contained = signVerifyRecoverMechanisms_.contains(
+                new Long(mechanismCode));
+        if (!contained) {
+            contained = PKCS11VendorConstants.isSignVerifyRecoverMechanism(
+                    mechanismCode);
+        }
+        return contained;
     }
 
     /**
@@ -1455,7 +1490,11 @@ public class Functions {
             digestMechanisms_ = mechanisms;
         }
 
-        return digestMechanisms_.contains(new Long(mechanismCode));
+        boolean contained = digestMechanisms_.contains(new Long(mechanismCode));
+        if (!contained) {
+            contained = PKCS11VendorConstants.isDigestMechanism(mechanismCode);
+        }
+        return contained;
     }
 
     /**
@@ -1507,7 +1546,13 @@ public class Functions {
             keyGenerationMechanisms_ = mechanisms;
         }
 
-        return keyGenerationMechanisms_.contains(new Long(mechanismCode));
+        boolean contained = keyGenerationMechanisms_.contains(
+                new Long(mechanismCode));
+        if (!contained) {
+            contained = PKCS11VendorConstants.isKeyGenerationMechanism(
+                    mechanismCode);
+        }
+        return contained;
     }
 
     /**
@@ -1543,7 +1588,13 @@ public class Functions {
             keyPairGenerationMechanisms_ = mechanisms;
         }
 
-        return keyPairGenerationMechanisms_.contains(new Long(mechanismCode));
+        boolean contained = keyPairGenerationMechanisms_.contains(
+                new Long(mechanismCode));
+        if (!contained) {
+            contained = PKCS11VendorConstants.isKeyPairGenerationMechanism(
+                    mechanismCode);
+        }
+        return contained;
     }
 
     /**
@@ -1608,7 +1659,12 @@ public class Functions {
             wrapUnwrapMechanisms_ = wrapUnwrapMechanisms;
         }
 
-        return wrapUnwrapMechanisms_.contains(mechanismCode);
+        boolean contained = wrapUnwrapMechanisms_.contains(mechanismCode);
+        if (!contained) {
+            contained = PKCS11VendorConstants.isWrapUnwrapMechanism(
+                    mechanismCode);
+        }
+        return contained;
     }
 
     /**
@@ -1695,7 +1751,14 @@ public class Functions {
             keyDerivationMechanisms_ = mechanisms;
         }
 
-        return keyDerivationMechanisms_.contains(new Long(mechanismCode));
+        boolean contained = keyDerivationMechanisms_.contains(
+                new Long(mechanismCode));
+        if (!contained) {
+            contained = PKCS11VendorConstants.isKeyDerivationMechanism(
+                    mechanismCode);
+        }
+        return contained;
+
     }
 
 }

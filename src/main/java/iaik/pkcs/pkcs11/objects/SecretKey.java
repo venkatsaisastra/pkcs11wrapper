@@ -246,6 +246,8 @@ public class SecretKey extends Key {
                 newObject = JuniperSecretKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.CDMF)) {
                 newObject = CDMFSecretKey.getInstance(session, objectHandle);
+            } else if (keyType.equals(Key.KeyType.VENDOR_SM4)) {
+                newObject = SM4SecretKey.getInstance(session, objectHandle);
             } else if ((keyType.longValue()
                             & KeyType.VENDOR_DEFINED.longValue()) != 0L) {
                 newObject = getUnknownSecretKey(session, objectHandle);

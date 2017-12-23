@@ -265,7 +265,7 @@ public interface PKCS11Constants {
     public static final long CKK_DSA                              = 0x00000001L;
     public static final long CKK_DH                               = 0x00000002L;
     /**
-     * Use CKK_EC instead
+     * Use CKK_EC instead.
      */
     @Deprecated
     public static final long CKK_ECDSA                            = 0x00000003L;
@@ -281,7 +281,7 @@ public interface PKCS11Constants {
     public static final long CKK_CAST                             = 0x00000016L;
     public static final long CKK_CAST3                            = 0x00000017L;
     /**
-     * Use CKK_CAST128 instead
+     * Use CKK_CAST128 instead.
      */
     @Deprecated
     public static final long CKK_CAST5                            = 0x00000018L;
@@ -651,25 +651,25 @@ public interface PKCS11Constants {
     public static final long CKM_CAST5_ECB                        = 0x00000321L;
     public static final long CKM_CAST128_ECB                      = 0x00000321L;
     /**
-     * Use CKM_CAST128_CBC instead
+     * Use CKM_CAST128_CBC instead.
      */
     @Deprecated
     public static final long CKM_CAST5_CBC                        = 0x00000322L;
     public static final long CKM_CAST128_CBC                      = 0x00000322L;
     /**
-     * Use CKM_CAST128_MAC instead
+     * Use CKM_CAST128_MAC instead.
      */
     @Deprecated
     public static final long CKM_CAST5_MAC                        = 0x00000323L;
     public static final long CKM_CAST128_MAC                      = 0x00000323L;
     /**
-     * Use CKM_CAST128_MAC_GENERAL instead
+     * Use CKM_CAST128_MAC_GENERAL instead.
      */
     @Deprecated
     public static final long CKM_CAST5_MAC_GENERAL                = 0x00000324L;
     public static final long CKM_CAST128_MAC_GENERAL              = 0x00000324L;
     /**
-     * Use CKM_CAST128_CBC_PAD instead
+     * Use CKM_CAST128_CBC_PAD instead.
      */
     @Deprecated
     public static final long CKM_CAST5_CBC_PAD                    = 0x00000325L;
@@ -720,13 +720,13 @@ public interface PKCS11Constants {
     public static final long CKM_PBE_MD5_CAST_CBC                 = 0x000003A2L;
     public static final long CKM_PBE_MD5_CAST3_CBC                = 0x000003A3L;
     /**
-     * Use CKM_PBE_MD5_CAST128_CBC instead
+     * Use CKM_PBE_MD5_CAST128_CBC instead.
      */
     @Deprecated
     public static final long CKM_PBE_MD5_CAST5_CBC                = 0x000003A4L;
     public static final long CKM_PBE_MD5_CAST128_CBC              = 0x000003A4L;
     /**
-     * Use CKM_PBE_SHA1_CAST128_CBC instead
+     * Use CKM_PBE_SHA1_CAST128_CBC instead.
      */
     @Deprecated
     public static final long CKM_PBE_SHA1_CAST5_CBC               = 0x000003A5L;
@@ -820,7 +820,7 @@ public interface PKCS11Constants {
     public static final long CKM_BATON_WRAP                       = 0x00001036L;
 
     /**
-     * Use CKM_EC_KEY_PAIR_GEN instead
+     * Use CKM_EC_KEY_PAIR_GEN instead.
      */
     @Deprecated
     public static final long CKM_ECDSA_KEY_PAIR_GEN               = 0x00001040L;

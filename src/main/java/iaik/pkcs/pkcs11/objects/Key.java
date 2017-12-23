@@ -50,6 +50,7 @@ import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
+import iaik.pkcs.pkcs11.wrapper.PKCS11VendorConstants;
 
 /**
  * An object of this class represents a key as defined by PKCS#11 2.11.
@@ -210,7 +211,19 @@ public class Key extends Storage {
          */
         public static final Long TWOFISH
             = new Long(PKCS11Constants.CKK_TWOFISH);
-
+        
+        /**
+         * The identifier for a SM2 key.
+         */
+        public static final Long VENDOR_SM2
+            = new Long(PKCS11VendorConstants.CKK_VENDOR_SM2);
+        
+        /**
+         * The identifier for a SM4 key.
+         */
+        public static final Long VENDOR_SM4
+            = new Long(PKCS11VendorConstants.CKK_VENDOR_SM4);
+        
         /**
          * The identifier for a VENDOR_DEFINED key. Any Long object with a
          * value bigger than this one is also a valid vendor-defined key
@@ -381,42 +394,44 @@ public class Key extends Storage {
     public static String getKeyTypeName(Long keyType) {
         Util.requireNonNull("keyType", keyType);
 
-        String keyTypeName;
-        if ((keyType.longValue() & PKCS11Constants.CKK_VENDOR_DEFINED) != 0L) {
-            keyTypeName = "Vendor Defined";
-        } else {
-            if (keyTypeNames_ == null) {
-                // setup key type names table
-                Hashtable<Long, String> keyTypeNames = new Hashtable<>(24);
-                keyTypeNames.put(KeyType.RSA, "RSA");
-                keyTypeNames.put(KeyType.DSA, "DSA");
-                keyTypeNames.put(KeyType.DH, "DH");
-                keyTypeNames.put(KeyType.EC, "EC");
-                keyTypeNames.put(KeyType.X9_42_DH, "X9_42_DH");
-                keyTypeNames.put(KeyType.KEA, "KEA");
-                keyTypeNames.put(KeyType.GENERIC_SECRET, "GENERIC_SECRET");
-                keyTypeNames.put(KeyType.RC2, "RC2");
-                keyTypeNames.put(KeyType.RC4, "RC4");
-                keyTypeNames.put(KeyType.DES, "DES");
-                keyTypeNames.put(KeyType.DES2, "DES2");
-                keyTypeNames.put(KeyType.DES3, "DES3");
-                keyTypeNames.put(KeyType.CAST, "CAST");
-                keyTypeNames.put(KeyType.CAST3, "CAST3");
-                keyTypeNames.put(KeyType.CAST128, "CAST128");
-                keyTypeNames.put(KeyType.RC5, "RC5");
-                keyTypeNames.put(KeyType.IDEA, "IDEA");
-                keyTypeNames.put(KeyType.SKIPJACK, "SKIPJACK");
-                keyTypeNames.put(KeyType.BATON, "BATON");
-                keyTypeNames.put(KeyType.JUNIPER, "JUNIPER");
-                keyTypeNames.put(KeyType.CDMF, "CDMF");
-                keyTypeNames.put(KeyType.AES, "AES");
-                keyTypeNames.put(KeyType.BLOWFISH, "BLOWFISH");
-                keyTypeNames.put(KeyType.TWOFISH, "TWOFISH");
-                keyTypeNames_ = keyTypeNames;
-            }
+        if (keyTypeNames_ == null) {
+            // setup key type names table
+            Hashtable<Long, String> keyTypeNames = new Hashtable<>(24);
+            keyTypeNames.put(KeyType.RSA, "RSA");
+            keyTypeNames.put(KeyType.DSA, "DSA");
+            keyTypeNames.put(KeyType.DH, "DH");
+            keyTypeNames.put(KeyType.EC, "EC");
+            keyTypeNames.put(KeyType.X9_42_DH, "X9_42_DH");
+            keyTypeNames.put(KeyType.KEA, "KEA");
+            keyTypeNames.put(KeyType.GENERIC_SECRET, "GENERIC_SECRET");
+            keyTypeNames.put(KeyType.RC2, "RC2");
+            keyTypeNames.put(KeyType.RC4, "RC4");
+            keyTypeNames.put(KeyType.DES, "DES");
+            keyTypeNames.put(KeyType.DES2, "DES2");
+            keyTypeNames.put(KeyType.DES3, "DES3");
+            keyTypeNames.put(KeyType.CAST, "CAST");
+            keyTypeNames.put(KeyType.CAST3, "CAST3");
+            keyTypeNames.put(KeyType.CAST128, "CAST128");
+            keyTypeNames.put(KeyType.RC5, "RC5");
+            keyTypeNames.put(KeyType.IDEA, "IDEA");
+            keyTypeNames.put(KeyType.SKIPJACK, "SKIPJACK");
+            keyTypeNames.put(KeyType.BATON, "BATON");
+            keyTypeNames.put(KeyType.JUNIPER, "JUNIPER");
+            keyTypeNames.put(KeyType.CDMF, "CDMF");
+            keyTypeNames.put(KeyType.AES, "AES");
+            keyTypeNames.put(KeyType.BLOWFISH, "BLOWFISH");
+            keyTypeNames.put(KeyType.TWOFISH, "TWOFISH");
+            keyTypeNames.put(KeyType.VENDOR_SM2, "SM2");
+            keyTypeNames.put(KeyType.VENDOR_SM4, "SM4");
+            keyTypeNames_ = keyTypeNames;
+        }
 
-            keyTypeName = (String) keyTypeNames_.get(keyType);
-            if (keyTypeName == null) {
+        String keyTypeName = (String) keyTypeNames_.get(keyType);
+        if (keyTypeName == null) {
+            if ((keyType.longValue()
+                    & PKCS11Constants.CKK_VENDOR_DEFINED) != 0L) {
+                keyTypeName = "Vendor Defined";
+            } else {
                 keyTypeName = "<unknown>";
             }
         }
