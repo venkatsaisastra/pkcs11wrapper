@@ -61,7 +61,7 @@ import java.util.Set;
 public class PKCS11VendorConstants {
 
     public static final String CKM_VENDOR_VENDOR_CODE_PROPERTIES_FILE = 
-                "ckm-vendor.file";
+                "pkcs11.ckm-vendor.file";
 
     private static final String CKM_VENDOR_VENDOR_CODE_PROPERTIES =
                 "/iaik/pkcs/pkcs11/wrapper/ckm-vendor.properties";
