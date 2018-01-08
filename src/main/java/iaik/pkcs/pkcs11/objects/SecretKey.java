@@ -206,53 +206,8 @@ public class SecretKey extends Key {
         Object newObject;
 
         if (keyTypeAttribute.isPresent() && (keyType != null)) {
-            if (keyType.equals(Key.KeyType.DES)) {
-                newObject = DESSecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.DES2)) {
-                newObject = DES2SecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.DES3)) {
-                newObject = DES3SecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.AES)) {
-                newObject = AESSecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.RC2)) {
-                newObject = RC2SecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.RC4)) {
-                newObject = RC4SecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.RC5)) {
-                newObject = RC5SecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.IDEA)) {
-                newObject = IDEASecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.GENERIC_SECRET)) {
-                newObject = GenericSecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.CAST)) {
-                newObject = CASTSecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.CAST3)) {
-                newObject = CAST3SecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.CAST128)) {
-                newObject = CAST128SecretKey.getInstance(session,
-                        objectHandle);
-            } else if (keyType.equals(Key.KeyType.BLOWFISH)) {
-                newObject = BlowfishSecretKey.getInstance(session,
-                        objectHandle);
-            } else if (keyType.equals(Key.KeyType.TWOFISH)) {
-                newObject = TwofishSecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.SKIPJACK)) {
-                newObject = SkipJackSecretKey.getInstance(session,
-                        objectHandle);
-            } else if (keyType.equals(Key.KeyType.BATON)) {
-                newObject = BatonSecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.JUNIPER)) {
-                newObject = JuniperSecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.CDMF)) {
-                newObject = CDMFSecretKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.VENDOR_SM4)) {
-                newObject = SM4SecretKey.getInstance(session, objectHandle);
-            } else if ((keyType.longValue()
-                            & KeyType.VENDOR_DEFINED.longValue()) != 0L) {
-                newObject = getUnknownSecretKey(session, objectHandle);
-            } else {
-                newObject = getUnknownSecretKey(session, objectHandle);
-            }
+            newObject = ValuedSecretKey.getInstance(session, objectHandle,
+                    keyType.longValue());
         } else {
             newObject = getUnknownSecretKey(session, objectHandle);
         }

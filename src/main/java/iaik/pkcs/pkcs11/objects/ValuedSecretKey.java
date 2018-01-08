@@ -47,16 +47,14 @@ import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
 
 /**
- * Objects of this class represent CAST128 secret keys as specified by PKCS#11
+ * Objects of this class represent secret keys as specified by PKCS#11
  * v2.11.
  *
  * @author Karl Scheibelhofer
- * @version 1.0
- * @invariants (value <> null)
- *             and (valueLen <> null)
+ * @author Lijun Liao
  */
 // CHECKSTYLE:SKIP
-public class CAST128SecretKey extends SecretKey {
+public class ValuedSecretKey extends SecretKey {
 
     /**
      * The value attribute of this secret key.
@@ -71,17 +69,19 @@ public class CAST128SecretKey extends SecretKey {
     /**
      * Default Constructor.
      *
+     * @param keyType
+     *          The type of the key.
+     *
      * @preconditions
      * @postconditions
      */
-    public CAST128SecretKey() {
+    public ValuedSecretKey(long keyType) {
         super();
-        keyType.setLongValue(KeyType.CAST128);
+        this.keyType.setLongValue(keyType);
     }
 
     /**
-     * Called by getInstance to create an instance of a PKCS#11 CAST128 secret
-     * key.
+     * Called by getInstance to create an instance of a PKCS#11 secret key.
      *
      * @param session
      *          The session to use for reading attributes. This session must
@@ -89,20 +89,22 @@ public class CAST128SecretKey extends SecretKey {
      *          it is a private object.
      * @param objectHandle
      *          The object handle as given from the PKCS#111 module.
+     * @param keyType
+     *          The type of the key.
      * @exception TokenException
      *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions
      */
-    protected CAST128SecretKey(Session session, long objectHandle)
+    protected ValuedSecretKey(Session session, long objectHandle, long keyType)
         throws TokenException {
         super(session, objectHandle);
-        keyType.setLongValue(KeyType.CAST128);
+        this.keyType.setLongValue(keyType);
     }
 
     /**
      * The getInstance method of the SecretKey class uses this method to create
-     * an instance of a PKCS#11 CAST128 secret key.
+     * an instance of a PKCS#11 AES secret key.
      *
      * @param session
      *          The session to use for reading attributes. This session must
@@ -110,17 +112,19 @@ public class CAST128SecretKey extends SecretKey {
      *          it is a private object.
      * @param objectHandle
      *          The object handle as given from the PKCS#111 module.
+     * @param keyType
+     *          The type of the key.
      * @return The object representing the PKCS#11 object.
-     *         The returned object can be casted to the
-     *         according sub-class.
+     *         The returned object can be casted to the according sub-class.
      * @exception TokenException
      *              If getting the attributes failed.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static Object getInstance(Session session, long objectHandle,
+            long keyType)
         throws TokenException {
-        return new CAST128SecretKey(session, objectHandle);
+        return new ValuedSecretKey(session, objectHandle, keyType);
     }
 
     /**
@@ -134,7 +138,7 @@ public class CAST128SecretKey extends SecretKey {
      * @preconditions (object <> null)
      * @postconditions
      */
-    protected static void putAttributesInTable(CAST128SecretKey object) {
+    protected static void putAttributesInTable(ValuedSecretKey object) {
         Util.requireNonNull("object", object);
         object.attributeTable.put(Attribute.VALUE, object.value);
         object.attributeTable.put(Attribute.VALUE_LEN, object.valueLen);
@@ -163,15 +167,16 @@ public class CAST128SecretKey extends SecretKey {
      * @return A clone of this object.
      * @preconditions
      * @postconditions (result <> null)
-     *                 and (result instanceof CAST128SecretKey)
+     *                 and (result instanceof AESSecretKey)
      *                 and (result.equals(this))
      */
     @Override
     public java.lang.Object clone() {
-        CAST128SecretKey clone = (CAST128SecretKey) super.clone();
+        ValuedSecretKey clone = (ValuedSecretKey) super.clone();
 
         clone.value = (ByteArrayAttribute) this.value.clone();
         clone.valueLen = (LongAttribute) this.valueLen.clone();
+
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
 
@@ -195,18 +200,18 @@ public class CAST128SecretKey extends SecretKey {
             return true;
         }
 
-        if (!(otherObject instanceof CAST128SecretKey)) {
+        if (!(otherObject instanceof ValuedSecretKey)) {
             return false;
         }
 
-        CAST128SecretKey other = (CAST128SecretKey) otherObject;
+        ValuedSecretKey other = (ValuedSecretKey) otherObject;
         return super.equals(other)
                 && this.value.equals(other.value)
                 && this.valueLen.equals(other.valueLen);
     }
 
     /**
-     * Gets the value attribute of this CAST128 key.
+     * Gets the value attribute of this AES key.
      *
      * @return The value attribute.
      * @preconditions
@@ -217,7 +222,7 @@ public class CAST128SecretKey extends SecretKey {
     }
 
     /**
-     * Gets the value length attribute of this CAST128 key (in bytes).
+     * Gets the value length attribute of this AES key (in bytes).
      *
      * @return The value attribute.
      * @preconditions
@@ -261,7 +266,9 @@ public class CAST128SecretKey extends SecretKey {
     public String toString() {
         StringBuilder sb = new StringBuilder(super.toString());
         sb.append("\n  Value (hex): ").append(value);
-        sb.append("\n  Value Length (dec): ").append(valueLen.toString(10));
+        if (valueLen.isPresent()) {
+            sb.append("\n  Value Length (dec): ").append(valueLen.toString(10));
+        }
         return sb.toString();
     }
 
