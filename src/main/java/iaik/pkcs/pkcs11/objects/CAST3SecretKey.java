@@ -56,17 +56,18 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  * @invariants (value_ <> null)
  *             and (valueLen_ <> null)
  */
+// CHECKSTYLE:SKIP
 public class CAST3SecretKey extends SecretKey {
 
     /**
      * The value attribute of this secret key.
      */
-    protected ByteArrayAttribute value_;
+    protected ByteArrayAttribute value;
 
     /**
      * The length of this secret key in bytes.
      */
-    protected LongAttribute valueLen_;
+    protected LongAttribute valueLen;
 
     /**
      * Default Constructor.
@@ -76,7 +77,7 @@ public class CAST3SecretKey extends SecretKey {
      */
     public CAST3SecretKey() {
         super();
-        keyType_.setLongValue(KeyType.CAST3);
+        keyType.setLongValue(KeyType.CAST3);
     }
 
     /**
@@ -97,7 +98,7 @@ public class CAST3SecretKey extends SecretKey {
     protected CAST3SecretKey(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        keyType_.setLongValue(KeyType.CAST3);
+        keyType.setLongValue(KeyType.CAST3);
     }
 
     /**
@@ -137,8 +138,8 @@ public class CAST3SecretKey extends SecretKey {
     protected static void putAttributesInTable(CAST3SecretKey object) {
         Util.requireNonNull("object", object);
 
-        object.attributeTable_.put(Attribute.VALUE, object.value_);
-        object.attributeTable_.put(Attribute.VALUE_LEN, object.valueLen_);
+        object.attributeTable.put(Attribute.VALUE, object.value);
+        object.attributeTable.put(Attribute.VALUE_LEN, object.valueLen);
     }
 
     /**
@@ -152,8 +153,8 @@ public class CAST3SecretKey extends SecretKey {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        value_ = new ByteArrayAttribute(Attribute.VALUE);
-        valueLen_ = new LongAttribute(Attribute.VALUE_LEN);
+        value = new ByteArrayAttribute(Attribute.VALUE);
+        valueLen = new LongAttribute(Attribute.VALUE_LEN);
 
         putAttributesInTable(this);
     }
@@ -171,8 +172,8 @@ public class CAST3SecretKey extends SecretKey {
     public java.lang.Object clone() {
         CAST3SecretKey clone = (CAST3SecretKey) super.clone();
 
-        clone.value_ = (ByteArrayAttribute) this.value_.clone();
-        clone.valueLen_ = (LongAttribute) this.valueLen_.clone();
+        clone.value = (ByteArrayAttribute) this.value.clone();
+        clone.valueLen = (LongAttribute) this.valueLen.clone();
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
 
@@ -202,8 +203,8 @@ public class CAST3SecretKey extends SecretKey {
 
         CAST3SecretKey other = (CAST3SecretKey) otherObject;
         return super.equals(other)
-                && this.value_.equals(other.value_)
-                && this.valueLen_.equals(other.valueLen_);
+                && this.value.equals(other.value)
+                && this.valueLen.equals(other.valueLen);
     }
 
     /**
@@ -214,7 +215,7 @@ public class CAST3SecretKey extends SecretKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getValue() {
-        return value_;
+        return value;
     }
 
     /**
@@ -225,7 +226,7 @@ public class CAST3SecretKey extends SecretKey {
      * @postconditions (result <> null)
      */
     public LongAttribute getValueLen() {
-        return valueLen_;
+        return valueLen;
     }
 
     /**
@@ -245,12 +246,12 @@ public class CAST3SecretKey extends SecretKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValue(session, objectHandle_, value_);
-        Object.getAttributeValue(session, objectHandle_, valueLen_);
+        Object.getAttributeValue(session, objectHandle, value);
+        Object.getAttributeValue(session, objectHandle, valueLen);
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -265,10 +266,10 @@ public class CAST3SecretKey extends SecretKey {
         buffer.append(super.toString());
 
         buffer.append(Constants.NEWLINE_INDENT_HEXVALUE);
-        buffer.append(value_.toString());
+        buffer.append(value.toString());
 
         buffer.append(Constants.NEWLINE_INDENT_VALUELEN);
-        buffer.append(valueLen_.toString(10));
+        buffer.append(valueLen.toString(10));
 
         return buffer.toString();
     }

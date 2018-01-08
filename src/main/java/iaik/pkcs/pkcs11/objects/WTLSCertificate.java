@@ -54,38 +54,39 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  * @author Florian Reimair
  * @version 1.0
  */
+// CHECKSTYLE:SKIP
 public class WTLSCertificate extends Certificate {
 
     /**
      * The subject attribute of this certificate.
      */
-    protected ByteArrayAttribute subject_;
+    protected ByteArrayAttribute subject;
 
     /**
      * The issuer attribute of this certificate.
      */
-    protected ByteArrayAttribute issuer_;
+    protected ByteArrayAttribute issuer;
 
     /**
      * The value attribute of this certificate; i.e. BER-encoded certificate.
      */
-    protected ByteArrayAttribute value_;
+    protected ByteArrayAttribute value;
 
     /**
      * This attribute gives the URL where the complete certificate can be
      * obtained.
      */
-    protected CharArrayAttribute url_;
+    protected CharArrayAttribute url;
 
     /**
      * SHA-1 hash of the subject public key.
      */
-    protected ByteArrayAttribute hashOfSubjectPublicKey_;
+    protected ByteArrayAttribute hashOfSubjectPublicKey;
 
     /**
      * SHA-1 hash of the issuer public key.
      */
-    protected ByteArrayAttribute hashOfIssuerPublicKey_;
+    protected ByteArrayAttribute hashOfIssuerPublicKey;
 
     /**
      * Default Constructor.
@@ -95,7 +96,7 @@ public class WTLSCertificate extends Certificate {
      */
     public WTLSCertificate() {
         super();
-        certificateType_.setLongValue(CertificateType.WTLS);
+        certificateType.setLongValue(CertificateType.WTLS);
     }
 
     /**
@@ -116,7 +117,7 @@ public class WTLSCertificate extends Certificate {
     protected WTLSCertificate(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        certificateType_.setLongValue(CertificateType.WTLS);
+        certificateType.setLongValue(CertificateType.WTLS);
     }
 
     /**
@@ -155,14 +156,14 @@ public class WTLSCertificate extends Certificate {
      */
     protected static void putAttributesInTable(WTLSCertificate object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.SUBJECT, object.subject_);
-        object.attributeTable_.put(Attribute.ISSUER, object.issuer_);
-        object.attributeTable_.put(Attribute.VALUE, object.value_);
-        object.attributeTable_.put(Attribute.URL, object.url_);
-        object.attributeTable_.put(Attribute.HASH_OF_SUBJECT_PUBLIC_KEY,
-            object.hashOfSubjectPublicKey_);
-        object.attributeTable_.put(Attribute.HASH_OF_ISSUER_PUBLIC_KEY,
-            object.hashOfIssuerPublicKey_);
+        object.attributeTable.put(Attribute.SUBJECT, object.subject);
+        object.attributeTable.put(Attribute.ISSUER, object.issuer);
+        object.attributeTable.put(Attribute.VALUE, object.value);
+        object.attributeTable.put(Attribute.URL, object.url);
+        object.attributeTable.put(Attribute.HASH_OF_SUBJECT_PUBLIC_KEY,
+            object.hashOfSubjectPublicKey);
+        object.attributeTable.put(Attribute.HASH_OF_ISSUER_PUBLIC_KEY,
+            object.hashOfIssuerPublicKey);
     }
 
     /**
@@ -176,13 +177,13 @@ public class WTLSCertificate extends Certificate {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        subject_ = new ByteArrayAttribute(Attribute.SUBJECT);
-        issuer_ = new ByteArrayAttribute(Attribute.ISSUER);
-        value_ = new ByteArrayAttribute(Attribute.VALUE);
-        url_ = new CharArrayAttribute(Attribute.URL);
-        hashOfSubjectPublicKey_
+        subject = new ByteArrayAttribute(Attribute.SUBJECT);
+        issuer = new ByteArrayAttribute(Attribute.ISSUER);
+        value = new ByteArrayAttribute(Attribute.VALUE);
+        url = new CharArrayAttribute(Attribute.URL);
+        hashOfSubjectPublicKey
             = new ByteArrayAttribute(Attribute.HASH_OF_SUBJECT_PUBLIC_KEY);
-        hashOfIssuerPublicKey_
+        hashOfIssuerPublicKey
             = new ByteArrayAttribute(Attribute.HASH_OF_ISSUER_PUBLIC_KEY);
 
         putAttributesInTable(this);
@@ -201,14 +202,14 @@ public class WTLSCertificate extends Certificate {
     public java.lang.Object clone() {
         WTLSCertificate clone = (WTLSCertificate) super.clone();
 
-        clone.subject_ = (ByteArrayAttribute) this.subject_.clone();
-        clone.issuer_ = (ByteArrayAttribute) this.issuer_.clone();
-        clone.value_ = (ByteArrayAttribute) this.value_.clone();
-        clone.url_ = (CharArrayAttribute) this.url_.clone();
-        clone.hashOfSubjectPublicKey_
-            = (ByteArrayAttribute) this.hashOfSubjectPublicKey_.clone();
-        clone.hashOfIssuerPublicKey_
-            = (ByteArrayAttribute) this.hashOfIssuerPublicKey_.clone();
+        clone.subject = (ByteArrayAttribute) this.subject.clone();
+        clone.issuer = (ByteArrayAttribute) this.issuer.clone();
+        clone.value = (ByteArrayAttribute) this.value.clone();
+        clone.url = (CharArrayAttribute) this.url.clone();
+        clone.hashOfSubjectPublicKey
+            = (ByteArrayAttribute) this.hashOfSubjectPublicKey.clone();
+        clone.hashOfIssuerPublicKey
+            = (ByteArrayAttribute) this.hashOfIssuerPublicKey.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -239,14 +240,14 @@ public class WTLSCertificate extends Certificate {
 
         WTLSCertificate other = (WTLSCertificate) otherObject;
         return super.equals(other)
-                && this.subject_.equals(other.subject_)
-                && this.issuer_.equals(other.issuer_)
-                && this.value_.equals(other.value_)
-                && this.url_.equals(other.url_)
-                && this.hashOfSubjectPublicKey_.equals(
-                        other.hashOfSubjectPublicKey_)
-                && this.hashOfIssuerPublicKey_.equals(
-                        other.hashOfIssuerPublicKey_);
+                && this.subject.equals(other.subject)
+                && this.issuer.equals(other.issuer)
+                && this.value.equals(other.value)
+                && this.url.equals(other.url)
+                && this.hashOfSubjectPublicKey.equals(
+                        other.hashOfSubjectPublicKey)
+                && this.hashOfIssuerPublicKey.equals(
+                        other.hashOfIssuerPublicKey);
     }
 
     /**
@@ -257,7 +258,7 @@ public class WTLSCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getSubject() {
-        return subject_;
+        return subject;
     }
 
     /**
@@ -268,7 +269,7 @@ public class WTLSCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getIssuer() {
-        return issuer_;
+        return issuer;
     }
 
     /**
@@ -279,7 +280,7 @@ public class WTLSCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getValue() {
-        return value_;
+        return value;
     }
 
     /**
@@ -290,7 +291,7 @@ public class WTLSCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public CharArrayAttribute getUrl() {
-        return url_;
+        return url;
     }
 
     /**
@@ -303,7 +304,7 @@ public class WTLSCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getHashOfSubjectPublicKey() {
-        return hashOfSubjectPublicKey_;
+        return hashOfSubjectPublicKey;
     }
 
     /**
@@ -316,7 +317,7 @@ public class WTLSCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getHashOfIssuerPublicKey() {
-        return hashOfIssuerPublicKey_;
+        return hashOfIssuerPublicKey;
     }
 
     /**
@@ -329,7 +330,7 @@ public class WTLSCertificate extends Certificate {
      */
     @Override
     public int hashCode() {
-        return issuer_.hashCode();
+        return issuer.hashCode();
     }
 
     /**
@@ -349,14 +350,14 @@ public class WTLSCertificate extends Certificate {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            subject_, issuer_, value_ });
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            url_, hashOfSubjectPublicKey_, hashOfIssuerPublicKey_ });
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            subject, issuer, value });
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            url, hashOfSubjectPublicKey, hashOfIssuerPublicKey });
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -372,27 +373,27 @@ public class WTLSCertificate extends Certificate {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Subject (DER, hex): ");
-        buffer.append(subject_.toString());
+        buffer.append(subject.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Issuer (DER, hex): ");
-        buffer.append(issuer_.toString());
+        buffer.append(issuer.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Value (BER, hex): ");
-        buffer.append(value_.toString());
+        buffer.append(value.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("URL: ");
-        buffer.append(url_.toString());
+        buffer.append(url.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Hash Of Subject Public Key: ");
-        buffer.append(hashOfSubjectPublicKey_.toString());
+        buffer.append(hashOfSubjectPublicKey.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Hash Of Issuer Public Key: ");
-        buffer.append(hashOfIssuerPublicKey_.toString());
+        buffer.append(hashOfIssuerPublicKey.toString());
 
         return buffer.toString();
     }

@@ -94,6 +94,7 @@ package iaik.pkcs.pkcs11.wrapper;
  * @version 1.0
  * @invariants
  */
+// CHECKSTYLE:SKIP
 public interface PKCS11Constants {
 
     public static final boolean TRUE = true;
@@ -427,7 +428,7 @@ public interface PKCS11Constants {
     public static final long CKA_DESTROYABLE                      = 0x00000172L;
 
     /**
-     * Use CKA_EC_PARAMS instead
+     * Use CKA_EC_PARAMS instead.
      */
     @Deprecated
     public static final long CKA_ECDSA_PARAMS                     = 0x00000180L;

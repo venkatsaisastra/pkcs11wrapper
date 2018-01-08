@@ -56,7 +56,7 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (value_ <> null)
+ * @invariants (value <> null)
  */
 public class Clock extends HardwareFeature {
 
@@ -64,7 +64,7 @@ public class Clock extends HardwareFeature {
      * The value attribute of this clock; i.e. the value, this object wa
      * created.
      */
-    protected ByteArrayAttribute value_;
+    protected ByteArrayAttribute value;
 
     /**
      * Default Constructor.
@@ -74,7 +74,7 @@ public class Clock extends HardwareFeature {
      */
     public Clock() {
         super();
-        hardwareFeatureType_.setLongValue(FeatureType.CLOCK);
+        hardwareFeatureType.setLongValue(FeatureType.CLOCK);
     }
 
     /**
@@ -94,7 +94,7 @@ public class Clock extends HardwareFeature {
     protected Clock(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        hardwareFeatureType_.setLongValue(FeatureType.CLOCK);
+        hardwareFeatureType.setLongValue(FeatureType.CLOCK);
     }
 
     /**
@@ -133,7 +133,7 @@ public class Clock extends HardwareFeature {
      */
     protected static void putAttributesInTable(Clock object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.VALUE, object.value_);
+        object.attributeTable.put(Attribute.VALUE, object.value);
     }
 
     /**
@@ -147,7 +147,7 @@ public class Clock extends HardwareFeature {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        value_ = new ByteArrayAttribute(Attribute.VALUE);
+        value = new ByteArrayAttribute(Attribute.VALUE);
 
         putAttributesInTable(this);
     }
@@ -164,7 +164,7 @@ public class Clock extends HardwareFeature {
     @Override
     public java.lang.Object clone() {
         Clock clone = (Clock) super.clone();
-        clone.value_ = (ByteArrayAttribute) this.value_.clone();
+        clone.value = (ByteArrayAttribute) this.value.clone();
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
         return clone;
@@ -193,7 +193,7 @@ public class Clock extends HardwareFeature {
 
         Clock other = (Clock) otherObject;
         return super.equals(other)
-                && this.value_.equals(other.value_);
+                && this.value.equals(other.value);
     }
 
     /**
@@ -204,7 +204,7 @@ public class Clock extends HardwareFeature {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getValue() {
-        return value_;
+        return value;
     }
 
     /**
@@ -217,7 +217,7 @@ public class Clock extends HardwareFeature {
      */
     @Override
     public int hashCode() {
-        return value_.hashCode();
+        return value.hashCode();
     }
 
     /**
@@ -237,11 +237,11 @@ public class Clock extends HardwareFeature {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValue(session, objectHandle_, value_);
+        Object.getAttributeValue(session, objectHandle, value);
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -258,9 +258,9 @@ public class Clock extends HardwareFeature {
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Value: ");
         try {
-            buffer.append(new String(value_.getByteArrayValue(), "ASCII"));
+            buffer.append(new String(value.getByteArrayValue(), "ASCII"));
         } catch (UnsupportedEncodingException ex) {
-            buffer.append(new String(value_.getByteArrayValue()));
+            buffer.append(new String(value.getByteArrayValue()));
         }
 
         return buffer.toString();

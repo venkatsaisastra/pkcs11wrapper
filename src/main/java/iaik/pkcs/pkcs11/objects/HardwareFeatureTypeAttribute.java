@@ -75,9 +75,9 @@ public class HardwareFeatureTypeAttribute extends LongAttribute {
     protected String getValueString() {
         String valueString;
 
-        if ((ckAttribute_ != null) && (ckAttribute_.pValue != null)) {
+        if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
             valueString = HardwareFeature
-                .getHardwareFeatureTypeName((Long) ckAttribute_.pValue);
+                .getHardwareFeatureTypeName((Long) ckAttribute.pValue);
         } else {
             valueString = "<NULL_PTR>";
         }

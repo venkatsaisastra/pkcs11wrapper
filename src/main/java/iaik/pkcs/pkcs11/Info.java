@@ -51,10 +51,10 @@ import sun.security.pkcs11.wrapper.CK_INFO;
  *
  * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
  * @version 1.0
- * @invariants (cryptokiVersion_ <> null)
- *             and (manufacturerID_ <> null)
- *             and (libraryDescription_ <> null)
- *             and (libraryVersion_ <> null)
+ * @invariants (cryptokiVersion <> null)
+ *             and (manufacturerID <> null)
+ *             and (libraryDescription <> null)
+ *             and (libraryVersion <> null)
  */
 @SuppressWarnings("restriction")
 public class Info implements Cloneable {
@@ -62,22 +62,23 @@ public class Info implements Cloneable {
     /**
      * The module claims to be compliant to this version of PKCS#11.
      */
-    protected Version cryptokiVersion_;
+    protected Version cryptokiVersion;
 
     /**
      * The identifer for the manufacturer of this module.
      */
-    protected String manufacturerID_;
+    // CHECKSTYLE:SKIP
+    protected String manufacturerID;
 
     /**
      * A description of this module.
      */
-    protected String libraryDescription_;
+    protected String libraryDescription;
 
     /**
      * The version number of this module.
      */
-    protected Version libraryVersion_;
+    protected Version libraryVersion;
 
     /**
      * Constructor taking the CK_INFO object of the token.
@@ -89,10 +90,10 @@ public class Info implements Cloneable {
      */
     protected Info(CK_INFO ckInfo) {
         Util.requireNonNull("ckInfo", ckInfo);
-        cryptokiVersion_ = new Version(ckInfo.cryptokiVersion);
-        manufacturerID_ = new String(ckInfo.manufacturerID);
-        libraryDescription_ = new String(ckInfo.libraryDescription);
-        libraryVersion_ = new Version(ckInfo.libraryVersion);
+        cryptokiVersion = new Version(ckInfo.cryptokiVersion);
+        manufacturerID = new String(ckInfo.manufacturerID);
+        libraryDescription = new String(ckInfo.libraryDescription);
+        libraryVersion = new Version(ckInfo.libraryVersion);
     }
 
     /**
@@ -111,8 +112,8 @@ public class Info implements Cloneable {
         try {
             clone = (Info) super.clone();
 
-            clone.cryptokiVersion_ = (Version) this.cryptokiVersion_.clone();
-            clone.libraryVersion_ = (Version) this.libraryVersion_.clone();
+            clone.cryptokiVersion = (Version) this.cryptokiVersion.clone();
+            clone.libraryVersion = (Version) this.libraryVersion.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is clone-able
             throw new TokenRuntimeException(
@@ -130,7 +131,7 @@ public class Info implements Cloneable {
      * @postconditions (result <> null)
      */
     public Version getCryptokiVersion() {
-        return cryptokiVersion_;
+        return cryptokiVersion;
     }
 
     /**
@@ -140,8 +141,9 @@ public class Info implements Cloneable {
      * @preconditions
      * @postconditions (result <> null)
      */
+    // CHECKSTYLE:SKIP
     public String getManufacturerID() {
-        return manufacturerID_;
+        return manufacturerID;
     }
 
     /**
@@ -152,7 +154,7 @@ public class Info implements Cloneable {
      * @postconditions (result <> null)
      */
     public String getLibraryDescription() {
-        return libraryDescription_;
+        return libraryDescription;
     }
 
     /**
@@ -163,7 +165,7 @@ public class Info implements Cloneable {
      * @postconditions
      */
     public Version getLibraryVersion() {
-        return libraryVersion_;
+        return libraryVersion;
     }
 
     /**
@@ -173,24 +175,17 @@ public class Info implements Cloneable {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-        buffer.append("Cryptoki Version: ");
-        buffer.append(cryptokiVersion_);
-        buffer.append(Constants.NEWLINE);
+        sb.append("Cryptoki Version: ").append(cryptokiVersion)
+            .append(Constants.NEWLINE);
+        sb.append("ManufacturerID: ").append(manufacturerID)
+            .append(Constants.NEWLINE);
+        sb.append("Library Description: ").append(libraryDescription)
+            .append(Constants.NEWLINE);
+        sb.append("Library Version: ").append(libraryVersion);
 
-        buffer.append("ManufacturerID: ");
-        buffer.append(manufacturerID_);
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("Library Description: ");
-        buffer.append(libraryDescription_);
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("Library Version: ");
-        buffer.append(libraryVersion_);
-
-        return buffer.toString();
+        return sb.toString();
     }
 
     /**
@@ -215,10 +210,10 @@ public class Info implements Cloneable {
         }
 
         Info other = (Info) otherObject;
-        return this.cryptokiVersion_.equals(other.cryptokiVersion_)
-                && this.manufacturerID_.equals(other.manufacturerID_)
-                && this.libraryDescription_.equals(other.libraryDescription_)
-                && this.libraryVersion_.equals(other.libraryVersion_);
+        return this.cryptokiVersion.equals(other.cryptokiVersion)
+                && this.manufacturerID.equals(other.manufacturerID)
+                && this.libraryDescription.equals(other.libraryDescription)
+                && this.libraryVersion.equals(other.libraryVersion);
     }
 
     /**
@@ -231,8 +226,8 @@ public class Info implements Cloneable {
      */
     @Override
     public int hashCode() {
-        return cryptokiVersion_.hashCode() ^ manufacturerID_.hashCode()
-            ^ libraryDescription_.hashCode() ^ libraryVersion_.hashCode();
+        return cryptokiVersion.hashCode() ^ manufacturerID.hashCode()
+            ^ libraryDescription.hashCode() ^ libraryVersion.hashCode();
     }
 
 }

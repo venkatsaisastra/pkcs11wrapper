@@ -61,12 +61,12 @@ public class Mechanism implements Cloneable {
      * The code of the mechanism as defined in PKCS11Constants (or pkcs11t.h
      * likewise).
      */
-    protected long pkcs11MechanismCode_;
+    protected long pkcs11MechanismCode;
 
     /**
      * The parameters of the mechanism. Not all mechanisms use these parameters.
      */
-    protected Parameters parameters_;
+    protected Parameters parameters;
 
     /**
      * Constructor taking just the mechanism code as defined in PKCS11Constants.
@@ -77,7 +77,7 @@ public class Mechanism implements Cloneable {
      * @postconditions
      */
     public Mechanism(long pkcs11MechanismCode) {
-        pkcs11MechanismCode_ = pkcs11MechanismCode;
+        this.pkcs11MechanismCode = pkcs11MechanismCode;
     }
 
     /**
@@ -119,7 +119,7 @@ public class Mechanism implements Cloneable {
      * @param otherObject
      *          The other Mechanism object.
      * @return True, if other is an instance of this class and
-     *         pkcs11MechanismCode_ and parameter_ of both objects are equal.
+     *         pkcs11MechanismCode and parameter of both objects are equal.
      * @preconditions
      * @postconditions
      */
@@ -134,11 +134,11 @@ public class Mechanism implements Cloneable {
         }
 
         Mechanism other = (Mechanism) otherObject;
-        if  (this.pkcs11MechanismCode_ != other.pkcs11MechanismCode_) {
+        if  (this.pkcs11MechanismCode != other.pkcs11MechanismCode) {
             return false;
         }
 
-        return Util.objEquals(this.parameters_, other.parameters_);
+        return Util.objEquals(this.parameters, other.parameters);
     }
 
     /**
@@ -151,14 +151,14 @@ public class Mechanism implements Cloneable {
      */
     @Override
     public int hashCode() {
-        return (int) pkcs11MechanismCode_;
+        return (int) pkcs11MechanismCode;
     }
 
     /**
      * This method checks, if this mechanism is a digest mechanism.
      * This is the information as provided by the table on page 229
      * of the PKCS#11 v2.11 standard.
-     * If this method returns true, the mechanism can be used with the digest
+     * If Returns true, the mechanism can be used with the digest
      * functions.
      *
      * @return True, if this mechanism is a digest mechanism. False,
@@ -167,7 +167,7 @@ public class Mechanism implements Cloneable {
      * @postconditions
      */
     public boolean isDigestMechanism() {
-        return Functions.isDigestMechanism(pkcs11MechanismCode_);
+        return Functions.isDigestMechanism(pkcs11MechanismCode);
     }
 
     /**
@@ -176,7 +176,7 @@ public class Mechanism implements Cloneable {
      * and decryptUpdate() functions.
      * This is the information as provided by the table on page 229
      * of the PKCS#11 v2.11 standard.
-     * If this method returns true, the mechanism can be used with the encrypt
+     * If Returns true, the mechanism can be used with the encrypt
      * and decrypt functions including encryptUpdate and decryptUpdate.
      *
      * @return True, if this mechanism is a full encrypt/decrypt
@@ -185,7 +185,7 @@ public class Mechanism implements Cloneable {
      * @postconditions
      */
     public boolean isFullEncryptDecryptMechanism() {
-        return Functions.isFullEncryptDecryptMechanism(pkcs11MechanismCode_);
+        return Functions.isFullEncryptDecryptMechanism(pkcs11MechanismCode);
     }
 
     /**
@@ -194,7 +194,7 @@ public class Mechanism implements Cloneable {
      * and verifyUpdate() functions.
      * This is the information as provided by the table on page 229
      * of the PKCS#11 v2.11 standard.
-     * If this method returns true, the mechanism can be used with the sign and
+     * If Returns true, the mechanism can be used with the sign and
      * verify functions including signUpdate and verifyUpdate.
      *
      * @return True, if this mechanism is a full sign/verify
@@ -203,7 +203,7 @@ public class Mechanism implements Cloneable {
      * @postconditions
      */
     public boolean isFullSignVerifyMechanism() {
-        return Functions.isFullSignVerifyMechanism(pkcs11MechanismCode_);
+        return Functions.isFullSignVerifyMechanism(pkcs11MechanismCode);
     }
 
     /**
@@ -211,7 +211,7 @@ public class Mechanism implements Cloneable {
      * key derivation mechanism.
      * This is the information as provided by the table on page 229
      * of the PKCS#11 v2.11 standard.
-     * If this method returns true, the mechanism can be used with the deriveKey
+     * If Returns true, the mechanism can be used with the deriveKey
      * function.
      *
      * @return True, if this mechanism is a key derivation mechanism.
@@ -220,7 +220,7 @@ public class Mechanism implements Cloneable {
      * @postconditions
      */
     public boolean isKeyDerivationMechanism() {
-        return Functions.isKeyDerivationMechanism(pkcs11MechanismCode_);
+        return Functions.isKeyDerivationMechanism(pkcs11MechanismCode);
     }
 
     /**
@@ -228,7 +228,7 @@ public class Mechanism implements Cloneable {
      * generation mechanism for generating symmetric keys.
      * This is the information as provided by the table on page 229
      * of the PKCS#11 v2.11 standard.
-     * If this method returns true, the mechanism can be used with the
+     * If Returns true, the mechanism can be used with the
      * generateKey function.
      *
      * @return True, if this mechanism is a key generation mechanism.
@@ -237,7 +237,7 @@ public class Mechanism implements Cloneable {
      * @postconditions
      */
     public boolean isKeyGenerationMechanism() {
-        return Functions.isKeyGenerationMechanism(pkcs11MechanismCode_);
+        return Functions.isKeyGenerationMechanism(pkcs11MechanismCode);
     }
 
     /**
@@ -254,7 +254,7 @@ public class Mechanism implements Cloneable {
      * @postconditions
      */
     public boolean isKeyPairGenerationMechanism() {
-        return Functions.isKeyPairGenerationMechanism(pkcs11MechanismCode_);
+        return Functions.isKeyPairGenerationMechanism(pkcs11MechanismCode);
     }
 
     /**
@@ -262,7 +262,7 @@ public class Mechanism implements Cloneable {
      * mechanism with message recovery.
      * This is the information as provided by the table on page 229
      * of the PKCS#11 v2.11 standard.
-     * If this method returns true, the mechanism can be used with the
+     * If Returns true, the mechanism can be used with the
      * signRecover and verifyRecover functions.
      *
      * @return True, if this mechanism is a sign/verify mechanism with
@@ -271,7 +271,7 @@ public class Mechanism implements Cloneable {
      * @postconditions
      */
     public boolean isSignVerifyRecoverMechanism() {
-        return Functions.isSignVerifyRecoverMechanism(pkcs11MechanismCode_);
+        return Functions.isSignVerifyRecoverMechanism(pkcs11MechanismCode);
     }
 
     /**
@@ -290,7 +290,7 @@ public class Mechanism implements Cloneable {
      */
     public boolean isSingleOperationEncryptDecryptMechanism() {
         return Functions.isSingleOperationEncryptDecryptMechanism(
-                pkcs11MechanismCode_);
+                pkcs11MechanismCode);
     }
 
     /**
@@ -309,7 +309,7 @@ public class Mechanism implements Cloneable {
      */
     public boolean isSingleOperationSignVerifyMechanism() {
         return Functions.isSingleOperationSignVerifyMechanism(
-                pkcs11MechanismCode_);
+                pkcs11MechanismCode);
     }
 
     /**
@@ -327,7 +327,7 @@ public class Mechanism implements Cloneable {
      * @postconditions
      */
     public boolean isWrapUnwrapMechanism() {
-        return Functions.isWrapUnwrapMechanism(pkcs11MechanismCode_);
+        return Functions.isWrapUnwrapMechanism(pkcs11MechanismCode);
     }
 
     /**
@@ -338,7 +338,7 @@ public class Mechanism implements Cloneable {
      * @postconditions
      */
     public Parameters getParameters() {
-        return parameters_;
+        return parameters;
     }
 
     /**
@@ -350,7 +350,7 @@ public class Mechanism implements Cloneable {
      * @postconditions
      */
     public void setParameters(Parameters parameters) {
-        parameters_ = parameters;
+        this.parameters = parameters;
     }
 
     /**
@@ -362,7 +362,7 @@ public class Mechanism implements Cloneable {
      * @postconditions
      */
     public long getMechanismCode() {
-        return pkcs11MechanismCode_;
+        return pkcs11MechanismCode;
     }
 
     /**
@@ -373,7 +373,7 @@ public class Mechanism implements Cloneable {
      * @postconditions
      */
     public String getName() {
-        return Functions.mechanismCodeToString(pkcs11MechanismCode_);
+        return Functions.mechanismCodeToString(pkcs11MechanismCode);
     }
 
     /**
@@ -383,19 +383,15 @@ public class Mechanism implements Cloneable {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(128);
+        StringBuilder sb = new StringBuilder(128);
 
-        buffer.append(Constants.INDENT);
-        buffer.append("Mechanism: ");
-        buffer.append(Functions.mechanismCodeToString(pkcs11MechanismCode_));
-        buffer.append(Constants.NEWLINE);
+        sb.append("    Mechanism: ")
+            .append(Functions.mechanismCodeToString(pkcs11MechanismCode))
+            .append(Constants.NEWLINE);
+        sb.append("    Parameters: ").append(Constants.NEWLINE)
+            .append(parameters);
 
-        buffer.append(Constants.INDENT);
-        buffer.append("Parameters: ");
-        buffer.append(Constants.NEWLINE);
-        buffer.append(parameters_);
-
-        return buffer.toString();
+        return sb.toString();
     }
 
 }

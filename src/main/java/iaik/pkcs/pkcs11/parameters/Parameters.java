@@ -59,6 +59,7 @@ public interface Parameters extends Cloneable {
      * @preconditions
      * @postconditions (result <> null)
      */
+    // CHECKSTYLE:SKIP
     public Object getPKCS11ParamsObject();
 
 }

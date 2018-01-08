@@ -87,7 +87,7 @@ public class State implements Cloneable {
     /**
      * The status code of this state as defined in PKCS#11.
      */
-    protected long code_;
+    protected long code;
 
     /**
      * Constructor that simply takes the status code as defined in PKCS#11.
@@ -103,7 +103,7 @@ public class State implements Cloneable {
      * @postconditions
      */
     protected State(long code) {
-        code_ = code;
+        this.code = code;
     }
 
     /**
@@ -152,7 +152,7 @@ public class State implements Cloneable {
         }
 
         State other = (State) otherObject;
-        return (this.code_ == other.code_);
+        return (this.code == other.code);
     }
 
     /**
@@ -165,7 +165,7 @@ public class State implements Cloneable {
      */
     @Override
     public int hashCode() {
-        return (int) code_;
+        return (int) code;
     }
 
     /**
@@ -178,18 +178,18 @@ public class State implements Cloneable {
         StringBuilder buffer = new StringBuilder();
 
         String name;
-        if (code_ == PKCS11Constants.CKS_RO_PUBLIC_SESSION) {
+        if (code == PKCS11Constants.CKS_RO_PUBLIC_SESSION) {
             name = "Read-Only Public Session";
-        } else if (code_ == PKCS11Constants.CKS_RO_USER_FUNCTIONS) {
+        } else if (code == PKCS11Constants.CKS_RO_USER_FUNCTIONS) {
             name = "Read-Only User Session";
-        } else if (code_ == PKCS11Constants.CKS_RW_PUBLIC_SESSION) {
+        } else if (code == PKCS11Constants.CKS_RW_PUBLIC_SESSION) {
             name = "Read/Write Public Session";
-        } else if (code_ == PKCS11Constants.CKS_RW_USER_FUNCTIONS) {
+        } else if (code == PKCS11Constants.CKS_RW_USER_FUNCTIONS) {
             name = "Read/Write User Functions";
-        } else if (code_ == PKCS11Constants.CKS_RW_SO_FUNCTIONS) {
+        } else if (code == PKCS11Constants.CKS_RW_SO_FUNCTIONS) {
             name = "Read/Write Security Officer Functions";
         } else {
-            name = "ERROR: unknown session state with code: " + code_;
+            name = "ERROR: unknown session state with code: " + code;
         }
 
         buffer.append(name);

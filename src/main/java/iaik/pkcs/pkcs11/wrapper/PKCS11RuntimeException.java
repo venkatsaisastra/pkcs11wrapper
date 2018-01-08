@@ -53,51 +53,53 @@ import iaik.pkcs.pkcs11.TokenRuntimeException;
  * @version 1.0
  *
  */
+// CHECKSTYLE:SKIP
 public class PKCS11RuntimeException extends TokenRuntimeException {
 
-  private static final long serialVersionUID = 592472650470600711L;
+    private static final long serialVersionUID = 592472650470600711L;
 
-  /**
-   * Empty constructor.
-   *
-   */
-  public PKCS11RuntimeException() {
-    super();
-  }
+    /**
+     * Empty constructor.
+     *
+     */
+    public PKCS11RuntimeException() {
+      super();
+    }
 
-  /**
-   * Constructor taking a string that describes the reason of the exception in
-   * more detail.
-   *
-   * @param message
-   *          A description of the reason for this exception.
-   */
-  public PKCS11RuntimeException(String message) {
-    super(message);
-  }
+    /**
+     * Constructor taking a string that describes the reason of the exception in
+     * more detail.
+     *
+     * @param message
+     *          A description of the reason for this exception.
+     */
+    public PKCS11RuntimeException(String message) {
+        super(message);
+    }
 
-  /**
-   * Constructor taking an other exception to wrap.
-   *
-   * @param encapsulatedException
-   *          The other exception the wrap into this.
-   */
-  public PKCS11RuntimeException(Exception encapsulatedException) {
-    super(encapsulatedException);
-  }
+    /**
+     * Constructor taking an other exception to wrap.
+     *
+     * @param encapsulatedException
+     *          The other exception the wrap into this.
+     */
+    public PKCS11RuntimeException(Exception encapsulatedException) {
+        super(encapsulatedException);
+    }
 
-  /**
-   * Constructor taking a message for this exception and an other exception to
-   * wrap.
-   *
-   * @param message
-   *          The message giving details about the exception to ease debugging.
-   * @param encapsulatedException
-   *          The other exception the wrap into this.
-   */
-  public PKCS11RuntimeException(String message,
-          Exception encapsulatedException) {
-    super(message, encapsulatedException);
-  }
+    /**
+     * Constructor taking a message for this exception and an other exception to
+     * wrap.
+     *
+     * @param message
+     *          The message giving details about the exception to ease
+     *          debugging.
+     * @param encapsulatedException
+     *          The other exception the wrap into this.
+     */
+    public PKCS11RuntimeException(String message,
+            Exception encapsulatedException) {
+        super(message, encapsulatedException);
+    }
 
 }

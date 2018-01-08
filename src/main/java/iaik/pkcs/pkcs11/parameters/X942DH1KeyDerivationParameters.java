@@ -60,7 +60,7 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
     /**
      * The data shared between the two parties.
      */
-    protected byte[] otherInfo_;
+    protected byte[] otherInfo;
 
     /**
      * Create a new X942DH1KeyDerivationParameters object with the given
@@ -87,7 +87,7 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
             byte[] otherInfo,
             byte[] publicData) {
         super(keyDerivationFunction, publicData);
-        otherInfo_ = otherInfo;
+        this.otherInfo = otherInfo;
     }
 
     /**
@@ -104,7 +104,7 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
         X942DH1KeyDerivationParameters clone
                 = (X942DH1KeyDerivationParameters) super.clone();
 
-        clone.otherInfo_ = (byte[]) this.otherInfo_.clone();
+        clone.otherInfo = (byte[]) this.otherInfo.clone();
         return clone;
     }
 
@@ -120,9 +120,9 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
     public Object getPKCS11ParamsObject() {
         CK_X9_42_DH1_DERIVE_PARAMS params = new CK_X9_42_DH1_DERIVE_PARAMS();
 
-        params.kdf = keyDerivationFunction_;
-        params.pOtherInfo = otherInfo_;
-        params.pPublicData = publicData_;
+        params.kdf = kdf;
+        params.pOtherInfo = otherInfo;
+        params.pPublicData = publicData;
 
         return params;
     }
@@ -135,7 +135,7 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
      * @postconditions
      */
     public byte[] getOtherInfo() {
-        return otherInfo_;
+        return otherInfo;
     }
 
     /**
@@ -147,7 +147,7 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
      * @postconditions
      */
     public void setOtherInfo(byte[] otherInfo) {
-        otherInfo_ = otherInfo;
+        this.otherInfo = otherInfo;
     }
 
     /**
@@ -164,7 +164,7 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Other Info: ");
-        buffer.append(Functions.toHexString(otherInfo_));
+        buffer.append(Functions.toHexString(otherInfo));
 
         return buffer.toString();
     }
@@ -193,7 +193,7 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
         X942DH1KeyDerivationParameters other
                 = (X942DH1KeyDerivationParameters) otherObject;
         return super.equals(other)
-                && Functions.equals(this.otherInfo_, other.otherInfo_);
+                && Functions.equals(this.otherInfo, other.otherInfo);
     }
 
     /**
@@ -206,7 +206,7 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
      */
     @Override
     public int hashCode() {
-        return super.hashCode() ^ Functions.hashCode(otherInfo_);
+        return super.hashCode() ^ Functions.hashCode(otherInfo);
     }
 
 }

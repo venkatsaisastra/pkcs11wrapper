@@ -58,23 +58,23 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  */
 public class UserInterface extends HardwareFeature {
 
-    private LongAttribute pixelX_;
-    private LongAttribute pixelY_;
-    private LongAttribute resolution_;
-    private LongAttribute charRows_;
-    private LongAttribute charColumns_;
-    private BooleanAttribute color_;
-    private LongAttribute bitsPerPixel_;
-    private ByteArrayAttribute charSets_;
-    private ByteArrayAttribute encodingMethods_;
-    private ByteArrayAttribute mimeTypes_;
+    private LongAttribute pixelX;
+    private LongAttribute pixelY;
+    private LongAttribute resolution;
+    private LongAttribute charRows;
+    private LongAttribute charColumns;
+    private BooleanAttribute color;
+    private LongAttribute bitsPerPixel;
+    private ByteArrayAttribute charSets;
+    private ByteArrayAttribute encodingMethods;
+    private ByteArrayAttribute mimeTypes;
 
     /**
      * Default Constructor.
      */
     public UserInterface() {
         super();
-        hardwareFeatureType_.setLongValue(FeatureType.USER_INTERFACE);
+        hardwareFeatureType.setLongValue(FeatureType.USER_INTERFACE);
     }
 
     /**
@@ -92,7 +92,7 @@ public class UserInterface extends HardwareFeature {
     protected UserInterface(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        hardwareFeatureType_.setLongValue(FeatureType.USER_INTERFACE);
+        hardwareFeatureType.setLongValue(FeatureType.USER_INTERFACE);
     }
 
     /**
@@ -127,18 +127,18 @@ public class UserInterface extends HardwareFeature {
      */
     protected static void putAttributesInTable(UserInterface object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.PIXEL_X, object.pixelX_);
-        object.attributeTable_.put(Attribute.PIXEL_Y, object.pixelY_);
-        object.attributeTable_.put(Attribute.RESOLUTION, object.resolution_);
-        object.attributeTable_.put(Attribute.CHAR_ROWS, object.charRows_);
-        object.attributeTable_.put(Attribute.CHAR_COLUMNS, object.charColumns_);
-        object.attributeTable_.put(Attribute.COLOR, object.color_);
-        object.attributeTable_.put(Attribute.BITS_PER_PIXEL,
-                object.bitsPerPixel_);
-        object.attributeTable_.put(Attribute.CHAR_SETS, object.charSets_);
-        object.attributeTable_.put(Attribute.ENCODING_METHODS,
-                object.encodingMethods_);
-        object.attributeTable_.put(Attribute.MIME_TYPES, object.mimeTypes_);
+        object.attributeTable.put(Attribute.PIXEL_X, object.pixelX);
+        object.attributeTable.put(Attribute.PIXEL_Y, object.pixelY);
+        object.attributeTable.put(Attribute.RESOLUTION, object.resolution);
+        object.attributeTable.put(Attribute.CHAR_ROWS, object.charRows);
+        object.attributeTable.put(Attribute.CHAR_COLUMNS, object.charColumns);
+        object.attributeTable.put(Attribute.COLOR, object.color);
+        object.attributeTable.put(Attribute.BITS_PER_PIXEL,
+                object.bitsPerPixel);
+        object.attributeTable.put(Attribute.CHAR_SETS, object.charSets);
+        object.attributeTable.put(Attribute.ENCODING_METHODS,
+                object.encodingMethods);
+        object.attributeTable.put(Attribute.MIME_TYPES, object.mimeTypes);
     }
 
     /**
@@ -149,16 +149,16 @@ public class UserInterface extends HardwareFeature {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        pixelX_ = new LongAttribute(Attribute.PIXEL_X);
-        pixelY_ = new LongAttribute(Attribute.PIXEL_Y);
-        resolution_ = new LongAttribute(Attribute.RESOLUTION);
-        charRows_ = new LongAttribute(Attribute.CHAR_ROWS);
-        charColumns_ = new LongAttribute(Attribute.CHAR_COLUMNS);
-        color_ = new BooleanAttribute(Attribute.COLOR);
-        bitsPerPixel_ = new LongAttribute(Attribute.BITS_PER_PIXEL);
-        charSets_ = new ByteArrayAttribute(Attribute.CHAR_SETS);
-        encodingMethods_ = new ByteArrayAttribute(Attribute.ENCODING_METHODS);
-        mimeTypes_ = new ByteArrayAttribute(Attribute.MIME_TYPES);
+        pixelX = new LongAttribute(Attribute.PIXEL_X);
+        pixelY = new LongAttribute(Attribute.PIXEL_Y);
+        resolution = new LongAttribute(Attribute.RESOLUTION);
+        charRows = new LongAttribute(Attribute.CHAR_ROWS);
+        charColumns = new LongAttribute(Attribute.CHAR_COLUMNS);
+        color = new BooleanAttribute(Attribute.COLOR);
+        bitsPerPixel = new LongAttribute(Attribute.BITS_PER_PIXEL);
+        charSets = new ByteArrayAttribute(Attribute.CHAR_SETS);
+        encodingMethods = new ByteArrayAttribute(Attribute.ENCODING_METHODS);
+        mimeTypes = new ByteArrayAttribute(Attribute.MIME_TYPES);
 
         putAttributesInTable(this);
     }
@@ -172,17 +172,17 @@ public class UserInterface extends HardwareFeature {
     public java.lang.Object clone() {
         UserInterface clone = (UserInterface) super.clone();
 
-        clone.pixelX_ = (LongAttribute) this.pixelX_.clone();
-        clone.pixelY_ = (LongAttribute) this.pixelY_.clone();
-        clone.resolution_ = (LongAttribute) this.resolution_.clone();
-        clone.charRows_ = (LongAttribute) this.charRows_.clone();
-        clone.charColumns_ = (LongAttribute) this.charColumns_.clone();
-        clone.color_ = (BooleanAttribute) this.color_.clone();
-        clone.bitsPerPixel_ = (LongAttribute) this.bitsPerPixel_.clone();
-        clone.charSets_ = (ByteArrayAttribute) this.charSets_.clone();
-        clone.encodingMethods_
-            = (ByteArrayAttribute) this.encodingMethods_.clone();
-        clone.mimeTypes_ = (ByteArrayAttribute) this.mimeTypes_.clone();
+        clone.pixelX = (LongAttribute) this.pixelX.clone();
+        clone.pixelY = (LongAttribute) this.pixelY.clone();
+        clone.resolution = (LongAttribute) this.resolution.clone();
+        clone.charRows = (LongAttribute) this.charRows.clone();
+        clone.charColumns = (LongAttribute) this.charColumns.clone();
+        clone.color = (BooleanAttribute) this.color.clone();
+        clone.bitsPerPixel = (LongAttribute) this.bitsPerPixel.clone();
+        clone.charSets = (ByteArrayAttribute) this.charSets.clone();
+        clone.encodingMethods
+            = (ByteArrayAttribute) this.encodingMethods.clone();
+        clone.mimeTypes = (ByteArrayAttribute) this.mimeTypes.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -204,17 +204,17 @@ public class UserInterface extends HardwareFeature {
         }
 
         UserInterface other = (UserInterface) otherObject;
-        return Util.objEquals(this.bitsPerPixel_, other.bitsPerPixel_)
-                && Util.objEquals(this.charColumns_, other.charColumns_)
-                && Util.objEquals(this.charRows_, other.charRows_)
-                && Util.objEquals(this.charSets_, other.charSets_)
-                && Util.objEquals(this.color_, other.color_)
-                && Util.objEquals(this.encodingMethods_, other.encodingMethods_)
-                && Util.objEquals(this.mimeTypes_, other.mimeTypes_)
-                && Util.objEquals(this.mimeTypes_, other.mimeTypes_)
-                && Util.objEquals(this.pixelX_, other.pixelX_)
-                && Util.objEquals(this.pixelY_, other.pixelY_)
-                && Util.objEquals(this.resolution_, other.resolution_);
+        return Util.objEquals(this.bitsPerPixel, other.bitsPerPixel)
+                && Util.objEquals(this.charColumns, other.charColumns)
+                && Util.objEquals(this.charRows, other.charRows)
+                && Util.objEquals(this.charSets, other.charSets)
+                && Util.objEquals(this.color, other.color)
+                && Util.objEquals(this.encodingMethods, other.encodingMethods)
+                && Util.objEquals(this.mimeTypes, other.mimeTypes)
+                && Util.objEquals(this.mimeTypes, other.mimeTypes)
+                && Util.objEquals(this.pixelX, other.pixelX)
+                && Util.objEquals(this.pixelY, other.pixelY)
+                && Util.objEquals(this.resolution, other.resolution);
     }
 
     /**
@@ -223,7 +223,7 @@ public class UserInterface extends HardwareFeature {
      * @return the pixel x
      */
     public LongAttribute getPixelX() {
-        return this.pixelX_;
+        return this.pixelX;
     }
 
     /**
@@ -232,7 +232,7 @@ public class UserInterface extends HardwareFeature {
      * @return the pixel y
      */
     public LongAttribute getPixelY() {
-        return pixelY_;
+        return pixelY;
     }
 
     /**
@@ -241,7 +241,7 @@ public class UserInterface extends HardwareFeature {
      * @return the resolution
      */
     public LongAttribute getResolution() {
-        return resolution_;
+        return resolution;
     }
 
     /**
@@ -250,7 +250,7 @@ public class UserInterface extends HardwareFeature {
      * @return the char rows
      */
     public LongAttribute getCharRows() {
-        return charRows_;
+        return charRows;
     }
 
     /**
@@ -259,7 +259,7 @@ public class UserInterface extends HardwareFeature {
      * @return the char columns
      */
     public LongAttribute getCharColumns() {
-        return charColumns_;
+        return charColumns;
     }
 
     /**
@@ -268,7 +268,7 @@ public class UserInterface extends HardwareFeature {
      * @return the color
      */
     public BooleanAttribute getColor() {
-        return color_;
+        return color;
     }
 
     /**
@@ -277,7 +277,7 @@ public class UserInterface extends HardwareFeature {
      * @return the bits per pixel
      */
     public LongAttribute getBitsPerPixel() {
-        return bitsPerPixel_;
+        return bitsPerPixel;
     }
 
     /**
@@ -286,7 +286,7 @@ public class UserInterface extends HardwareFeature {
      * @return the char sets
      */
     public ByteArrayAttribute getCharSets() {
-        return charSets_;
+        return charSets;
     }
 
     /**
@@ -295,7 +295,7 @@ public class UserInterface extends HardwareFeature {
      * @return the encoding methods
      */
     public ByteArrayAttribute getEncodingMethods() {
-        return encodingMethods_;
+        return encodingMethods;
     }
 
     /**
@@ -304,7 +304,7 @@ public class UserInterface extends HardwareFeature {
      * @return the mime types
      */
     public ByteArrayAttribute getMimeTypes() {
-        return mimeTypes_;
+        return mimeTypes;
     }
 
     /**
@@ -315,10 +315,10 @@ public class UserInterface extends HardwareFeature {
      */
     @Override
     public int hashCode() {
-        return pixelX_.hashCode() ^ pixelY_.hashCode() ^ resolution_.hashCode()
-            ^ charRows_.hashCode() ^ charColumns_.hashCode() ^ color_.hashCode()
-            ^ bitsPerPixel_.hashCode() ^ charSets_.hashCode()
-            ^ encodingMethods_.hashCode() ^ mimeTypes_.hashCode();
+        return pixelX.hashCode() ^ pixelY.hashCode() ^ resolution.hashCode()
+            ^ charRows.hashCode() ^ charColumns.hashCode() ^ color.hashCode()
+            ^ bitsPerPixel.hashCode() ^ charSets.hashCode()
+            ^ encodingMethods.hashCode() ^ mimeTypes.hashCode();
     }
 
     /**
@@ -336,13 +336,13 @@ public class UserInterface extends HardwareFeature {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            pixelX_, pixelY_, resolution_, charRows_, charColumns_, color_,
-            bitsPerPixel_, charSets_, encodingMethods_, mimeTypes_ });
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            pixelX, pixelY, resolution, charRows, charColumns, color,
+            bitsPerPixel, charSets, encodingMethods, mimeTypes });
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -356,55 +356,55 @@ public class UserInterface extends HardwareFeature {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Pixel X: ");
-        buffer.append(pixelX_.getValueString());
+        buffer.append(pixelX.getValueString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Pixel Y: ");
-        buffer.append(pixelY_.getValueString());
+        buffer.append(pixelY.getValueString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Resolution: ");
-        buffer.append(resolution_.getValueString());
+        buffer.append(resolution.getValueString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Char Rows: ");
-        buffer.append(charRows_.getValueString());
+        buffer.append(charRows.getValueString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Char Columns: ");
-        buffer.append(charColumns_.getValueString());
+        buffer.append(charColumns.getValueString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Color: ");
-        buffer.append(color_.getValueString());
+        buffer.append(color.getValueString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Bits per Pixel: ");
-        buffer.append(bitsPerPixel_.getValueString());
+        buffer.append(bitsPerPixel.getValueString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Char sets:");
         try {
-            buffer.append(new String(charSets_.getByteArrayValue(), "ASCII"));
+            buffer.append(new String(charSets.getByteArrayValue(), "ASCII"));
         } catch (UnsupportedEncodingException ex) {
-            buffer.append(new String(charSets_.getByteArrayValue()));
+            buffer.append(new String(charSets.getByteArrayValue()));
         }
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Encoding methods: ");
         try {
             buffer.append(
-                    new String(encodingMethods_.getByteArrayValue(), "ASCII"));
+                    new String(encodingMethods.getByteArrayValue(), "ASCII"));
         } catch (UnsupportedEncodingException ex) {
-            buffer.append(new String(encodingMethods_.getByteArrayValue()));
+            buffer.append(new String(encodingMethods.getByteArrayValue()));
         }
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Mime Types: ");
         try {
-            buffer.append(new String(mimeTypes_.getByteArrayValue(), "ASCII"));
+            buffer.append(new String(mimeTypes.getByteArrayValue(), "ASCII"));
         } catch (UnsupportedEncodingException ex) {
-            buffer.append(new String(mimeTypes_.getByteArrayValue()));
+            buffer.append(new String(mimeTypes.getByteArrayValue()));
         }
 
         return buffer.toString();

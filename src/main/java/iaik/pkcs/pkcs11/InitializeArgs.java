@@ -53,7 +53,7 @@ package iaik.pkcs.pkcs11;
 public interface InitializeArgs {
 
     /**
-     * This method returns the object that implements the functionality for
+     * Returns the object that implements the functionality for
      * handling mutexes. It returns null, if no handler is set. If this method
      * returns null, the wrapper does not pass any callback functions to the
      * underlying module; i.e. is passes null-pointer for the functions.

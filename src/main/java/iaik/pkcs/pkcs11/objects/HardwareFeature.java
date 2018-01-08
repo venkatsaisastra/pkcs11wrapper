@@ -60,7 +60,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (hardwareFeatureType_ <> null)
+ * @invariants (hardwareFeatureType <> null)
  */
 public class HardwareFeature extends Object {
 
@@ -142,13 +142,13 @@ public class HardwareFeature extends Object {
      * The currently set vendor defined hardware feature builder, or null.
      */
     protected static VendorDefinedHardwareFeatureBuilder
-        vendorHardwareFeatureBuilder_;
+        vendorHardwareFeatureBuilder;
 
     /**
      * The type of this hardware feature. Its value is one of FeatureType, or
      * one that has a bigger value than VENDOR_DEFINED.
      */
-    protected HardwareFeatureTypeAttribute hardwareFeatureType_;
+    protected HardwareFeatureTypeAttribute hardwareFeatureType;
 
     /**
      * The default constructor. An application use this constructor to
@@ -160,7 +160,7 @@ public class HardwareFeature extends Object {
      */
     public HardwareFeature() {
         super();
-        objectClass_.setLongValue(ObjectClass.HW_FEATURE);
+        objectClass.setLongValue(ObjectClass.HW_FEATURE);
     }
 
     /**
@@ -181,7 +181,7 @@ public class HardwareFeature extends Object {
     protected HardwareFeature(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        objectClass_.setLongValue(ObjectClass.HW_FEATURE);
+        objectClass.setLongValue(ObjectClass.HW_FEATURE);
     }
 
     /**
@@ -219,7 +219,7 @@ public class HardwareFeature extends Object {
      * the getInstance method of the according sub-class.
      * If the hardware feature type is a vendor defined it uses the
      * VendorDefinedHardwareFeatureBuilder set by the application. If no
-     * hardware feature could be constructed, this method returns null.
+     * hardware feature could be constructed, Returns null.
      *
      * @param session
      *          The session to use for reading attributes. This session must
@@ -295,9 +295,9 @@ public class HardwareFeature extends Object {
         Util.requireNonNull("session", session);
 
         Object newObject;
-        if (vendorHardwareFeatureBuilder_ != null) {
+        if (vendorHardwareFeatureBuilder != null) {
             try {
-                newObject = vendorHardwareFeatureBuilder_.build(session,
+                newObject = vendorHardwareFeatureBuilder.build(session,
                         objectHandle);
             } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
                 // we can just treat it like some unknown type of hardware
@@ -325,7 +325,7 @@ public class HardwareFeature extends Object {
      */
     public static void setVendorDefinedHardwareFeatureBuilder(
             VendorDefinedHardwareFeatureBuilder builder) {
-        vendorHardwareFeatureBuilder_ = builder;
+        vendorHardwareFeatureBuilder = builder;
     }
 
     /**
@@ -338,7 +338,7 @@ public class HardwareFeature extends Object {
      */
     public static VendorDefinedHardwareFeatureBuilder
         getVendorDefinedHardwareFeatureBuilder() {
-        return vendorHardwareFeatureBuilder_;
+        return vendorHardwareFeatureBuilder;
     }
 
     /**
@@ -355,8 +355,8 @@ public class HardwareFeature extends Object {
     protected static void putAttributesInTable(HardwareFeature object) {
         Util.requireNonNull("object", object);
 
-        object.attributeTable_.put(Attribute.HW_FEATURE_TYPE,
-            object.hardwareFeatureType_);
+        object.attributeTable.put(Attribute.HW_FEATURE_TYPE,
+            object.hardwareFeatureType);
     }
 
     /**
@@ -370,7 +370,7 @@ public class HardwareFeature extends Object {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        hardwareFeatureType_ = new HardwareFeatureTypeAttribute();
+        hardwareFeatureType = new HardwareFeatureTypeAttribute();
 
         putAttributesInTable(this);
     }
@@ -388,8 +388,8 @@ public class HardwareFeature extends Object {
     public java.lang.Object clone() {
         HardwareFeature clone = (HardwareFeature) super.clone();
 
-        clone.hardwareFeatureType_ = (HardwareFeatureTypeAttribute)
-                this.hardwareFeatureType_.clone();
+        clone.hardwareFeatureType = (HardwareFeatureTypeAttribute)
+                this.hardwareFeatureType.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -420,7 +420,7 @@ public class HardwareFeature extends Object {
 
         HardwareFeature other = (HardwareFeature) otherObject;
         return super.equals(other)
-                && this.hardwareFeatureType_.equals(other.hardwareFeatureType_);
+                && this.hardwareFeatureType.equals(other.hardwareFeatureType);
     }
 
     /**
@@ -433,7 +433,7 @@ public class HardwareFeature extends Object {
      * @postconditions (result <> null)
      */
     public LongAttribute getHardwareFeatureType() {
-        return hardwareFeatureType_;
+        return hardwareFeatureType;
     }
 
     /**
@@ -446,11 +446,11 @@ public class HardwareFeature extends Object {
      */
     @Override
     public int hashCode() {
-        return hardwareFeatureType_.hashCode();
+        return hardwareFeatureType.hashCode();
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -466,8 +466,8 @@ public class HardwareFeature extends Object {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Hardware Feature Type: ");
-        if (hardwareFeatureType_ != null) {
-            buffer.append(hardwareFeatureType_.toString());
+        if (hardwareFeatureType != null) {
+            buffer.append(hardwareFeatureType.toString());
         } else {
             buffer.append("<unavailable>");
         }

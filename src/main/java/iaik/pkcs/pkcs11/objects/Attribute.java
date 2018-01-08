@@ -204,28 +204,28 @@ public abstract class Attribute implements Cloneable {
     public static final Long MIME_TYPES
             = new Long(PKCS11Constants.CKA_MIME_TYPES);
 
-    protected static Hashtable<Long, String> attributeNames_;
-    protected static Hashtable<Long, Class<?>> attributeClasses_;
+    protected static Hashtable<Long, String> attributeNames;
+    protected static Hashtable<Long, Class<?>> attributeClasses;
 
     /**
      * True, if the object really possesses this attribute.
      */
-    protected boolean present_;
+    protected boolean present;
 
     /**
      * True, if this attribute is sensitive.
      */
-    protected boolean sensitive_;
+    protected boolean sensitive;
 
     /**
      * The CK_ATTRIBUTE that is used to hold the PKCS#11 type of this attribute
      * and the value.
      */
-    protected CK_ATTRIBUTE ckAttribute_;
+    protected CK_ATTRIBUTE ckAttribute;
 
     /**
      * Empty constructor.
-     * Attention! If you use this constructor, you must set ckAttribute_ to
+     * Attention! If you use this constructor, you must set ckAttribute to
      * ensure that the class invariant is not violated.
      *
      * @preconditions
@@ -245,10 +245,10 @@ public abstract class Attribute implements Cloneable {
      */
     protected Attribute(Long type) {
         Util.requireNonNull("type", type);
-        present_ = false;
-        sensitive_ = false;
-        ckAttribute_ = new CK_ATTRIBUTE();
-        ckAttribute_.type = type.longValue();
+        present = false;
+        sensitive = false;
+        ckAttribute = new CK_ATTRIBUTE();
+        ckAttribute.type = type.longValue();
     }
 
     /**
@@ -263,92 +263,92 @@ public abstract class Attribute implements Cloneable {
     protected static synchronized String getAttributeName(Long type) {
         Util.requireNonNull("type", type);
 
-        if (attributeNames_ == null) {
-            attributeNames_ = new Hashtable<>(85);
-            attributeNames_.put(Attribute.CLASS, "Class");
-            attributeNames_.put(Attribute.TOKEN, "Token");
-            attributeNames_.put(Attribute.PRIVATE, "Private");
-            attributeNames_.put(Attribute.LABEL, "Label");
-            attributeNames_.put(Attribute.APPLICATION, "Application");
-            attributeNames_.put(Attribute.VALUE, "Value");
-            attributeNames_.put(Attribute.OBJECT_ID, "Object ID");
-            attributeNames_.put(Attribute.CERTIFICATE_TYPE, "Certificate Type");
-            attributeNames_.put(Attribute.ISSUER, "Issuer");
-            attributeNames_.put(Attribute.SERIAL_NUMBER, "Serial Number");
-            attributeNames_.put(Attribute.URL, "URL");
-            attributeNames_.put(Attribute.HASH_OF_SUBJECT_PUBLIC_KEY,
+        if (attributeNames == null) {
+            attributeNames = new Hashtable<>(85);
+            attributeNames.put(Attribute.CLASS, "Class");
+            attributeNames.put(Attribute.TOKEN, "Token");
+            attributeNames.put(Attribute.PRIVATE, "Private");
+            attributeNames.put(Attribute.LABEL, "Label");
+            attributeNames.put(Attribute.APPLICATION, "Application");
+            attributeNames.put(Attribute.VALUE, "Value");
+            attributeNames.put(Attribute.OBJECT_ID, "Object ID");
+            attributeNames.put(Attribute.CERTIFICATE_TYPE, "Certificate Type");
+            attributeNames.put(Attribute.ISSUER, "Issuer");
+            attributeNames.put(Attribute.SERIAL_NUMBER, "Serial Number");
+            attributeNames.put(Attribute.URL, "URL");
+            attributeNames.put(Attribute.HASH_OF_SUBJECT_PUBLIC_KEY,
                 "Hash Of Subject Public Key");
-            attributeNames_.put(Attribute.HASH_OF_ISSUER_PUBLIC_KEY,
+            attributeNames.put(Attribute.HASH_OF_ISSUER_PUBLIC_KEY,
                 "Hash Of Issuer Public Key");
-            attributeNames_.put(Attribute.JAVA_MIDP_SECURITY_DOMAIN,
+            attributeNames.put(Attribute.JAVA_MIDP_SECURITY_DOMAIN,
                 "Java MIDP Security Domain");
-            attributeNames_.put(Attribute.AC_ISSUER, "AC Issuer");
-            attributeNames_.put(Attribute.OWNER, "Owner");
-            attributeNames_.put(Attribute.ATTR_TYPES, "Attribute Types");
-            attributeNames_.put(Attribute.TRUSTED, "Trusted");
-            attributeNames_.put(Attribute.KEY_TYPE, "Key Type");
-            attributeNames_.put(Attribute.SUBJECT, "Subject");
-            attributeNames_.put(Attribute.ID, "ID");
-            attributeNames_.put(Attribute.CHECK_VALUE, "Check Value");
-            attributeNames_.put(Attribute.CERTIFICATE_CATEGORY,
+            attributeNames.put(Attribute.AC_ISSUER, "AC Issuer");
+            attributeNames.put(Attribute.OWNER, "Owner");
+            attributeNames.put(Attribute.ATTR_TYPES, "Attribute Types");
+            attributeNames.put(Attribute.TRUSTED, "Trusted");
+            attributeNames.put(Attribute.KEY_TYPE, "Key Type");
+            attributeNames.put(Attribute.SUBJECT, "Subject");
+            attributeNames.put(Attribute.ID, "ID");
+            attributeNames.put(Attribute.CHECK_VALUE, "Check Value");
+            attributeNames.put(Attribute.CERTIFICATE_CATEGORY,
                  "Certificate Category");
-            attributeNames_.put(Attribute.SENSITIVE, "Sensitive");
-            attributeNames_.put(Attribute.ENCRYPT, "Encrypt");
-            attributeNames_.put(Attribute.DECRYPT, "Decrypt");
-            attributeNames_.put(Attribute.WRAP, "Wrap");
-            attributeNames_.put(Attribute.UNWRAP, "Unwrap");
-            attributeNames_.put(Attribute.WRAP_TEMPLATE, "Wrap Template");
-            attributeNames_.put(Attribute.UNWRAP_TEMPLATE, "Unwrap Template");
-            attributeNames_.put(Attribute.SIGN, "Sign");
-            attributeNames_.put(Attribute.SIGN_RECOVER, "Sign Recover");
-            attributeNames_.put(Attribute.VERIFY, "Verify");
-            attributeNames_.put(Attribute.VERIFY_RECOVER, "Verify Recover");
-            attributeNames_.put(Attribute.DERIVE, "Derive");
-            attributeNames_.put(Attribute.START_DATE, "Start Date");
-            attributeNames_.put(Attribute.END_DATE, "End Date");
-            attributeNames_.put(Attribute.MODULUS, "Modulus");
-            attributeNames_.put(Attribute.MODULUS_BITS, "Modulus Bits");
-            attributeNames_.put(Attribute.PUBLIC_EXPONENT, "Public Exponent");
-            attributeNames_.put(Attribute.PRIVATE_EXPONENT, "Private Exponent");
-            attributeNames_.put(Attribute.PRIME_1, "Prime 1");
-            attributeNames_.put(Attribute.PRIME_2, "Prime 2");
-            attributeNames_.put(Attribute.EXPONENT_1, "Exponent 1");
-            attributeNames_.put(Attribute.EXPONENT_2, "Exponent 2");
-            attributeNames_.put(Attribute.COEFFICIENT, "Coefficient");
-            attributeNames_.put(Attribute.PRIME, "Prime");
-            attributeNames_.put(Attribute.SUBPRIME, "Subprime");
-            attributeNames_.put(Attribute.BASE, "Base");
-            attributeNames_.put(Attribute.PRIME_BITS, "Prime Pits");
-            attributeNames_.put(Attribute.SUB_PRIME_BITS, "Subprime Bits");
-            attributeNames_.put(Attribute.VALUE_BITS, "Value Bits");
-            attributeNames_.put(Attribute.VALUE_LEN, "Value Length");
-            attributeNames_.put(Attribute.EXTRACTABLE, "Extractable");
-            attributeNames_.put(Attribute.LOCAL, "Local");
-            attributeNames_.put(Attribute.NEVER_EXTRACTABLE,
+            attributeNames.put(Attribute.SENSITIVE, "Sensitive");
+            attributeNames.put(Attribute.ENCRYPT, "Encrypt");
+            attributeNames.put(Attribute.DECRYPT, "Decrypt");
+            attributeNames.put(Attribute.WRAP, "Wrap");
+            attributeNames.put(Attribute.UNWRAP, "Unwrap");
+            attributeNames.put(Attribute.WRAP_TEMPLATE, "Wrap Template");
+            attributeNames.put(Attribute.UNWRAP_TEMPLATE, "Unwrap Template");
+            attributeNames.put(Attribute.SIGN, "Sign");
+            attributeNames.put(Attribute.SIGN_RECOVER, "Sign Recover");
+            attributeNames.put(Attribute.VERIFY, "Verify");
+            attributeNames.put(Attribute.VERIFY_RECOVER, "Verify Recover");
+            attributeNames.put(Attribute.DERIVE, "Derive");
+            attributeNames.put(Attribute.START_DATE, "Start Date");
+            attributeNames.put(Attribute.END_DATE, "End Date");
+            attributeNames.put(Attribute.MODULUS, "Modulus");
+            attributeNames.put(Attribute.MODULUS_BITS, "Modulus Bits");
+            attributeNames.put(Attribute.PUBLIC_EXPONENT, "Public Exponent");
+            attributeNames.put(Attribute.PRIVATE_EXPONENT, "Private Exponent");
+            attributeNames.put(Attribute.PRIME_1, "Prime 1");
+            attributeNames.put(Attribute.PRIME_2, "Prime 2");
+            attributeNames.put(Attribute.EXPONENT_1, "Exponent 1");
+            attributeNames.put(Attribute.EXPONENT_2, "Exponent 2");
+            attributeNames.put(Attribute.COEFFICIENT, "Coefficient");
+            attributeNames.put(Attribute.PRIME, "Prime");
+            attributeNames.put(Attribute.SUBPRIME, "Subprime");
+            attributeNames.put(Attribute.BASE, "Base");
+            attributeNames.put(Attribute.PRIME_BITS, "Prime Pits");
+            attributeNames.put(Attribute.SUB_PRIME_BITS, "Subprime Bits");
+            attributeNames.put(Attribute.VALUE_BITS, "Value Bits");
+            attributeNames.put(Attribute.VALUE_LEN, "Value Length");
+            attributeNames.put(Attribute.EXTRACTABLE, "Extractable");
+            attributeNames.put(Attribute.LOCAL, "Local");
+            attributeNames.put(Attribute.NEVER_EXTRACTABLE,
                 "Never Extractable");
-            attributeNames_.put(Attribute.WRAP_WITH_TRUSTED,
+            attributeNames.put(Attribute.WRAP_WITH_TRUSTED,
                 "Wrap With Trusted");
-            attributeNames_.put(Attribute.ALWAYS_SENSITIVE,
+            attributeNames.put(Attribute.ALWAYS_SENSITIVE,
                 "Always Sensitive");
-            attributeNames_.put(Attribute.ALWAYS_AUTHENTICATE,
+            attributeNames.put(Attribute.ALWAYS_AUTHENTICATE,
                 "Always Authenticate");
-            attributeNames_.put(Attribute.KEY_GEN_MECHANISM,
+            attributeNames.put(Attribute.KEY_GEN_MECHANISM,
                 "Key Generation Mechanism");
-            attributeNames_.put(Attribute.ALLOWED_MECHANISMS,
+            attributeNames.put(Attribute.ALLOWED_MECHANISMS,
                 "Allowed Mechanisms");
-            attributeNames_.put(Attribute.MODIFIABLE, "Modifiable");
-            attributeNames_.put(Attribute.EC_PARAMS, "EC Parameters");
-            attributeNames_.put(Attribute.EC_POINT, "EC Point");
-            attributeNames_.put(Attribute.SECONDARY_AUTH,
+            attributeNames.put(Attribute.MODIFIABLE, "Modifiable");
+            attributeNames.put(Attribute.EC_PARAMS, "EC Parameters");
+            attributeNames.put(Attribute.EC_POINT, "EC Point");
+            attributeNames.put(Attribute.SECONDARY_AUTH,
                 "Secondary Authentication");
-            attributeNames_.put(Attribute.AUTH_PIN_FLAGS,
+            attributeNames.put(Attribute.AUTH_PIN_FLAGS,
                 "Authentication PIN Flags");
-            attributeNames_.put(Attribute.HW_FEATURE_TYPE,
+            attributeNames.put(Attribute.HW_FEATURE_TYPE,
                 "Hardware Feature Type");
-            attributeNames_.put(Attribute.RESET_ON_INIT,
+            attributeNames.put(Attribute.RESET_ON_INIT,
                 "Reset on Initialization");
-            attributeNames_.put(Attribute.HAS_RESET, "Has been reset");
-            attributeNames_.put(Attribute.VENDOR_DEFINED, "Vendor Defined");
+            attributeNames.put(Attribute.HAS_RESET, "Has been reset");
+            attributeNames.put(Attribute.VENDOR_DEFINED, "Vendor Defined");
         }
 
         String name;
@@ -360,7 +360,7 @@ public abstract class Attribute implements Cloneable {
             nameBuffer.append(']');
             name = nameBuffer.toString();
         } else {
-            name = (String) attributeNames_.get(type);
+            name = (String) attributeNames.get(type);
             if (name == null) {
                 StringBuilder nameBuffer = new StringBuilder(25);
                 nameBuffer.append("[0x");
@@ -398,149 +398,149 @@ public abstract class Attribute implements Cloneable {
     protected static synchronized Class<?> getAttributeClass(Long type) {
         Util.requireNonNull("type", type);
 
-        if (attributeClasses_ == null) {
-            attributeClasses_ = new Hashtable<>(85);
-            attributeClasses_.put(Attribute.CLASS,
+        if (attributeClasses == null) {
+            attributeClasses = new Hashtable<>(85);
+            attributeClasses.put(Attribute.CLASS,
                     ObjectClassAttribute.class); //CK_OBJECT_CLASS
-            attributeClasses_.put(Attribute.TOKEN,
+            attributeClasses.put(Attribute.TOKEN,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.PRIVATE,
+            attributeClasses.put(Attribute.PRIVATE,
                     BooleanAttribute.class);//CK_BBOOL
-            attributeClasses_.put(Attribute.LABEL,
+            attributeClasses.put(Attribute.LABEL,
                     CharArrayAttribute.class); //RFC2279 string
-            attributeClasses_.put(Attribute.APPLICATION,
+            attributeClasses.put(Attribute.APPLICATION,
                     CharArrayAttribute.class); //RFC2279 string
-            attributeClasses_.put(Attribute.VALUE,
+            attributeClasses.put(Attribute.VALUE,
                     ByteArrayAttribute.class); //Byte Array
-            attributeClasses_.put(Attribute.OBJECT_ID,
+            attributeClasses.put(Attribute.OBJECT_ID,
                     ByteArrayAttribute.class); //Byte Array
-            attributeClasses_.put(Attribute.CERTIFICATE_TYPE,
+            attributeClasses.put(Attribute.CERTIFICATE_TYPE,
                     CertificateTypeAttribute.class); //CK_CERTIFICATE_TYPE
-            attributeClasses_.put(Attribute.ISSUER,
+            attributeClasses.put(Attribute.ISSUER,
                     ByteArrayAttribute.class); //Byte array
-            attributeClasses_.put(Attribute.SERIAL_NUMBER,
+            attributeClasses.put(Attribute.SERIAL_NUMBER,
                     ByteArrayAttribute.class); //Byte array
-            attributeClasses_.put(Attribute.URL,
+            attributeClasses.put(Attribute.URL,
                     CharArrayAttribute.class); //RFC2279 string
-            attributeClasses_.put(Attribute.HASH_OF_SUBJECT_PUBLIC_KEY,
+            attributeClasses.put(Attribute.HASH_OF_SUBJECT_PUBLIC_KEY,
                 ByteArrayAttribute.class); //Byte array
-            attributeClasses_.put(Attribute.HASH_OF_ISSUER_PUBLIC_KEY,
+            attributeClasses.put(Attribute.HASH_OF_ISSUER_PUBLIC_KEY,
                         ByteArrayAttribute.class); //Byte array
-            attributeClasses_.put(Attribute.JAVA_MIDP_SECURITY_DOMAIN,
+            attributeClasses.put(Attribute.JAVA_MIDP_SECURITY_DOMAIN,
                     LongAttribute.class); //CK_ULONG
-            attributeClasses_.put(Attribute.AC_ISSUER,
+            attributeClasses.put(Attribute.AC_ISSUER,
                     ByteArrayAttribute.class); //Byte array
-            attributeClasses_.put(Attribute.OWNER,
+            attributeClasses.put(Attribute.OWNER,
                     ByteArrayAttribute.class); //Byte array
-            attributeClasses_.put(Attribute.ATTR_TYPES,
+            attributeClasses.put(Attribute.ATTR_TYPES,
                     ByteArrayAttribute.class); //Byte array
-            attributeClasses_.put(Attribute.TRUSTED,
+            attributeClasses.put(Attribute.TRUSTED,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.KEY_TYPE,
+            attributeClasses.put(Attribute.KEY_TYPE,
                     KeyTypeAttribute.class); //CK_KEY_TYPE
-            attributeClasses_.put(Attribute.SUBJECT,
+            attributeClasses.put(Attribute.SUBJECT,
                     ByteArrayAttribute.class); //Byte array
-            attributeClasses_.put(Attribute.ID,
+            attributeClasses.put(Attribute.ID,
                     ByteArrayAttribute.class); //Byte array
-            attributeClasses_.put(Attribute.CHECK_VALUE,
+            attributeClasses.put(Attribute.CHECK_VALUE,
                     ByteArrayAttribute.class); //Byte array
-            attributeClasses_.put(Attribute.CERTIFICATE_CATEGORY,
+            attributeClasses.put(Attribute.CERTIFICATE_CATEGORY,
                     LongAttribute.class); //CK_ULONG
-            attributeClasses_.put(Attribute.SENSITIVE,
+            attributeClasses.put(Attribute.SENSITIVE,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.ENCRYPT,
+            attributeClasses.put(Attribute.ENCRYPT,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.DECRYPT,
+            attributeClasses.put(Attribute.DECRYPT,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.WRAP,
+            attributeClasses.put(Attribute.WRAP,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.UNWRAP,
+            attributeClasses.put(Attribute.UNWRAP,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.WRAP_TEMPLATE,
+            attributeClasses.put(Attribute.WRAP_TEMPLATE,
                     AttributeArray.class); //CK_ATTRIBUTE_PTR
-            attributeClasses_.put(Attribute.UNWRAP_TEMPLATE,
+            attributeClasses.put(Attribute.UNWRAP_TEMPLATE,
                     AttributeArray.class); //CK_ATTRIBUTE_PTR
-            attributeClasses_.put(Attribute.SIGN,
+            attributeClasses.put(Attribute.SIGN,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.SIGN_RECOVER,
+            attributeClasses.put(Attribute.SIGN_RECOVER,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.VERIFY,
+            attributeClasses.put(Attribute.VERIFY,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.VERIFY_RECOVER,
+            attributeClasses.put(Attribute.VERIFY_RECOVER,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.DERIVE,
+            attributeClasses.put(Attribute.DERIVE,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.START_DATE,
+            attributeClasses.put(Attribute.START_DATE,
                     DateAttribute.class); //CK_DATE
-            attributeClasses_.put(Attribute.END_DATE,
+            attributeClasses.put(Attribute.END_DATE,
                     DateAttribute.class); //CK_DATE
-            attributeClasses_.put(Attribute.MODULUS,
+            attributeClasses.put(Attribute.MODULUS,
                     ByteArrayAttribute.class); //Big integer
-            attributeClasses_.put(Attribute.MODULUS_BITS,
+            attributeClasses.put(Attribute.MODULUS_BITS,
                     LongAttribute.class); //CK_ULONG
-            attributeClasses_.put(Attribute.PUBLIC_EXPONENT,
+            attributeClasses.put(Attribute.PUBLIC_EXPONENT,
                     ByteArrayAttribute.class); //Big integer
-            attributeClasses_.put(Attribute.PRIVATE_EXPONENT,
+            attributeClasses.put(Attribute.PRIVATE_EXPONENT,
                     ByteArrayAttribute.class); //Big integer
-            attributeClasses_.put(Attribute.PRIME_1,
+            attributeClasses.put(Attribute.PRIME_1,
                     ByteArrayAttribute.class); //Big integer
-            attributeClasses_.put(Attribute.PRIME_2,
+            attributeClasses.put(Attribute.PRIME_2,
                     ByteArrayAttribute.class); //Big integer
-            attributeClasses_.put(Attribute.EXPONENT_1,
+            attributeClasses.put(Attribute.EXPONENT_1,
                     ByteArrayAttribute.class); //Big integer
-            attributeClasses_.put(Attribute.EXPONENT_2,
+            attributeClasses.put(Attribute.EXPONENT_2,
                     ByteArrayAttribute.class); //Big integer
-            attributeClasses_.put(Attribute.COEFFICIENT,
+            attributeClasses.put(Attribute.COEFFICIENT,
                     ByteArrayAttribute.class); //Big integer
-            attributeClasses_.put(Attribute.PRIME,
+            attributeClasses.put(Attribute.PRIME,
                     ByteArrayAttribute.class); //Big integer
-            attributeClasses_.put(Attribute.SUBPRIME,
+            attributeClasses.put(Attribute.SUBPRIME,
                     ByteArrayAttribute.class); //Big integer
-            attributeClasses_.put(Attribute.BASE,
+            attributeClasses.put(Attribute.BASE,
                     ByteArrayAttribute.class); //Big integer
-            attributeClasses_.put(Attribute.PRIME_BITS,
+            attributeClasses.put(Attribute.PRIME_BITS,
                     LongAttribute.class); //CK_ULONG
-            attributeClasses_.put(Attribute.SUB_PRIME_BITS,
+            attributeClasses.put(Attribute.SUB_PRIME_BITS,
                     LongAttribute.class); //CK_ULONG
-            attributeClasses_.put(Attribute.VALUE_BITS,
+            attributeClasses.put(Attribute.VALUE_BITS,
                     LongAttribute.class); //CK_ULONG
-            attributeClasses_.put(Attribute.VALUE_LEN,
+            attributeClasses.put(Attribute.VALUE_LEN,
                     LongAttribute.class); //CK_ULONG
-            attributeClasses_.put(Attribute.EXTRACTABLE,
+            attributeClasses.put(Attribute.EXTRACTABLE,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.LOCAL,
+            attributeClasses.put(Attribute.LOCAL,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.NEVER_EXTRACTABLE,
+            attributeClasses.put(Attribute.NEVER_EXTRACTABLE,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.WRAP_WITH_TRUSTED,
+            attributeClasses.put(Attribute.WRAP_WITH_TRUSTED,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.ALWAYS_SENSITIVE,
+            attributeClasses.put(Attribute.ALWAYS_SENSITIVE,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.ALWAYS_AUTHENTICATE,
+            attributeClasses.put(Attribute.ALWAYS_AUTHENTICATE,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.KEY_GEN_MECHANISM,
+            attributeClasses.put(Attribute.KEY_GEN_MECHANISM,
                     MechanismAttribute.class); //CK_MECHANISM_TYPE
-            attributeClasses_.put(Attribute.ALLOWED_MECHANISMS,
+            attributeClasses.put(Attribute.ALLOWED_MECHANISMS,
                     MechanismArrayAttribute.class); //CK_MECHANISM_TYPE_PTR
-            attributeClasses_.put(Attribute.MODIFIABLE,
+            attributeClasses.put(Attribute.MODIFIABLE,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.EC_PARAMS,
+            attributeClasses.put(Attribute.EC_PARAMS,
                     ByteArrayAttribute.class); //Byte array
-            attributeClasses_.put(Attribute.EC_POINT,
+            attributeClasses.put(Attribute.EC_POINT,
                     ByteArrayAttribute.class); //Byte array
-            attributeClasses_.put(Attribute.SECONDARY_AUTH,
+            attributeClasses.put(Attribute.SECONDARY_AUTH,
                     BooleanAttribute.class); //CK_BBOOL - deprecated
-            attributeClasses_.put(Attribute.AUTH_PIN_FLAGS,
+            attributeClasses.put(Attribute.AUTH_PIN_FLAGS,
                     LongAttribute.class); //CK_ULONG - deprecated
-            attributeClasses_.put(Attribute.HW_FEATURE_TYPE,
+            attributeClasses.put(Attribute.HW_FEATURE_TYPE,
                     HardwareFeatureTypeAttribute.class); //CK_HW_FEATURE
-            attributeClasses_.put(Attribute.RESET_ON_INIT,
+            attributeClasses.put(Attribute.RESET_ON_INIT,
                     BooleanAttribute.class); //CK_BBOOL
-            attributeClasses_.put(Attribute.HAS_RESET,
+            attributeClasses.put(Attribute.HAS_RESET,
                     BooleanAttribute.class); //CK_BBOOL
         }
 
-        Class<?> implementation = (Class<?>) attributeClasses_.get(type);
+        Class<?> implementation = (Class<?>) attributeClasses.get(type);
         return implementation;
 
     }
@@ -559,8 +559,8 @@ public abstract class Attribute implements Cloneable {
 
         try {
             clone = (Attribute) super.clone();
-            clone.ckAttribute_ = new CK_ATTRIBUTE(this.ckAttribute_.type,
-                    this.ckAttribute_.pValue);
+            clone.ckAttribute = new CK_ATTRIBUTE(this.ckAttribute.type,
+                    this.ckAttribute.pValue);
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is clone-able
             throw new TokenRuntimeException(
@@ -580,7 +580,7 @@ public abstract class Attribute implements Cloneable {
      * @postconditions
      */
     public void setPresent(boolean present) {
-        present_ = present;
+        this.present = present;
     }
 
     /**
@@ -593,7 +593,7 @@ public abstract class Attribute implements Cloneable {
      * @postconditions
      */
     public void setSensitive(boolean sensitive) {
-        sensitive_ = sensitive;
+        this.sensitive = sensitive;
     }
 
     /**
@@ -609,8 +609,7 @@ public abstract class Attribute implements Cloneable {
      *           the {@link OtherAttribute} implementation does not support
      *           setting a value directly.
      */
-    public abstract void setValue(java.lang.Object value)
-        throws UnsupportedOperationException;
+    public abstract void setValue(java.lang.Object value);
 
     /**
      * Set the CK_ATTRIBUTE of this Attribute. Only for internal use.
@@ -621,7 +620,7 @@ public abstract class Attribute implements Cloneable {
      * @postconditions
      */
     protected void setCkAttribute(CK_ATTRIBUTE ckAttribute) {
-        ckAttribute_ = Util.requireNonNull("ckAttribute", ckAttribute);
+        this.ckAttribute = Util.requireNonNull("ckAttribute", ckAttribute);
     }
 
     /**
@@ -633,7 +632,7 @@ public abstract class Attribute implements Cloneable {
      * @postconditions
      */
     public boolean isPresent() {
-        return present_;
+        return present;
     }
 
     /**
@@ -644,7 +643,7 @@ public abstract class Attribute implements Cloneable {
      * @postconditions
      */
     public boolean isSensitive() {
-        return sensitive_;
+        return sensitive;
     }
 
     /**
@@ -656,7 +655,7 @@ public abstract class Attribute implements Cloneable {
      * @postconditions (result <> null)
      */
     protected CK_ATTRIBUTE getCkAttribute() {
-        return ckAttribute_;
+        return ckAttribute;
     }
 
     /**
@@ -669,8 +668,8 @@ public abstract class Attribute implements Cloneable {
     protected String getValueString() {
         String valueString;
 
-        if ((ckAttribute_ != null) && (ckAttribute_.pValue != null)) {
-            valueString = ckAttribute_.pValue.toString();
+        if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
+            valueString = ckAttribute.pValue.toString();
         } else {
             valueString = "<NULL_PTR>";
         }
@@ -709,12 +708,12 @@ public abstract class Attribute implements Cloneable {
         StringBuilder buffer = new StringBuilder(32);
 
         if (withName) {
-            String typeName = getAttributeName(new Long(ckAttribute_.type));
+            String typeName = getAttributeName(new Long(ckAttribute.type));
             buffer.append(typeName);
             buffer.append(": ");
         }
-        if (present_) {
-            if (sensitive_) {
+        if (present) {
+            if (sensitive) {
                 buffer.append("<Value is sensitive>");
             } else {
                 buffer.append(getValueString());
@@ -736,7 +735,7 @@ public abstract class Attribute implements Cloneable {
      */
     protected void setType(Long type) {
         Util.requireNonNull("type", type);
-        ckAttribute_.type = type.longValue();
+        ckAttribute.type = type.longValue();
     }
 
     /**
@@ -747,7 +746,7 @@ public abstract class Attribute implements Cloneable {
      * @postconditions (result <> null)
      */
     protected Long getType() {
-        return new Long(ckAttribute_.type);
+        return new Long(ckAttribute.type);
     }
 
     /**
@@ -772,24 +771,24 @@ public abstract class Attribute implements Cloneable {
         }
 
         Attribute other = (Attribute) otherObject;
-        if (!this.present_ && !other.present_) {
+        if (!this.present && !other.present) {
             return true;
         }
 
-        if (!(this.present_ && other.present_)) {
+        if (!(this.present && other.present)) {
             return false;
         }
 
-        if (this.sensitive_ != other.sensitive_) {
+        if (this.sensitive != other.sensitive) {
             return false;
         }
 
-        if (this.ckAttribute_.type != other.ckAttribute_.type) {
+        if (this.ckAttribute.type != other.ckAttribute.type) {
             return false;
         }
 
-        return Util.objEquals(this.ckAttribute_.pValue,
-                other.ckAttribute_.pValue);
+        return Util.objEquals(this.ckAttribute.pValue,
+                other.ckAttribute.pValue);
     }
 
     /**
@@ -802,9 +801,9 @@ public abstract class Attribute implements Cloneable {
      */
     @Override
     public int hashCode() {
-        int valueHashCode = (ckAttribute_.pValue != null)
-                ? ckAttribute_.pValue.hashCode() : 0;
-        return ((int) ckAttribute_.type) ^ valueHashCode;
+        int valueHashCode = (ckAttribute.pValue != null)
+                ? ckAttribute.pValue.hashCode() : 0;
+        return ((int) ckAttribute.type) ^ valueHashCode;
     }
 
 }

@@ -97,8 +97,8 @@ public class MechanismArrayAttribute extends Attribute {
                 values[i] = value[i].getMechanismCode();
             }
         }
-        ckAttribute_.pValue = values;
-        present_ = true;
+        ckAttribute.pValue = values;
+        present = true;
     }
 
     /**
@@ -112,8 +112,8 @@ public class MechanismArrayAttribute extends Attribute {
     @SuppressWarnings("restriction")
     public Mechanism[] getMechanismAttributeArrayValue() {
         Mechanism[] mechanisms = null;
-        if (ckAttribute_.pValue != null) {
-            long[] values = (long[]) ckAttribute_.pValue;
+        if (ckAttribute.pValue != null) {
+            long[] values = (long[]) ckAttribute.pValue;
             if (values != null && values.length > 0) {
                 mechanisms = new Mechanism[values.length];
                 for (int i = 0; i < values.length; i++) {
@@ -172,20 +172,20 @@ public class MechanismArrayAttribute extends Attribute {
         }
 
         MechanismArrayAttribute other = (MechanismArrayAttribute) otherObject;
-        if (!this.present_ && !other.present_) {
+        if (!this.present && !other.present) {
             return true;
         }
 
-        if (!(this.present_ && other.present_)) {
+        if (!(this.present && other.present)) {
             return false;
         }
 
-        if (this.sensitive_ != other.sensitive_) {
+        if (this.sensitive != other.sensitive) {
             return false;
         }
 
-        return Functions.equals((long[]) this.ckAttribute_.pValue,
-                (long[]) other.ckAttribute_.pValue);
+        return Functions.equals((long[]) this.ckAttribute.pValue,
+                (long[]) other.ckAttribute.pValue);
     }
 
     /**
@@ -199,8 +199,8 @@ public class MechanismArrayAttribute extends Attribute {
     @SuppressWarnings("restriction")
     @Override
     public int hashCode() {
-        return (ckAttribute_.pValue != null) ? Functions
-            .hashCode((long[]) ckAttribute_.pValue) : 0;
+        return (ckAttribute.pValue != null) ? Functions
+            .hashCode((long[]) ckAttribute.pValue) : 0;
     }
 
     /**
@@ -220,18 +220,17 @@ public class MechanismArrayAttribute extends Attribute {
         MechanismArrayAttribute clone;
 
         clone = (MechanismArrayAttribute) super.clone();
-        if (this.ckAttribute_.pValue != null) {
-            clone.ckAttribute_.pValue
-                = ((long[]) this.ckAttribute_.pValue).clone();
+        if (this.ckAttribute.pValue != null) {
+            clone.ckAttribute.pValue
+                = ((long[]) this.ckAttribute.pValue).clone();
         } else {
-            clone.ckAttribute_.pValue = null;
+            clone.ckAttribute.pValue = null;
         }
         return clone;
     }
 
     @Override
-    public void setValue(java.lang.Object value)
-        throws UnsupportedOperationException {
+    public void setValue(java.lang.Object value) {
         setMechanismAttributeArrayValue((Mechanism[]) value);
     }
 

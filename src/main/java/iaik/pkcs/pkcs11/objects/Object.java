@@ -67,8 +67,8 @@ import sun.security.pkcs11.wrapper.PKCS11;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (attributeTable_ <> null)
- *             and (objectClass_ <> null)
+ * @invariants (attributeTable <> null)
+ *             and (objectClass <> null)
  */
 @SuppressWarnings("restriction")
 public class Object implements Cloneable {
@@ -180,31 +180,31 @@ public class Object implements Cloneable {
     /**
      * The currently set vendor defined object builder, or null.
      */
-    protected static VendorDefinedObjectBuilder vendorObjectBuilder_;
+    protected static VendorDefinedObjectBuilder vendorObjectBuilder;
 
     /**
      * A table holding string representations for all known key types. Table key
      * is the key type as Long object.
      */
-    protected static Hashtable<Long, String> objectClassNames_;
+    protected static Hashtable<Long, String> objectClassNames;
 
     /**
      * Contains all attribute objects an object possesses. No matter if an
      * attribute is set present or not, it is part of this collection.
      * The key of this table is the attribute type as Long.
      */
-    protected Hashtable<Long, Attribute> attributeTable_;
+    protected Hashtable<Long, Attribute> attributeTable;
 
     /**
      * The class type of this object. One of ObjectClass, or one that has a
      * bigger value than VENDOR_DEFINED.
      */
-    protected ObjectClassAttribute objectClass_;
+    protected ObjectClassAttribute objectClass;
 
     /**
      * The object handle as given from the PKCS#11 driver.
      */
-    protected long objectHandle_ = -1;
+    protected long objectHandle = -1;
 
     /**
      * The default constructor. An application use this constructor to
@@ -215,7 +215,7 @@ public class Object implements Cloneable {
      * @postconditions
      */
     public Object() {
-        attributeTable_ = new Hashtable<>(32);
+        attributeTable = new Hashtable<>(32);
 
         allocateAttributes();
     }
@@ -240,12 +240,9 @@ public class Object implements Cloneable {
      */
     protected Object(Session session, long objectHandle)
         throws TokenException {
-        attributeTable_ = new Hashtable<>(32);
-
+        this.attributeTable = new Hashtable<>(32);
         allocateAttributes();
-
-        objectHandle_ = objectHandle;
-
+        this.objectHandle = objectHandle;
         readAttributes(session);
     }
 
@@ -255,7 +252,7 @@ public class Object implements Cloneable {
      * attribute and calls the getInstance method of the according sub-class. If
      * the object class is a vendor defined it uses the
      * VendorDefinedObjectBuilder set by the application. If no object could be
-     * constructed, this method returns null.
+     * constructed, Returns null.
      *
      * @param session
      *          The session to use for reading attributes. This session must
@@ -333,9 +330,9 @@ public class Object implements Cloneable {
         Util.requireNonNull("session", session);
 
         Object newObject;
-        if (vendorObjectBuilder_ != null) {
+        if (vendorObjectBuilder != null) {
             try {
-                newObject = vendorObjectBuilder_.build(session, objectHandle);
+                newObject = vendorObjectBuilder.build(session, objectHandle);
             } catch (PKCS11Exception ex) {
                 // we can just treat it like some unknown type of object
                 newObject = new Object(session, objectHandle);
@@ -361,7 +358,7 @@ public class Object implements Cloneable {
      */
     public static void setVendorDefinedObjectBuilder(
             VendorDefinedObjectBuilder builder) {
-        vendorObjectBuilder_ = builder;
+        vendorObjectBuilder = builder;
     }
 
     /**
@@ -381,9 +378,9 @@ public class Object implements Cloneable {
                 & PKCS11Constants.CKO_VENDOR_DEFINED) != 0L) {
             objectClassName = "Vendor Defined";
         } else {
-            if (objectClassNames_ == null) {
+            if (objectClassNames == null) {
                 // setup object class names table
-                Hashtable<Long, String> objectClassNames = new Hashtable<>(7);
+                objectClassNames = new Hashtable<>(7);
                 objectClassNames.put(ObjectClass.DATA, "Data");
                 objectClassNames.put(ObjectClass.CERTIFICATE, "Certificate");
                 objectClassNames.put(ObjectClass.PUBLIC_KEY, "Public Key");
@@ -393,10 +390,9 @@ public class Object implements Cloneable {
                         "Hardware Feature");
                 objectClassNames.put(ObjectClass.DOMAIN_PARAMETERS,
                         "Domain Parameters");
-                objectClassNames_ = objectClassNames;
             }
 
-            objectClassName = (String) objectClassNames_.get(objectClass);
+            objectClassName = (String) objectClassNames.get(objectClass);
             if (objectClassName == null) {
                 objectClassName = "<unknown>";
             }
@@ -414,7 +410,7 @@ public class Object implements Cloneable {
      * @postconditions
      */
     public static VendorDefinedObjectBuilder getVendorDefinedObjectBuilder() {
-        return vendorObjectBuilder_;
+        return vendorObjectBuilder;
     }
 
     /**
@@ -430,7 +426,7 @@ public class Object implements Cloneable {
      */
     protected static void putAttributesInTable(Object object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.CLASS, object.objectClass_);
+        object.attributeTable.put(Attribute.CLASS, object.objectClass);
     }
 
     /**
@@ -441,7 +437,7 @@ public class Object implements Cloneable {
      * @postconditions
      */
     protected void allocateAttributes() {
-        objectClass_ = new ObjectClassAttribute();
+        objectClass = new ObjectClassAttribute();
 
         putAttributesInTable(this);
     }
@@ -462,10 +458,10 @@ public class Object implements Cloneable {
         try {
             clone = (Object) super.clone();
 
-            clone.objectClass_ = (ObjectClassAttribute)
-                    this.objectClass_.clone();
+            clone.objectClass = (ObjectClassAttribute)
+                    this.objectClass.clone();
             // a new table for the clone
-            clone.attributeTable_ = new Hashtable<>(32);
+            clone.attributeTable = new Hashtable<>(32);
 
             // put all cloned attributes into the new table
             putAttributesInTable(clone);
@@ -500,8 +496,8 @@ public class Object implements Cloneable {
         }
 
         Object other = (Object) otherObject;
-        return (this.objectHandle_ == other.objectHandle_)
-                && this.objectClass_.equals(other.objectClass_);
+        return (this.objectHandle == other.objectHandle)
+                && this.objectClass.equals(other.objectClass);
     }
 
     /**
@@ -515,7 +511,7 @@ public class Object implements Cloneable {
      */
     @SuppressWarnings("unchecked")
     public Hashtable<Long, Attribute> getAttributeTable() {
-        return (Hashtable<Long, Attribute>) attributeTable_.clone();
+        return (Hashtable<Long, Attribute>) attributeTable.clone();
     }
 
     /**
@@ -553,7 +549,7 @@ public class Object implements Cloneable {
      * @return the attribute
      */
     public Attribute getAttribute(long attribute) {
-        return (Attribute) attributeTable_.get(new Long(attribute));
+        return (Attribute) attributeTable.get(new Long(attribute));
     }
 
     /**
@@ -574,7 +570,7 @@ public class Object implements Cloneable {
      * @postconditions
      */
     public long getObjectHandle() {
-        return objectHandle_;
+        return objectHandle;
     }
 
     /**
@@ -588,7 +584,7 @@ public class Object implements Cloneable {
      * @postconditions
      */
     public void setObjectHandle(long objectHandle) {
-        objectHandle_ = objectHandle;
+        this.objectHandle = objectHandle;
     }
 
     /**
@@ -601,14 +597,15 @@ public class Object implements Cloneable {
      * @postconditions
      */
     public LongAttribute getObjectClass() {
-        return objectClass_;
+        return objectClass;
     }
 
     /**
-     * This method returns the PKCS#11 attributes of this object. The collection
+     * Returns the PKCS#11 attributes of this object. The collection
      * contains CK_ATTRIBUTE objects, one for each present attribute of this
      * object; e.g. for each attribute that has a set value (which might be
      * sensitive).
+     * 
      * The array representation of this collection can be used directly as input
      * for the PKCS#11 wrapper. The Session class uses this method for various
      * object operations.
@@ -619,10 +616,10 @@ public class Object implements Cloneable {
      */
     public Vector<CK_ATTRIBUTE> getSetAttributes() {
         Vector<CK_ATTRIBUTE> attributeCollection
-            = new Vector<>(attributeTable_.size());
+            = new Vector<>(attributeTable.size());
 
         Enumeration<Attribute> attributeEnumeration
-            = attributeTable_.elements();
+            = attributeTable.elements();
         while (attributeEnumeration.hasMoreElements()) {
             Attribute attribute = attributeEnumeration.nextElement();
             if (attribute.isPresent()) {
@@ -635,99 +632,7 @@ public class Object implements Cloneable {
     }
 
     /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return objectClass_.hashCode() ^ ((int) objectHandle_);
-    }
-
-    /**
-     * Read the values of the attributes of this object from the token.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    public void readAttributes(Session session)
-        throws TokenException {
-        Util.requireNonNull("session", session);
-        // no attributes that we need to read, subclasses set the CLASS
-        // attribute
-    }
-
-    /**
-     * This method returns a string representation of the current object. The
-     * output is only for debugging purposes and should not be used for other
-     * purposes.
-     *
-     * @return A string presentation of this object for debugging output.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public String toString() {
-        StringBuilder buffer = new StringBuilder(32);
-
-        buffer.append(Constants.INDENT);
-        buffer.append("Object Class: ");
-        if (objectClass_ != null) {
-            buffer.append(objectClass_.toString());
-        } else {
-            buffer.append("<unavailable>");
-        }
-
-        return buffer.toString();
-    }
-
-    /**
-     * This method returns a string representation of the current object. Some
-     * parameters can be set to manipulate the output. The output is only for
-     * debugging purposes and should not be used for other purposes.
-     *
-     * @param newline
-     *        true if the output should start in a new line
-     * @param withName
-     *        true if the type of the attribute should be returned too
-     * @param indent
-     *        the indent to be used
-     * @return A string presentation of this object for debugging output.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public String toString(boolean newline, boolean withName, String indent) {
-        StringBuilder buffer = new StringBuilder(1024);
-
-        Enumeration<Attribute> attributesEnumeration
-            = attributeTable_.elements();
-        boolean firstAttribute = !newline;
-        while (attributesEnumeration.hasMoreElements()) {
-            Attribute attribute = attributesEnumeration.nextElement();
-            if (attribute.isPresent()) {
-                if (!firstAttribute) {
-                    buffer.append(Constants.NEWLINE);
-                }
-                buffer.append(indent);
-                buffer.append(attribute.toString(withName));
-                firstAttribute = false;
-            }
-        }
-
-        return buffer.toString();
-    }
-
-    /**
-     * This method returns the PKCS#11 attributes of an object. The array
+     * Returns the PKCS#11 attributes of an object. The array
      * contains CK_ATTRIBUTE objects, one for each set attribute of this object;
      * e.g. for each attribute that is not null.
      * The array can be used directly as input for the PKCS#11 wrapper. The
@@ -751,6 +656,98 @@ public class Object implements Cloneable {
                 ? Util.convertAttributesVectorToArray(setAttributes) : null;
 
         return ckAttributes;
+    }
+
+    /**
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
+     *
+     * @return The hash code of this object.
+     * @preconditions
+     * @postconditions
+     */
+    @Override
+    public int hashCode() {
+        return objectClass.hashCode() ^ ((int) objectHandle);
+    }
+
+    /**
+     * Read the values of the attributes of this object from the token.
+     *
+     * @param session
+     *          The session to use for reading attributes. This session must
+     *          have the appropriate rights; i.e. it must be a user-session, if
+     *          it is a private object.
+     * @exception TokenException
+     *              If getting the attributes failed.
+     * @preconditions (session <> null)
+     * @postconditions
+     */
+    public void readAttributes(Session session)
+        throws TokenException {
+        Util.requireNonNull("session", session);
+        // no attributes that we need to read, subclasses set the CLASS
+        // attribute
+    }
+
+    /**
+     * Returns a string representation of the current object. The
+     * output is only for debugging purposes and should not be used for other
+     * purposes.
+     *
+     * @return A string presentation of this object for debugging output.
+     * @preconditions
+     * @postconditions (result <> null)
+     */
+    @Override
+    public String toString() {
+        StringBuilder buffer = new StringBuilder(32);
+
+        buffer.append(Constants.INDENT);
+        buffer.append("Object Class: ");
+        if (objectClass != null) {
+            buffer.append(objectClass.toString());
+        } else {
+            buffer.append("<unavailable>");
+        }
+
+        return buffer.toString();
+    }
+
+    /**
+     * Returns a string representation of the current object. Some
+     * parameters can be set to manipulate the output. The output is only for
+     * debugging purposes and should not be used for other purposes.
+     *
+     * @param newline
+     *        true if the output should start in a new line
+     * @param withName
+     *        true if the type of the attribute should be returned too
+     * @param indent
+     *        the indent to be used
+     * @return A string presentation of this object for debugging output.
+     * @preconditions
+     * @postconditions (result <> null)
+     */
+    public String toString(boolean newline, boolean withName, String indent) {
+        StringBuilder buffer = new StringBuilder(1024);
+
+        Enumeration<Attribute> attributesEnumeration
+            = attributeTable.elements();
+        boolean firstAttribute = !newline;
+        while (attributesEnumeration.hasMoreElements()) {
+            Attribute attribute = attributesEnumeration.nextElement();
+            if (attribute.isPresent()) {
+                if (!firstAttribute) {
+                    buffer.append(Constants.NEWLINE);
+                }
+                buffer.append(indent);
+                buffer.append(attribute.toString(withName));
+                firstAttribute = false;
+            }
+        }
+
+        return buffer.toString();
     }
 
     /**

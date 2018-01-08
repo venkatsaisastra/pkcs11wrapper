@@ -84,8 +84,8 @@ public class LongAttribute extends Attribute {
      */
     @SuppressWarnings("restriction")
     public void setLongValue(Long value) {
-        ckAttribute_.pValue = value;
-        present_ = true;
+        ckAttribute.pValue = value;
+        present = true;
     }
 
     /**
@@ -97,7 +97,7 @@ public class LongAttribute extends Attribute {
      */
     @SuppressWarnings("restriction")
     public Long getLongValue() {
-        return (Long) ckAttribute_.pValue;
+        return (Long) ckAttribute.pValue;
     }
 
     /**
@@ -114,9 +114,9 @@ public class LongAttribute extends Attribute {
     protected String getValueString(int radix) {
         String valueString;
 
-        if ((ckAttribute_ != null) && (ckAttribute_.pValue != null)) {
+        if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
             valueString = Long.toString(
-                    ((Long) ckAttribute_.pValue).longValue(), radix);
+                    ((Long) ckAttribute.pValue).longValue(), radix);
         } else {
             valueString = "<NULL_PTR>";
         }
@@ -138,8 +138,8 @@ public class LongAttribute extends Attribute {
     public String toString(int radix) {
         StringBuilder buffer = new StringBuilder(32);
 
-        if (present_) {
-            if (sensitive_) {
+        if (present) {
+            if (sensitive) {
                 buffer.append("<Value is sensitive>");
             } else {
                 buffer.append(getValueString(radix));
@@ -152,8 +152,7 @@ public class LongAttribute extends Attribute {
     }
 
     @Override
-    public void setValue(java.lang.Object value)
-        throws UnsupportedOperationException {
+    public void setValue(java.lang.Object value) {
         setLongValue((Long) value);
     }
 

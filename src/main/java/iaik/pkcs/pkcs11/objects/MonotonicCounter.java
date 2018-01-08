@@ -54,26 +54,26 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (resetOnInit_ <> null)
- *             and (hasReset_ <> null)
- *             and (value_ <> null)
+ * @invariants (resetOnInit <> null)
+ *             and (hasReset <> null)
+ *             and (value <> null)
  */
 public class MonotonicCounter extends HardwareFeature {
 
     /**
      * True, if this counter is reset on token initialization.
      */
-    protected BooleanAttribute resetOnInit_;
+    protected BooleanAttribute resetOnInit;
 
     /**
-     * True, if this counter has benn reset at least once.
+     * True, if this counter has been reset at least once.
      */
-    protected BooleanAttribute hasReset_;
+    protected BooleanAttribute hasReset;
 
     /**
      * The value attribute of this monotonic counter.
      */
-    protected ByteArrayAttribute value_;
+    protected ByteArrayAttribute value;
 
     /**
      * Default Constructor.
@@ -83,7 +83,7 @@ public class MonotonicCounter extends HardwareFeature {
      */
     public MonotonicCounter() {
         super();
-        hardwareFeatureType_.setLongValue(FeatureType.MONOTONIC_COUNTER);
+        hardwareFeatureType.setLongValue(FeatureType.MONOTONIC_COUNTER);
     }
 
     /**
@@ -104,7 +104,7 @@ public class MonotonicCounter extends HardwareFeature {
     protected MonotonicCounter(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        hardwareFeatureType_.setLongValue(FeatureType.MONOTONIC_COUNTER);
+        hardwareFeatureType.setLongValue(FeatureType.MONOTONIC_COUNTER);
     }
 
     /**
@@ -143,10 +143,10 @@ public class MonotonicCounter extends HardwareFeature {
      */
     protected static void putAttributesInTable(MonotonicCounter object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.RESET_ON_INIT,
-                object.resetOnInit_);
-        object.attributeTable_.put(Attribute.HAS_RESET, object.hasReset_);
-        object.attributeTable_.put(Attribute.VALUE, object.value_);
+        object.attributeTable.put(Attribute.RESET_ON_INIT,
+                object.resetOnInit);
+        object.attributeTable.put(Attribute.HAS_RESET, object.hasReset);
+        object.attributeTable.put(Attribute.VALUE, object.value);
     }
 
     /**
@@ -160,9 +160,9 @@ public class MonotonicCounter extends HardwareFeature {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        resetOnInit_ = new BooleanAttribute(Attribute.RESET_ON_INIT);
-        hasReset_ = new BooleanAttribute(Attribute.HAS_RESET);
-        value_ = new ByteArrayAttribute(Attribute.VALUE);
+        resetOnInit = new BooleanAttribute(Attribute.RESET_ON_INIT);
+        hasReset = new BooleanAttribute(Attribute.HAS_RESET);
+        value = new ByteArrayAttribute(Attribute.VALUE);
 
         putAttributesInTable(this);
     }
@@ -180,9 +180,9 @@ public class MonotonicCounter extends HardwareFeature {
     public java.lang.Object clone() {
         MonotonicCounter clone = (MonotonicCounter) super.clone();
 
-        clone.resetOnInit_ = (BooleanAttribute) this.resetOnInit_.clone();
-        clone.hasReset_ = (BooleanAttribute) this.hasReset_.clone();
-        clone.value_ = (ByteArrayAttribute) this.value_.clone();
+        clone.resetOnInit = (BooleanAttribute) this.resetOnInit.clone();
+        clone.hasReset = (BooleanAttribute) this.hasReset.clone();
+        clone.value = (ByteArrayAttribute) this.value.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -213,9 +213,9 @@ public class MonotonicCounter extends HardwareFeature {
 
         MonotonicCounter other = (MonotonicCounter) otherObject;
         return super.equals(other)
-                && this.resetOnInit_.equals(other.resetOnInit_)
-                && this.hasReset_.equals(other.hasReset_)
-                && this.value_.equals(other.value_);
+                && this.resetOnInit.equals(other.resetOnInit)
+                && this.hasReset.equals(other.hasReset)
+                && this.value.equals(other.value);
     }
 
     /**
@@ -226,7 +226,7 @@ public class MonotonicCounter extends HardwareFeature {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getHasReset() {
-        return hasReset_;
+        return hasReset;
     }
 
     /**
@@ -237,7 +237,7 @@ public class MonotonicCounter extends HardwareFeature {
      * @postconditions (result <> null)
      */
     public BooleanAttribute isResetOnInit() {
-        return resetOnInit_;
+        return resetOnInit;
     }
 
     /**
@@ -248,7 +248,7 @@ public class MonotonicCounter extends HardwareFeature {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getValue() {
-        return value_;
+        return value;
     }
 
     /**
@@ -261,8 +261,8 @@ public class MonotonicCounter extends HardwareFeature {
      */
     @Override
     public int hashCode() {
-        return resetOnInit_.hashCode() ^ hasReset_.hashCode()
-                ^ value_.hashCode();
+        return resetOnInit.hashCode() ^ hasReset.hashCode()
+                ^ value.hashCode();
     }
 
     /**
@@ -282,12 +282,12 @@ public class MonotonicCounter extends HardwareFeature {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            resetOnInit_, hasReset_, value_ });
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            resetOnInit, hasReset, value });
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -303,14 +303,14 @@ public class MonotonicCounter extends HardwareFeature {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Reset on Initialization: ");
-        buffer.append(resetOnInit_.toString());
+        buffer.append(resetOnInit.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Has been reset: ");
-        buffer.append(hasReset_.toString());
+        buffer.append(hasReset.toString());
 
         buffer.append(Constants.NEWLINE_INDENT_HEXVALUE);
-        buffer.append(value_.toString());
+        buffer.append(value.toString());
 
         return buffer.toString();
     }

@@ -58,12 +58,12 @@ public class Version implements Cloneable {
     /**
      * The major version number.
      */
-    protected byte major_;
+    protected byte major;
 
     /**
      * The minor version number.
      */
-    protected byte minor_;
+    protected byte minor;
 
     /**
      * Constructor for internal use only.
@@ -84,8 +84,8 @@ public class Version implements Cloneable {
      */
     protected Version(CK_VERSION ckVersion) {
         Util.requireNonNull("ckVersion", ckVersion);
-        major_ = ckVersion.major;
-        minor_ = ckVersion.minor;
+        this.major = ckVersion.major;
+        this.minor = ckVersion.minor;
     }
 
     /**
@@ -120,7 +120,7 @@ public class Version implements Cloneable {
      * @postconditions
      */
     public byte getMajor() {
-        return major_;
+        return major;
     }
 
     /**
@@ -131,7 +131,7 @@ public class Version implements Cloneable {
      * @postconditions
      */
     public byte getMinor() {
-        return minor_;
+        return minor;
     }
 
     /**
@@ -143,12 +143,12 @@ public class Version implements Cloneable {
     public String toString() {
         StringBuilder buffer = new StringBuilder();
 
-        buffer.append(major_ & 0xff);
+        buffer.append(major & 0xff);
         buffer.append('.');
-        if (minor_ < 10) {
+        if (minor < 10) {
             buffer.append('0');
         }
-        buffer.append(minor_ & 0xff);
+        buffer.append(minor & 0xff);
 
         return buffer.toString();
     }
@@ -175,22 +175,22 @@ public class Version implements Cloneable {
         }
 
         Version other = (Version) otherObject;
-        return (this.major_ == other.major_)
-                && (this.minor_ == other.minor_);
+        return (this.major == other.major)
+                && (this.minor == other.minor);
     }
 
     /**
      * The overriding of this method should ensure that the objects of this
      * class work correctly in a hashtable.
      *
-     * @return The hash code of this object. Gained from the slotID_, state_ and
-     *         deviceError_.
+     * @return The hash code of this object. Gained from the slotID, state and
+     *         deviceError.
      * @preconditions
      * @postconditions
      */
     @Override
     public int hashCode() {
-        return major_ ^ minor_;
+        return major ^ minor;
     }
 
 }

@@ -171,9 +171,9 @@ public class Module {
     /**
      * Interface to the underlying PKCS#11 module.
      */
-    protected PKCS11 pkcs11Module_;
+    protected PKCS11 pkcs11Module;
 
-    protected String pkcs11ModuleName_;
+    protected String pkcs11ModuleName;
 
     /**
      * Create a new module that uses the given PKCS11 interface to interact with
@@ -185,7 +185,7 @@ public class Module {
      * @postconditions
      */
     protected Module(String pkcs11ModuleName) {
-        pkcs11ModuleName_ = pkcs11ModuleName;
+        this.pkcs11ModuleName = pkcs11ModuleName;
     }
 
     /**
@@ -260,7 +260,7 @@ public class Module {
         throws TokenException {
         CK_INFO ckInfo;
         try {
-            ckInfo = pkcs11Module_.C_GetInfo();
+            ckInfo = pkcs11Module.C_GetInfo();
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -289,28 +289,30 @@ public class Module {
             wrapperInitArgs = new CK_C_INITIALIZE_ARGS();
             if (mutexHandler != null) {
                 wrapperInitArgs.CreateMutex = new CK_CREATEMUTEX() {
+                    // CHECKSTYLE:SKIP
                     public Object CK_CREATEMUTEX()
                         throws sun.security.pkcs11.wrapper.PKCS11Exception {
                         return mutexHandler.createMutex();
                     }
                 };
                 wrapperInitArgs.DestroyMutex = new CK_DESTROYMUTEX() {
+                    // CHECKSTYLE:SKIP
                     public void CK_DESTROYMUTEX(Object pMutex)
                         throws sun.security.pkcs11.wrapper.PKCS11Exception {
                         mutexHandler.destroyMutex(pMutex);
                     }
                 };
                 wrapperInitArgs.LockMutex = new CK_LOCKMUTEX() {
+                    // CHECKSTYLE:SKIP
                     public void CK_LOCKMUTEX(Object pMutex)
-                        throws sun.security.pkcs11.wrapper.PKCS11Exception
-                    {
+                        throws sun.security.pkcs11.wrapper.PKCS11Exception {
                         mutexHandler.lockMutex(pMutex);
                     }
                 };
                 wrapperInitArgs.UnlockMutex = new CK_UNLOCKMUTEX() {
+                    // CHECKSTYLE:SKIP
                     public void CK_UNLOCKMUTEX(Object pMutex)
-                        throws sun.security.pkcs11.wrapper.PKCS11Exception
-                    {
+                        throws sun.security.pkcs11.wrapper.PKCS11Exception {
                         mutexHandler.unlockMutex(pMutex);
                     }
                 };
@@ -336,34 +338,10 @@ public class Module {
         final String functionList = "C_GetFunctionList";
         final boolean omitInitialize = false;
         try {
-            pkcs11Module_ = PKCS11.getInstance(pkcs11ModuleName_, functionList,
+            pkcs11Module = PKCS11.getInstance(pkcs11ModuleName, functionList,
                     wrapperInitArgs, omitInitialize);
         } catch (IOException ex) {
             throw new TokenException(ex.getMessage(), ex);
-        } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
-            throw new PKCS11Exception(ex);
-        }
-    }
-
-    /**
-     * Finalizes this module. The application should call this method when it
-     * finished using the module.
-     * Note that this method is different from the <code>finalize</code> method,
-     * which is the reserved Java method called by the garbage collector.
-     * This method calls the <code>C_Finalize(Object)</code> method of the
-     * underlying PKCS11 module.
-     *
-     * @param args
-     *          Must be null in version 2.x of PKCS#11.
-     * @exception TokenException
-     *              If finalization fails.
-     * @preconditions (args == null)
-     * @postconditions
-     */
-    public void finalize(Object args)
-        throws TokenException {
-        try {
-            pkcs11Module_.C_Finalize(args);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -388,7 +366,7 @@ public class Module {
         throws TokenException {
         long[] slotIDs;
         try {
-            slotIDs = pkcs11Module_.C_GetSlotList(tokenPresent);
+            slotIDs = pkcs11Module.C_GetSlotList(tokenPresent);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -436,8 +414,9 @@ public class Module {
      * @preconditions
      * @postconditions (result <> null)
      */
+    // CHECKSTYLE:SKIP
     public PKCS11 getPKCS11Module() {
-        return pkcs11Module_;
+        return pkcs11Module;
     }
 
     /**
@@ -446,7 +425,7 @@ public class Module {
      * @return The string representation of object
      */
     public String toString() {
-        return (pkcs11Module_ != null) ? pkcs11Module_.toString() : null;
+        return (pkcs11Module != null) ? pkcs11Module.toString() : null;
     }
 
     /**
@@ -463,14 +442,39 @@ public class Module {
      * @postconditions
      * @see #finalize(Object)
      */
+    // CHECKSTYLE:SKIP
     public void finalize()
         throws Throwable {
         // pkcs11Module_.finalize();
         Method method = PKCS11.class.getDeclaredMethod("finalize");
         method.setAccessible(true);
-        method.invoke(pkcs11Module_);
+        method.invoke(pkcs11Module);
 
         super.finalize();
+    }
+
+    /**
+     * Finalizes this module. The application should call this method when it
+     * finished using the module.
+     * Note that this method is different from the <code>finalize</code> method,
+     * which is the reserved Java method called by the garbage collector.
+     * This method calls the <code>C_Finalize(Object)</code> method of the
+     * underlying PKCS11 module.
+     *
+     * @param args
+     *          Must be null in version 2.x of PKCS#11.
+     * @exception TokenException
+     *              If finalization fails.
+     * @preconditions (args == null)
+     * @postconditions
+     */
+    public void finalize(Object args)
+        throws TokenException {
+        try {
+            pkcs11Module.C_Finalize(args);
+        } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+            throw new PKCS11Exception(ex);
+        }
     }
 
     /**
@@ -495,7 +499,7 @@ public class Module {
         }
 
         Module other = (Module) otherObject;
-        return Util.objEquals(this.pkcs11Module_, other.pkcs11Module_);
+        return Util.objEquals(this.pkcs11Module, other.pkcs11Module);
     }
 
     /**
@@ -508,7 +512,7 @@ public class Module {
      */
     @Override
     public int hashCode() {
-        return pkcs11Module_.hashCode();
+        return pkcs11Module.hashCode();
     }
 
 }

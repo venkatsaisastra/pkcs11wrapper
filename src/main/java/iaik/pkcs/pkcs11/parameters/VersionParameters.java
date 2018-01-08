@@ -79,8 +79,8 @@ public class VersionParameters extends Version implements Parameters {
      */
     public VersionParameters(byte major, byte minor) {
         super();
-        major_ = major;
-        minor_ = minor;
+        this.major = major;
+        this.minor = minor;
     }
 
     /**
@@ -92,7 +92,7 @@ public class VersionParameters extends Version implements Parameters {
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        CK_VERSION params = new CK_VERSION(major_, minor_);
+        CK_VERSION params = new CK_VERSION(major, minor);
         return params;
     }
 
@@ -105,9 +105,10 @@ public class VersionParameters extends Version implements Parameters {
      * @preconditions (input <> null)
      * @postconditions
      */
+    // CHECKSTYLE:SKIP
     public void setPKCS11ParamsObject(CK_VERSION input) {
-        major_ = input.major;
-        minor_ = input.minor;
+        major = input.major;
+        minor = input.minor;
     }
 
     /**
@@ -119,7 +120,7 @@ public class VersionParameters extends Version implements Parameters {
      * @postconditions
      */
     public void setMajor(byte major) {
-        major_ = major;
+        this.major = major;
     }
 
     /**
@@ -131,7 +132,7 @@ public class VersionParameters extends Version implements Parameters {
      * @postconditions
      */
     public void setMinor(byte minor) {
-        minor_ = minor;
+        this.minor = minor;
     }
 
 }

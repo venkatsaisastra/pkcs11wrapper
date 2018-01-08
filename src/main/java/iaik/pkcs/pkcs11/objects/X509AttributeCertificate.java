@@ -53,38 +53,38 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (owner_ <> null)
- *             and (acIssuer_ <> null)
- *             and (serialNumber_ <> null)
- *             and (attrTypes_ <> null)
- *             and (value_ <> null)
+ * @invariants (owner <> null)
+ *             and (acIssuer <> null)
+ *             and (serialNumber <> null)
+ *             and (attrTypes <> null)
+ *             and (value <> null)
  */
 public class X509AttributeCertificate extends Certificate {
 
     /**
      * The owner attribute of this certificate.
      */
-    protected ByteArrayAttribute owner_;
+    protected ByteArrayAttribute owner;
 
     /**
      * The owner attribute of this certificate.
      */
-    protected ByteArrayAttribute acIssuer_;
+    protected ByteArrayAttribute acIssuer;
 
     /**
      * The serial number attribute of this certificate.
      */
-    protected ByteArrayAttribute serialNumber_;
+    protected ByteArrayAttribute serialNumber;
 
     /**
      * The attribute types attribute of this certificate.
      */
-    protected ByteArrayAttribute attrTypes_;
+    protected ByteArrayAttribute attrTypes;
 
     /**
      * The value attribute of this certificate; i.e. BER-encoded certificate.
      */
-    protected ByteArrayAttribute value_;
+    protected ByteArrayAttribute value;
 
     /**
      * Default Constructor.
@@ -94,7 +94,7 @@ public class X509AttributeCertificate extends Certificate {
      */
     public X509AttributeCertificate() {
         super();
-        certificateType_.setLongValue(CertificateType.X_509_ATTRIBUTE);
+        certificateType.setLongValue(CertificateType.X_509_ATTRIBUTE);
     }
 
     /**
@@ -115,7 +115,7 @@ public class X509AttributeCertificate extends Certificate {
     protected X509AttributeCertificate(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        certificateType_.setLongValue(CertificateType.X_509_ATTRIBUTE);
+        certificateType.setLongValue(CertificateType.X_509_ATTRIBUTE);
     }
 
     /**
@@ -155,12 +155,12 @@ public class X509AttributeCertificate extends Certificate {
     protected static void putAttributesInTable(
             X509AttributeCertificate object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.OWNER, object.owner_);
-        object.attributeTable_.put(Attribute.AC_ISSUER, object.acIssuer_);
-        object.attributeTable_.put(Attribute.SERIAL_NUMBER,
-                object.serialNumber_);
-        object.attributeTable_.put(Attribute.ATTR_TYPES, object.attrTypes_);
-        object.attributeTable_.put(Attribute.VALUE, object.value_);
+        object.attributeTable.put(Attribute.OWNER, object.owner);
+        object.attributeTable.put(Attribute.AC_ISSUER, object.acIssuer);
+        object.attributeTable.put(Attribute.SERIAL_NUMBER,
+                object.serialNumber);
+        object.attributeTable.put(Attribute.ATTR_TYPES, object.attrTypes);
+        object.attributeTable.put(Attribute.VALUE, object.value);
     }
 
     /**
@@ -174,11 +174,11 @@ public class X509AttributeCertificate extends Certificate {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        owner_ = new ByteArrayAttribute(Attribute.OWNER);
-        acIssuer_ = new ByteArrayAttribute(Attribute.AC_ISSUER);
-        serialNumber_ = new ByteArrayAttribute(Attribute.SERIAL_NUMBER);
-        attrTypes_ = new ByteArrayAttribute(Attribute.ATTR_TYPES);
-        value_ = new ByteArrayAttribute(Attribute.VALUE);
+        owner = new ByteArrayAttribute(Attribute.OWNER);
+        acIssuer = new ByteArrayAttribute(Attribute.AC_ISSUER);
+        serialNumber = new ByteArrayAttribute(Attribute.SERIAL_NUMBER);
+        attrTypes = new ByteArrayAttribute(Attribute.ATTR_TYPES);
+        value = new ByteArrayAttribute(Attribute.VALUE);
 
         putAttributesInTable(this);
     }
@@ -197,11 +197,11 @@ public class X509AttributeCertificate extends Certificate {
         X509AttributeCertificate clone
             = (X509AttributeCertificate) super.clone();
 
-        clone.owner_ = (ByteArrayAttribute) this.owner_.clone();
-        clone.acIssuer_ = (ByteArrayAttribute) this.acIssuer_.clone();
-        clone.serialNumber_ = (ByteArrayAttribute) this.serialNumber_.clone();
-        clone.attrTypes_ = (ByteArrayAttribute) this.attrTypes_.clone();
-        clone.value_ = (ByteArrayAttribute) this.value_.clone();
+        clone.owner = (ByteArrayAttribute) this.owner.clone();
+        clone.acIssuer = (ByteArrayAttribute) this.acIssuer.clone();
+        clone.serialNumber = (ByteArrayAttribute) this.serialNumber.clone();
+        clone.attrTypes = (ByteArrayAttribute) this.attrTypes.clone();
+        clone.value = (ByteArrayAttribute) this.value.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -232,11 +232,11 @@ public class X509AttributeCertificate extends Certificate {
 
         X509AttributeCertificate other = (X509AttributeCertificate) otherObject;
         return super.equals(other)
-                && this.owner_.equals(other.owner_)
-                && this.acIssuer_.equals(other.acIssuer_)
-                && this.serialNumber_.equals(other.serialNumber_)
-                && this.attrTypes_.equals(other.attrTypes_)
-                && this.value_.equals(other.value_);
+                && this.owner.equals(other.owner)
+                && this.acIssuer.equals(other.acIssuer)
+                && this.serialNumber.equals(other.serialNumber)
+                && this.attrTypes.equals(other.attrTypes)
+                && this.value.equals(other.value);
     }
 
     /**
@@ -247,7 +247,7 @@ public class X509AttributeCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getOwner() {
-        return owner_;
+        return owner;
     }
 
     /**
@@ -260,7 +260,7 @@ public class X509AttributeCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getAcIssuer() {
-        return acIssuer_;
+        return acIssuer;
     }
 
     /**
@@ -271,7 +271,7 @@ public class X509AttributeCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getSerialNumber() {
-        return serialNumber_;
+        return serialNumber;
     }
 
     /**
@@ -283,7 +283,7 @@ public class X509AttributeCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getAttrTypes() {
-        return attrTypes_;
+        return attrTypes;
     }
 
     /**
@@ -294,7 +294,7 @@ public class X509AttributeCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getValue() {
-        return value_;
+        return value;
     }
 
     /**
@@ -307,7 +307,7 @@ public class X509AttributeCertificate extends Certificate {
      */
     @Override
     public int hashCode() {
-        return acIssuer_.hashCode() ^ serialNumber_.hashCode();
+        return acIssuer.hashCode() ^ serialNumber.hashCode();
     }
 
     /**
@@ -327,12 +327,12 @@ public class X509AttributeCertificate extends Certificate {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            owner_, acIssuer_, serialNumber_, attrTypes_, value_ });
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            owner, acIssuer, serialNumber, attrTypes, value });
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -348,23 +348,23 @@ public class X509AttributeCertificate extends Certificate {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Owner (DER, hex): ");
-        buffer.append(owner_.toString());
+        buffer.append(owner.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Attribute Certificate Issuer (DER, hex): ");
-        buffer.append(acIssuer_.toString());
+        buffer.append(acIssuer.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Serial Number (DER, hex): ");
-        buffer.append(serialNumber_.toString());
+        buffer.append(serialNumber.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Attribute Types (BER, hex): ");
-        buffer.append(attrTypes_.toString());
+        buffer.append(attrTypes.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Value (BER, hex): ");
-        buffer.append(value_.toString());
+        buffer.append(value.toString());
 
         return buffer.toString();
     }

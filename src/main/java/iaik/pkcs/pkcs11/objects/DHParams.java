@@ -53,26 +53,27 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (prime_ <> null)
- *             and (base_ <> null)
- *             and (primeBits_ <> null)
+ * @invariants (prime <> null)
+ *             and (base <> null)
+ *             and (primeBits <> null)
  */
+// CHECKSTYLE:SKIP
 public class DHParams extends DomainParameters {
 
     /**
      * The prime (p) of this DH key.
      */
-    protected ByteArrayAttribute prime_;
+    protected ByteArrayAttribute prime;
 
     /**
      * The base (g) of this DH key.
      */
-    protected ByteArrayAttribute base_;
+    protected ByteArrayAttribute base;
 
     /**
      * The length of the prime value in bits.
      */
-    protected LongAttribute primeBits_;
+    protected LongAttribute primeBits;
 
     /**
      * Default Constructor.
@@ -82,7 +83,7 @@ public class DHParams extends DomainParameters {
      */
     public DHParams() {
         super();
-        keyType_.setLongValue(Key.KeyType.DH);
+        keyType.setLongValue(Key.KeyType.DH);
     }
 
     /**
@@ -102,7 +103,7 @@ public class DHParams extends DomainParameters {
     protected DHParams(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        keyType_.setLongValue(Key.KeyType.DH);
+        keyType.setLongValue(Key.KeyType.DH);
     }
 
     /**
@@ -141,9 +142,9 @@ public class DHParams extends DomainParameters {
      */
     protected static void putAttributesInTable(DHParams object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.PRIME, object.prime_);
-        object.attributeTable_.put(Attribute.BASE, object.base_);
-        object.attributeTable_.put(Attribute.PRIME_BITS, object.primeBits_);
+        object.attributeTable.put(Attribute.PRIME, object.prime);
+        object.attributeTable.put(Attribute.BASE, object.base);
+        object.attributeTable.put(Attribute.PRIME_BITS, object.primeBits);
     }
 
     /**
@@ -157,9 +158,9 @@ public class DHParams extends DomainParameters {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        prime_ = new ByteArrayAttribute(Attribute.PRIME);
-        base_ = new ByteArrayAttribute(Attribute.BASE);
-        primeBits_ = new LongAttribute(Attribute.PRIME_BITS);
+        prime = new ByteArrayAttribute(Attribute.PRIME);
+        base = new ByteArrayAttribute(Attribute.BASE);
+        primeBits = new LongAttribute(Attribute.PRIME_BITS);
 
         putAttributesInTable(this);
     }
@@ -176,9 +177,9 @@ public class DHParams extends DomainParameters {
     @Override
     public java.lang.Object clone() {
         DHParams clone = (DHParams) super.clone();
-        clone.prime_ = (ByteArrayAttribute) this.prime_.clone();
-        clone.base_ = (ByteArrayAttribute) this.base_.clone();
-        clone.primeBits_ = (LongAttribute) this.primeBits_.clone();
+        clone.prime = (ByteArrayAttribute) this.prime.clone();
+        clone.base = (ByteArrayAttribute) this.base.clone();
+        clone.primeBits = (LongAttribute) this.primeBits.clone();
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
         return clone;
@@ -207,9 +208,9 @@ public class DHParams extends DomainParameters {
 
         DHParams other = (DHParams) otherObject;
         return super.equals(other)
-                && this.prime_.equals(other.prime_)
-                && this.base_.equals(other.base_)
-                && this.primeBits_.equals(other.primeBits_);
+                && this.prime.equals(other.prime)
+                && this.base.equals(other.base)
+                && this.primeBits.equals(other.primeBits);
     }
 
     /**
@@ -220,7 +221,7 @@ public class DHParams extends DomainParameters {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getPrime() {
-        return prime_;
+        return prime;
     }
 
     /**
@@ -231,7 +232,7 @@ public class DHParams extends DomainParameters {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getBase() {
-        return base_;
+        return base;
     }
 
     /**
@@ -242,7 +243,7 @@ public class DHParams extends DomainParameters {
      * @postconditions (result <> null)
      */
     public LongAttribute getPrimeBits() {
-        return primeBits_;
+        return primeBits;
     }
 
     /**
@@ -262,12 +263,12 @@ public class DHParams extends DomainParameters {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            prime_, base_, primeBits_ });
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            prime, base, primeBits });
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -283,15 +284,15 @@ public class DHParams extends DomainParameters {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Prime (hex): ");
-        buffer.append(prime_.toString());
+        buffer.append(prime.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Base (hex): ");
-        buffer.append(base_.toString());
+        buffer.append(base.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Prime Bits (dec): ");
-        buffer.append(primeBits_.toString(10));
+        buffer.append(primeBits.toString(10));
 
         return buffer.toString();
     }

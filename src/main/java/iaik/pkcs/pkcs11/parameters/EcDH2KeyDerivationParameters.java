@@ -62,23 +62,23 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
     /**
      * The length in bytes of the second EC private key.
      */
-    protected long privateDataLength_;
+    protected long privateDataLength;
 
     /**
      * The key for the second EC private key value.
      */
-    protected iaik.pkcs.pkcs11.objects.Object privateData_;
+    protected iaik.pkcs.pkcs11.objects.Object privateData;
 
     /**
      * The other party's second EC public key value.
      */
-    protected byte[] publicData2_;
+    protected byte[] publicData2;
 
     /**
      * Create a new EcDH1KeyDerivationParameters object with the given
      * attributes.
      *
-     * @param keyDerivationFunction
+     * @param kdf
      *          The key derivation function used on the shared secret value.
      *          One of the values defined in KeyDerivationFunctionType.
      * @param sharedData
@@ -91,28 +91,25 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
      *          The key for the second EC private key value.
      * @param publicData2
      *          The other party's second EC public key value.
-     * @preconditions ((keyDerivationFunction == KeyDerivationFunctionType.NULL)
-     *                 or (keyDerivationFunction
-     *                      == KeyDerivationFunctionType.SHA1_KDF)
-     *                 or (keyDerivationFunction
-     *                      == KeyDerivationFunctionType.SHA1_KDF_ASN1)
-     *                 or (keyDerivationFunction
-     *                      == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
-     *                and (publicData <> null)
-     *                and (privateData <> null)
-     *                and (publicData2 <> null)
+     * @preconditions ((kdf == KeyDerivationFunctionType.NULL)
+     *              or (kdf == KeyDerivationFunctionType.SHA1_KDF)
+     *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1)
+     *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
+     *              and (publicData <> null)
+     *              and (privateData <> null)
+     *              and (publicData2 <> null)
      * @postconditions
      */
-    public EcDH2KeyDerivationParameters(long keyDerivationFunction,
+    public EcDH2KeyDerivationParameters(long kdf,
             byte[] sharedData,
             byte[] publicData,
             long privateDataLength,
             iaik.pkcs.pkcs11.objects.Object privateData,
             byte[] publicData2) {
-        super(keyDerivationFunction, sharedData, publicData);
-        privateDataLength_ = privateDataLength;
-        privateData_ = Util.requireNonNull("privateData", privateData);
-        publicData2_ = Util.requireNonNull("publicData2", publicData2);
+        super(kdf, sharedData, publicData);
+        this.privateDataLength = privateDataLength;
+        this.privateData = Util.requireNonNull("privateData", privateData);
+        this.publicData2 = Util.requireNonNull("publicData2", publicData2);
     }
 
     /**
@@ -129,9 +126,9 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
         EcDH2KeyDerivationParameters clone
             = (EcDH2KeyDerivationParameters) super.clone();
 
-        clone.privateData_ = (iaik.pkcs.pkcs11.objects.Object)
-                this.privateData_.clone();
-        clone.publicData2_ = (byte[]) this.publicData2_.clone();
+        clone.privateData = (iaik.pkcs.pkcs11.objects.Object)
+                this.privateData.clone();
+        clone.publicData2 = (byte[]) this.publicData2.clone();
 
         return clone;
     }
@@ -148,12 +145,12 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
     public Object getPKCS11ParamsObject() {
         CK_ECDH2_DERIVE_PARAMS params = new CK_ECDH2_DERIVE_PARAMS();
 
-        params.kdf = keyDerivationFunction_;
-        params.pSharedData = sharedData_;
-        params.pPublicData = publicData_;
-        params.ulPrivateDataLen = privateDataLength_;
-        params.hPrivateData = privateData_.getObjectHandle();
-        params.pPublicData2 = publicData2_;
+        params.kdf = kdf;
+        params.pSharedData = sharedData;
+        params.pPublicData = publicData;
+        params.ulPrivateDataLen = privateDataLength;
+        params.hPrivateData = privateData.getObjectHandle();
+        params.pPublicData2 = publicData2;
 
         return params;
     }
@@ -166,7 +163,7 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
      * @postconditions (result <> null)
      */
     public iaik.pkcs.pkcs11.objects.Object getPrivateData() {
-        return privateData_;
+        return privateData;
     }
 
     /**
@@ -177,7 +174,7 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
      * @postconditions
      */
     public long getPrivateDataLength() {
-        return privateDataLength_;
+        return privateDataLength;
     }
 
     /**
@@ -188,7 +185,7 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
      * @postconditions (result <> null)
      */
     public byte[] getPublicData2() {
-        return publicData2_;
+        return publicData2;
     }
 
     /**
@@ -200,7 +197,7 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
      * @postconditions
      */
     public void setPrivateData(iaik.pkcs.pkcs11.objects.Object privateData) {
-        privateData_ = Util.requireNonNull("privateData", privateData);
+        this.privateData = Util.requireNonNull("privateData", privateData);
     }
 
     /**
@@ -212,7 +209,7 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
      * @postconditions
      */
     public void setPrivateDataLength(long privateDataLength) {
-        privateDataLength_ = privateDataLength;
+        this.privateDataLength = privateDataLength;
     }
 
     /**
@@ -224,7 +221,7 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
      * @postconditions
      */
     public void setPublicData2(byte[] publicData2) {
-        publicData2_ = Util.requireNonNull("publicData2", publicData2);
+        this.publicData2 = Util.requireNonNull("publicData2", publicData2);
     }
 
     /**
@@ -241,15 +238,15 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Private Data Length (dec): ");
-        buffer.append(privateDataLength_);
+        buffer.append(privateDataLength);
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Private Data: ");
-        buffer.append(privateData_);
+        buffer.append(privateData);
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Public Data 2: ");
-        buffer.append(Functions.toHexString(publicData2_));
+        buffer.append(Functions.toHexString(publicData2));
 
         return buffer.toString();
     }
@@ -278,9 +275,9 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
         EcDH2KeyDerivationParameters other
                 = (EcDH2KeyDerivationParameters) otherObject;
         return super.equals(other)
-                && (this.privateDataLength_ == other.privateDataLength_)
-                && this.privateData_.equals(other.privateData_)
-                && Functions.equals(this.publicData2_, other.publicData2_);
+                && (this.privateDataLength == other.privateDataLength)
+                && this.privateData.equals(other.privateData)
+                && Functions.equals(this.publicData2, other.publicData2);
     }
 
     /**
@@ -293,8 +290,8 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
      */
     @Override
     public int hashCode() {
-        return super.hashCode() ^ ((int) privateDataLength_)
-                ^ privateData_.hashCode() ^ Functions.hashCode(publicData2_);
+        return super.hashCode() ^ ((int) privateDataLength)
+                ^ privateData.hashCode() ^ Functions.hashCode(publicData2);
     }
 
 }

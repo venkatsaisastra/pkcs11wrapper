@@ -56,16 +56,17 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (keyDerivationFunction_
+ * @invariants (keyDerivationFunction
  *                      == KeyDerivationFunctionType.NULL)
- *              or (keyDerivationFunction_
+ *              or (keyDerivationFunction
  *                      == KeyDerivationFunctionType.SHA1_KDF)
- *              or (keyDerivationFunction_
+ *              or (keyDerivationFunction
  *                      == KeyDerivationFunctionType.SHA1_KDF_ASN1)
- *              or (keyDerivationFunction_
+ *              or (keyDerivationFunction
  *                      == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
- *             and (publicData_ <> null)
+ *             and (publicData <> null)
  */
+// CHECKSTYLE:SKIP
 abstract public class DHKeyDerivationParameters implements Parameters {
 
     /**
@@ -106,47 +107,41 @@ abstract public class DHKeyDerivationParameters implements Parameters {
     /**
      * The key derivation function used on the shared secret value.
      */
-    protected long keyDerivationFunction_;
+    protected long kdf;
 
     /**
      * The other partie's public key value.
      */
-    protected byte[] publicData_;
+    protected byte[] publicData;
 
     /**
      * Create a new DHKeyDerivationParameters object with the given attributes.
      *
-     * @param keyDerivationFunction
+     * @param kdf
      *          The key derivation function used on the shared secret value.
      *          One of the values defined in KeyDerivationFunctionType.
      * @param publicData
      *          The other partie's public key value.
-     * @preconditions ((keyDerivationFunction
-     *                      == KeyDerivationFunctionType.NULL)
-     *                 or (keyDerivationFunction
-     *                      == KeyDerivationFunctionType.SHA1_KDF)
-     *                 or (keyDerivationFunction
-     *                      == KeyDerivationFunctionType.SHA1_KDF_ASN1)
-     *                 or (keyDerivationFunction
-     *                      == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
-     *                and (publicData <> null)
+     * @preconditions ((kdf == KeyDerivationFunctionType.NULL)
+     *              or (kdf == KeyDerivationFunctionType.SHA1_KDF)
+     *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1)
+     *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
+     *              and (publicData <> null)
      * @postconditions
      */
-    protected DHKeyDerivationParameters(long keyDerivationFunction,
+    protected DHKeyDerivationParameters(long kdf,
             byte[] publicData) {
-        if ((keyDerivationFunction != KeyDerivationFunctionType.NULL)
-            && (keyDerivationFunction != KeyDerivationFunctionType.SHA1_KDF)
-            && (keyDerivationFunction
-                    != KeyDerivationFunctionType.SHA1_KDF_ASN1)
-            && (keyDerivationFunction
-                    != KeyDerivationFunctionType.SHA1_KDF_CONCATENATE)) {
+        if ((kdf != KeyDerivationFunctionType.NULL)
+            && (kdf != KeyDerivationFunctionType.SHA1_KDF)
+            && (kdf != KeyDerivationFunctionType.SHA1_KDF_ASN1)
+            && (kdf != KeyDerivationFunctionType.SHA1_KDF_CONCATENATE)) {
             throw new IllegalArgumentException(
-                "Illegal value for argument\"keyDerivationFunction\": "
-                    + Functions.toHexString(keyDerivationFunction));
+                "Illegal value for argument\"kdf\": "
+                    + Functions.toHexString(kdf));
         }
 
-        publicData_ = Util.requireNonNull("publicData", publicData);
-        keyDerivationFunction_ = keyDerivationFunction;
+        this.publicData = Util.requireNonNull("publicData", publicData);
+        this.kdf = kdf;
     }
 
     /**
@@ -165,7 +160,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
         try {
             clone = (DHKeyDerivationParameters) super.clone();
 
-            clone.publicData_ = (byte[]) this.publicData_.clone();
+            clone.publicData = (byte[]) this.publicData.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
             throw new TokenRuntimeException(
@@ -184,7 +179,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
      * @postconditions
      */
     public long getKeyDerivationFunction() {
-        return keyDerivationFunction_;
+        return kdf;
     }
 
     /**
@@ -195,37 +190,31 @@ abstract public class DHKeyDerivationParameters implements Parameters {
      * @postconditions (result <> null)
      */
     public byte[] getPublicData() {
-        return publicData_;
+        return publicData;
     }
 
     /**
      * Set the key derivation function used on the shared secret value.
      *
-     * @param keyDerivationFunction
+     * @param kdf
      *          The key derivation function used on the shared secret value.
      *          One of the values defined in KeyDerivationFunctionType.
-     * @preconditions (keyDerivationFunction
-     *                      == KeyDerivationFunctionType.NULL)
-     *                or (keyDerivationFunction
-     *                      == KeyDerivationFunctionType.SHA1_KDF))
-     *                or (keyDerivationFunction
-     *                      == KeyDerivationFunctionType.SHA1_KDF_ASN1))
-     *                or (keyDerivationFunction
-     *                      == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
+     * @preconditions (kdf  == KeyDerivationFunctionType.NULL)
+     *             or (kdf == KeyDerivationFunctionType.SHA1_KDF))
+     *             or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1))
+     *             or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
      * @postconditions
      */
-    public void setKeyDerivationFunction(long keyDerivationFunction) {
-        if ((keyDerivationFunction != KeyDerivationFunctionType.NULL)
-            && (keyDerivationFunction != KeyDerivationFunctionType.SHA1_KDF)
-            && (keyDerivationFunction
-                    != KeyDerivationFunctionType.SHA1_KDF_ASN1)
-            && (keyDerivationFunction
-                    != KeyDerivationFunctionType.SHA1_KDF_CONCATENATE)) {
+    public void setKeyDerivationFunction(long kdf) {
+        if ((kdf != KeyDerivationFunctionType.NULL)
+            && (kdf != KeyDerivationFunctionType.SHA1_KDF)
+            && (kdf != KeyDerivationFunctionType.SHA1_KDF_ASN1)
+            && (kdf != KeyDerivationFunctionType.SHA1_KDF_CONCATENATE)) {
             throw new IllegalArgumentException(
-                "Illegal value for argument\"keyDerivationFunction\": "
-                    + Functions.toHexString(keyDerivationFunction));
+                "Illegal value for argument\"kdf\": "
+                    + Functions.toHexString(kdf));
         }
-        keyDerivationFunction_ = keyDerivationFunction;
+        this.kdf = kdf;
     }
 
     /**
@@ -237,7 +226,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
      * @postconditions
      */
     public void setPublicData(byte[] publicData) {
-        publicData_ = Util.requireNonNull("publicData", publicData);
+        this.publicData = Util.requireNonNull("publicData", publicData);
     }
 
     /**
@@ -252,16 +241,13 @@ abstract public class DHKeyDerivationParameters implements Parameters {
 
         buffer.append(Constants.INDENT);
         buffer.append("Key Derivation Function: ");
-        if (keyDerivationFunction_ == KeyDerivationFunctionType.NULL) {
+        if (kdf == KeyDerivationFunctionType.NULL) {
             buffer.append("NULL");
-        } else if (keyDerivationFunction_
-                == KeyDerivationFunctionType.SHA1_KDF) {
+        } else if (kdf == KeyDerivationFunctionType.SHA1_KDF) {
             buffer.append("SHA1_KDF");
-        } else if (keyDerivationFunction_
-                == KeyDerivationFunctionType.SHA1_KDF_ASN1) {
+        } else if (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1) {
             buffer.append("SHA1_KDF_ASN1");
-        } else if (keyDerivationFunction_
-                == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE) {
+        } else if (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE) {
             buffer.append("SHA1_KDF_CONCATENATE");
         } else {
             buffer.append("<unknown>");
@@ -269,7 +255,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Public Data: ");
-        buffer.append(Functions.toHexString(publicData_));
+        buffer.append(Functions.toHexString(publicData));
 
         return buffer.toString();
     }
@@ -297,8 +283,8 @@ abstract public class DHKeyDerivationParameters implements Parameters {
 
         DHKeyDerivationParameters other
                 = (DHKeyDerivationParameters) otherObject;
-        return (this.keyDerivationFunction_ == other.keyDerivationFunction_)
-                && Functions.equals(this.publicData_, other.publicData_);
+        return (this.kdf == other.kdf)
+                && Functions.equals(this.publicData, other.publicData);
     }
 
     /**
@@ -311,7 +297,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return ((int) keyDerivationFunction_) ^ Functions.hashCode(publicData_);
+        return ((int) kdf) ^ Functions.hashCode(publicData);
     }
 
 }

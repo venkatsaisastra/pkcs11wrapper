@@ -53,26 +53,27 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (application_ <> null)
- *             and (objectID_ <> null)
- *             and (value_ <> null)
+ * @invariants (application <> null)
+ *             and (objectID <> null)
+ *             and (value <> null)
  */
 public class Data extends Storage {
 
     /**
      * The application description attribute of this data object.
      */
-    protected CharArrayAttribute application_;
+    protected CharArrayAttribute application;
 
     /**
      * The object ID attribute of this data object (DER-encoded).
      */
-    protected ByteArrayAttribute objectID_;
+    // CHECKSTYLE:SKIP
+    protected ByteArrayAttribute objectID;
 
     /**
      * The value attribute of this data object.
      */
-    protected ByteArrayAttribute value_;
+    protected ByteArrayAttribute value;
 
     /**
      * Default Constructor.
@@ -82,7 +83,7 @@ public class Data extends Storage {
      */
     public Data() {
         super();
-        objectClass_.setLongValue(ObjectClass.DATA);
+        objectClass.setLongValue(ObjectClass.DATA);
     }
 
     /**
@@ -102,7 +103,7 @@ public class Data extends Storage {
     protected Data(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        objectClass_.setLongValue(ObjectClass.DATA);
+        objectClass.setLongValue(ObjectClass.DATA);
     }
 
     /**
@@ -119,9 +120,9 @@ public class Data extends Storage {
     protected static void putAttributesInTable(Data object) {
         Util.requireNonNull("object", object);
 
-        object.attributeTable_.put(Attribute.APPLICATION, object.application_);
-        object.attributeTable_.put(Attribute.OBJECT_ID, object.objectID_);
-        object.attributeTable_.put(Attribute.VALUE, object.value_);
+        object.attributeTable.put(Attribute.APPLICATION, object.application);
+        object.attributeTable.put(Attribute.OBJECT_ID, object.objectID);
+        object.attributeTable.put(Attribute.VALUE, object.value);
     }
 
     /**
@@ -135,9 +136,9 @@ public class Data extends Storage {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        application_ = new CharArrayAttribute(Attribute.APPLICATION);
-        objectID_ = new ByteArrayAttribute(Attribute.OBJECT_ID);
-        value_ = new ByteArrayAttribute(Attribute.VALUE);
+        application = new CharArrayAttribute(Attribute.APPLICATION);
+        objectID = new ByteArrayAttribute(Attribute.OBJECT_ID);
+        value = new ByteArrayAttribute(Attribute.VALUE);
 
         putAttributesInTable(this);
     }
@@ -178,9 +179,9 @@ public class Data extends Storage {
     public java.lang.Object clone() {
         Data clone = (Data) super.clone();
 
-        clone.application_ = (CharArrayAttribute) this.application_.clone();
-        clone.objectID_ = (ByteArrayAttribute) this.objectID_.clone();
-        clone.value_ = (ByteArrayAttribute) this.value_.clone();
+        clone.application = (CharArrayAttribute) this.application.clone();
+        clone.objectID = (ByteArrayAttribute) this.objectID.clone();
+        clone.value = (ByteArrayAttribute) this.value.clone();
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
 
@@ -210,9 +211,9 @@ public class Data extends Storage {
 
         Data other = (Data) otherObject;
         return super.equals(other)
-                && this.application_.equals(other.application_)
-                && this.objectID_.equals(other.objectID_)
-                && this.value_.equals(other.value_);
+                && this.application.equals(other.application)
+                && this.objectID.equals(other.objectID)
+                && this.value.equals(other.value);
     }
 
     /**
@@ -223,7 +224,7 @@ public class Data extends Storage {
      * @postconditions (result <> null)
      */
     public CharArrayAttribute getApplication() {
-        return application_;
+        return application;
     }
 
     /**
@@ -233,8 +234,9 @@ public class Data extends Storage {
      * @preconditions
      * @postconditions (result <> null)
      */
+    // CHECKSTYLE:SKIP
     public ByteArrayAttribute getObjectID() {
-        return objectID_;
+        return objectID;
     }
 
     /**
@@ -245,7 +247,7 @@ public class Data extends Storage {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getValue() {
-        return value_;
+        return value;
     }
 
     /**
@@ -258,8 +260,8 @@ public class Data extends Storage {
      */
     @Override
     public int hashCode() {
-        return application_.hashCode() ^ objectID_.hashCode()
-                ^ value_.hashCode();
+        return application.hashCode() ^ objectID.hashCode()
+                ^ value.hashCode();
     }
 
     /**
@@ -279,13 +281,13 @@ public class Data extends Storage {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValue(session, objectHandle_, application_);
-        Object.getAttributeValue(session, objectHandle_, objectID_);
-        Object.getAttributeValue(session, objectHandle_, value_);
+        Object.getAttributeValue(session, objectHandle, application);
+        Object.getAttributeValue(session, objectHandle, objectID);
+        Object.getAttributeValue(session, objectHandle, value);
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -301,14 +303,14 @@ public class Data extends Storage {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Application: ");
-        buffer.append(application_.toString());
+        buffer.append(application.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Object ID (DER, hex): ");
-        buffer.append(objectID_.toString());
+        buffer.append(objectID.toString());
 
         buffer.append(Constants.NEWLINE_INDENT_HEXVALUE);
-        buffer.append(value_.toString());
+        buffer.append(value.toString());
 
         return buffer.toString();
     }

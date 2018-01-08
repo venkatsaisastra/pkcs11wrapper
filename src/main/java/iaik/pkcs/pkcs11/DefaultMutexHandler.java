@@ -69,16 +69,16 @@ public class DefaultMutexHandler implements MutexHandler {
         /**
          * Indicates that this mutex is currently locked.
          */
-        protected boolean locked_;
+        protected boolean locked;
 
         /**
          * Default constructor.
          *
          * @preconditions
-         * @postconditions (locked_ == false)
+         * @postconditions (locked == false)
          */
         public Mutex() {
-            locked_ = false;
+            locked = false;
         }
 
         /**
@@ -88,7 +88,7 @@ public class DefaultMutexHandler implements MutexHandler {
          * @exception InterruptedException
          *              If the current thread has been interrupted.
          * @preconditions
-         * @postconditions (locked_ == true)
+         * @postconditions (locked == true)
          */
         public synchronized void lock()
             throws InterruptedException {
@@ -96,10 +96,10 @@ public class DefaultMutexHandler implements MutexHandler {
                 throw new InterruptedException();
             }
             try {
-                while (locked_) {
+                while (locked) {
                     wait();
                 }
-                locked_ = true;
+                locked = true;
             } catch (InterruptedException ex) {
                 notify();
                 throw ex;
@@ -111,13 +111,13 @@ public class DefaultMutexHandler implements MutexHandler {
          *
          * @return True, if the mutex was locked. False, otherwise.
          * @preconditions
-         * @postconditions (locked_ == false)
-         *                 and (result == locked_@pre)
+         * @postconditions (locked == false)
+         *                 and (result == locked@pre)
          */
         public synchronized boolean unlock() {
-            boolean previousState = locked_;
+            boolean previousState = locked;
 
-            locked_ = false;
+            locked = false;
             notify();
 
             return previousState;
@@ -129,7 +129,7 @@ public class DefaultMutexHandler implements MutexHandler {
          * @return the string representation of this object
          */
         public String toString() {
-            return ((locked_) ? "locked" : "unlocked");
+            return ((locked) ? "locked" : "unlocked");
         }
 
     }

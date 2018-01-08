@@ -60,34 +60,31 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
     /**
      * The data shared between the two parties.
      */
-    protected byte[] sharedData_;
+    protected byte[] sharedData;
 
     /**
      * Create a new EcDH1KeyDerivationParameters object with the given
      * attributes.
      *
-     * @param keyDerivationFunction
+     * @param kdf
      *          The key derivation function used on the shared secret value.
      *          One of the values defined in KeyDerivationFunctionType.
      * @param sharedData
      *          The data shared between the two parties.
      * @param publicData
      *          The other partie's public key value.
-     * @preconditions ((keyDerivationFunction == KeyDerivationFunctionType.NULL)
-     *                 or (keyDerivationFunction
-     *                      == KeyDerivationFunctionType.SHA1_KDF)
-     *                 or (keyDerivationFunction
-     *                      == KeyDerivationFunctionType.SHA1_KDF_ASN1)
-     *                 or (keyDerivationFunction
-     *                      == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
-     *                and (publicData <> null)
+     * @preconditions ((kdf == KeyDerivationFunctionType.NULL)
+     *              or (kdf == KeyDerivationFunctionType.SHA1_KDF)
+     *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1)
+     *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
+     *              and (publicData <> null)
      * @postconditions
      */
-    public EcDH1KeyDerivationParameters(long keyDerivationFunction,
+    public EcDH1KeyDerivationParameters(long kdf,
             byte[] sharedData,
             byte[] publicData) {
-        super(keyDerivationFunction, publicData);
-        sharedData_ = sharedData;
+        super(kdf, publicData);
+        this.sharedData = sharedData;
     }
 
     /**
@@ -104,7 +101,7 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
         EcDH1KeyDerivationParameters clone
                 = (EcDH1KeyDerivationParameters) super.clone();
 
-        clone.sharedData_ = (byte[]) this.sharedData_.clone();
+        clone.sharedData = (byte[]) this.sharedData.clone();
 
         return clone;
     }
@@ -119,8 +116,7 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        return new CK_ECDH1_DERIVE_PARAMS(keyDerivationFunction_, sharedData_,
-                publicData_);
+        return new CK_ECDH1_DERIVE_PARAMS(kdf, sharedData, publicData);
     }
 
     /**
@@ -131,7 +127,7 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
      * @postconditions
      */
     public byte[] getSharedData() {
-        return sharedData_;
+        return sharedData;
     }
 
     /**
@@ -143,7 +139,7 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
      * @postconditions
      */
     public void setSharedData(byte[] sharedData) {
-        sharedData_ = sharedData;
+        this.sharedData = sharedData;
     }
 
     /**
@@ -160,7 +156,7 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Shared Data: ");
-        buffer.append(Functions.toHexString(sharedData_));
+        buffer.append(Functions.toHexString(sharedData));
 
         return buffer.toString();
     }
@@ -189,7 +185,7 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
         EcDH1KeyDerivationParameters other
                 = (EcDH1KeyDerivationParameters) otherObject;
         return super.equals(other)
-                && Functions.equals(this.sharedData_, other.sharedData_);
+                && Functions.equals(this.sharedData, other.sharedData);
     }
 
     /**
@@ -202,7 +198,7 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
      */
     @Override
     public int hashCode() {
-        return super.hashCode() ^ Functions.hashCode(sharedData_);
+        return super.hashCode() ^ Functions.hashCode(sharedData);
     }
 
 }

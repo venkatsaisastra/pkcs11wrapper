@@ -58,7 +58,7 @@ public class TokenRuntimeException extends RuntimeException {
      * An encapsulated (inner) exception. Possibly, an exception from a lower
      * layer that can be propagated to a higher layer only in wrapped form.
      */
-    protected Exception encapsulatedException_;
+    protected Exception encapsulatedException;
 
     /**
      * The default constructor.
@@ -93,7 +93,7 @@ public class TokenRuntimeException extends RuntimeException {
      */
     public TokenRuntimeException(Exception encapsulatedException) {
         super();
-        encapsulatedException_ = encapsulatedException;
+        this.encapsulatedException = encapsulatedException;
     }
 
     /**
@@ -111,7 +111,7 @@ public class TokenRuntimeException extends RuntimeException {
     public TokenRuntimeException(String message,
             Exception encapsulatedException) {
         super(message);
-        encapsulatedException_ = encapsulatedException;
+        this.encapsulatedException = encapsulatedException;
     }
 
     /**
@@ -123,7 +123,7 @@ public class TokenRuntimeException extends RuntimeException {
      * @postconditions
      */
     public Exception getEncapsulatedException() {
-        return encapsulatedException_;
+        return encapsulatedException;
     }
 
     /**
@@ -136,9 +136,9 @@ public class TokenRuntimeException extends RuntimeException {
     public String toString() {
         StringBuilder buffer = new StringBuilder(super.toString());
 
-        if (encapsulatedException_ != null) {
+        if (encapsulatedException != null) {
             buffer.append(", Encasulated Exception: ");
-            buffer.append(encapsulatedException_.toString());
+            buffer.append(encapsulatedException.toString());
         }
 
         return buffer.toString();

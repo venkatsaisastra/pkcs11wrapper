@@ -54,92 +54,92 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (subject_ <> null)
- *             and (sensitive_ <> null)
- *             and (secondaryAuth_ <> null)
- *             and (authPinFlags_ <> null)
- *             and (decrypt_ <> null)
- *             and (sign_ <> null)
- *             and (signRecover_ <> null)
- *             and (unwrap_ <> null)
- *             and (extractable_ <> null)
- *             and (alwaysSensitive_ <> null)
- *             and (neverExtractable_ <> null)
+ * @invariants (subject <> null)
+ *             and (sensitive <> null)
+ *             and (secondaryAuth <> null)
+ *             and (authPinFlags <> null)
+ *             and (decrypt <> null)
+ *             and (sign <> null)
+ *             and (signRecover <> null)
+ *             and (unwrap <> null)
+ *             and (extractable <> null)
+ *             and (alwaysSensitive <> null)
+ *             and (neverExtractable <> null)
  */
 public class PrivateKey extends Key {
 
     /**
      * The subject of this private key.
      */
-    protected ByteArrayAttribute subject_;
+    protected ByteArrayAttribute subject;
 
     /**
      * True, if this private key is sensitive.
      */
-    protected BooleanAttribute sensitive_;
+    protected BooleanAttribute sensitive;
 
     /**
      * True, if this private key supports secondary authentication.
      */
-    protected BooleanAttribute secondaryAuth_;
+    protected BooleanAttribute secondaryAuth;
 
     /**
      * The authentication flags for secondary authentication. Only defined, if
-     * the secondaryAuth_ is set.
+     * the secondaryAuth is set.
      */
-    protected LongAttribute authPinFlags_;
+    protected LongAttribute authPinFlags;
 
     /**
      * True, if this private key can be used for encryption.
      */
-    protected BooleanAttribute decrypt_;
+    protected BooleanAttribute decrypt;
 
     /**
      * True, if this private key can be used for signing.
      */
-    protected BooleanAttribute sign_;
+    protected BooleanAttribute sign;
 
     /**
      * True, if this private key can be used for signing with recover.
      */
-    protected BooleanAttribute signRecover_;
+    protected BooleanAttribute signRecover;
 
     /**
      * True, if this private key can be used for unwrapping wrapped keys.
      */
-    protected BooleanAttribute unwrap_;
+    protected BooleanAttribute unwrap;
 
     /**
      * True, if this private key can not be extracted from the token.
      */
-    protected BooleanAttribute extractable_;
+    protected BooleanAttribute extractable;
 
     /**
      * True, if this private key was always sensitive.
      */
-    protected BooleanAttribute alwaysSensitive_;
+    protected BooleanAttribute alwaysSensitive;
 
     /**
      * True, if this private key was never extractable.
      */
-    protected BooleanAttribute neverExtractable_;
+    protected BooleanAttribute neverExtractable;
 
     /**
      * True, if this private key can only be wrapped with a wrapping key
      * having set the attribute trusted to true.
      */
-    protected BooleanAttribute wrapWithTrusted_;
+    protected BooleanAttribute wrapWithTrusted;
 
     /**
      * Template of the key, that can be unwrapped.
      */
-    protected AttributeArray unwrapTemplate_;
+    protected AttributeArray unwrapTemplate;
 
     /**
      * True, if the user has to supply the PIN for each use
      * (sign or decrypt) with the key.
      */
-    protected BooleanAttribute alwaysAuthenticate_;
+    protected BooleanAttribute alwaysAuthenticate;
 
     /**
      * Default Constructor.
@@ -149,7 +149,7 @@ public class PrivateKey extends Key {
      */
     public PrivateKey() {
         super();
-        objectClass_.setLongValue(ObjectClass.PRIVATE_KEY);
+        objectClass.setLongValue(ObjectClass.PRIVATE_KEY);
     }
 
     /**
@@ -169,7 +169,7 @@ public class PrivateKey extends Key {
     protected PrivateKey(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        objectClass_.setLongValue(ObjectClass.PRIVATE_KEY);
+        objectClass.setLongValue(ObjectClass.PRIVATE_KEY);
     }
 
     /**
@@ -179,7 +179,7 @@ public class PrivateKey extends Key {
      * sub-class.
      * If the key type is a vendor defined it uses the
      * VendorDefinedKeyBuilder set by the application. If no private key
-     * could be constructed, this method returns null.
+     * could be constructed, Returns null.
      *
      * @param session
      *          The session to use for reading attributes. This session must
@@ -259,9 +259,9 @@ public class PrivateKey extends Key {
         Util.requireNonNull("session", session);
 
         Object newObject;
-        if (Key.vendorKeyBuilder_ != null) {
+        if (Key.vendorKeyBuilder != null) {
             try {
-                newObject = Key.vendorKeyBuilder_.build(session, objectHandle);
+                newObject = Key.vendorKeyBuilder.build(session, objectHandle);
             } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
                 // we can just treat it like some unknown type of private key
                 newObject = new PrivateKey(session, objectHandle);
@@ -287,27 +287,27 @@ public class PrivateKey extends Key {
      */
     protected static void putAttributesInTable(PrivateKey object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.SUBJECT, object.subject_);
-        object.attributeTable_.put(Attribute.SENSITIVE, object.sensitive_);
-        object.attributeTable_.put(Attribute.SECONDARY_AUTH,
-                object.secondaryAuth_);
-        object.attributeTable_.put(Attribute.AUTH_PIN_FLAGS,
-                object.authPinFlags_);
-        object.attributeTable_.put(Attribute.DECRYPT, object.decrypt_);
-        object.attributeTable_.put(Attribute.SIGN, object.sign_);
-        object.attributeTable_.put(Attribute.SIGN_RECOVER, object.signRecover_);
-        object.attributeTable_.put(Attribute.UNWRAP, object.unwrap_);
-        object.attributeTable_.put(Attribute.EXTRACTABLE, object.extractable_);
-        object.attributeTable_.put(Attribute.ALWAYS_SENSITIVE,
-                object.alwaysSensitive_);
-        object.attributeTable_.put(Attribute.NEVER_EXTRACTABLE,
-                object.neverExtractable_);
-        object.attributeTable_.put(Attribute.WRAP_WITH_TRUSTED,
-                object.wrapWithTrusted_);
-        object.attributeTable_.put(Attribute.UNWRAP_TEMPLATE,
-                object.unwrapTemplate_);
-        object.attributeTable_.put(Attribute.ALWAYS_AUTHENTICATE,
-                object.alwaysAuthenticate_);
+        object.attributeTable.put(Attribute.SUBJECT, object.subject);
+        object.attributeTable.put(Attribute.SENSITIVE, object.sensitive);
+        object.attributeTable.put(Attribute.SECONDARY_AUTH,
+                object.secondaryAuth);
+        object.attributeTable.put(Attribute.AUTH_PIN_FLAGS,
+                object.authPinFlags);
+        object.attributeTable.put(Attribute.DECRYPT, object.decrypt);
+        object.attributeTable.put(Attribute.SIGN, object.sign);
+        object.attributeTable.put(Attribute.SIGN_RECOVER, object.signRecover);
+        object.attributeTable.put(Attribute.UNWRAP, object.unwrap);
+        object.attributeTable.put(Attribute.EXTRACTABLE, object.extractable);
+        object.attributeTable.put(Attribute.ALWAYS_SENSITIVE,
+                object.alwaysSensitive);
+        object.attributeTable.put(Attribute.NEVER_EXTRACTABLE,
+                object.neverExtractable);
+        object.attributeTable.put(Attribute.WRAP_WITH_TRUSTED,
+                object.wrapWithTrusted);
+        object.attributeTable.put(Attribute.UNWRAP_TEMPLATE,
+                object.unwrapTemplate);
+        object.attributeTable.put(Attribute.ALWAYS_AUTHENTICATE,
+                object.alwaysAuthenticate);
     }
 
     /**
@@ -321,20 +321,20 @@ public class PrivateKey extends Key {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        subject_ = new ByteArrayAttribute(Attribute.SUBJECT);
-        sensitive_ = new BooleanAttribute(Attribute.SENSITIVE);
-        secondaryAuth_ = new BooleanAttribute(Attribute.SECONDARY_AUTH);
-        authPinFlags_ = new LongAttribute(Attribute.AUTH_PIN_FLAGS);
-        decrypt_ = new BooleanAttribute(Attribute.DECRYPT);
-        sign_ = new BooleanAttribute(Attribute.SIGN);
-        signRecover_ = new BooleanAttribute(Attribute.SIGN_RECOVER);
-        unwrap_ = new BooleanAttribute(Attribute.UNWRAP);
-        extractable_ = new BooleanAttribute(Attribute.EXTRACTABLE);
-        alwaysSensitive_ = new BooleanAttribute(Attribute.ALWAYS_SENSITIVE);
-        neverExtractable_ = new BooleanAttribute(Attribute.NEVER_EXTRACTABLE);
-        wrapWithTrusted_ = new BooleanAttribute(Attribute.WRAP_WITH_TRUSTED);
-        unwrapTemplate_ = new AttributeArray(Attribute.UNWRAP_TEMPLATE);
-        alwaysAuthenticate_
+        subject = new ByteArrayAttribute(Attribute.SUBJECT);
+        sensitive = new BooleanAttribute(Attribute.SENSITIVE);
+        secondaryAuth = new BooleanAttribute(Attribute.SECONDARY_AUTH);
+        authPinFlags = new LongAttribute(Attribute.AUTH_PIN_FLAGS);
+        decrypt = new BooleanAttribute(Attribute.DECRYPT);
+        sign = new BooleanAttribute(Attribute.SIGN);
+        signRecover = new BooleanAttribute(Attribute.SIGN_RECOVER);
+        unwrap = new BooleanAttribute(Attribute.UNWRAP);
+        extractable = new BooleanAttribute(Attribute.EXTRACTABLE);
+        alwaysSensitive = new BooleanAttribute(Attribute.ALWAYS_SENSITIVE);
+        neverExtractable = new BooleanAttribute(Attribute.NEVER_EXTRACTABLE);
+        wrapWithTrusted = new BooleanAttribute(Attribute.WRAP_WITH_TRUSTED);
+        unwrapTemplate = new AttributeArray(Attribute.UNWRAP_TEMPLATE);
+        alwaysAuthenticate
             = new BooleanAttribute(Attribute.ALWAYS_AUTHENTICATE);
 
         putAttributesInTable(this);
@@ -353,24 +353,24 @@ public class PrivateKey extends Key {
     public java.lang.Object clone() {
         PrivateKey clone = (PrivateKey) super.clone();
 
-        clone.subject_ = (ByteArrayAttribute) this.subject_.clone();
-        clone.sensitive_ = (BooleanAttribute) this.sensitive_.clone();
-        clone.secondaryAuth_ = (BooleanAttribute) this.secondaryAuth_.clone();
-        clone.authPinFlags_ = (LongAttribute) this.authPinFlags_.clone();
-        clone.decrypt_ = (BooleanAttribute) this.decrypt_.clone();
-        clone.sign_ = (BooleanAttribute) this.sign_.clone();
-        clone.signRecover_ = (BooleanAttribute) this.signRecover_.clone();
-        clone.unwrap_ = (BooleanAttribute) this.unwrap_.clone();
-        clone.extractable_ = (BooleanAttribute) this.extractable_.clone();
-        clone.alwaysSensitive_
-            = (BooleanAttribute) this.alwaysSensitive_.clone();
-        clone.neverExtractable_
-            = (BooleanAttribute) this.neverExtractable_.clone();
-        clone.wrapWithTrusted_
-            = (BooleanAttribute) this.wrapWithTrusted_.clone();
-        clone.unwrapTemplate_ = (AttributeArray) this.unwrapTemplate_.clone();
-        clone.alwaysAuthenticate_
-            = (BooleanAttribute) this.alwaysAuthenticate_.clone();
+        clone.subject = (ByteArrayAttribute) this.subject.clone();
+        clone.sensitive = (BooleanAttribute) this.sensitive.clone();
+        clone.secondaryAuth = (BooleanAttribute) this.secondaryAuth.clone();
+        clone.authPinFlags = (LongAttribute) this.authPinFlags.clone();
+        clone.decrypt = (BooleanAttribute) this.decrypt.clone();
+        clone.sign = (BooleanAttribute) this.sign.clone();
+        clone.signRecover = (BooleanAttribute) this.signRecover.clone();
+        clone.unwrap = (BooleanAttribute) this.unwrap.clone();
+        clone.extractable = (BooleanAttribute) this.extractable.clone();
+        clone.alwaysSensitive
+            = (BooleanAttribute) this.alwaysSensitive.clone();
+        clone.neverExtractable
+            = (BooleanAttribute) this.neverExtractable.clone();
+        clone.wrapWithTrusted
+            = (BooleanAttribute) this.wrapWithTrusted.clone();
+        clone.unwrapTemplate = (AttributeArray) this.unwrapTemplate.clone();
+        clone.alwaysAuthenticate
+            = (BooleanAttribute) this.alwaysAuthenticate.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -401,20 +401,20 @@ public class PrivateKey extends Key {
 
         PrivateKey other = (PrivateKey) otherObject;
         return super.equals(other)
-                && this.subject_.equals(other.subject_)
-                && this.sensitive_.equals(other.sensitive_)
-                && this.secondaryAuth_.equals(other.secondaryAuth_)
-                && this.authPinFlags_.equals(other.authPinFlags_)
-                && this.decrypt_.equals(other.decrypt_)
-                && this.sign_.equals(other.sign_)
-                && this.signRecover_.equals(other.signRecover_)
-                && this.unwrap_.equals(other.unwrap_)
-                && this.extractable_.equals(other.extractable_)
-                && this.alwaysSensitive_.equals(other.alwaysSensitive_)
-                && this.neverExtractable_.equals(other.neverExtractable_)
-                && this.wrapWithTrusted_.equals(other.wrapWithTrusted_)
-                && this.unwrapTemplate_.equals(other.unwrapTemplate_)
-                && this.alwaysAuthenticate_.equals(other.alwaysAuthenticate_);
+                && this.subject.equals(other.subject)
+                && this.sensitive.equals(other.sensitive)
+                && this.secondaryAuth.equals(other.secondaryAuth)
+                && this.authPinFlags.equals(other.authPinFlags)
+                && this.decrypt.equals(other.decrypt)
+                && this.sign.equals(other.sign)
+                && this.signRecover.equals(other.signRecover)
+                && this.unwrap.equals(other.unwrap)
+                && this.extractable.equals(other.extractable)
+                && this.alwaysSensitive.equals(other.alwaysSensitive)
+                && this.neverExtractable.equals(other.neverExtractable)
+                && this.wrapWithTrusted.equals(other.wrapWithTrusted)
+                && this.unwrapTemplate.equals(other.unwrapTemplate)
+                && this.alwaysAuthenticate.equals(other.alwaysAuthenticate);
     }
 
     /**
@@ -425,7 +425,7 @@ public class PrivateKey extends Key {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getSubject() {
-        return subject_;
+        return subject;
     }
 
     /**
@@ -436,7 +436,7 @@ public class PrivateKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getSensitive() {
-        return sensitive_;
+        return sensitive;
     }
 
     /**
@@ -447,7 +447,7 @@ public class PrivateKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getSecondaryAuth() {
-        return secondaryAuth_;
+        return secondaryAuth;
     }
 
     /**
@@ -458,7 +458,7 @@ public class PrivateKey extends Key {
      * @postconditions (result <> null)
      */
     public LongAttribute getAuthPinFlags() {
-        return authPinFlags_;
+        return authPinFlags;
     }
 
     /**
@@ -469,7 +469,7 @@ public class PrivateKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getDecrypt() {
-        return decrypt_;
+        return decrypt;
     }
 
     /**
@@ -480,7 +480,7 @@ public class PrivateKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getSign() {
-        return sign_;
+        return sign;
     }
 
     /**
@@ -491,7 +491,7 @@ public class PrivateKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getSignRecover() {
-        return signRecover_;
+        return signRecover;
     }
 
     /**
@@ -502,7 +502,7 @@ public class PrivateKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getUnwrap() {
-        return unwrap_;
+        return unwrap;
     }
 
     /**
@@ -513,7 +513,7 @@ public class PrivateKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getExtractable() {
-        return extractable_;
+        return extractable;
     }
 
     /**
@@ -524,7 +524,7 @@ public class PrivateKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getAlwaysSensitive() {
-        return alwaysSensitive_;
+        return alwaysSensitive;
     }
 
     /**
@@ -535,7 +535,7 @@ public class PrivateKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getNeverExtractable() {
-        return neverExtractable_;
+        return neverExtractable;
     }
 
     /**
@@ -546,7 +546,7 @@ public class PrivateKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getWrapWithTrusted() {
-        return wrapWithTrusted_;
+        return wrapWithTrusted;
     }
 
     /**
@@ -559,7 +559,7 @@ public class PrivateKey extends Key {
      * @postconditions (result <> null)
      */
     public AttributeArray getUnwrapTemplate() {
-        return unwrapTemplate_;
+        return unwrapTemplate;
     }
 
     /**
@@ -570,7 +570,7 @@ public class PrivateKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getAlwaysAuthenticate() {
-        return alwaysAuthenticate_;
+        return alwaysAuthenticate;
     }
 
     /**
@@ -590,15 +590,15 @@ public class PrivateKey extends Key {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            subject_, sensitive_, secondaryAuth_, authPinFlags_, decrypt_,
-            sign_, signRecover_, unwrap_, extractable_, alwaysSensitive_,
-            neverExtractable_, wrapWithTrusted_, alwaysAuthenticate_ });
-        Object.getAttributeValue(session, objectHandle_, unwrapTemplate_);
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            subject, sensitive, secondaryAuth, authPinFlags, decrypt,
+            sign, signRecover, unwrap, extractable, alwaysSensitive,
+            neverExtractable, wrapWithTrusted, alwaysAuthenticate });
+        Object.getAttributeValue(session, objectHandle, unwrapTemplate);
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -614,21 +614,21 @@ public class PrivateKey extends Key {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Subject (DER, hex): ");
-        buffer.append(subject_.toString());
+        buffer.append(subject.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Sensitive: ");
-        buffer.append(sensitive_.toString());
+        buffer.append(sensitive.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Secondary Authentication: ");
-        buffer.append(secondaryAuth_.toString());
+        buffer.append(secondaryAuth.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Secondary Authentication PIN Flags: ");
-        if (authPinFlags_.isPresent() && !authPinFlags_.isSensitive()
-            && (authPinFlags_.getLongValue() != null)) {
-            long authFlagsValue = authPinFlags_.getLongValue().longValue();
+        if (authPinFlags.isPresent() && !authPinFlags.isSensitive()
+            && (authPinFlags.getLongValue() != null)) {
+            long authFlagsValue = authPinFlags.getLongValue().longValue();
 
             final String prefix = Constants.NEWLINE_INDENT + Constants.INDENT;
             buffer.append(prefix);
@@ -651,48 +651,48 @@ public class PrivateKey extends Key {
             buffer.append((authFlagsValue
                         & PKCS11Constants.CKF_USER_PIN_TO_BE_CHANGED) != 0L);
         } else {
-            buffer.append(authPinFlags_.toString());
+            buffer.append(authPinFlags.toString());
         }
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Decrypt: ");
-        buffer.append(decrypt_.toString());
+        buffer.append(decrypt.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Sign: ");
-        buffer.append(sign_.toString());
+        buffer.append(sign.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Sign Recover: ");
-        buffer.append(signRecover_.toString());
+        buffer.append(signRecover.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Unwrap: ");
-        buffer.append(unwrap_.toString());
+        buffer.append(unwrap.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Extractable: ");
-        buffer.append(extractable_.toString());
+        buffer.append(extractable.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Always Sensitive: ");
-        buffer.append(alwaysSensitive_.toString());
+        buffer.append(alwaysSensitive.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Never Extractable: ");
-        buffer.append(neverExtractable_.toString());
+        buffer.append(neverExtractable.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Wrap With Trusted: ");
-        buffer.append(wrapWithTrusted_.toString());
+        buffer.append(wrapWithTrusted.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Unwrap Template: ");
-        buffer.append(unwrapTemplate_.toString());
+        buffer.append(unwrapTemplate.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Always Authenticate: ");
-        buffer.append(alwaysAuthenticate_.toString());
+        buffer.append(alwaysAuthenticate.toString());
 
         return buffer.toString();
     }

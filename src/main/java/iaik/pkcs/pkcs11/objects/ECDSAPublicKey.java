@@ -50,17 +50,16 @@ import iaik.pkcs.pkcs11.TokenException;
  * @deprecated Use {@link ECPublicKey} instead.
  *
  */
+// CHECKSTYLE:SKIP
 public class ECDSAPublicKey extends ECPublicKey {
 
     public ECDSAPublicKey() {
         super();
-        keyType_.setLongValue(thisKeyType());
     }
 
     protected ECDSAPublicKey(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        keyType_.setLongValue(thisKeyType());
     }
 
 }

@@ -69,78 +69,78 @@ public class SecretKey extends Key {
     /**
      * True, if this key is sensitive.
      */
-    protected BooleanAttribute sensitive_;
+    protected BooleanAttribute sensitive;
 
     /**
      * True, if this key can be used for encryption.
      */
-    protected BooleanAttribute encrypt_;
+    protected BooleanAttribute encrypt;
 
     /**
      * True, if this key can be used for decryption.
      */
-    protected BooleanAttribute decrypt_;
+    protected BooleanAttribute decrypt;
 
     /**
      * True, if this key can be used for signing.
      */
-    protected BooleanAttribute sign_;
+    protected BooleanAttribute sign;
 
     /**
      * True, if this key can be used for verification.
      */
-    protected BooleanAttribute verify_;
+    protected BooleanAttribute verify;
 
     /**
      * True, if this key can be used for wrapping other keys.
      */
-    protected BooleanAttribute wrap_;
+    protected BooleanAttribute wrap;
 
     /**
      * True, if this key can be used for unwrapping other keys.
      */
-    protected BooleanAttribute unwrap_;
+    protected BooleanAttribute unwrap;
 
     /**
      * True, if this key is extractable from the token.
      */
-    protected BooleanAttribute extractable_;
+    protected BooleanAttribute extractable;
 
     /**
      * True, if this key was always sensitive.
      */
-    protected BooleanAttribute alwaysSensitive_;
+    protected BooleanAttribute alwaysSensitive;
 
     /**
      * True, if this key was never extractable.
      */
-    protected BooleanAttribute neverExtractable_;
+    protected BooleanAttribute neverExtractable;
 
     /**
      * Key checksum of this private key.
      */
-    protected ByteArrayAttribute checkValue_;
+    protected ByteArrayAttribute checkValue;
 
     /**
      * True, if this private key can only be wrapped with a wrapping key
      * having set the attribute trusted to true.
      */
-    protected BooleanAttribute wrapWithTrusted_;
+    protected BooleanAttribute wrapWithTrusted;
 
     /**
      * True, if this public key can be used for wrapping other keys.
      */
-    protected BooleanAttribute trusted_;
+    protected BooleanAttribute trusted;
 
     /**
      * Template of the key, that can be wrapped.
      */
-    protected AttributeArray wrapTemplate_;
+    protected AttributeArray wrapTemplate;
 
     /**
      * Template of the key, that can be unwrapped.
      */
-    protected AttributeArray unwrapTemplate_;
+    protected AttributeArray unwrapTemplate;
 
     /**
      * Default Constructor.
@@ -150,7 +150,7 @@ public class SecretKey extends Key {
      */
     public SecretKey() {
         super();
-        objectClass_.setLongValue(ObjectClass.SECRET_KEY);
+        objectClass.setLongValue(ObjectClass.SECRET_KEY);
     }
 
     /**
@@ -170,7 +170,7 @@ public class SecretKey extends Key {
     protected SecretKey(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        objectClass_.setLongValue(ObjectClass.SECRET_KEY);
+        objectClass.setLongValue(ObjectClass.SECRET_KEY);
     }
 
     /**
@@ -179,7 +179,7 @@ public class SecretKey extends Key {
      * attribute and calls the getInstance method of the according sub-class.
      * If the key type is a vendor defined it uses the
      * VendorDefinedKeyBuilder set by the application. If no secret key
-     * could be constructed, this method returns null.
+     * could be constructed, Returns null.
      *
      * @param session
      *          The session to use for reading attributes. This session must
@@ -286,9 +286,9 @@ public class SecretKey extends Key {
         Util.requireNonNull("session", session);
 
         Object newObject;
-        if (Key.vendorKeyBuilder_ != null) {
+        if (Key.vendorKeyBuilder != null) {
             try {
-                newObject = Key.vendorKeyBuilder_.build(session, objectHandle);
+                newObject = Key.vendorKeyBuilder.build(session, objectHandle);
             } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
                 // we can just treat it like some unknown type of secret key
                 newObject = new SecretKey(session, objectHandle);
@@ -314,26 +314,26 @@ public class SecretKey extends Key {
      */
     protected static void putAttributesInTable(SecretKey object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.SENSITIVE, object.sensitive_);
-        object.attributeTable_.put(Attribute.ENCRYPT, object.encrypt_);
-        object.attributeTable_.put(Attribute.DECRYPT, object.decrypt_);
-        object.attributeTable_.put(Attribute.SIGN, object.sign_);
-        object.attributeTable_.put(Attribute.VERIFY, object.verify_);
-        object.attributeTable_.put(Attribute.WRAP, object.wrap_);
-        object.attributeTable_.put(Attribute.UNWRAP, object.unwrap_);
-        object.attributeTable_.put(Attribute.EXTRACTABLE, object.extractable_);
-        object.attributeTable_.put(Attribute.ALWAYS_SENSITIVE,
-                object.alwaysSensitive_);
-        object.attributeTable_.put(Attribute.NEVER_EXTRACTABLE,
-                object.neverExtractable_);
-        object.attributeTable_.put(Attribute.CHECK_VALUE, object.checkValue_);
-        object.attributeTable_.put(Attribute.WRAP_WITH_TRUSTED,
-                object.wrapWithTrusted_);
-        object.attributeTable_.put(Attribute.TRUSTED, object.trusted_);
-        object.attributeTable_.put(Attribute.WRAP_TEMPLATE,
-                object.wrapTemplate_);
-        object.attributeTable_.put(Attribute.UNWRAP_TEMPLATE,
-                object.unwrapTemplate_);
+        object.attributeTable.put(Attribute.SENSITIVE, object.sensitive);
+        object.attributeTable.put(Attribute.ENCRYPT, object.encrypt);
+        object.attributeTable.put(Attribute.DECRYPT, object.decrypt);
+        object.attributeTable.put(Attribute.SIGN, object.sign);
+        object.attributeTable.put(Attribute.VERIFY, object.verify);
+        object.attributeTable.put(Attribute.WRAP, object.wrap);
+        object.attributeTable.put(Attribute.UNWRAP, object.unwrap);
+        object.attributeTable.put(Attribute.EXTRACTABLE, object.extractable);
+        object.attributeTable.put(Attribute.ALWAYS_SENSITIVE,
+                object.alwaysSensitive);
+        object.attributeTable.put(Attribute.NEVER_EXTRACTABLE,
+                object.neverExtractable);
+        object.attributeTable.put(Attribute.CHECK_VALUE, object.checkValue);
+        object.attributeTable.put(Attribute.WRAP_WITH_TRUSTED,
+                object.wrapWithTrusted);
+        object.attributeTable.put(Attribute.TRUSTED, object.trusted);
+        object.attributeTable.put(Attribute.WRAP_TEMPLATE,
+                object.wrapTemplate);
+        object.attributeTable.put(Attribute.UNWRAP_TEMPLATE,
+                object.unwrapTemplate);
     }
 
     /**
@@ -347,21 +347,21 @@ public class SecretKey extends Key {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        sensitive_ = new BooleanAttribute(Attribute.SENSITIVE);
-        encrypt_ = new BooleanAttribute(Attribute.ENCRYPT);
-        decrypt_ = new BooleanAttribute(Attribute.DECRYPT);
-        sign_ = new BooleanAttribute(Attribute.SIGN);
-        verify_ = new BooleanAttribute(Attribute.VERIFY);
-        wrap_ = new BooleanAttribute(Attribute.WRAP);
-        unwrap_ = new BooleanAttribute(Attribute.UNWRAP);
-        extractable_ = new BooleanAttribute(Attribute.EXTRACTABLE);
-        alwaysSensitive_ = new BooleanAttribute(Attribute.ALWAYS_SENSITIVE);
-        neverExtractable_ = new BooleanAttribute(Attribute.NEVER_EXTRACTABLE);
-        checkValue_ = new ByteArrayAttribute(Attribute.CHECK_VALUE);
-        wrapWithTrusted_ = new BooleanAttribute(Attribute.WRAP_WITH_TRUSTED);
-        trusted_ = new BooleanAttribute(Attribute.TRUSTED);
-        wrapTemplate_ = new AttributeArray(Attribute.WRAP_TEMPLATE);
-        unwrapTemplate_ = new AttributeArray(Attribute.UNWRAP_TEMPLATE);
+        sensitive = new BooleanAttribute(Attribute.SENSITIVE);
+        encrypt = new BooleanAttribute(Attribute.ENCRYPT);
+        decrypt = new BooleanAttribute(Attribute.DECRYPT);
+        sign = new BooleanAttribute(Attribute.SIGN);
+        verify = new BooleanAttribute(Attribute.VERIFY);
+        wrap = new BooleanAttribute(Attribute.WRAP);
+        unwrap = new BooleanAttribute(Attribute.UNWRAP);
+        extractable = new BooleanAttribute(Attribute.EXTRACTABLE);
+        alwaysSensitive = new BooleanAttribute(Attribute.ALWAYS_SENSITIVE);
+        neverExtractable = new BooleanAttribute(Attribute.NEVER_EXTRACTABLE);
+        checkValue = new ByteArrayAttribute(Attribute.CHECK_VALUE);
+        wrapWithTrusted = new BooleanAttribute(Attribute.WRAP_WITH_TRUSTED);
+        trusted = new BooleanAttribute(Attribute.TRUSTED);
+        wrapTemplate = new AttributeArray(Attribute.WRAP_TEMPLATE);
+        unwrapTemplate = new AttributeArray(Attribute.UNWRAP_TEMPLATE);
 
         putAttributesInTable(this);
     }
@@ -379,24 +379,24 @@ public class SecretKey extends Key {
     public java.lang.Object clone() {
         SecretKey clone = (SecretKey) super.clone();
 
-        clone.sensitive_ = (BooleanAttribute) this.sensitive_.clone();
-        clone.encrypt_ = (BooleanAttribute) this.encrypt_.clone();
-        clone.decrypt_ = (BooleanAttribute) this.decrypt_.clone();
-        clone.sign_ = (BooleanAttribute) this.sign_.clone();
-        clone.verify_ = (BooleanAttribute) this.verify_.clone();
-        clone.wrap_ = (BooleanAttribute) this.wrap_.clone();
-        clone.unwrap_ = (BooleanAttribute) this.unwrap_.clone();
-        clone.extractable_ = (BooleanAttribute) this.extractable_.clone();
-        clone.alwaysSensitive_
-            = (BooleanAttribute) this.alwaysSensitive_.clone();
-        clone.neverExtractable_
-            = (BooleanAttribute) this.neverExtractable_.clone();
-        clone.checkValue_ = (ByteArrayAttribute) this.checkValue_.clone();
-        clone.wrapWithTrusted_
-            = (BooleanAttribute) this.wrapWithTrusted_.clone();
-        clone.trusted_ = (BooleanAttribute) this.trusted_.clone();
-        clone.wrapTemplate_ = (AttributeArray) this.wrapTemplate_.clone();
-        clone.unwrapTemplate_ = (AttributeArray) this.unwrapTemplate_.clone();
+        clone.sensitive = (BooleanAttribute) this.sensitive.clone();
+        clone.encrypt = (BooleanAttribute) this.encrypt.clone();
+        clone.decrypt = (BooleanAttribute) this.decrypt.clone();
+        clone.sign = (BooleanAttribute) this.sign.clone();
+        clone.verify = (BooleanAttribute) this.verify.clone();
+        clone.wrap = (BooleanAttribute) this.wrap.clone();
+        clone.unwrap = (BooleanAttribute) this.unwrap.clone();
+        clone.extractable = (BooleanAttribute) this.extractable.clone();
+        clone.alwaysSensitive
+            = (BooleanAttribute) this.alwaysSensitive.clone();
+        clone.neverExtractable
+            = (BooleanAttribute) this.neverExtractable.clone();
+        clone.checkValue = (ByteArrayAttribute) this.checkValue.clone();
+        clone.wrapWithTrusted
+            = (BooleanAttribute) this.wrapWithTrusted.clone();
+        clone.trusted = (BooleanAttribute) this.trusted.clone();
+        clone.wrapTemplate = (AttributeArray) this.wrapTemplate.clone();
+        clone.unwrapTemplate = (AttributeArray) this.unwrapTemplate.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -427,21 +427,21 @@ public class SecretKey extends Key {
 
         SecretKey other = (SecretKey) otherObject;
         return super.equals(other)
-                && this.sensitive_.equals(other.sensitive_)
-                && this.encrypt_.equals(other.encrypt_)
-                && this.decrypt_.equals(other.decrypt_)
-                && this.sign_.equals(other.sign_)
-                && this.verify_.equals(other.verify_)
-                && this.wrap_.equals(other.wrap_)
-                && this.unwrap_.equals(other.unwrap_)
-                && this.extractable_.equals(other.extractable_)
-                && this.alwaysSensitive_.equals(other.alwaysSensitive_)
-                && this.neverExtractable_.equals(other.neverExtractable_)
-                && this.checkValue_.equals(other.checkValue_)
-                && this.wrapWithTrusted_.equals(other.wrapWithTrusted_)
-                && this.trusted_.equals(other.trusted_)
-                && this.wrapTemplate_.equals(other.wrapTemplate_)
-                && this.unwrapTemplate_.equals(other.unwrapTemplate_);
+                && this.sensitive.equals(other.sensitive)
+                && this.encrypt.equals(other.encrypt)
+                && this.decrypt.equals(other.decrypt)
+                && this.sign.equals(other.sign)
+                && this.verify.equals(other.verify)
+                && this.wrap.equals(other.wrap)
+                && this.unwrap.equals(other.unwrap)
+                && this.extractable.equals(other.extractable)
+                && this.alwaysSensitive.equals(other.alwaysSensitive)
+                && this.neverExtractable.equals(other.neverExtractable)
+                && this.checkValue.equals(other.checkValue)
+                && this.wrapWithTrusted.equals(other.wrapWithTrusted)
+                && this.trusted.equals(other.trusted)
+                && this.wrapTemplate.equals(other.wrapTemplate)
+                && this.unwrapTemplate.equals(other.unwrapTemplate);
     }
 
     /**
@@ -452,7 +452,7 @@ public class SecretKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getSensitive() {
-        return sensitive_;
+        return sensitive;
     }
 
     /**
@@ -463,7 +463,7 @@ public class SecretKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getEncrypt() {
-        return encrypt_;
+        return encrypt;
     }
 
     /**
@@ -474,7 +474,7 @@ public class SecretKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getVerify() {
-        return verify_;
+        return verify;
     }
 
     /**
@@ -485,7 +485,7 @@ public class SecretKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getDecrypt() {
-        return decrypt_;
+        return decrypt;
     }
 
     /**
@@ -496,7 +496,7 @@ public class SecretKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getSign() {
-        return sign_;
+        return sign;
     }
 
     /**
@@ -507,7 +507,7 @@ public class SecretKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getWrap() {
-        return wrap_;
+        return wrap;
     }
 
     /**
@@ -518,7 +518,7 @@ public class SecretKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getUnwrap() {
-        return unwrap_;
+        return unwrap;
     }
 
     /**
@@ -529,7 +529,7 @@ public class SecretKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getExtractable() {
-        return extractable_;
+        return extractable;
     }
 
     /**
@@ -540,7 +540,7 @@ public class SecretKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getAlwaysSensitive() {
-        return alwaysSensitive_;
+        return alwaysSensitive;
     }
 
     /**
@@ -551,7 +551,7 @@ public class SecretKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getNeverExtractable() {
-        return neverExtractable_;
+        return neverExtractable;
     }
 
     /**
@@ -562,7 +562,7 @@ public class SecretKey extends Key {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getCheckValue() {
-        return checkValue_;
+        return checkValue;
     }
 
     /**
@@ -573,7 +573,7 @@ public class SecretKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getWrapWithTrusted() {
-        return wrapWithTrusted_;
+        return wrapWithTrusted;
     }
 
     /**
@@ -584,7 +584,7 @@ public class SecretKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getTrusted() {
-        return trusted_;
+        return trusted;
     }
 
     /**
@@ -597,7 +597,7 @@ public class SecretKey extends Key {
      * @postconditions (result <> null)
      */
     public AttributeArray getWrapTemplate() {
-        return wrapTemplate_;
+        return wrapTemplate;
     }
 
     /**
@@ -610,7 +610,7 @@ public class SecretKey extends Key {
      * @postconditions (result <> null)
      */
     public AttributeArray getUnwrapTemplate() {
-        return unwrapTemplate_;
+        return unwrapTemplate;
     }
 
     /**
@@ -630,16 +630,16 @@ public class SecretKey extends Key {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            sensitive_, encrypt_, decrypt_, sign_, verify_, wrap_, unwrap_,
-            extractable_, alwaysSensitive_, neverExtractable_, checkValue_,
-            wrapWithTrusted_, trusted_ });
-        Object.getAttributeValue(session, objectHandle_, wrapTemplate_);
-        Object.getAttributeValue(session, objectHandle_, unwrapTemplate_);
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            sensitive, encrypt, decrypt, sign, verify, wrap, unwrap,
+            extractable, alwaysSensitive, neverExtractable, checkValue,
+            wrapWithTrusted, trusted });
+        Object.getAttributeValue(session, objectHandle, wrapTemplate);
+        Object.getAttributeValue(session, objectHandle, unwrapTemplate);
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -655,63 +655,63 @@ public class SecretKey extends Key {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Sensitive: ");
-        buffer.append(sensitive_.toString());
+        buffer.append(sensitive.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Encrypt: ");
-        buffer.append(encrypt_.toString());
+        buffer.append(encrypt.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Decrypt: ");
-        buffer.append(decrypt_.toString());
+        buffer.append(decrypt.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Sign: ");
-        buffer.append(sign_.toString());
+        buffer.append(sign.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Verify: ");
-        buffer.append(verify_.toString());
+        buffer.append(verify.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Wrap: ");
-        buffer.append(wrap_.toString());
+        buffer.append(wrap.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Unwrap: ");
-        buffer.append(unwrap_.toString());
+        buffer.append(unwrap.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Extractable: ");
-        buffer.append(extractable_.toString());
+        buffer.append(extractable.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Always Sensitive: ");
-        buffer.append(alwaysSensitive_.toString());
+        buffer.append(alwaysSensitive.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Never Extractable: ");
-        buffer.append(neverExtractable_.toString());
+        buffer.append(neverExtractable.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Check Value: ");
-        buffer.append(checkValue_.toString());
+        buffer.append(checkValue.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Wrap With Trusted: ");
-        buffer.append(wrapWithTrusted_.toString());
+        buffer.append(wrapWithTrusted.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Trusted: ");
-        buffer.append(trusted_.toString());
+        buffer.append(trusted.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Wrap Template: ");
-        buffer.append(wrapTemplate_.toString());
+        buffer.append(wrapTemplate.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Unwrap Template: ");
-        buffer.append(unwrapTemplate_.toString());
+        buffer.append(unwrapTemplate.toString());
 
         return buffer.toString();
     }

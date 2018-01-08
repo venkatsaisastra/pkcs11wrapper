@@ -89,9 +89,9 @@ public class MechanismAttribute extends LongAttribute {
      */
     @SuppressWarnings("restriction")
     public void setMechanism(Mechanism mechanism) {
-        ckAttribute_.pValue = (mechanism != null)
+        ckAttribute.pValue = (mechanism != null)
                 ? new Long(mechanism.getMechanismCode()) : null;
-        present_ = true;
+        present = true;
     }
 
     /**
@@ -103,8 +103,8 @@ public class MechanismAttribute extends LongAttribute {
      */
     @SuppressWarnings("restriction")
     public Mechanism getMechanism() {
-        return ((ckAttribute_ != null) && (ckAttribute_.pValue != null))
-                ? new Mechanism(((Long) ckAttribute_.pValue).longValue())
+        return ((ckAttribute != null) && (ckAttribute.pValue != null))
+                ? new Mechanism(((Long) ckAttribute.pValue).longValue())
                 : null;
     }
 
@@ -120,11 +120,11 @@ public class MechanismAttribute extends LongAttribute {
     protected String getValueString() {
         String valueString;
 
-        if ((ckAttribute_ != null) && (ckAttribute_.pValue != null)) {
-            if (((Long) ckAttribute_.pValue).longValue()
+        if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
+            if (((Long) ckAttribute.pValue).longValue()
                     != PKCS11Constants.CK_UNAVAILABLE_INFORMATION) {
                 valueString = Functions.mechanismCodeToString(
-                        ((Long) ckAttribute_.pValue).longValue());
+                        ((Long) ckAttribute.pValue).longValue());
             } else {
                 valueString = "<Information unavailable>";
             }

@@ -55,21 +55,22 @@ import sun.security.pkcs11.wrapper.CK_VERSION;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (randomInfo_ <> null)
- *             and (version_ <> null)
+ * @invariants (randomInfo <> null)
+ *             and (version <> null)
  */
 @SuppressWarnings("restriction")
+// CHECKSTYLE:SKIP
 public class SSL3MasterKeyDeriveParameters implements Parameters {
 
     /**
      * The client's and server's random data information.
      */
-    protected SSL3RandomDataParameters randomInfo_;
+    protected SSL3RandomDataParameters randomInfo;
 
     /**
      * The SSL protocol version information.
      */
-    protected VersionParameters version_;
+    protected VersionParameters version;
 
     /**
      * Create a new SSL3MasterKeyDeriveParameters object with the given
@@ -85,8 +86,8 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      */
     public SSL3MasterKeyDeriveParameters(SSL3RandomDataParameters randomInfo,
             VersionParameters version) {
-        randomInfo_ = Util.requireNonNull("randomInfo", randomInfo);
-        version_ = Util.requireNonNull("version", version);
+        this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
+        this.version = Util.requireNonNull("version", version);
     }
 
     /**
@@ -105,9 +106,9 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
         try {
             clone = (SSL3MasterKeyDeriveParameters) super.clone();
 
-            clone.randomInfo_
-                = (SSL3RandomDataParameters)this.randomInfo_.clone();
-            clone.version_ = (VersionParameters) this.version_.clone();
+            clone.randomInfo
+                = (SSL3RandomDataParameters)this.randomInfo.clone();
+            clone.version = (VersionParameters) this.version.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
             throw new TokenRuntimeException(
@@ -128,8 +129,8 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
     public Object getPKCS11ParamsObject() {
         CK_SSL3_MASTER_KEY_DERIVE_PARAMS params
             = new CK_SSL3_MASTER_KEY_DERIVE_PARAMS(
-                (CK_SSL3_RANDOM_DATA) randomInfo_.getPKCS11ParamsObject(),
-                (CK_VERSION) version_.getPKCS11ParamsObject());
+                (CK_SSL3_RANDOM_DATA) randomInfo.getPKCS11ParamsObject(),
+                (CK_VERSION) version.getPKCS11ParamsObject());
 
         return params;
     }
@@ -142,7 +143,7 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      * @postconditions (result <> null)
      */
     public SSL3RandomDataParameters getRandomInfo() {
-        return randomInfo_;
+        return randomInfo;
     }
 
     /**
@@ -153,7 +154,7 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      * @postconditions (result <> null)
      */
     public VersionParameters getVersion() {
-        return version_;
+        return version;
     }
 
     /**
@@ -165,7 +166,7 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      * @postconditions
      */
     public void setRandomInfo(SSL3RandomDataParameters randomInfo) {
-        randomInfo_ = Util.requireNonNull("randomInfo", randomInfo);
+        this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
     }
 
     /**
@@ -177,7 +178,7 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      * @postconditions
      */
     public void setVersion(VersionParameters version) {
-        version_ = Util.requireNonNull("version", version);
+        this.version = Util.requireNonNull("version", version);
     }
 
     /**
@@ -193,11 +194,11 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
         buffer.append(Constants.INDENT);
         buffer.append("Random Information:");
         buffer.append(Constants.NEWLINE);
-        buffer.append(randomInfo_);
+        buffer.append(randomInfo);
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Version: ");
-        buffer.append(version_);
+        buffer.append(version);
 
         return buffer.toString();
     }
@@ -225,8 +226,8 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
 
         SSL3MasterKeyDeriveParameters other
                 = (SSL3MasterKeyDeriveParameters) otherObject;
-        return this.randomInfo_.equals(other.randomInfo_)
-                && this.version_.equals(other.version_);
+        return this.randomInfo.equals(other.randomInfo)
+                && this.version.equals(other.version);
     }
 
     /**
@@ -239,7 +240,7 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return randomInfo_.hashCode() ^ version_.hashCode();
+        return randomInfo.hashCode() ^ version.hashCode();
     }
 
 }

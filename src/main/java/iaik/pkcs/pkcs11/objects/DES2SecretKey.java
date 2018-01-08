@@ -55,12 +55,13 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  * @version 1.0
  * @invariants (value_ <> null)
  */
+// CHECKSTYLE:SKIP
 public class DES2SecretKey extends SecretKey {
 
     /**
      * The value attribute of this secret key.
      */
-    protected ByteArrayAttribute value_;
+    protected ByteArrayAttribute value;
 
     /**
      * Default Constructor.
@@ -70,7 +71,7 @@ public class DES2SecretKey extends SecretKey {
      */
     public DES2SecretKey() {
         super();
-        keyType_.setLongValue(KeyType.DES2);
+        keyType.setLongValue(KeyType.DES2);
     }
 
     /**
@@ -90,7 +91,7 @@ public class DES2SecretKey extends SecretKey {
     protected DES2SecretKey(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        keyType_.setLongValue(KeyType.DES2);
+        keyType.setLongValue(KeyType.DES2);
     }
 
     /**
@@ -130,7 +131,7 @@ public class DES2SecretKey extends SecretKey {
     protected static void putAttributesInTable(DES2SecretKey object) {
         Util.requireNonNull("object", object);
 
-        object.attributeTable_.put(Attribute.VALUE, object.value_);
+        object.attributeTable.put(Attribute.VALUE, object.value);
     }
 
     /**
@@ -143,7 +144,7 @@ public class DES2SecretKey extends SecretKey {
     @Override
     protected void allocateAttributes() {
         super.allocateAttributes();
-        value_ = new ByteArrayAttribute(Attribute.VALUE);
+        value = new ByteArrayAttribute(Attribute.VALUE);
         putAttributesInTable(this);
     }
 
@@ -160,7 +161,7 @@ public class DES2SecretKey extends SecretKey {
     public java.lang.Object clone() {
         DES2SecretKey clone = (DES2SecretKey) super.clone();
 
-        clone.value_ = (ByteArrayAttribute) this.value_.clone();
+        clone.value = (ByteArrayAttribute) this.value.clone();
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
 
@@ -190,7 +191,7 @@ public class DES2SecretKey extends SecretKey {
 
         DES2SecretKey other = (DES2SecretKey) otherObject;
         return super.equals(other)
-                && this.value_.equals(other.value_);
+                && this.value.equals(other.value);
     }
 
     /**
@@ -201,7 +202,7 @@ public class DES2SecretKey extends SecretKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getValue() {
-        return value_;
+        return value;
     }
 
     /**
@@ -221,11 +222,11 @@ public class DES2SecretKey extends SecretKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValue(session, objectHandle_, value_);
+        Object.getAttributeValue(session, objectHandle, value);
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -240,7 +241,7 @@ public class DES2SecretKey extends SecretKey {
         buffer.append(super.toString());
 
         buffer.append(Constants.NEWLINE_INDENT_HEXVALUE);
-        buffer.append(value_.toString());
+        buffer.append(value.toString());
 
         return buffer.toString();
     }

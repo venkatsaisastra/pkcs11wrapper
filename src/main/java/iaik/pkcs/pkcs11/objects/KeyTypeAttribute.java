@@ -75,8 +75,8 @@ public class KeyTypeAttribute extends LongAttribute {
     protected String getValueString() {
         String valueString;
 
-        if ((ckAttribute_ != null) && (ckAttribute_.pValue != null)) {
-            valueString = Key.getKeyTypeName((Long) ckAttribute_.pValue);
+        if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
+            valueString = Key.getKeyTypeName((Long) ckAttribute.pValue);
         } else {
             valueString = "<NULL_PTR>";
         }

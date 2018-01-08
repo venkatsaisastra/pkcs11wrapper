@@ -153,7 +153,7 @@ import sun.security.pkcs11.wrapper.PKCS11;
  * @see iaik.pkcs.pkcs11.SessionInfo
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (pkcs11Module_ <> null)
+ * @invariants (pkcs11Module <> null)
  */
 @SuppressWarnings("restriction")
 public class Session {
@@ -182,22 +182,22 @@ public class Session {
     /**
      * A reference to the underlying PKCS#11 module to perform the operations.
      */
-    protected Module module_;
+    protected Module module;
 
     /**
      * A reference to the underlying PKCS#11 module to perform the operations.
      */
-    protected PKCS11 pkcs11Module_;
+    protected PKCS11 pkcs11Module;
 
     /**
      * The session handle to perform the operations with.
      */
-    protected long sessionHandle_;
+    protected long sessionHandle;
 
     /**
      * The token to perform the operations on.
      */
-    protected Token token_;
+    protected Token token;
 
     /**
      * Constructor taking the token and the session handle.
@@ -210,10 +210,10 @@ public class Session {
      * @postconditions
      */
     protected Session(Token token, long sessionHandle) {
-        token_ = Util.requireNonNull("token", token);
-        module_ = token_.getSlot().getModule();
-        pkcs11Module_ = module_.getPKCS11Module();
-        sessionHandle_ = sessionHandle;
+        this.token = Util.requireNonNull("token", token);
+        this.module = token.getSlot().getModule();
+        this.pkcs11Module = module.getPKCS11Module();
+        this.sessionHandle = sessionHandle;
     }
 
     /**
@@ -234,7 +234,7 @@ public class Session {
     /*
     public void initPIN(char[] pin)
         throws TokenException {
-        pkcs11Module_.C_InitPIN(sessionHandle_, pin, useUtf8Encoding_);
+        pkcs11Module.C_InitPIN(sessionHandle, pin, useUtf8Encoding);
     }*/
 
     /**
@@ -253,8 +253,8 @@ public class Session {
     /*
     public void setPIN(char[] oldPin, char[] newPin)
         throws TokenException {
-        pkcs11Module_.C_SetPIN(sessionHandle_, oldPin, newPin,
-                useUtf8Encoding_);
+        pkcs11Module.C_SetPIN(sessionHandle, oldPin, newPin,
+                useUtf8Encoding);
     }*/
 
     /**
@@ -268,14 +268,14 @@ public class Session {
     public void closeSession()
         throws TokenException {
         try {
-            pkcs11Module_.C_CloseSession(sessionHandle_);
+            pkcs11Module.C_CloseSession(sessionHandle);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
     }
 
     /**
-     * Compares the sessionHandle and token_ of this object with the other
+     * Compares the sessionHandle and token of this object with the other
      * object. Returns only true, if those are equal in both objects.
      *
      * @param otherObject
@@ -296,11 +296,11 @@ public class Session {
         }
 
         Session other = (Session) otherObject;
-        if (this.sessionHandle_ != other.sessionHandle_) {
+        if (this.sessionHandle != other.sessionHandle) {
             return false;
         }
 
-        return this.token_.equals(other.token_);
+        return this.token.equals(other.token);
     }
 
     /**
@@ -313,7 +313,7 @@ public class Session {
      */
     @Override
     public int hashCode() {
-        return (int) sessionHandle_;
+        return (int) sessionHandle;
     }
 
     /**
@@ -324,7 +324,7 @@ public class Session {
      * @postconditions
      */
     public long getSessionHandle() {
-        return sessionHandle_;
+        return sessionHandle;
     }
 
     /**
@@ -340,7 +340,7 @@ public class Session {
         throws TokenException  {
         CK_SESSION_INFO ckSessionInfo;
         try {
-            ckSessionInfo = pkcs11Module_.C_GetSessionInfo(sessionHandle_);
+            ckSessionInfo = pkcs11Module.C_GetSessionInfo(sessionHandle);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -356,7 +356,7 @@ public class Session {
      * @postconditions
      */
     public Module getModule() {
-        return module_;
+        return module;
     }
 
     /**
@@ -367,7 +367,7 @@ public class Session {
      * @postconditions
      */
     public Token getToken() {
-        return token_;
+        return token;
     }
 
     /**
@@ -384,7 +384,7 @@ public class Session {
     public byte[] getOperationState()
         throws TokenException {
         try {
-            return pkcs11Module_.C_GetOperationState(sessionHandle_);
+            return pkcs11Module.C_GetOperationState(sessionHandle);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -417,7 +417,7 @@ public class Session {
             Key authenticationKey)
         throws TokenException {
         try {
-            pkcs11Module_.C_SetOperationState(sessionHandle_, operationState,
+            pkcs11Module.C_SetOperationState(sessionHandle, operationState,
                 encryptionKey.getObjectHandle(),
                 authenticationKey.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
@@ -443,10 +443,10 @@ public class Session {
      */
     public void login(boolean userType, char[] pin)
         throws TokenException {
-        long lUserType = (userType == UserType.SO)
+        long tmpUserType = (userType == UserType.SO)
                 ? PKCS11Constants.CKU_SO : PKCS11Constants.CKU_USER;
         try {
-            pkcs11Module_.C_Login(sessionHandle_, lUserType, pin);
+            pkcs11Module.C_Login(sessionHandle, tmpUserType, pin);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -455,7 +455,7 @@ public class Session {
     public void login(long userType, char[] pin)
         throws TokenException {
         try {
-            pkcs11Module_.C_Login(sessionHandle_, userType, pin);
+            pkcs11Module.C_Login(sessionHandle, userType, pin);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -472,7 +472,7 @@ public class Session {
     public void logout()
         throws TokenException {
         try {
-            pkcs11Module_.C_Logout(sessionHandle_);
+            pkcs11Module.C_Logout(sessionHandle);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -519,7 +519,7 @@ public class Session {
         CK_ATTRIBUTE[] ckAttributes = Object.getSetAttributes(templateObject);
         long objectHandle;
         try {
-            objectHandle = pkcs11Module_.C_CreateObject(sessionHandle_,
+            objectHandle = pkcs11Module.C_CreateObject(sessionHandle,
                     ckAttributes);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -554,7 +554,7 @@ public class Session {
         CK_ATTRIBUTE[] ckAttributes = Object.getSetAttributes(templateObject);
         long newObjectHandle;
         try {
-            newObjectHandle = pkcs11Module_.C_CopyObject(sessionHandle_,
+            newObjectHandle = pkcs11Module.C_CopyObject(sessionHandle,
                     sourceObjectHandle, ckAttributes);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -591,7 +591,7 @@ public class Session {
         CK_ATTRIBUTE[] ckAttributesTemplates =
                 Object.getSetAttributes(templateObject);
         try {
-            pkcs11Module_.C_SetAttributeValue(sessionHandle_,
+            pkcs11Module.C_SetAttributeValue(sessionHandle,
                     objectToUpdateHandle, ckAttributesTemplates);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -636,7 +636,7 @@ public class Session {
         throws TokenException {
         long objectHandle = object.getObjectHandle();
         try {
-            pkcs11Module_.C_DestroyObject(sessionHandle_, objectHandle);
+            pkcs11Module.C_DestroyObject(sessionHandle, objectHandle);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -658,7 +658,7 @@ public class Session {
     public long getObjectSize(Object object)
         throws TokenException {
         long objectHandle = object.getObjectHandle();
-        return pkcs11Module_.C_GetObjectSize(sessionHandle_, objectHandle);
+        return pkcs11Module.C_GetObjectSize(sessionHandle, objectHandle);
     }*/
 
     /**
@@ -681,7 +681,7 @@ public class Session {
         throws TokenException {
         CK_ATTRIBUTE[] ckAttributes = Object.getSetAttributes(templateObject);
         try {
-            pkcs11Module_.C_FindObjectsInit(sessionHandle_, ckAttributes);
+            pkcs11Module.C_FindObjectsInit(sessionHandle, ckAttributes);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -711,7 +711,7 @@ public class Session {
         Vector<Object> foundObjects = new Vector<>();
         long[] objectHandles;
         try {
-            objectHandles = pkcs11Module_.C_FindObjects(sessionHandle_,
+            objectHandles = pkcs11Module.C_FindObjects(sessionHandle,
                     maxObjectCount);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -744,7 +744,7 @@ public class Session {
     public void findObjectsFinal()
         throws TokenException {
         try {
-            pkcs11Module_.C_FindObjectsFinal(sessionHandle_);
+            pkcs11Module.C_FindObjectsFinal(sessionHandle);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -779,7 +779,7 @@ public class Session {
                 ? parameters.getPKCS11ParamsObject() : null;
 
         try {
-            pkcs11Module_.C_EncryptInit(sessionHandle_, ckMechanism,
+            pkcs11Module.C_EncryptInit(sessionHandle, ckMechanism,
                     key.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -808,7 +808,7 @@ public class Session {
         Util.requireNonNull("out", out);
 
         try {
-            return pkcs11Module_.C_Encrypt(sessionHandle_, in, inOfs, inLen,
+            return pkcs11Module.C_Encrypt(sessionHandle, in, inOfs, inLen,
                     out, outOfs, outLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -838,7 +838,7 @@ public class Session {
         Util.requireNonNull("out", out);
 
         try {
-            return pkcs11Module_.C_EncryptUpdate(sessionHandle_, 0, in, inOfs,
+            return pkcs11Module.C_EncryptUpdate(sessionHandle, 0, in, inOfs,
                     inLen, 0, out, outOfs, outLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -862,7 +862,7 @@ public class Session {
         Util.requireNonNull("out", out);
 
         try {
-            return pkcs11Module_.C_EncryptFinal(sessionHandle_, 0,
+            return pkcs11Module.C_EncryptFinal(sessionHandle, 0,
                     out, outOfs, outLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -894,7 +894,7 @@ public class Session {
         CK_MECHANISM ckMechanism = getCkMechanism(mechanism);
 
         try {
-            pkcs11Module_.C_DecryptInit(sessionHandle_, ckMechanism,
+            pkcs11Module.C_DecryptInit(sessionHandle, ckMechanism,
                     key.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -923,7 +923,7 @@ public class Session {
         Util.requireNonNull("out", out);
 
         try {
-            return pkcs11Module_.C_Decrypt(sessionHandle_, in, inOfs, inLen,
+            return pkcs11Module.C_Decrypt(sessionHandle, in, inOfs, inLen,
                     out, outOfs, outLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -953,7 +953,7 @@ public class Session {
         Util.requireNonNull("out", out);
 
         try {
-            return pkcs11Module_.C_DecryptUpdate(sessionHandle_, 0, in, inOfs,
+            return pkcs11Module.C_DecryptUpdate(sessionHandle, 0, in, inOfs,
                     inLen, 0, out, outOfs, outLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -977,7 +977,7 @@ public class Session {
         Util.requireNonNull("out", out);
 
         try {
-            return pkcs11Module_.C_DecryptFinal(sessionHandle_, 0,
+            return pkcs11Module.C_DecryptFinal(sessionHandle, 0,
                     out, outOfs, outLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1004,7 +1004,7 @@ public class Session {
         throws TokenException {
         CK_MECHANISM ckMechanism = getCkMechanism(mechanism);
         try {
-            pkcs11Module_.C_DigestInit(sessionHandle_, ckMechanism);
+            pkcs11Module.C_DigestInit(sessionHandle, ckMechanism);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1038,7 +1038,7 @@ public class Session {
         Util.requireNonNull("digest", digest);
 
         try {
-            return pkcs11Module_.C_DigestSingle(sessionHandle_,
+            return pkcs11Module.C_DigestSingle(sessionHandle,
                     getCkMechanism(mechanism),
                     in, inOfs, inLen, digest, digestOfs, digestLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
@@ -1065,7 +1065,7 @@ public class Session {
         Util.requireNonNull("part", part);
 
         try {
-            pkcs11Module_.C_DigestUpdate(sessionHandle_, 0, part, partOfs,
+            pkcs11Module.C_DigestUpdate(sessionHandle, 0, part, partOfs,
                     partLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1087,7 +1087,7 @@ public class Session {
     public void digestKey(SecretKey key)
         throws TokenException {
         try {
-            pkcs11Module_.C_DigestKey(sessionHandle_, key.getObjectHandle());
+            pkcs11Module.C_DigestKey(sessionHandle, key.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1111,7 +1111,7 @@ public class Session {
         Util.requireNonNull("digest", digest);
 
         try {
-            return pkcs11Module_.C_DigestFinal(sessionHandle_,
+            return pkcs11Module.C_DigestFinal(sessionHandle,
                     digest, digestOfs, digestLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1143,7 +1143,7 @@ public class Session {
         throws TokenException {
         CK_MECHANISM ckMechanism = getCkMechanism(mechanism);
         try {
-            pkcs11Module_.C_SignInit(sessionHandle_, ckMechanism,
+            pkcs11Module.C_SignInit(sessionHandle, ckMechanism,
                     key.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1169,7 +1169,7 @@ public class Session {
         Util.requireNonNull("data", data);
 
         try {
-            return pkcs11Module_.C_Sign(sessionHandle_, data);
+            return pkcs11Module.C_Sign(sessionHandle, data);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1194,7 +1194,7 @@ public class Session {
         Util.requireNonNull("in", in);
 
         try {
-            pkcs11Module_.C_SignUpdate(sessionHandle_, 0, in, inOfs, inLen);
+            pkcs11Module.C_SignUpdate(sessionHandle, 0, in, inOfs, inLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1216,7 +1216,7 @@ public class Session {
     public byte[] signFinal(int expectedLen)
         throws TokenException {
         try {
-            return pkcs11Module_.C_SignFinal(sessionHandle_, expectedLen);
+            return pkcs11Module.C_SignFinal(sessionHandle, expectedLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1252,7 +1252,7 @@ public class Session {
                 ? parameters.getPKCS11ParamsObject() : null;
 
         try {
-            pkcs11Module_.C_SignRecoverInit(sessionHandle_, ckMechanism,
+            pkcs11Module.C_SignRecoverInit(sessionHandle, ckMechanism,
                     key.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1280,7 +1280,7 @@ public class Session {
         Util.requireNonNull("out", out);
 
         try {
-            return pkcs11Module_.C_SignRecover(sessionHandle_, in, inOfs, inLen,
+            return pkcs11Module.C_SignRecover(sessionHandle, in, inOfs, inLen,
                     out, outOfs, outLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1317,7 +1317,7 @@ public class Session {
                 ? parameters.getPKCS11ParamsObject() : null;
 
         try {
-            pkcs11Module_.C_VerifyInit(sessionHandle_, ckMechanism,
+            pkcs11Module.C_VerifyInit(sessionHandle, ckMechanism,
                     key.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1347,7 +1347,7 @@ public class Session {
         Util.requireNonNull("signature", signature);
 
         try {
-            pkcs11Module_.C_Verify(sessionHandle_, data, signature);
+            pkcs11Module.C_Verify(sessionHandle, data, signature);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1371,7 +1371,7 @@ public class Session {
         Util.requireNonNull("in", in);
 
         try {
-            pkcs11Module_.C_VerifyUpdate(sessionHandle_, 0, in, inOfs, inLen);
+            pkcs11Module.C_VerifyUpdate(sessionHandle, 0, in, inOfs, inLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1399,7 +1399,7 @@ public class Session {
         Util.requireNonNull("signature", signature);
 
         try {
-            pkcs11Module_.C_VerifyFinal(sessionHandle_, signature);
+            pkcs11Module.C_VerifyFinal(sessionHandle, signature);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1429,7 +1429,7 @@ public class Session {
         throws TokenException {
         CK_MECHANISM ckMechanism = getCkMechanism(mechanism);
         try {
-            pkcs11Module_.C_VerifyRecoverInit(sessionHandle_, ckMechanism,
+            pkcs11Module.C_VerifyRecoverInit(sessionHandle, ckMechanism,
                     key.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1457,7 +1457,7 @@ public class Session {
         Util.requireNonNull("out", out);
 
         try {
-            return pkcs11Module_.C_VerifyRecover(sessionHandle_,
+            return pkcs11Module.C_VerifyRecover(sessionHandle,
                     in, inOfs, inLen, out, outOfs, outLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1481,7 +1481,7 @@ public class Session {
     /*
     public byte[] digestEncryptedUpdate(byte[] part)
         throws TokenException {
-        return pkcs11Module_.C_DigestEncryptUpdate(sessionHandle_, part);
+        return pkcs11Module.C_DigestEncryptUpdate(sessionHandle, part);
     }
     */
 
@@ -1503,7 +1503,7 @@ public class Session {
     /*
     public byte[] decryptDigestUpdate(byte[] part)
         throws TokenException {
-        return pkcs11Module_.C_DecryptDigestUpdate(sessionHandle_, part);
+        return pkcs11Module.C_DecryptDigestUpdate(sessionHandle, part);
     }
     */
 
@@ -1523,7 +1523,7 @@ public class Session {
     /*
     public byte[] signEncryptUpdate(byte[] part)
         throws TokenException {
-        return pkcs11Module_.C_SignEncryptUpdate(sessionHandle_, part);
+        return pkcs11Module.C_SignEncryptUpdate(sessionHandle, part);
     }
     */
 
@@ -1545,7 +1545,7 @@ public class Session {
     /*
     public byte[] decryptVerifyUpdate(byte[] encryptedPart)
         throws TokenException {
-        return pkcs11Module_.C_DecryptVerifyUpdate(sessionHandle_,
+        return pkcs11Module.C_DecryptVerifyUpdate(sessionHandle,
                 encryptedPart);
     }
     */
@@ -1580,7 +1580,7 @@ public class Session {
 
         long objectHandle;
         try {
-            objectHandle = pkcs11Module_.C_GenerateKey(sessionHandle_,
+            objectHandle = pkcs11Module.C_GenerateKey(sessionHandle,
                     ckMechanism, ckAttributes);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1627,7 +1627,7 @@ public class Session {
 
         long[] objectHandles;
         try {
-            objectHandles = pkcs11Module_.C_GenerateKeyPair(sessionHandle_,
+            objectHandles = pkcs11Module.C_GenerateKeyPair(sessionHandle,
                     ckMechanism, ckPublicKeyAttributes, ckPrivateKeyAttributes);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1667,7 +1667,7 @@ public class Session {
                 ? parameters.getPKCS11ParamsObject() : null;
 
         try {
-            return pkcs11Module_.C_WrapKey(sessionHandle_, ckMechanism,
+            return pkcs11Module.C_WrapKey(sessionHandle, ckMechanism,
                 wrappingKey.getObjectHandle(), key.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1711,7 +1711,7 @@ public class Session {
 
         long objectHandle;
         try {
-            objectHandle = pkcs11Module_.C_UnwrapKey(sessionHandle_,
+            objectHandle = pkcs11Module.C_UnwrapKey(sessionHandle,
                     ckMechanism, unwrappingKey.getObjectHandle(), wrappedKey,
                     ckAttributes);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
@@ -1754,7 +1754,7 @@ public class Session {
 
         long objectHandle;
         try {
-            objectHandle = pkcs11Module_.C_DeriveKey(sessionHandle_,
+            objectHandle = pkcs11Module.C_DeriveKey(sessionHandle,
                     ckMechanism, baseKey.getObjectHandle(), ckAttributes);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1824,7 +1824,7 @@ public class Session {
     public void seedRandom(byte[] seed)
         throws TokenException {
         try {
-            pkcs11Module_.C_SeedRandom(sessionHandle_, seed);
+            pkcs11Module.C_SeedRandom(sessionHandle, seed);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1846,7 +1846,7 @@ public class Session {
         throws TokenException {
         byte[] randomBytesBuffer = new byte[numberOfBytesToGenerate];
         try {
-            pkcs11Module_.C_GenerateRandom(sessionHandle_, randomBytesBuffer);
+            pkcs11Module.C_GenerateRandom(sessionHandle, randomBytesBuffer);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         } // fill the buffer with random bytes
@@ -1865,7 +1865,7 @@ public class Session {
     /*
     public void getFunctionStatus()
         throws TokenException {
-        pkcs11Module_.C_GetFunctionStatus(sessionHandle_);
+        pkcs11Module.C_GetFunctionStatus(sessionHandle);
     }*/
 
     /**
@@ -1880,7 +1880,7 @@ public class Session {
     /*
     public void cancelFunction()
         throws TokenException {
-        pkcs11Module_.C_CancelFunction(sessionHandle_);
+        pkcs11Module.C_CancelFunction(sessionHandle);
     }*/
 
     /**
@@ -1894,11 +1894,11 @@ public class Session {
 
         buffer.append("Session Handle: ");
         buffer.append("0x");
-        buffer.append(Functions.toHexString(sessionHandle_));
+        buffer.append(Functions.toHexString(sessionHandle));
         buffer.append(Constants.NEWLINE);
 
         buffer.append("Token: ");
-        buffer.append(token_.toString());
+        buffer.append(token.toString());
 
         return buffer.toString();
     }

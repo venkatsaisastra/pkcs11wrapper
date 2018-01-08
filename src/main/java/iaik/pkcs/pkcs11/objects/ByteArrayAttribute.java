@@ -48,7 +48,7 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  * Objects of this class represent a byte-array attribute of a PKCS#11 object
  * as specified by PKCS#11.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer</a>
  * @version 1.0
  * @invariants
  */
@@ -86,8 +86,8 @@ public class ByteArrayAttribute extends Attribute {
      */
     @SuppressWarnings("restriction")
     public void setByteArrayValue(byte[] value) {
-        ckAttribute_.pValue = value;
-        present_ = true;
+        ckAttribute.pValue = value;
+        present = true;
     }
 
     /**
@@ -99,7 +99,7 @@ public class ByteArrayAttribute extends Attribute {
      */
     @SuppressWarnings("restriction")
     public byte[] getByteArrayValue() {
-        return (byte[]) ckAttribute_.pValue;
+        return (byte[]) ckAttribute.pValue;
     }
 
     /**
@@ -114,8 +114,8 @@ public class ByteArrayAttribute extends Attribute {
     protected String getValueString() {
         String valueString;
 
-        if ((ckAttribute_ != null) && (ckAttribute_.pValue != null)) {
-            valueString = Functions.toHexString((byte[]) ckAttribute_.pValue);
+        if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
+            valueString = Functions.toHexString((byte[]) ckAttribute.pValue);
         } else {
             valueString = "<NULL_PTR>";
         }
@@ -146,25 +146,25 @@ public class ByteArrayAttribute extends Attribute {
         }
 
         ByteArrayAttribute other = (ByteArrayAttribute) otherObject;
-        if (!this.present_ && !other.present_) {
+        if (!this.present && !other.present) {
             return true;
         }
 
-        if (!(this.present_ && other.present_)) {
+        if (!(this.present && other.present)) {
             return false;
         }
 
-        if (this.sensitive_ != other.sensitive_) {
+        if (this.sensitive != other.sensitive) {
             return false;
         }
 
         /* In the original implementation, the type will not be compared.
-        if (this.ckAttribute_.type != other.ckAttribute_.type) {
+        if (this.ckAttribute.type != other.ckAttribute.type) {
             return false;
         }*/
 
-        return Functions.equals((byte[]) this.ckAttribute_.pValue,
-                (byte[]) other.ckAttribute_.pValue);
+        return Functions.equals((byte[]) this.ckAttribute.pValue,
+                (byte[]) other.ckAttribute.pValue);
     }
 
     /**
@@ -178,13 +178,12 @@ public class ByteArrayAttribute extends Attribute {
     @SuppressWarnings("restriction")
     @Override
     public int hashCode() {
-        return (ckAttribute_.pValue != null) ? Functions
-            .hashCode((byte[]) ckAttribute_.pValue) : 0;
+        return (ckAttribute.pValue != null) ? Functions
+            .hashCode((byte[]) ckAttribute.pValue) : 0;
     }
 
     @Override
-    public void setValue(java.lang.Object value)
-        throws UnsupportedOperationException {
+    public void setValue(java.lang.Object value) {
         setByteArrayValue((byte[]) value);
     }
 

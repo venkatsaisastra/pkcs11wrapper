@@ -53,56 +53,57 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (modulus_ <> null)
- *             and (publicExponent_ <> null)
- *             and (privateExponent_ <> null)
- *             and (prime1_ <> null)
- *             and (prime2_ <> null)
- *             and (exponent1_ <> null)
- *             and (exponent2_ <> null)
- *             and (coefficient_ <> null)
+ * @invariants (modulus <> null)
+ *             and (publicExponent <> null)
+ *             and (privateExponent <> null)
+ *             and (prime1 <> null)
+ *             and (prime2 <> null)
+ *             and (exponent1 <> null)
+ *             and (exponent2 <> null)
+ *             and (coefficient <> null)
  */
+// CHECKSTYLE:SKIP
 public class RSAPrivateKey extends PrivateKey {
 
     /**
      * The modulus (n) of this RSA key.
      */
-    protected ByteArrayAttribute modulus_;
+    protected ByteArrayAttribute modulus;
 
     /**
      * The public exponent (e) of this RSA key.
      */
-    protected ByteArrayAttribute publicExponent_;
+    protected ByteArrayAttribute publicExponent;
 
     /**
      * The private exponent (d) of this RSA key.
      */
-    protected ByteArrayAttribute privateExponent_;
+    protected ByteArrayAttribute privateExponent;
 
     /**
      * The first prime factor (p) of this RSA key, for use with CRT.
      */
-    protected ByteArrayAttribute prime1_;
+    protected ByteArrayAttribute prime1;
 
     /**
      * The second prime factor (q) of this RSA key, for use with CRT.
      */
-    protected ByteArrayAttribute prime2_;
+    protected ByteArrayAttribute prime2;
 
     /**
      * The first exponent (d mod (p-1)) of this RSA key, for use with CRT.
      */
-    protected ByteArrayAttribute exponent1_;
+    protected ByteArrayAttribute exponent1;
 
     /**
      * The second exponent (d mod (q-1)) of this RSA key, for use with CRT.
      */
-    protected ByteArrayAttribute exponent2_;
+    protected ByteArrayAttribute exponent2;
 
     /**
      * The coefficient (1/q mod (p)) of this RSA key, for use with CRT.
      */
-    protected ByteArrayAttribute coefficient_;
+    protected ByteArrayAttribute coefficient;
 
     /**
      * Default Constructor.
@@ -112,7 +113,7 @@ public class RSAPrivateKey extends PrivateKey {
      */
     public RSAPrivateKey() {
         super();
-        keyType_.setLongValue(KeyType.RSA);
+        keyType.setLongValue(KeyType.RSA);
     }
 
     /**
@@ -132,7 +133,7 @@ public class RSAPrivateKey extends PrivateKey {
     protected RSAPrivateKey(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        keyType_.setLongValue(KeyType.RSA);
+        keyType.setLongValue(KeyType.RSA);
     }
 
     /**
@@ -171,16 +172,16 @@ public class RSAPrivateKey extends PrivateKey {
      */
     protected static void putAttributesInTable(RSAPrivateKey object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.MODULUS, object.modulus_);
-        object.attributeTable_.put(Attribute.PUBLIC_EXPONENT,
-                object.publicExponent_);
-        object.attributeTable_.put(Attribute.PRIVATE_EXPONENT,
-                object.privateExponent_);
-        object.attributeTable_.put(Attribute.PRIME_1, object.prime1_);
-        object.attributeTable_.put(Attribute.PRIME_2, object.prime2_);
-        object.attributeTable_.put(Attribute.EXPONENT_1, object.exponent1_);
-        object.attributeTable_.put(Attribute.EXPONENT_2, object.exponent2_);
-        object.attributeTable_.put(Attribute.COEFFICIENT, object.coefficient_);
+        object.attributeTable.put(Attribute.MODULUS, object.modulus);
+        object.attributeTable.put(Attribute.PUBLIC_EXPONENT,
+                object.publicExponent);
+        object.attributeTable.put(Attribute.PRIVATE_EXPONENT,
+                object.privateExponent);
+        object.attributeTable.put(Attribute.PRIME_1, object.prime1);
+        object.attributeTable.put(Attribute.PRIME_2, object.prime2);
+        object.attributeTable.put(Attribute.EXPONENT_1, object.exponent1);
+        object.attributeTable.put(Attribute.EXPONENT_2, object.exponent2);
+        object.attributeTable.put(Attribute.COEFFICIENT, object.coefficient);
     }
 
     /**
@@ -194,14 +195,14 @@ public class RSAPrivateKey extends PrivateKey {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        modulus_ = new ByteArrayAttribute(Attribute.MODULUS);
-        publicExponent_ = new ByteArrayAttribute(Attribute.PUBLIC_EXPONENT);
-        privateExponent_ = new ByteArrayAttribute(Attribute.PRIVATE_EXPONENT);
-        prime1_ = new ByteArrayAttribute(Attribute.PRIME_1);
-        prime2_ = new ByteArrayAttribute(Attribute.PRIME_2);
-        exponent1_ = new ByteArrayAttribute(Attribute.EXPONENT_1);
-        exponent2_ = new ByteArrayAttribute(Attribute.EXPONENT_2);
-        coefficient_ = new ByteArrayAttribute(Attribute.COEFFICIENT);
+        modulus = new ByteArrayAttribute(Attribute.MODULUS);
+        publicExponent = new ByteArrayAttribute(Attribute.PUBLIC_EXPONENT);
+        privateExponent = new ByteArrayAttribute(Attribute.PRIVATE_EXPONENT);
+        prime1 = new ByteArrayAttribute(Attribute.PRIME_1);
+        prime2 = new ByteArrayAttribute(Attribute.PRIME_2);
+        exponent1 = new ByteArrayAttribute(Attribute.EXPONENT_1);
+        exponent2 = new ByteArrayAttribute(Attribute.EXPONENT_2);
+        coefficient = new ByteArrayAttribute(Attribute.COEFFICIENT);
 
         putAttributesInTable(this);
     }
@@ -219,16 +220,16 @@ public class RSAPrivateKey extends PrivateKey {
     public java.lang.Object clone() {
         RSAPrivateKey clone = (RSAPrivateKey) super.clone();
 
-        clone.modulus_ = (ByteArrayAttribute) this.modulus_.clone();
-        clone.publicExponent_
-            = (ByteArrayAttribute) this.publicExponent_.clone();
-        clone.privateExponent_
-            = (ByteArrayAttribute) this.privateExponent_.clone();
-        clone.prime1_ = (ByteArrayAttribute) this.prime1_.clone();
-        clone.prime2_ = (ByteArrayAttribute) this.prime2_.clone();
-        clone.exponent1_ = (ByteArrayAttribute) this.exponent1_.clone();
-        clone.exponent2_ = (ByteArrayAttribute) this.exponent2_.clone();
-        clone.coefficient_ = (ByteArrayAttribute) this.coefficient_.clone();
+        clone.modulus = (ByteArrayAttribute) this.modulus.clone();
+        clone.publicExponent
+            = (ByteArrayAttribute) this.publicExponent.clone();
+        clone.privateExponent
+            = (ByteArrayAttribute) this.privateExponent.clone();
+        clone.prime1 = (ByteArrayAttribute) this.prime1.clone();
+        clone.prime2 = (ByteArrayAttribute) this.prime2.clone();
+        clone.exponent1 = (ByteArrayAttribute) this.exponent1.clone();
+        clone.exponent2 = (ByteArrayAttribute) this.exponent2.clone();
+        clone.coefficient = (ByteArrayAttribute) this.coefficient.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -259,14 +260,14 @@ public class RSAPrivateKey extends PrivateKey {
 
         RSAPrivateKey other = (RSAPrivateKey) otherObject;
         return super.equals(other)
-                && this.modulus_.equals(other.modulus_)
-                && this.publicExponent_.equals(other.publicExponent_)
-                && this.privateExponent_.equals(other.privateExponent_)
-                && this.prime1_.equals(other.prime1_)
-                && this.prime2_.equals(other.prime2_)
-                && this.exponent1_.equals(other.exponent1_)
-                && this.exponent2_.equals(other.exponent2_)
-                && this.coefficient_.equals(other.coefficient_);
+                && this.modulus.equals(other.modulus)
+                && this.publicExponent.equals(other.publicExponent)
+                && this.privateExponent.equals(other.privateExponent)
+                && this.prime1.equals(other.prime1)
+                && this.prime2.equals(other.prime2)
+                && this.exponent1.equals(other.exponent1)
+                && this.exponent2.equals(other.exponent2)
+                && this.coefficient.equals(other.coefficient);
     }
 
     /**
@@ -277,7 +278,7 @@ public class RSAPrivateKey extends PrivateKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getModulus() {
-        return modulus_;
+        return modulus;
     }
 
     /**
@@ -288,7 +289,7 @@ public class RSAPrivateKey extends PrivateKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getPublicExponent() {
-        return publicExponent_;
+        return publicExponent;
     }
 
     /**
@@ -299,7 +300,7 @@ public class RSAPrivateKey extends PrivateKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getPrivateExponent() {
-        return privateExponent_;
+        return privateExponent;
     }
 
     /**
@@ -310,7 +311,7 @@ public class RSAPrivateKey extends PrivateKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getPrime1() {
-        return prime1_;
+        return prime1;
     }
 
     /**
@@ -321,7 +322,7 @@ public class RSAPrivateKey extends PrivateKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getPrime2() {
-        return prime2_;
+        return prime2;
     }
 
     /**
@@ -332,7 +333,7 @@ public class RSAPrivateKey extends PrivateKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getExponent1() {
-        return exponent1_;
+        return exponent1;
     }
 
     /**
@@ -343,7 +344,7 @@ public class RSAPrivateKey extends PrivateKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getExponent2() {
-        return exponent2_;
+        return exponent2;
     }
 
     /**
@@ -354,7 +355,7 @@ public class RSAPrivateKey extends PrivateKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getCoefficient() {
-        return coefficient_;
+        return coefficient;
     }
 
     /**
@@ -374,15 +375,15 @@ public class RSAPrivateKey extends PrivateKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            modulus_, publicExponent_ });
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            privateExponent_, prime1_, prime2_, exponent1_, exponent2_,
-            coefficient_ });
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            modulus, publicExponent });
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            privateExponent, prime1, prime2, exponent1, exponent2,
+            coefficient });
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -398,35 +399,35 @@ public class RSAPrivateKey extends PrivateKey {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Modulus (hex): ");
-        buffer.append(modulus_.toString());
+        buffer.append(modulus.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Public Exponent (hex): ");
-        buffer.append(publicExponent_.toString());
+        buffer.append(publicExponent.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Private Exponent (hex): ");
-        buffer.append(privateExponent_.toString());
+        buffer.append(privateExponent.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Prime 1 (hex): ");
-        buffer.append(prime1_.toString());
+        buffer.append(prime1.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Prime 2 (hex): ");
-        buffer.append(prime2_.toString());
+        buffer.append(prime2.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Exponent 1 (hex): ");
-        buffer.append(exponent1_.toString());
+        buffer.append(exponent1.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Exponent 2 (hex): ");
-        buffer.append(exponent2_.toString());
+        buffer.append(exponent2.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Coefficient (hex): ");
-        buffer.append(coefficient_.toString());
+        buffer.append(coefficient.toString());
 
         return buffer.toString();
     }

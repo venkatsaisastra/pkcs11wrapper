@@ -60,37 +60,40 @@ import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
  * @invariants
  */
 @SuppressWarnings("restriction")
+// CHECKSTYLE:SKIP
 public class SSL3KeyMaterialOutParameters implements Parameters {
 
     /**
      * The resulting Client MAC Secret key.
      */
-    protected SecretKey clientMacSecret_;
+    protected SecretKey clientMacSecret;
 
     /**
      * The resulting Server MAC Secret key.
      */
-    protected SecretKey serverMacSecret_;
+    protected SecretKey serverMacSecret;
 
     /**
      * The resulting Client Secret key.
      */
-    protected SecretKey clientKey_;
+    protected SecretKey clientKey;
 
     /**
      * The resulting Server Secret key.
      */
-    protected SecretKey serverKey_;
+    protected SecretKey serverKey;
 
     /**
      * The initialization vector (IV) created for the client (if any).
      */
-    protected byte[] clientIV_;
+    // CHECKSTYLE:SKIP
+    protected byte[] clientIV;
 
     /**
      * The initialization vector (IV) created for the server (if any).
      */
-    protected byte[] serverIV_;
+    // CHECKSTYLE:SKIP
+    protected byte[] serverIV;
 
     /**
      * Create a new SSL3KeyMaterialOutParameters object. It does not take any
@@ -107,9 +110,10 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      *                and (serverIV <> null)
      * @postconditions
      */
+    // CHECKSTYLE:SKIP
     public SSL3KeyMaterialOutParameters(byte[] clientIV, byte[] serverIV) {
-        clientIV_ = Util.requireNonNull("clientIV", clientIV);
-        serverIV_ = Util.requireNonNull("serverIV", serverIV);
+        this.clientIV = Util.requireNonNull("clientIV", clientIV);
+        this.serverIV = Util.requireNonNull("serverIV", serverIV);
     }
 
     /**
@@ -128,12 +132,12 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
         try {
             clone = (SSL3KeyMaterialOutParameters) super.clone();
 
-            clone.clientMacSecret_ = (SecretKey) this.clientMacSecret_.clone();
-            clone.serverMacSecret_ = (SecretKey) this.serverMacSecret_.clone();
-            clone.clientKey_ = (SecretKey) this.clientKey_.clone();
-            clone.serverKey_ = (SecretKey) this.serverKey_.clone();
-            clone.clientIV_ = (byte[]) this.clientIV_.clone();
-            clone.serverIV_ = (byte[]) this.serverIV_.clone();
+            clone.clientMacSecret = (SecretKey) this.clientMacSecret.clone();
+            clone.serverMacSecret = (SecretKey) this.serverMacSecret.clone();
+            clone.clientKey = (SecretKey) this.clientKey.clone();
+            clone.serverKey = (SecretKey) this.serverKey.clone();
+            clone.clientIV = (byte[]) this.clientIV.clone();
+            clone.serverIV = (byte[]) this.serverIV.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
             throw new TokenRuntimeException(
@@ -155,16 +159,16 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
     public Object getPKCS11ParamsObject() {
         CK_SSL3_KEY_MAT_OUT params = new CK_SSL3_KEY_MAT_OUT();
 
-        params.hClientMacSecret = (clientMacSecret_ != null)
-                ? clientMacSecret_.getObjectHandle() : 0L;
-        params.hServerMacSecret = (serverMacSecret_ != null)
-                ? serverMacSecret_.getObjectHandle() : 0L;
-        params.hClientKey = (clientKey_ != null)
-                ? clientKey_.getObjectHandle() : 0L;
-        params.hServerKey = (serverKey_ != null)
-                ? serverKey_.getObjectHandle() : 0L;
-        params.pIVClient = clientIV_;
-        params.pIVServer = serverIV_;
+        params.hClientMacSecret = (clientMacSecret != null)
+                ? clientMacSecret.getObjectHandle() : 0L;
+        params.hServerMacSecret = (serverMacSecret != null)
+                ? serverMacSecret.getObjectHandle() : 0L;
+        params.hClientKey = (clientKey != null)
+                ? clientKey.getObjectHandle() : 0L;
+        params.hServerKey = (serverKey != null)
+                ? serverKey.getObjectHandle() : 0L;
+        params.pIVClient = clientIV;
+        params.pIVServer = serverIV;
 
         return params;
     }
@@ -186,23 +190,24 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      *                and (session <> null)
      * @postconditions
      */
+    // CHECKSTYLE:SKIP
     public void setPKCS11ParamsObject(CK_SSL3_KEY_MAT_OUT input,
             Session session)
         throws TokenException {
-        clientMacSecret_ = (SecretKey)
+        clientMacSecret = (SecretKey)
                 iaik.pkcs.pkcs11.objects.Object.getInstance(session,
                         input.hClientMacSecret);
-        serverMacSecret_ = (SecretKey)
+        serverMacSecret = (SecretKey)
                 iaik.pkcs.pkcs11.objects.Object.getInstance(session,
                         input.hServerMacSecret);
-        clientKey_ = (SecretKey)
+        clientKey = (SecretKey)
                 iaik.pkcs.pkcs11.objects.Object.getInstance(session,
                         input.hClientKey);
-        serverKey_ = (SecretKey)
+        serverKey = (SecretKey)
                 iaik.pkcs.pkcs11.objects.Object.getInstance(session,
                         input.hServerKey);
-        clientIV_ = input.pIVClient;
-        serverIV_ = input.pIVServer;
+        clientIV = input.pIVClient;
+        serverIV = input.pIVServer;
     }
 
     /**
@@ -213,7 +218,7 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      * @postconditions (result == null)
      */
     public SecretKey getClientMacSecret() {
-        return clientMacSecret_;
+        return clientMacSecret;
     }
 
     /**
@@ -224,7 +229,7 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      * @postconditions (result == null)
      */
     public SecretKey getServerMacSecret() {
-        return serverMacSecret_;
+        return serverMacSecret;
     }
 
     /**
@@ -235,7 +240,7 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      * @postconditions (result == null)
      */
     public SecretKey getClientSecret() {
-        return clientKey_;
+        return clientKey;
     }
 
     /**
@@ -246,7 +251,7 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      * @postconditions (result == null)
      */
     public SecretKey getServerSecret() {
-        return serverKey_;
+        return serverKey;
     }
 
     /**
@@ -256,8 +261,9 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      * @preconditions
      * @postconditions
      */
+    // CHECKSTYLE:SKIP
     public byte[] getClientIV() {
-        return clientIV_;
+        return clientIV;
     }
 
     /**
@@ -267,8 +273,9 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      * @preconditions
      * @postconditions
      */
+    // CHECKSTYLE:SKIP
     public byte[] getServerIV() {
-        return serverIV_;
+        return serverIV;
     }
 
     /**
@@ -284,30 +291,30 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
         buffer.append(Constants.INDENT);
         buffer.append("Client MAC Secret key: ");
         buffer.append(Constants.NEWLINE);
-        buffer.append(clientMacSecret_);
+        buffer.append(clientMacSecret);
 
         buffer.append(prefix);
         buffer.append("Server MAC Secret key: ");
         buffer.append(Constants.NEWLINE);
-        buffer.append(serverMacSecret_);
+        buffer.append(serverMacSecret);
 
         buffer.append(prefix);
         buffer.append("Client Secret key: ");
         buffer.append(Constants.NEWLINE);
-        buffer.append(clientKey_);
+        buffer.append(clientKey);
 
         buffer.append(prefix);
         buffer.append("Server Secret key: ");
         buffer.append(Constants.NEWLINE);
-        buffer.append(serverKey_);
+        buffer.append(serverKey);
 
         buffer.append(prefix);
         buffer.append("Client Initializatin Vector (hex): ");
-        buffer.append(Functions.toHexString(clientIV_));
+        buffer.append(Functions.toHexString(clientIV));
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Server Initializatin Vector (hex): ");
-        buffer.append(Functions.toHexString(serverIV_));
+        buffer.append(Functions.toHexString(serverIV));
 
         return buffer.toString();
     }
@@ -335,12 +342,12 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
 
         SSL3KeyMaterialOutParameters other
                 = (SSL3KeyMaterialOutParameters) otherObject;
-        return Util.objEquals(this.clientMacSecret_, other.clientMacSecret_)
-                && Util.objEquals(this.serverMacSecret_, other.serverMacSecret_)
-                && Util.objEquals(this.clientKey_, other.clientKey_)
-                && Util.objEquals(this.serverKey_, other.serverKey_)
-                && Functions.equals(this.clientIV_, other.clientIV_)
-                && Functions.equals(this.serverIV_, other.serverIV_);
+        return Util.objEquals(this.clientMacSecret, other.clientMacSecret)
+                && Util.objEquals(this.serverMacSecret, other.serverMacSecret)
+                && Util.objEquals(this.clientKey, other.clientKey)
+                && Util.objEquals(this.serverKey, other.serverKey)
+                && Functions.equals(this.clientIV, other.clientIV)
+                && Functions.equals(this.serverIV, other.serverIV);
     }
 
     /**
@@ -353,10 +360,10 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return ((clientMacSecret_ != null) ? clientMacSecret_.hashCode() : 0)
-            ^ ((serverMacSecret_ != null) ? serverMacSecret_.hashCode() : 0)
-            ^ ((clientKey_ != null) ? clientKey_.hashCode() : 0)
-            ^ ((serverKey_ != null) ? serverKey_.hashCode() : 0);
+        return ((clientMacSecret != null) ? clientMacSecret.hashCode() : 0)
+            ^ ((serverMacSecret != null) ? serverMacSecret.hashCode() : 0)
+            ^ ((clientKey != null) ? clientKey.hashCode() : 0)
+            ^ ((serverKey != null) ? serverKey.hashCode() : 0);
     }
 
 }

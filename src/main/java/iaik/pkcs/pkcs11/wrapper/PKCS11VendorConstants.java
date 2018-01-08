@@ -58,6 +58,7 @@ import java.util.Set;
  * @version 1.4.1
  *
  */
+// CHECKSTYLE:SKIP
 public class PKCS11VendorConstants {
 
     public static final String CKM_VENDOR_VENDOR_CODE_PROPERTIES_FILE = 
@@ -154,7 +155,8 @@ public class PKCS11VendorConstants {
     public static final long CKM_VENDOR_SM4_ECB_ENCRYPT_DATA;
 
     static {
-        String file = System.getProperty(CKM_VENDOR_VENDOR_CODE_PROPERTIES_FILE);
+        String file = 
+                System.getProperty(CKM_VENDOR_VENDOR_CODE_PROPERTIES_FILE);
         
         InputStream is = null;
         if (file != null) {
@@ -185,7 +187,8 @@ public class PKCS11VendorConstants {
         }
         
         CKK_VENDOR_SM2 = readLong(props, "CKK_VENDOR_SM2");
-        CKM_VENDOR_SM2_KEY_PAIR_GEN = readLong(props, "CKM_VENDOR_SM2_KEY_PAIR_GEN");
+        CKM_VENDOR_SM2_KEY_PAIR_GEN =
+                readLong(props, "CKM_VENDOR_SM2_KEY_PAIR_GEN");
         CKM_VENDOR_SM2 = readLong(props, "CKM_VENDOR_SM2");
         CKM_VENDOR_SM2_SM3 = readLong(props, "CKM_VENDOR_SM2_SM3");
         CKM_VENDOR_SM2_ENCRYPT = readLong(props, "CKM_VENDOR_SM2_ENCRYPT");
@@ -194,20 +197,25 @@ public class PKCS11VendorConstants {
         CKM_VENDOR_SM4_KEY_GEN = readLong(props, "CKM_VENDOR_SM4_KEY_GEN");
         CKM_VENDOR_SM4_ECB = readLong(props, "CKM_VENDOR_SM4_ECB");
         CKM_VENDOR_SM4_CBC = readLong(props, "CKM_VENDOR_SM4_CBC");
-        CKM_VENDOR_SM4_MAC_GENERAL = readLong(props, "CKM_VENDOR_SM4_MAC_GENERAL");
-        CKM_VENDOR_SM4_MAC = readLong(props, "CKM_VENDOR_SM4_MAC");
-        CKM_VENDOR_ISO2_SM4_MAC_GENERAL = readLong(props, "CKM_VENDOR_ISO2_SM4_MAC_GENERAL");
+        CKM_VENDOR_SM4_MAC_GENERAL =
+                readLong(props, "CKM_VENDOR_SM4_MAC_GENERAL");
+        CKM_VENDOR_SM4_MAC =
+                readLong(props, "CKM_VENDOR_SM4_MAC");
+        CKM_VENDOR_ISO2_SM4_MAC_GENERAL = 
+                readLong(props, "CKM_VENDOR_ISO2_SM4_MAC_GENERAL");
         CKM_VENDOR_ISO2_SM4_MAC = readLong(props, "CKM_VENDOR_ISO2_SM4_MAC");
-        CKM_VENDOR_SM4_ECB_ENCRYPT_DATA = readLong(props, "CKM_VENDOR_SM4_ECB_ENCRYPT_DATA");
+        CKM_VENDOR_SM4_ECB_ENCRYPT_DATA = 
+                readLong(props, "CKM_VENDOR_SM4_ECB_ENCRYPT_DATA");
     }
 
     public static void main(String[] args) {
         new PKCS11VendorConstants();
     }
+
     /**
      * This method checks, if the mechanism with the given code is a digest
      * mechanism.
-     * If this method returns true, the mechanism can be used with the digest
+     * If Returns true, the mechanism can be used with the digest
      * functions.
      *
      * @param mechanismCode

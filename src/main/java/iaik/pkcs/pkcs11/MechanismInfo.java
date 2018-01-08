@@ -60,17 +60,17 @@ public class MechanismInfo implements Cloneable {
     /**
      * The minimum key length supported by this algorithm.
      */
-    protected long minKeySize_;
+    protected long minKeySize;
 
     /**
      * The maximum key length supported by this algorithm.
      */
-    protected long maxKeySize_;
+    protected long maxKeySize;
 
     /**
      * Contains all feature flags of this mechanism info.
      */
-    protected long flags_;
+    protected long flags;
 
     /**
      * Default constructor. All member variables get the default value for their
@@ -92,9 +92,9 @@ public class MechanismInfo implements Cloneable {
      */
     public MechanismInfo(CK_MECHANISM_INFO ckMechanismInfo) {
         Util.requireNonNull("ckMechanismInfo", ckMechanismInfo);
-        minKeySize_ = ckMechanismInfo.ulMinKeySize;
-        maxKeySize_ = ckMechanismInfo.ulMaxKeySize;
-        flags_ = ckMechanismInfo.flags;
+        this.minKeySize = ckMechanismInfo.ulMinKeySize;
+        this.maxKeySize = ckMechanismInfo.ulMaxKeySize;
+        this.flags = ckMechanismInfo.flags;
     }
 
     /**
@@ -142,9 +142,9 @@ public class MechanismInfo implements Cloneable {
         }
 
         MechanismInfo other = (MechanismInfo) otherObject;
-        return (this.minKeySize_ == other.minKeySize_)
-                && (this.maxKeySize_ == other.maxKeySize_)
-                && (this.flags_ == other.flags_);
+        return (this.minKeySize == other.minKeySize)
+                && (this.maxKeySize == other.maxKeySize)
+                && (this.flags == other.flags);
     }
 
     /**
@@ -157,7 +157,7 @@ public class MechanismInfo implements Cloneable {
      */
     @Override
     public int hashCode() {
-        return (int) (minKeySize_ ^ maxKeySize_ ^ flags_);
+        return (int) (minKeySize ^ maxKeySize ^ flags);
     }
 
     /**
@@ -168,7 +168,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public long getMinKeySize() {
-        return minKeySize_;
+        return minKeySize;
     }
 
     /**
@@ -179,7 +179,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public long getMaxKeySize() {
-        return maxKeySize_;
+        return maxKeySize;
     }
 
     /**
@@ -190,7 +190,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isHw() {
-        return (flags_ & PKCS11Constants.CKF_HW) != 0L;
+        return (flags & PKCS11Constants.CKF_HW) != 0L;
     }
 
     /**
@@ -201,7 +201,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isEncrypt() {
-        return (flags_ & PKCS11Constants.CKF_ENCRYPT) != 0L;
+        return (flags & PKCS11Constants.CKF_ENCRYPT) != 0L;
     }
 
     /**
@@ -212,7 +212,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isDecrypt() {
-        return (flags_ & PKCS11Constants.CKF_DECRYPT) != 0L;
+        return (flags & PKCS11Constants.CKF_DECRYPT) != 0L;
     }
 
     /**
@@ -223,7 +223,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isDigest() {
-        return (flags_ & PKCS11Constants.CKF_DIGEST) != 0L;
+        return (flags & PKCS11Constants.CKF_DIGEST) != 0L;
     }
 
     /**
@@ -234,7 +234,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isSign() {
-        return (flags_ & PKCS11Constants.CKF_SIGN) != 0L;
+        return (flags & PKCS11Constants.CKF_SIGN) != 0L;
     }
 
     /**
@@ -246,7 +246,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isSignRecover() {
-        return (flags_ & PKCS11Constants.CKF_SIGN_RECOVER) != 0L;
+        return (flags & PKCS11Constants.CKF_SIGN_RECOVER) != 0L;
     }
 
     /**
@@ -257,7 +257,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isVerify() {
-        return (flags_ & PKCS11Constants.CKF_VERIFY) != 0L;
+        return (flags & PKCS11Constants.CKF_VERIFY) != 0L;
     }
 
     /**
@@ -269,7 +269,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isVerifyRecover() {
-        return (flags_ & PKCS11Constants.CKF_VERIFY_RECOVER) != 0L;
+        return (flags & PKCS11Constants.CKF_VERIFY_RECOVER) != 0L;
     }
 
     /**
@@ -280,7 +280,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isGenerate() {
-        return (flags_ & PKCS11Constants.CKF_GENERATE) != 0L;
+        return (flags & PKCS11Constants.CKF_GENERATE) != 0L;
     }
 
     /**
@@ -291,7 +291,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isGenerateKeyPair() {
-        return (flags_ & PKCS11Constants.CKF_GENERATE_KEY_PAIR) != 0L;
+        return (flags & PKCS11Constants.CKF_GENERATE_KEY_PAIR) != 0L;
     }
 
     /**
@@ -302,7 +302,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isWrap() {
-        return (flags_ & PKCS11Constants.CKF_WRAP) != 0L;
+        return (flags & PKCS11Constants.CKF_WRAP) != 0L;
     }
 
     /**
@@ -313,7 +313,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isUnwrap() {
-        return (flags_ & PKCS11Constants.CKF_UNWRAP) != 0L;
+        return (flags & PKCS11Constants.CKF_UNWRAP) != 0L;
     }
 
     /**
@@ -324,7 +324,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isDerive() {
-        return (flags_ & PKCS11Constants.CKF_DERIVE) != 0L;
+        return (flags & PKCS11Constants.CKF_DERIVE) != 0L;
     }
 
     /**
@@ -336,7 +336,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isEcFp() {
-        return (flags_ & PKCS11Constants.CKF_EC_F_P) != 0L;
+        return (flags & PKCS11Constants.CKF_EC_F_P) != 0L;
     }
 
     /**
@@ -348,7 +348,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isEcF2m() {
-        return (flags_ & PKCS11Constants.CKF_EC_F_2M) != 0L;
+        return (flags & PKCS11Constants.CKF_EC_F_2M) != 0L;
     }
 
     /**
@@ -361,7 +361,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isEcEcParameters() {
-        return (flags_ & PKCS11Constants.CKF_EC_ECPARAMETERS) != 0L;
+        return (flags & PKCS11Constants.CKF_EC_ECPARAMETERS) != 0L;
     }
 
     /**
@@ -374,7 +374,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isEcNamedCurve() {
-        return (flags_ & PKCS11Constants.CKF_EC_NAMEDCURVE) != 0L;
+        return (flags & PKCS11Constants.CKF_EC_NAMEDCURVE) != 0L;
     }
 
     /**
@@ -387,7 +387,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isEcUncompress() {
-        return (flags_ & PKCS11Constants.CKF_EC_UNCOMPRESS) != 0L;
+        return (flags & PKCS11Constants.CKF_EC_UNCOMPRESS) != 0L;
     }
 
     /**
@@ -400,7 +400,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isEcCompress() {
-        return (flags_ & PKCS11Constants.CKF_EC_COMPRESS) != 0L;
+        return (flags & PKCS11Constants.CKF_EC_COMPRESS) != 0L;
     }
 
     /**
@@ -412,7 +412,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public boolean isExtension() {
-        return (flags_ & PKCS11Constants.CKF_EXTENSION) != 0L;
+        return (flags & PKCS11Constants.CKF_EXTENSION) != 0L;
     }
 
     /**
@@ -434,11 +434,11 @@ public class MechanismInfo implements Cloneable {
 
         if (other != null) {
             result = new MechanismInfo();
-            result.flags_ = this.flags_ | other.flags_;
-            result.minKeySize_ = (this.minKeySize_ < other.minKeySize_)
-                    ? this.minKeySize_ : other.minKeySize_;
-            result.maxKeySize_ = (this.maxKeySize_ > other.maxKeySize_)
-                    ? this.maxKeySize_ : other.maxKeySize_;
+            result.flags = this.flags | other.flags;
+            result.minKeySize = (this.minKeySize < other.minKeySize)
+                    ? this.minKeySize : other.minKeySize;
+            result.maxKeySize = (this.maxKeySize > other.maxKeySize)
+                    ? this.maxKeySize : other.maxKeySize;
         } else {
             result = (MechanismInfo) this.clone();
         }
@@ -464,11 +464,11 @@ public class MechanismInfo implements Cloneable {
         MechanismInfo result = new MechanismInfo();
 
         if (other != null) {
-            result.flags_ = this.flags_ & other.flags_;
-            result.minKeySize_ = (this.minKeySize_ > other.minKeySize_)
-                    ? this.minKeySize_ : other.minKeySize_;
-            result.maxKeySize_ = (this.maxKeySize_ < other.maxKeySize_)
-                    ? this.maxKeySize_ : other.maxKeySize_;
+            result.flags = this.flags & other.flags;
+            result.minKeySize = (this.minKeySize > other.minKeySize)
+                    ? this.minKeySize : other.minKeySize;
+            result.maxKeySize = (this.maxKeySize < other.maxKeySize)
+                    ? this.maxKeySize : other.maxKeySize;
         }
 
         return result;
@@ -485,7 +485,7 @@ public class MechanismInfo implements Cloneable {
     public MechanismInfo not() {
         MechanismInfo result = (MechanismInfo) this.clone();
 
-        result.flags_ = ~this.flags_;
+        result.flags = ~this.flags;
 
         return result;
     }
@@ -499,7 +499,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public void setMinKeySize(long minKeySize) {
-        minKeySize_ = minKeySize;
+        this.minKeySize = minKeySize;
     }
 
     /**
@@ -512,7 +512,7 @@ public class MechanismInfo implements Cloneable {
      * @postconditions
      */
     public void setMaxKeySize(long maxKeySize) {
-        maxKeySize_ = maxKeySize;
+        this.maxKeySize = maxKeySize;
     }
 
     /**
@@ -784,16 +784,16 @@ public class MechanismInfo implements Cloneable {
         Util.requireNonNull("requiredFeatures", requiredFeatures);
 
         long requiredMaxKeySize = requiredFeatures.getMaxKeySize();
-        if ((requiredMaxKeySize != 0) && (requiredMaxKeySize > maxKeySize_)) {
+        if ((requiredMaxKeySize != 0) && (requiredMaxKeySize > maxKeySize)) {
             return false;
         }
 
         long requiredMinKeySize = requiredFeatures.getMinKeySize();
-        if ((requiredMinKeySize != 0) && (requiredMinKeySize < minKeySize_)) {
+        if ((requiredMinKeySize != 0) && (requiredMinKeySize < minKeySize)) {
             return false;
         }
 
-        if ((requiredFeatures.flags_ & flags_) != requiredFeatures.flags_) {
+        if ((requiredFeatures.flags & flags) != requiredFeatures.flags) {
             return false;
         }
 
@@ -811,11 +811,11 @@ public class MechanismInfo implements Cloneable {
 
         buffer.append(Constants.INDENT);
         buffer.append("Minimum Key-Size: ");
-        buffer.append(minKeySize_);
+        buffer.append(minKeySize);
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Maximum Key-Size: ");
-        buffer.append(maxKeySize_);
+        buffer.append(maxKeySize);
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Hardware: ");
@@ -912,9 +912,9 @@ public class MechanismInfo implements Cloneable {
      */
     protected void setFlagBit(long flagMask, boolean value) {
         if (value) {
-            flags_ |= flagMask;
+            flags |= flagMask;
         } else {
-            flags_ &= ~flagMask;
+            flags &= ~flagMask;
         }
     }
 

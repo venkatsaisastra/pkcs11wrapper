@@ -93,7 +93,7 @@ import sun.security.pkcs11.wrapper.CK_TOKEN_INFO;
  * @see iaik.pkcs.pkcs11.TokenInfo
  * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
  * @version 1.0
- * @invariants (slot_ <> null)
+ * @invariants (slot <> null)
  */
 @SuppressWarnings("restriction")
 public class Token {
@@ -151,13 +151,13 @@ public class Token {
     /**
      * The reference to the slot.
      */
-    protected Slot slot_;
+    protected Slot slot;
 
-  /**
-   * True, if UTF8 encoding is used as character encoding for character array
-   * attributes and PINs.
-   */
-    protected boolean useUtf8Encoding_;
+    /**
+     * True, if UTF8 encoding is used as character encoding for character array
+     * attributes and PINs.
+     */
+    protected boolean useUtf8Encoding;
 
     /**
      * The constructor that takes a reference to the module and the slot ID.
@@ -168,17 +168,17 @@ public class Token {
      * @postconditions
      */
     protected Token(Slot slot) {
-        slot_ = Util.requireNonNull("slot", slot);
-        useUtf8Encoding_ = slot.useUtf8Encoding_;
+        this.slot = Util.requireNonNull("slot", slot);
+        this.useUtf8Encoding = slot.useUtf8Encoding;
     }
 
     /**
-     * Compares the slot_ of this object with the other object.
+     * Compares the slot of this object with the other object.
      * Returns only true, if those are equal in both objects.
      *
      * @param otherObject
      *          The other Token object.
-     * @return True, if other is an instance of Token and the slot_
+     * @return True, if other is an instance of Token and the slot
      *         member variable of both objects are equal. False, otherwise.
      * @preconditions
      * @postconditions
@@ -192,7 +192,7 @@ public class Token {
         }
 
         Token other = (Token) otherObject;
-        return this.slot_.equals(other.slot_);
+        return this.slot.equals(other.slot);
     }
 
     /**
@@ -203,7 +203,7 @@ public class Token {
      * @postconditions
      */
     public Slot getSlot() {
-        return slot_;
+        return slot;
     }
 
     /**
@@ -214,8 +214,9 @@ public class Token {
      * @preconditions
      * @postconditions
      */
+    // CHECKSTYLE:SKIP
     public long getTokenID() {
-        return slot_.getSlotID();
+        return slot.getSlotID();
     }
 
     /**
@@ -231,8 +232,8 @@ public class Token {
         throws TokenException {
         CK_TOKEN_INFO ckTokenInfo;
         try {
-            ckTokenInfo = slot_.getModule().getPKCS11Module()
-                .C_GetTokenInfo(slot_.getSlotID());
+            ckTokenInfo = slot.getModule().getPKCS11Module()
+                .C_GetTokenInfo(slot.getSlotID());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -256,8 +257,8 @@ public class Token {
         throws TokenException {
         long[] mechanismIdList;
         try {
-            mechanismIdList = slot_.getModule().getPKCS11Module()
-                .C_GetMechanismList(slot_.getSlotID());
+            mechanismIdList = slot.getModule().getPKCS11Module()
+                .C_GetMechanismList(slot.getSlotID());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -288,8 +289,8 @@ public class Token {
         long mechanismCode = mechanism.getMechanismCode();
         CK_MECHANISM_INFO ckMechanismInfo;
         try {
-            ckMechanismInfo = slot_.getModule().getPKCS11Module()
-                .C_GetMechanismInfo(slot_.getSlotID(), mechanismCode);
+            ckMechanismInfo = slot.getModule().getPKCS11Module()
+                .C_GetMechanismInfo(slot.getSlotID(), mechanismCode);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -307,7 +308,7 @@ public class Token {
      */
     @Override
     public int hashCode() {
-        return slot_.hashCode();
+        return slot.hashCode();
     }
 
     /**
@@ -336,8 +337,8 @@ public class Token {
     public void initToken(char[] pin, String label)
         throws TokenException {
         char[] labelChars = Util.toPaddedCharArray(label, 32, ' ');
-        slot_.getModule().getPKCS11Module().C_InitToken(slot_.getSlotID(), pin,
-               labelChars, useUtf8Encoding_);
+        slot.getModule().getPKCS11Module().C_InitToken(slot.getSlotID(), pin,
+               labelChars, useUtf8Encoding);
     }
     */
 
@@ -378,8 +379,9 @@ public class Token {
         CK_NOTIFY ckNotify = null;
         if (notify != null) {
             ckNotify = new CK_NOTIFY() {
+                // CHECKSTYLE:SKIP
                 public void CK_NOTIFY(long hSession, long event,
-                        Object pApplication)
+                        Object pApplication) // CHECKSTYLE:SKIP
                     throws sun.security.pkcs11.wrapper.PKCS11Exception {
                     boolean surrender =
                             (event & PKCS11Constants.CKN_SURRENDER) != 0L;
@@ -390,13 +392,13 @@ public class Token {
 
         long sessionHandle;
         try {
-            sessionHandle = slot_.getModule().getPKCS11Module()
-                .C_OpenSession(slot_.getSlotID(), flags, application, ckNotify);
+            sessionHandle = slot.getModule().getPKCS11Module()
+                .C_OpenSession(slot.getSlotID(), flags, application, ckNotify);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
         //now we have the session handle available
-        newSession.sessionHandle_ = sessionHandle;
+        newSession.sessionHandle = sessionHandle;
 
         return newSession;
     }
@@ -413,8 +415,7 @@ public class Token {
     /* public void closeAllSessions()
         throws TokenException {
         try {
-            slot_.getModule().getPKCS11Module().C_CloseSession(
-                    slot_.getSlotID());
+            slot.getModule().getPKCS11Module().C_CloseSession(slot.getSlotID());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -430,7 +431,7 @@ public class Token {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append("Token in Slot: ");
-        buffer.append(slot_.toString());
+        buffer.append(slot.toString());
 
         return buffer.toString();
     }

@@ -53,48 +53,48 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (subject_ <> null)
- *             and (encrypt_ <> null)
- *             and (verify_ <> null)
- *             and (verifyRecover_ <> null)
- *             and (wrap_ <> null)
+ * @invariants (subject <> null)
+ *             and (encrypt <> null)
+ *             and (verify <> null)
+ *             and (verifyRecover <> null)
+ *             and (wrap <> null)
  */
 public class PublicKey extends Key {
 
     /**
      * The subject attribute of this public key.
      */
-    protected ByteArrayAttribute subject_;
+    protected ByteArrayAttribute subject;
 
     /**
      * True, if this public key can be used for encryption.
      */
-    protected BooleanAttribute encrypt_;
+    protected BooleanAttribute encrypt;
 
     /**
      * True, if this public key can be used for verification.
      */
-    protected BooleanAttribute verify_;
+    protected BooleanAttribute verify;
 
     /**
      * True, if this public key can be used for encryption with recovery.
      */
-    protected BooleanAttribute verifyRecover_;
+    protected BooleanAttribute verifyRecover;
 
     /**
      * True, if this public key can be used for wrapping other keys.
      */
-    protected BooleanAttribute wrap_;
+    protected BooleanAttribute wrap;
 
     /**
      * True, if this public key can be used for wrapping other keys.
      */
-    protected BooleanAttribute trusted_;
+    protected BooleanAttribute trusted;
 
     /**
      * Template of the key, that can be wrapped.
      */
-    protected AttributeArray wrapTemplate_;
+    protected AttributeArray wrapTemplate;
 
     /**
      * Default Constructor.
@@ -104,7 +104,7 @@ public class PublicKey extends Key {
      */
     public PublicKey() {
         super();
-        objectClass_.setLongValue(ObjectClass.PUBLIC_KEY);
+        objectClass.setLongValue(ObjectClass.PUBLIC_KEY);
     }
 
     /**
@@ -124,7 +124,7 @@ public class PublicKey extends Key {
     protected PublicKey(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        objectClass_.setLongValue(ObjectClass.PUBLIC_KEY);
+        objectClass.setLongValue(ObjectClass.PUBLIC_KEY);
     }
 
     /**
@@ -133,7 +133,7 @@ public class PublicKey extends Key {
      * type attribute and calls the getInstance method of the according
      * sub-class. If the key type is a vendor defined it uses the
      * VendorDefinedKeyBuilder set by the application. If no public key
-     * could be constructed, this method returns null.
+     * could be constructed, Returns null.
      *
      * @param session
      *          The session to use for reading attributes. This session must
@@ -211,9 +211,9 @@ public class PublicKey extends Key {
         Util.requireNonNull("session", session);
 
         Object newObject;
-        if (Key.vendorKeyBuilder_ != null) {
+        if (Key.vendorKeyBuilder != null) {
             try {
-                newObject = Key.vendorKeyBuilder_.build(session, objectHandle);
+                newObject = Key.vendorKeyBuilder.build(session, objectHandle);
             } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
                 // we can just treat it like some unknown type of public key
                 newObject = new PublicKey(session, objectHandle);
@@ -239,15 +239,15 @@ public class PublicKey extends Key {
      */
     protected static void putAttributesInTable(PublicKey object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.SUBJECT, object.subject_);
-        object.attributeTable_.put(Attribute.ENCRYPT, object.encrypt_);
-        object.attributeTable_.put(Attribute.VERIFY, object.verify_);
-        object.attributeTable_.put(Attribute.VERIFY_RECOVER,
-                object.verifyRecover_);
-        object.attributeTable_.put(Attribute.WRAP, object.wrap_);
-        object.attributeTable_.put(Attribute.TRUSTED, object.trusted_);
-        object.attributeTable_.put(Attribute.WRAP_TEMPLATE,
-                object.wrapTemplate_);
+        object.attributeTable.put(Attribute.SUBJECT, object.subject);
+        object.attributeTable.put(Attribute.ENCRYPT, object.encrypt);
+        object.attributeTable.put(Attribute.VERIFY, object.verify);
+        object.attributeTable.put(Attribute.VERIFY_RECOVER,
+                object.verifyRecover);
+        object.attributeTable.put(Attribute.WRAP, object.wrap);
+        object.attributeTable.put(Attribute.TRUSTED, object.trusted);
+        object.attributeTable.put(Attribute.WRAP_TEMPLATE,
+                object.wrapTemplate);
     }
 
     /**
@@ -261,13 +261,13 @@ public class PublicKey extends Key {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        subject_ = new ByteArrayAttribute(Attribute.SUBJECT);
-        encrypt_ = new BooleanAttribute(Attribute.ENCRYPT);
-        verify_ = new BooleanAttribute(Attribute.VERIFY);
-        verifyRecover_ = new BooleanAttribute(Attribute.VERIFY_RECOVER);
-        wrap_ = new BooleanAttribute(Attribute.WRAP);
-        trusted_ = new BooleanAttribute(Attribute.TRUSTED);
-        wrapTemplate_ = new AttributeArray(Attribute.WRAP_TEMPLATE);
+        subject = new ByteArrayAttribute(Attribute.SUBJECT);
+        encrypt = new BooleanAttribute(Attribute.ENCRYPT);
+        verify = new BooleanAttribute(Attribute.VERIFY);
+        verifyRecover = new BooleanAttribute(Attribute.VERIFY_RECOVER);
+        wrap = new BooleanAttribute(Attribute.WRAP);
+        trusted = new BooleanAttribute(Attribute.TRUSTED);
+        wrapTemplate = new AttributeArray(Attribute.WRAP_TEMPLATE);
 
         putAttributesInTable(this);
     }
@@ -285,13 +285,13 @@ public class PublicKey extends Key {
     public java.lang.Object clone() {
         PublicKey clone = (PublicKey) super.clone();
 
-        clone.subject_ = (ByteArrayAttribute) this.subject_.clone();
-        clone.encrypt_ = (BooleanAttribute) this.encrypt_.clone();
-        clone.verify_ = (BooleanAttribute) this.verify_.clone();
-        clone.verifyRecover_ = (BooleanAttribute) this.verifyRecover_.clone();
-        clone.wrap_ = (BooleanAttribute) this.wrap_.clone();
-        clone.trusted_ = (BooleanAttribute) this.trusted_.clone();
-        clone.wrapTemplate_ = (AttributeArray) this.wrapTemplate_.clone();
+        clone.subject = (ByteArrayAttribute) this.subject.clone();
+        clone.encrypt = (BooleanAttribute) this.encrypt.clone();
+        clone.verify = (BooleanAttribute) this.verify.clone();
+        clone.verifyRecover = (BooleanAttribute) this.verifyRecover.clone();
+        clone.wrap = (BooleanAttribute) this.wrap.clone();
+        clone.trusted = (BooleanAttribute) this.trusted.clone();
+        clone.wrapTemplate = (AttributeArray) this.wrapTemplate.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -322,13 +322,13 @@ public class PublicKey extends Key {
 
         PublicKey other = (PublicKey) otherObject;
         return super.equals(other)
-                && this.subject_.equals(other.subject_)
-                && this.encrypt_.equals(other.encrypt_)
-                && this.verify_.equals(other.verify_)
-                && this.verifyRecover_.equals(other.verifyRecover_)
-                && this.wrap_.equals(other.wrap_)
-                && this.trusted_.equals(other.trusted_)
-                && this.wrapTemplate_.equals(other.wrapTemplate_);
+                && this.subject.equals(other.subject)
+                && this.encrypt.equals(other.encrypt)
+                && this.verify.equals(other.verify)
+                && this.verifyRecover.equals(other.verifyRecover)
+                && this.wrap.equals(other.wrap)
+                && this.trusted.equals(other.trusted)
+                && this.wrapTemplate.equals(other.wrapTemplate);
     }
 
     /**
@@ -339,7 +339,7 @@ public class PublicKey extends Key {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getSubject() {
-        return subject_;
+        return subject;
     }
 
     /**
@@ -350,7 +350,7 @@ public class PublicKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getEncrypt() {
-        return encrypt_;
+        return encrypt;
     }
 
     /**
@@ -361,7 +361,7 @@ public class PublicKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getVerify() {
-        return verify_;
+        return verify;
     }
 
     /**
@@ -372,7 +372,7 @@ public class PublicKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getVerifyRecover() {
-        return verifyRecover_;
+        return verifyRecover;
     }
 
     /**
@@ -383,7 +383,7 @@ public class PublicKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getWrap() {
-        return wrap_;
+        return wrap;
     }
 
     /**
@@ -394,7 +394,7 @@ public class PublicKey extends Key {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getTrusted() {
-        return trusted_;
+        return trusted;
     }
 
     /**
@@ -407,7 +407,7 @@ public class PublicKey extends Key {
      * @postconditions (result <> null)
      */
     public AttributeArray getWrapTemplate() {
-        return wrapTemplate_;
+        return wrapTemplate;
     }
 
     /**
@@ -427,13 +427,13 @@ public class PublicKey extends Key {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            subject_, encrypt_, verify_, verifyRecover_, wrap_, trusted_ });
-        Object.getAttributeValue(session, objectHandle_, wrapTemplate_);
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            subject, encrypt, verify, verifyRecover, wrap, trusted });
+        Object.getAttributeValue(session, objectHandle, wrapTemplate);
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -449,31 +449,31 @@ public class PublicKey extends Key {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Subject (DER, hex): ");
-        buffer.append(subject_.toString());
+        buffer.append(subject.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Encrypt: ");
-        buffer.append(encrypt_.toString());
+        buffer.append(encrypt.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Verify: ");
-        buffer.append(verify_.toString());
+        buffer.append(verify.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Verify Recover: ");
-        buffer.append(verifyRecover_.toString());
+        buffer.append(verifyRecover.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Wrap: ");
-        buffer.append(wrap_.toString());
+        buffer.append(wrap.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Trusted: ");
-        buffer.append(trusted_.toString());
+        buffer.append(trusted.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Wrap Template: ");
-        buffer.append(wrapTemplate_.toString());
+        buffer.append(wrapTemplate.toString());
 
         return buffer.toString();
     }

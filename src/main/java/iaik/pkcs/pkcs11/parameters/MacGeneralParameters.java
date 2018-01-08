@@ -59,7 +59,7 @@ public class MacGeneralParameters implements Parameters {
     /**
      * The length of the MAC produced, in bytes.
      */
-    protected long macLength_;
+    protected long macLength;
 
     /**
      * Create a new MacGeneralParameters object with the given MAC length.
@@ -70,7 +70,7 @@ public class MacGeneralParameters implements Parameters {
      * @postconditions
      */
     public MacGeneralParameters(long macLength) {
-        macLength_ = macLength;
+        this.macLength = macLength;
     }
 
     /**
@@ -106,7 +106,7 @@ public class MacGeneralParameters implements Parameters {
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        return new Long(macLength_);
+        return new Long(macLength);
     }
 
     /**
@@ -117,7 +117,7 @@ public class MacGeneralParameters implements Parameters {
      * @postconditions
      */
     public long getMacLength() {
-        return macLength_;
+        return macLength;
     }
 
     /**
@@ -129,7 +129,7 @@ public class MacGeneralParameters implements Parameters {
      * @postconditions
      */
     public void setMacLength(long macLength) {
-        macLength_ = macLength;
+        this.macLength = macLength;
     }
 
     /**
@@ -144,7 +144,7 @@ public class MacGeneralParameters implements Parameters {
 
         buffer.append(Constants.INDENT);
         buffer.append("Mac Length (dec): ");
-        buffer.append(macLength_);
+        buffer.append(macLength);
 
         return buffer.toString();
     }
@@ -171,7 +171,7 @@ public class MacGeneralParameters implements Parameters {
         }
 
         MacGeneralParameters other = (MacGeneralParameters) otherObject;
-        return (this.macLength_ == other.macLength_);
+        return (this.macLength == other.macLength);
     }
 
     /**
@@ -184,7 +184,7 @@ public class MacGeneralParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return (int) macLength_;
+        return (int) macLength;
     }
 
 }

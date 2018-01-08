@@ -90,8 +90,8 @@ public class DateAttribute extends Attribute {
      * @postconditions
      */
     public void setDateValue(Date value) {
-        ckAttribute_.pValue = Util.convertToCkDate(value);
-        present_ = true;
+        ckAttribute.pValue = Util.convertToCkDate(value);
+        present = true;
     }
 
     /**
@@ -102,7 +102,7 @@ public class DateAttribute extends Attribute {
      * @postconditions
      */
     public Date getDateValue() {
-        return Util.convertToDate((CK_DATE) ckAttribute_.pValue);
+        return Util.convertToDate((CK_DATE) ckAttribute.pValue);
     }
 
     /**
@@ -127,24 +127,24 @@ public class DateAttribute extends Attribute {
         }
 
         DateAttribute other = (DateAttribute) otherObject;
-        if (!this.present_ && !other.present_) {
+        if (!this.present && !other.present) {
             return true;
         }
 
-        if (!(this.present_ && other.present_)) {
+        if (!(this.present && other.present)) {
             return false;
         }
 
-        if (this.sensitive_ != other.sensitive_) {
+        if (this.sensitive != other.sensitive) {
             return false;
         }
 
-        if (this.ckAttribute_.type != other.ckAttribute_.type) {
+        if (this.ckAttribute.type != other.ckAttribute.type) {
             return false;
         }
 
-        return Functions.equals((CK_DATE) this.ckAttribute_.pValue,
-                (CK_DATE) other.ckAttribute_.pValue);
+        return Functions.equals((CK_DATE) this.ckAttribute.pValue,
+                (CK_DATE) other.ckAttribute.pValue);
     }
 
     /**
@@ -157,9 +157,9 @@ public class DateAttribute extends Attribute {
      */
     @Override
     public int hashCode() {
-        return ((int) ckAttribute_.type)
-            ^ ((ckAttribute_.pValue != null) ? Functions
-                .hashCode((CK_DATE) ckAttribute_.pValue) : 0);
+        return ((int) ckAttribute.type)
+            ^ ((ckAttribute.pValue != null) ? Functions
+                .hashCode((CK_DATE) ckAttribute.pValue) : 0);
     }
 
     @Override

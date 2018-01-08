@@ -61,6 +61,7 @@ import iaik.pkcs.pkcs11.TokenException;
  * @version 1.0
  * @invariants
  */
+// CHECKSTYLE:SKIP
 public class PKCS11Exception extends TokenException {
 
     private static final long serialVersionUID = -5193259612747392211L;
@@ -86,7 +87,7 @@ public class PKCS11Exception extends TokenException {
     /**
      * The code of the error which was the reason for this exception.
      */
-    protected long errorCode_;
+    protected long errorCode;
 
     /**
      * Constructor taking the error code as defined for the CKR_* constants
@@ -96,7 +97,7 @@ public class PKCS11Exception extends TokenException {
      *          The PKCS#11 error code (return value).
      */
     public PKCS11Exception(long errorCode) {
-        errorCode_ = errorCode;
+        this.errorCode = errorCode;
     }
 
     @SuppressWarnings("restriction")
@@ -127,7 +128,7 @@ public class PKCS11Exception extends TokenException {
                     String errorName = props.getProperty(propName);
                     if (errorName == null) {
                         System.out.println("No name defined for error code "
-                                + Functions.toFullHexString((int) errorCode_));
+                                + Functions.toFullHexString((int) errorCode));
                     }
                     long code;
                     if (propName.startsWith("0x")
@@ -148,12 +149,12 @@ public class PKCS11Exception extends TokenException {
         }
 
         String name = errorCodeNamesAvailable_
-                ? errorCodeNames_.get(new Long(errorCode_)) : null;
+                ? errorCodeNames_.get(new Long(errorCode)) : null;
 
         // if we can get the name of the error code, take the name, otherwise
         // return the code
         return (name != null)
-                ? name : "0x" + Functions.toFullHexString((int) errorCode_);
+                ? name : "0x" + Functions.toFullHexString((int) errorCode);
     }
 
     /**
@@ -164,7 +165,7 @@ public class PKCS11Exception extends TokenException {
      * @postconditions
      */
     public long getErrorCode() {
-        return errorCode_;
+        return errorCode;
     }
 
 }

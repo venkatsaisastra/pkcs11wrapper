@@ -46,8 +46,8 @@ package iaik.pkcs.pkcs11.wrapper;
  * This class holds only final static member variables that are constants
  * in this package.
  *
- * @author Karl Scheibelhofer <Karl.Scheibelhofer@iaik.at>
- * @author Martin Schläffer <schlaeff@sbox.tugraz.at>
+ * @author Karl Scheibelhofer &lt;Karl.Scheibelhofer@iaik.at&gt;
+ * @author Martin Schläffer &lt;schlaeff@sbox.tugraz.at&gt;
  */
 public class Constants {
 

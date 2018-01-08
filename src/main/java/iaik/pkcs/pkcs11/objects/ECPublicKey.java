@@ -56,17 +56,18 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  * @invariants (ecdsaParams_ <> null)
  *             and (ecPoint_ <> null)
  */
+// CHECKSTYLE:SKIP
 public class ECPublicKey extends PublicKey {
 
     /**
      * The DER-encoding of an X9.62 ECParameters value of this ECDSA key.
      */
-    protected ByteArrayAttribute ecdsaParams_;
+    protected ByteArrayAttribute ecdsaParams;
 
     /**
      * The DER-encoding of X9.62 ECPoint value P of this ECDSA key.
      */
-    protected ByteArrayAttribute ecPoint_;
+    protected ByteArrayAttribute ecPoint;
 
     /**
      * Default Constructor.
@@ -76,7 +77,7 @@ public class ECPublicKey extends PublicKey {
      */
     public ECPublicKey() {
         super();
-        keyType_.setLongValue(thisKeyType());
+        keyType.setLongValue(thisKeyType());
     }
 
     /**
@@ -97,7 +98,7 @@ public class ECPublicKey extends PublicKey {
     protected ECPublicKey(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        keyType_.setLongValue(thisKeyType());
+        keyType.setLongValue(thisKeyType());
     }
 
     protected Long thisKeyType() {
@@ -140,8 +141,8 @@ public class ECPublicKey extends PublicKey {
      */
     protected static void putAttributesInTable(ECPublicKey object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.EC_PARAMS, object.ecdsaParams_);
-        object.attributeTable_.put(Attribute.EC_POINT, object.ecPoint_);
+        object.attributeTable.put(Attribute.EC_PARAMS, object.ecdsaParams);
+        object.attributeTable.put(Attribute.EC_POINT, object.ecPoint);
     }
 
     /**
@@ -155,8 +156,8 @@ public class ECPublicKey extends PublicKey {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        ecdsaParams_ = new ByteArrayAttribute(Attribute.EC_PARAMS);
-        ecPoint_ = new ByteArrayAttribute(Attribute.EC_POINT);
+        ecdsaParams = new ByteArrayAttribute(Attribute.EC_PARAMS);
+        ecPoint = new ByteArrayAttribute(Attribute.EC_POINT);
 
         putAttributesInTable(this);
     }
@@ -174,8 +175,8 @@ public class ECPublicKey extends PublicKey {
     public java.lang.Object clone() {
         ECPublicKey clone = (ECPublicKey) super.clone();
 
-        clone.ecdsaParams_ = (ByteArrayAttribute) this.ecdsaParams_.clone();
-        clone.ecPoint_ = (ByteArrayAttribute) this.ecPoint_.clone();
+        clone.ecdsaParams = (ByteArrayAttribute) this.ecdsaParams.clone();
+        clone.ecPoint = (ByteArrayAttribute) this.ecPoint.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -206,8 +207,8 @@ public class ECPublicKey extends PublicKey {
 
         ECPublicKey other = (ECPublicKey) otherObject;
         return super.equals(other)
-                && this.ecdsaParams_.equals(other.ecdsaParams_)
-                && this.ecPoint_.equals(other.ecPoint_);
+                && this.ecdsaParams.equals(other.ecdsaParams)
+                && this.ecPoint.equals(other.ecPoint);
     }
 
     /**
@@ -218,7 +219,7 @@ public class ECPublicKey extends PublicKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getEcdsaParams() {
-        return ecdsaParams_;
+        return ecdsaParams;
     }
 
     /**
@@ -229,7 +230,7 @@ public class ECPublicKey extends PublicKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getEcPoint() {
-        return ecPoint_;
+        return ecPoint;
     }
 
     /**
@@ -249,12 +250,12 @@ public class ECPublicKey extends PublicKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            ecdsaParams_, ecPoint_ });
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            ecdsaParams, ecPoint });
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -270,11 +271,11 @@ public class ECPublicKey extends PublicKey {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("ECDSA Params (DER, hex): ");
-        buffer.append(ecdsaParams_.toString());
+        buffer.append(ecdsaParams.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("EC Point (DER, hex): ");
-        buffer.append(ecPoint_.toString());
+        buffer.append(ecPoint.toString());
 
         return buffer.toString();
     }

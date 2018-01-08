@@ -50,6 +50,7 @@ import iaik.pkcs.pkcs11.TokenException;
  * @deprecated Use {@link ECPrivateKey} instead.
  *
  */
+// CHECKSTYLE:SKIP
 public class ECDSAPrivateKey extends ECPrivateKey {
 
     public ECDSAPrivateKey() {

@@ -53,65 +53,65 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (subject_ <> null)
- *             and (id_ <> null)
- *             and (issuer_ <> null)
- *             and (serialNumber_ <> null)
- *             and (value_ <> null)
+ * @invariants (subject <> null)
+ *             and (id <> null)
+ *             and (issuer <> null)
+ *             and (serialNumber <> null)
+ *             and (value <> null)
  */
 public class X509PublicKeyCertificate extends Certificate {
 
     /**
      * The subject attribute of this certificate.
      */
-    protected ByteArrayAttribute subject_;
+    protected ByteArrayAttribute subject;
 
     /**
      * The ID attribute of this certificate.
      */
-    protected ByteArrayAttribute id_;
+    protected ByteArrayAttribute id;
 
     /**
      * The issuer attribute of this certificate.
      */
-    protected ByteArrayAttribute issuer_;
+    protected ByteArrayAttribute issuer;
 
     /**
      * The serial number attribute of this certificate.
      * Notice that netscape needs the raw serial number, but PKCS#11 defines
      * this attribute as DER encoded integer.
      */
-    protected ByteArrayAttribute serialNumber_;
+    protected ByteArrayAttribute serialNumber;
 
     /**
      * The value attribute of this certificate; i.e. BER-encoded certificate.
      */
-    protected ByteArrayAttribute value_;
+    protected ByteArrayAttribute value;
 
     /**
      * This attribute gives the URL where the complete certificate can be
      * obtained.
      */
-    protected CharArrayAttribute url_;
+    protected CharArrayAttribute url;
 
     /**
      * SHA-1 hash of the subject public key.
      */
-    protected ByteArrayAttribute hashOfSubjectPublicKey_;
+    protected ByteArrayAttribute hashOfSubjectPublicKey;
 
     /**
      * SHA-1 hash of the issuer public key.
      */
-    protected ByteArrayAttribute hashOfIssuerPublicKey_;
+    protected ByteArrayAttribute hashOfIssuerPublicKey;
 
     /**
      * Java MIDP security domain:
      * 0 = unspecified (default value),
      * 1 = manufacturer,
      * 2 = operator,
-     * 3 = third party
+     * 3 = third party.
      */
-    protected LongAttribute javaMidpSecurityDomain_;
+    protected LongAttribute javaMidpSecurityDomain;
 
     /**
      * Default Constructor.
@@ -121,7 +121,7 @@ public class X509PublicKeyCertificate extends Certificate {
      */
     public X509PublicKeyCertificate() {
         super();
-        certificateType_.setLongValue(CertificateType.X_509_PUBLIC_KEY);
+        certificateType.setLongValue(CertificateType.X_509_PUBLIC_KEY);
     }
 
     /**
@@ -142,7 +142,7 @@ public class X509PublicKeyCertificate extends Certificate {
     protected X509PublicKeyCertificate(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        certificateType_.setLongValue(CertificateType.X_509_PUBLIC_KEY);
+        certificateType.setLongValue(CertificateType.X_509_PUBLIC_KEY);
     }
 
     /**
@@ -181,19 +181,19 @@ public class X509PublicKeyCertificate extends Certificate {
     protected static void putAttributesInTable(
             X509PublicKeyCertificate object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.SUBJECT, object.subject_);
-        object.attributeTable_.put(Attribute.ID, object.id_);
-        object.attributeTable_.put(Attribute.ISSUER, object.issuer_);
-        object.attributeTable_.put(Attribute.SERIAL_NUMBER,
-            object.serialNumber_);
-        object.attributeTable_.put(Attribute.VALUE, object.value_);
-        object.attributeTable_.put(Attribute.URL, object.url_);
-        object.attributeTable_.put(Attribute.HASH_OF_SUBJECT_PUBLIC_KEY,
-            object.hashOfSubjectPublicKey_);
-        object.attributeTable_.put(Attribute.HASH_OF_ISSUER_PUBLIC_KEY,
-            object.hashOfIssuerPublicKey_);
-        object.attributeTable_.put(Attribute.JAVA_MIDP_SECURITY_DOMAIN,
-            object.javaMidpSecurityDomain_);
+        object.attributeTable.put(Attribute.SUBJECT, object.subject);
+        object.attributeTable.put(Attribute.ID, object.id);
+        object.attributeTable.put(Attribute.ISSUER, object.issuer);
+        object.attributeTable.put(Attribute.SERIAL_NUMBER,
+            object.serialNumber);
+        object.attributeTable.put(Attribute.VALUE, object.value);
+        object.attributeTable.put(Attribute.URL, object.url);
+        object.attributeTable.put(Attribute.HASH_OF_SUBJECT_PUBLIC_KEY,
+            object.hashOfSubjectPublicKey);
+        object.attributeTable.put(Attribute.HASH_OF_ISSUER_PUBLIC_KEY,
+            object.hashOfIssuerPublicKey);
+        object.attributeTable.put(Attribute.JAVA_MIDP_SECURITY_DOMAIN,
+            object.javaMidpSecurityDomain);
     }
 
     /**
@@ -207,17 +207,17 @@ public class X509PublicKeyCertificate extends Certificate {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        subject_ = new ByteArrayAttribute(Attribute.SUBJECT);
-        id_ = new ByteArrayAttribute(Attribute.ID);
-        issuer_ = new ByteArrayAttribute(Attribute.ISSUER);
-        serialNumber_ = new ByteArrayAttribute(Attribute.SERIAL_NUMBER);
-        value_ = new ByteArrayAttribute(Attribute.VALUE);
-        url_ = new CharArrayAttribute(Attribute.URL);
-        hashOfSubjectPublicKey_ = new ByteArrayAttribute(
+        subject = new ByteArrayAttribute(Attribute.SUBJECT);
+        id = new ByteArrayAttribute(Attribute.ID);
+        issuer = new ByteArrayAttribute(Attribute.ISSUER);
+        serialNumber = new ByteArrayAttribute(Attribute.SERIAL_NUMBER);
+        value = new ByteArrayAttribute(Attribute.VALUE);
+        url = new CharArrayAttribute(Attribute.URL);
+        hashOfSubjectPublicKey = new ByteArrayAttribute(
             Attribute.HASH_OF_SUBJECT_PUBLIC_KEY);
-        hashOfIssuerPublicKey_ = new ByteArrayAttribute(
+        hashOfIssuerPublicKey = new ByteArrayAttribute(
             Attribute.HASH_OF_ISSUER_PUBLIC_KEY);
-        javaMidpSecurityDomain_ = new LongAttribute(
+        javaMidpSecurityDomain = new LongAttribute(
             Attribute.JAVA_MIDP_SECURITY_DOMAIN);
 
         putAttributesInTable(this);
@@ -237,18 +237,18 @@ public class X509PublicKeyCertificate extends Certificate {
         X509PublicKeyCertificate clone
             = (X509PublicKeyCertificate) super.clone();
 
-        clone.subject_ = (ByteArrayAttribute) this.subject_.clone();
-        clone.id_ = (ByteArrayAttribute) this.id_.clone();
-        clone.issuer_ = (ByteArrayAttribute) this.issuer_.clone();
-        clone.serialNumber_ = (ByteArrayAttribute) this.serialNumber_.clone();
-        clone.value_ = (ByteArrayAttribute) this.value_.clone();
-        clone.url_ = (CharArrayAttribute) this.url_.clone();
-        clone.hashOfSubjectPublicKey_ = (ByteArrayAttribute)
-            this.hashOfSubjectPublicKey_.clone();
-        clone.hashOfIssuerPublicKey_ = (ByteArrayAttribute)
-            this.hashOfIssuerPublicKey_.clone();
-        clone.javaMidpSecurityDomain_ = (LongAttribute)
-            this.javaMidpSecurityDomain_.clone();
+        clone.subject = (ByteArrayAttribute) this.subject.clone();
+        clone.id = (ByteArrayAttribute) this.id.clone();
+        clone.issuer = (ByteArrayAttribute) this.issuer.clone();
+        clone.serialNumber = (ByteArrayAttribute) this.serialNumber.clone();
+        clone.value = (ByteArrayAttribute) this.value.clone();
+        clone.url = (CharArrayAttribute) this.url.clone();
+        clone.hashOfSubjectPublicKey = (ByteArrayAttribute)
+            this.hashOfSubjectPublicKey.clone();
+        clone.hashOfIssuerPublicKey = (ByteArrayAttribute)
+            this.hashOfIssuerPublicKey.clone();
+        clone.javaMidpSecurityDomain = (LongAttribute)
+            this.javaMidpSecurityDomain.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -279,18 +279,18 @@ public class X509PublicKeyCertificate extends Certificate {
 
         X509PublicKeyCertificate other = (X509PublicKeyCertificate) otherObject;
         return super.equals(other)
-                && this.subject_.equals(other.subject_)
-                && this.id_.equals(other.id_)
-                && this.issuer_.equals(other.issuer_)
-                && this.serialNumber_.equals(other.serialNumber_)
-                && this.value_.equals(other.value_)
-                && this.url_.equals(other.url_)
-                && this.hashOfSubjectPublicKey_.equals(
-                        other.hashOfSubjectPublicKey_)
-                && this.hashOfIssuerPublicKey_.equals(
-                        other.hashOfIssuerPublicKey_)
-                && this.javaMidpSecurityDomain_.equals(
-                        other.javaMidpSecurityDomain_);
+                && this.subject.equals(other.subject)
+                && this.id.equals(other.id)
+                && this.issuer.equals(other.issuer)
+                && this.serialNumber.equals(other.serialNumber)
+                && this.value.equals(other.value)
+                && this.url.equals(other.url)
+                && this.hashOfSubjectPublicKey.equals(
+                        other.hashOfSubjectPublicKey)
+                && this.hashOfIssuerPublicKey.equals(
+                        other.hashOfIssuerPublicKey)
+                && this.javaMidpSecurityDomain.equals(
+                        other.javaMidpSecurityDomain);
     }
 
     /**
@@ -301,7 +301,7 @@ public class X509PublicKeyCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getSubject() {
-        return subject_;
+        return subject;
     }
 
     /**
@@ -312,7 +312,7 @@ public class X509PublicKeyCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getId() {
-        return id_;
+        return id;
     }
 
     /**
@@ -323,7 +323,7 @@ public class X509PublicKeyCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getIssuer() {
-        return issuer_;
+        return issuer;
     }
 
     /**
@@ -334,7 +334,7 @@ public class X509PublicKeyCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getSerialNumber() {
-        return serialNumber_;
+        return serialNumber;
     }
 
     /**
@@ -345,7 +345,7 @@ public class X509PublicKeyCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getValue() {
-        return value_;
+        return value;
     }
 
     /**
@@ -356,7 +356,7 @@ public class X509PublicKeyCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public CharArrayAttribute getUrl() {
-        return url_;
+        return url;
     }
 
     /**
@@ -369,7 +369,7 @@ public class X509PublicKeyCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getHashOfSubjectPublicKey() {
-        return hashOfSubjectPublicKey_;
+        return hashOfSubjectPublicKey;
     }
 
     /**
@@ -382,7 +382,7 @@ public class X509PublicKeyCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getHashOfIssuerPublicKey() {
-        return hashOfIssuerPublicKey_;
+        return hashOfIssuerPublicKey;
     }
 
     /**
@@ -393,7 +393,7 @@ public class X509PublicKeyCertificate extends Certificate {
      * @postconditions (result <> null)
      */
     public LongAttribute getJavaMidpSecurityDomain() {
-        return javaMidpSecurityDomain_;
+        return javaMidpSecurityDomain;
     }
 
     /**
@@ -406,7 +406,7 @@ public class X509PublicKeyCertificate extends Certificate {
      */
     @Override
     public int hashCode() {
-        return issuer_.hashCode() ^ serialNumber_.hashCode();
+        return issuer.hashCode() ^ serialNumber.hashCode();
     }
 
     /**
@@ -426,15 +426,15 @@ public class X509PublicKeyCertificate extends Certificate {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            subject_, id_, issuer_, serialNumber_, value_ });
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            url_, hashOfSubjectPublicKey_, hashOfIssuerPublicKey_,
-            javaMidpSecurityDomain_ });
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            subject, id, issuer, serialNumber, value });
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            url, hashOfSubjectPublicKey, hashOfIssuerPublicKey,
+            javaMidpSecurityDomain });
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -450,39 +450,39 @@ public class X509PublicKeyCertificate extends Certificate {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Subject (DER, hex): ");
-        buffer.append(subject_.toString());
+        buffer.append(subject.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("ID (hex): ");
-        buffer.append(id_.toString());
+        buffer.append(id.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Issuer (DER, hex): ");
-        buffer.append(issuer_.toString());
+        buffer.append(issuer.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Serial Number (DER, hex): ");
-        buffer.append(serialNumber_.toString());
+        buffer.append(serialNumber.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Value (BER, hex): ");
-        buffer.append(value_.toString());
+        buffer.append(value.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("URL: ");
-        buffer.append(url_.toString());
+        buffer.append(url.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Hash Of Subject Public Key: ");
-        buffer.append(hashOfSubjectPublicKey_.toString());
+        buffer.append(hashOfSubjectPublicKey.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Hash Of Issuer Public Key: ");
-        buffer.append(hashOfIssuerPublicKey_.toString());
+        buffer.append(hashOfIssuerPublicKey.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Java MIDP Security Domain: ");
-        buffer.append(javaMidpSecurityDomain_.toString());
+        buffer.append(javaMidpSecurityDomain.toString());
 
         return buffer.toString();
     }

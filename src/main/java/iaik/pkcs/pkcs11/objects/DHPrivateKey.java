@@ -53,32 +53,33 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (prime_ <> null)
- *             and (base_ <> null)
- *             and (value_ <> null)
- *             and (valueBits_ <> null)
+ * @invariants (prime <> null)
+ *             and (base <> null)
+ *             and (value <> null)
+ *             and (valueBits <> null)
  */
+// CHECKSTYLE:SKIP
 public class DHPrivateKey extends PrivateKey {
 
     /**
      * The prime (p) of this DH key.
      */
-    protected ByteArrayAttribute prime_;
+    protected ByteArrayAttribute prime;
 
     /**
      * The base (g) of this DH key.
      */
-    protected ByteArrayAttribute base_;
+    protected ByteArrayAttribute base;
 
     /**
      * The private value (x) of this DH key.
      */
-    protected ByteArrayAttribute value_;
+    protected ByteArrayAttribute value;
 
     /**
      * The length of the value (x) of this DH key in bits.
      */
-    protected LongAttribute valueBits_;
+    protected LongAttribute valueBits;
 
     /**
      * Default Constructor.
@@ -88,7 +89,7 @@ public class DHPrivateKey extends PrivateKey {
      */
     public DHPrivateKey() {
         super();
-        keyType_.setLongValue(KeyType.DH);
+        keyType.setLongValue(KeyType.DH);
     }
 
     /**
@@ -108,7 +109,7 @@ public class DHPrivateKey extends PrivateKey {
     protected DHPrivateKey(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        keyType_.setLongValue(KeyType.DH);
+        keyType.setLongValue(KeyType.DH);
     }
 
     /**
@@ -147,10 +148,10 @@ public class DHPrivateKey extends PrivateKey {
      */
     protected static void putAttributesInTable(DHPrivateKey object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.PRIME, object.prime_);
-        object.attributeTable_.put(Attribute.BASE, object.base_);
-        object.attributeTable_.put(Attribute.VALUE, object.value_);
-        object.attributeTable_.put(Attribute.VALUE_BITS, object.valueBits_);
+        object.attributeTable.put(Attribute.PRIME, object.prime);
+        object.attributeTable.put(Attribute.BASE, object.base);
+        object.attributeTable.put(Attribute.VALUE, object.value);
+        object.attributeTable.put(Attribute.VALUE_BITS, object.valueBits);
     }
 
     /**
@@ -164,10 +165,10 @@ public class DHPrivateKey extends PrivateKey {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        prime_ = new ByteArrayAttribute(Attribute.PRIME);
-        base_ = new ByteArrayAttribute(Attribute.BASE);
-        value_ = new ByteArrayAttribute(Attribute.VALUE);
-        valueBits_ = new LongAttribute(Attribute.VALUE_BITS);
+        prime = new ByteArrayAttribute(Attribute.PRIME);
+        base = new ByteArrayAttribute(Attribute.BASE);
+        value = new ByteArrayAttribute(Attribute.VALUE);
+        valueBits = new LongAttribute(Attribute.VALUE_BITS);
 
         putAttributesInTable(this);
     }
@@ -185,10 +186,10 @@ public class DHPrivateKey extends PrivateKey {
     public java.lang.Object clone() {
         DHPrivateKey clone = (DHPrivateKey) super.clone();
 
-        clone.prime_ = (ByteArrayAttribute) this.prime_.clone();
-        clone.base_ = (ByteArrayAttribute) this.base_.clone();
-        clone.value_ = (ByteArrayAttribute) this.value_.clone();
-        clone.valueBits_ = (LongAttribute) this.valueBits_.clone();
+        clone.prime = (ByteArrayAttribute) this.prime.clone();
+        clone.base = (ByteArrayAttribute) this.base.clone();
+        clone.value = (ByteArrayAttribute) this.value.clone();
+        clone.valueBits = (LongAttribute) this.valueBits.clone();
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
 
@@ -218,10 +219,10 @@ public class DHPrivateKey extends PrivateKey {
 
         DHPrivateKey other = (DHPrivateKey) otherObject;
         return super.equals(other)
-                && this.prime_.equals(other.prime_)
-                && this.base_.equals(other.base_)
-                && this.value_.equals(other.value_)
-                && this.valueBits_.equals(other.valueBits_);
+                && this.prime.equals(other.prime)
+                && this.base.equals(other.base)
+                && this.value.equals(other.value)
+                && this.valueBits.equals(other.valueBits);
     }
 
     /**
@@ -232,7 +233,7 @@ public class DHPrivateKey extends PrivateKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getPrime() {
-        return prime_;
+        return prime;
     }
 
     /**
@@ -243,7 +244,7 @@ public class DHPrivateKey extends PrivateKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getBase() {
-        return base_;
+        return base;
     }
 
     /**
@@ -254,7 +255,7 @@ public class DHPrivateKey extends PrivateKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getValue() {
-        return value_;
+        return value;
     }
 
     /**
@@ -265,7 +266,7 @@ public class DHPrivateKey extends PrivateKey {
      * @postconditions (result <> null)
      */
     public LongAttribute getValueBits() {
-        return valueBits_;
+        return valueBits;
     }
 
     /**
@@ -285,13 +286,13 @@ public class DHPrivateKey extends PrivateKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            prime_, base_, valueBits_ });
-        Object.getAttributeValue(session, objectHandle_, value_);
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            prime, base, valueBits });
+        Object.getAttributeValue(session, objectHandle, value);
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -307,18 +308,18 @@ public class DHPrivateKey extends PrivateKey {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Prime (hex): ");
-        buffer.append(prime_.toString());
+        buffer.append(prime.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Base (hex): ");
-        buffer.append(base_.toString());
+        buffer.append(base.toString());
 
         buffer.append(Constants.NEWLINE_INDENT_HEXVALUE);
-        buffer.append(value_.toString());
+        buffer.append(value.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Value Bits (dec): ");
-        buffer.append(valueBits_.toString(10));
+        buffer.append(valueBits.toString(10));
 
         return buffer.toString();
     }

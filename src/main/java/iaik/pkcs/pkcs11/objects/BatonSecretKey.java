@@ -53,14 +53,14 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (value_ <> null)
+ * @invariants (value <> null)
  */
 public class BatonSecretKey extends SecretKey {
 
     /**
      * The value attribute of this secret key.
      */
-    protected ByteArrayAttribute value_;
+    protected ByteArrayAttribute value;
 
     /**
      * Default Constructor.
@@ -70,7 +70,7 @@ public class BatonSecretKey extends SecretKey {
      */
     public BatonSecretKey() {
         super();
-        keyType_.setLongValue(KeyType.BATON);
+        keyType.setLongValue(KeyType.BATON);
     }
 
     /**
@@ -91,7 +91,7 @@ public class BatonSecretKey extends SecretKey {
     protected BatonSecretKey(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        keyType_.setLongValue(KeyType.BATON);
+        keyType.setLongValue(KeyType.BATON);
     }
 
     /**
@@ -130,7 +130,7 @@ public class BatonSecretKey extends SecretKey {
      */
     protected static void putAttributesInTable(BatonSecretKey object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.VALUE, object.value_);
+        object.attributeTable.put(Attribute.VALUE, object.value);
     }
 
     /**
@@ -143,7 +143,7 @@ public class BatonSecretKey extends SecretKey {
     @Override
     protected void allocateAttributes() {
         super.allocateAttributes();
-        value_ = new ByteArrayAttribute(Attribute.VALUE);
+        value = new ByteArrayAttribute(Attribute.VALUE);
         putAttributesInTable(this);
     }
 
@@ -159,7 +159,7 @@ public class BatonSecretKey extends SecretKey {
     @Override
     public java.lang.Object clone() {
         BatonSecretKey clone = (BatonSecretKey) super.clone();
-        clone.value_ = (ByteArrayAttribute) this.value_.clone();
+        clone.value = (ByteArrayAttribute) this.value.clone();
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
         return clone;
@@ -188,7 +188,7 @@ public class BatonSecretKey extends SecretKey {
 
         BatonSecretKey other = (BatonSecretKey) otherObject;
         return super.equals(other)
-                && this.value_.equals(other.value_);
+                && this.value.equals(other.value);
     }
 
     /**
@@ -199,7 +199,7 @@ public class BatonSecretKey extends SecretKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getValue() {
-        return value_;
+        return value;
     }
 
     /**
@@ -219,11 +219,11 @@ public class BatonSecretKey extends SecretKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValue(session, objectHandle_, value_);
+        Object.getAttributeValue(session, objectHandle, value);
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -238,7 +238,7 @@ public class BatonSecretKey extends SecretKey {
         buffer.append(super.toString());
 
         buffer.append(Constants.NEWLINE_INDENT_HEXVALUE);
-        buffer.append(value_.toString());
+        buffer.append(value.toString());
 
         return buffer.toString();
     }

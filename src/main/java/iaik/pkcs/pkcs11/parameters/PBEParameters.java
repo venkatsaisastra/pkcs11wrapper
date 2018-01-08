@@ -54,34 +54,35 @@ import sun.security.pkcs11.wrapper.CK_PBE_PARAMS;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (initializationVector_ == null)
- *             or ((initializationVector_ <> null)
- *                 and (initializationVector_.length == 8))
- *             and (password_ <> null)
- *             and (salt_ <> null)
+ * @invariants (initializationVector == null)
+ *             or ((initializationVector <> null)
+ *                 and (initializationVector.length == 8))
+ *             and (password <> null)
+ *             and (salt <> null)
  */
 @SuppressWarnings("restriction")
+// CHECKSTYLE:SKIP
 public class PBEParameters implements Parameters {
 
     /**
      * The 8-byte initialization vector (IV), if an IV is required.
      */
-    protected char[] initializationVector_;
+    protected char[] iv;
 
     /**
      * The password to be used in the PBE key generation.
      */
-    protected char[] password_;
+    protected char[] password;
 
     /**
      * The salt to be used in the PBE key generation.
      */
-    protected char[] salt_;
+    protected char[] salt;
 
     /**
      * The number of iterations required for the generation.
      */
-    protected long iterations_;
+    protected long iterations;
 
     /**
      * Create a new PBEDeriveParameters object with the given attributes.
@@ -101,20 +102,19 @@ public class PBEParameters implements Parameters {
      *                and (salt <> null)
      * @postconditions
      */
-    public PBEParameters(char[] initializationVector,
+    public PBEParameters(char[] iv,
             char[] password,
             char[] salt,
             long iterations) {
-        if ((initializationVector != null)
-                && (initializationVector.length != 8)) {
+        if ((iv != null) && (iv.length != 8)) {
             throw new IllegalArgumentException(
                 "Argument \"initializationVector\" must be null or must have"
                 + " length 8, if it is not null.");
         }
-        initializationVector_ = initializationVector;
-        password_ = Util.requireNonNull("password", password);
-        salt_ = Util.requireNonNull("salt", salt);
-        iterations_ = iterations;
+        this.iv = iv;
+        this.password = Util.requireNonNull("password", password);
+        this.salt = Util.requireNonNull("salt", salt);
+        this.iterations = iterations;
     }
 
     /**
@@ -133,10 +133,9 @@ public class PBEParameters implements Parameters {
         try {
             clone = (PBEParameters) super.clone();
 
-            clone.initializationVector_
-                    = (char[]) this.initializationVector_.clone();
-            clone.password_ = (char[]) this.password_.clone();
-            clone.salt_ = (char[]) this.salt_.clone();
+            clone.iv = (char[]) this.iv.clone();
+            clone.password = (char[]) this.password.clone();
+            clone.salt = (char[]) this.salt.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
             throw new TokenRuntimeException(
@@ -157,10 +156,10 @@ public class PBEParameters implements Parameters {
     public Object getPKCS11ParamsObject() {
         CK_PBE_PARAMS params = new CK_PBE_PARAMS();
 
-        params.pInitVector = initializationVector_;
-        params.pPassword = password_;
-        params.pSalt = salt_;
-        params.ulIteration = iterations_;
+        params.pInitVector = iv;
+        params.pPassword = password;
+        params.pSalt = salt;
+        params.ulIteration = iterations;
 
         return params;
     }
@@ -175,7 +174,7 @@ public class PBEParameters implements Parameters {
      *                     and (result.length == 8))
      */
     public char[] getInitializationVector() {
-        return initializationVector_;
+        return iv;
     }
 
     /**
@@ -186,7 +185,7 @@ public class PBEParameters implements Parameters {
      * @postconditions (result <> null)
      */
     public char[] getPassword() {
-        return password_;
+        return password;
     }
 
     /**
@@ -197,7 +196,7 @@ public class PBEParameters implements Parameters {
      * @postconditions (result <> null)
      */
     public char[] getSalt() {
-        return salt_;
+        return salt;
     }
 
     /**
@@ -208,7 +207,7 @@ public class PBEParameters implements Parameters {
      * @postconditions
      */
     public long getIterations() {
-        return iterations_;
+        return iterations;
     }
 
     /**
@@ -221,14 +220,13 @@ public class PBEParameters implements Parameters {
      *                    and (initializationVector.length == 8))
      * @postconditions
      */
-    public void setInitializationVector(char[] initializationVector) {
-        if ((initializationVector != null)
-                && (initializationVector.length != 8)) {
+    public void setInitializationVector(char[] iv) {
+        if ((iv != null) && (iv.length != 8)) {
             throw new IllegalArgumentException(
-                "Argument \"initializationVector\" must be null or must have "
+                "Argument \"iv\" must be null or must have "
                 + "length 8, if it is not null.");
         }
-        initializationVector_ = initializationVector;
+        this.iv = iv;
     }
 
     /**
@@ -240,7 +238,7 @@ public class PBEParameters implements Parameters {
      * @postconditions
      */
     public void setPassword(char[] password) {
-        password_ = Util.requireNonNull("password", password);
+        this.password = Util.requireNonNull("password", password);
     }
 
     /**
@@ -252,7 +250,7 @@ public class PBEParameters implements Parameters {
      * @postconditions
      */
     public void setSalt(char[] salt) {
-        salt_ = Util.requireNonNull("salt", salt);;
+        this.salt = Util.requireNonNull("salt", salt);;
     }
 
     /**
@@ -264,7 +262,7 @@ public class PBEParameters implements Parameters {
      * @postconditions
      */
     public void setIterations(long iterations) {
-        iterations_ = iterations;
+        this.iterations = iterations;
     }
 
     /**
@@ -279,20 +277,19 @@ public class PBEParameters implements Parameters {
 
         buffer.append(Constants.INDENT);
         buffer.append("Initialization Vector: ");
-        buffer.append((initializationVector_ != null)
-                ? new String(initializationVector_) : null);
+        buffer.append((iv != null) ? new String(iv) : null);
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Password: ");
-        buffer.append((password_ != null) ? new String(password_) : null);
+        buffer.append((password != null) ? new String(password) : null);
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Salt: ");
-        buffer.append((salt_ != null) ? new String(salt_) : null);
+        buffer.append((salt != null) ? new String(salt) : null);
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Iterations (dec): ");
-        buffer.append(iterations_);
+        buffer.append(iterations);
 
         return buffer.toString();
     }
@@ -319,11 +316,10 @@ public class PBEParameters implements Parameters {
         }
 
         PBEParameters other = (PBEParameters) otherObject;
-        return Functions.equals(this.initializationVector_,
-                    other.initializationVector_)
-               && Functions.equals(this.password_, other.password_)
-               && Functions.equals(this.salt_, other.salt_)
-               && (this.iterations_ == other.iterations_);
+        return Functions.equals(this.iv, other.iv)
+               && Functions.equals(this.password, other.password)
+               && Functions.equals(this.salt, other.salt)
+               && (this.iterations == other.iterations);
     }
 
     /**
@@ -336,10 +332,10 @@ public class PBEParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return Functions.hashCode(initializationVector_)
-                ^ Functions.hashCode(password_)
-                ^ Functions.hashCode(salt_)
-                ^ ((int) iterations_);
+        return Functions.hashCode(iv)
+                ^ Functions.hashCode(password)
+                ^ Functions.hashCode(salt)
+                ^ ((int) iterations);
     }
 
 }

@@ -273,55 +273,55 @@ public class Key extends Storage {
     /**
      * The currently set vendor defined key builder, or null.
      */
-    protected static VendorDefinedKeyBuilder vendorKeyBuilder_;
+    protected static VendorDefinedKeyBuilder vendorKeyBuilder;
 
     /**
      * A table holding string representations for all known key types. Table key
      * is the key type as Long object.
      */
-    protected static Hashtable<Long, String> keyTypeNames_;
+    protected static Hashtable<Long, String> keyTypeNames;
 
     /**
      * The type of this key. Its value is one of KeyType, or one that has a
      * bigger value than VENDOR_DEFINED.
      */
-    protected KeyTypeAttribute keyType_;
+    protected KeyTypeAttribute keyType;
 
     /**
      * The identifier (ID) of this key.
      */
-    protected ByteArrayAttribute id_;
+    protected ByteArrayAttribute id;
 
     /**
      * The start date of this key's validity.
      */
-    protected DateAttribute startDate_;
+    protected DateAttribute startDate;
 
     /**
      * The end date of this key's validity.
      */
-    protected DateAttribute endDate_;
+    protected DateAttribute endDate;
 
     /**
      * True, if other keys can be derived from this key.
      */
-    protected BooleanAttribute derive_;
+    protected BooleanAttribute derive;
 
     /**
      * True, if this key was created (generated or copied from a different key)
      * on the token.
      */
-    protected BooleanAttribute local_;
+    protected BooleanAttribute local;
 
     /**
      * The mechanism used to generate the key material.
      */
-    protected MechanismAttribute keyGenMechanism_;
+    protected MechanismAttribute keyGenMechanism;
 
     /**
      * The list of mechanism that can be used with this key.
      */
-    protected MechanismArrayAttribute allowedMechanisms_;
+    protected MechanismArrayAttribute allowedMechanisms;
 
     /**
      * The default constructor. An application use this constructor to
@@ -367,7 +367,7 @@ public class Key extends Storage {
      */
     public static void setVendorDefinedKeyBuilder(
             VendorDefinedKeyBuilder builder) {
-        vendorKeyBuilder_ = builder;
+        vendorKeyBuilder = builder;
     }
 
     /**
@@ -379,7 +379,7 @@ public class Key extends Storage {
      * @postconditions
      */
     public static VendorDefinedKeyBuilder getVendorDefinedKeyBuilder() {
-        return vendorKeyBuilder_;
+        return vendorKeyBuilder;
     }
 
     /**
@@ -394,9 +394,9 @@ public class Key extends Storage {
     public static String getKeyTypeName(Long keyType) {
         Util.requireNonNull("keyType", keyType);
 
-        if (keyTypeNames_ == null) {
+        if (keyTypeNames == null) {
             // setup key type names table
-            Hashtable<Long, String> keyTypeNames = new Hashtable<>(24);
+            keyTypeNames = new Hashtable<>(24);
             keyTypeNames.put(KeyType.RSA, "RSA");
             keyTypeNames.put(KeyType.DSA, "DSA");
             keyTypeNames.put(KeyType.DH, "DH");
@@ -423,10 +423,9 @@ public class Key extends Storage {
             keyTypeNames.put(KeyType.TWOFISH, "TWOFISH");
             keyTypeNames.put(KeyType.VENDOR_SM2, "SM2");
             keyTypeNames.put(KeyType.VENDOR_SM4, "SM4");
-            keyTypeNames_ = keyTypeNames;
         }
 
-        String keyTypeName = (String) keyTypeNames_.get(keyType);
+        String keyTypeName = (String) keyTypeNames.get(keyType);
         if (keyTypeName == null) {
             if ((keyType.longValue()
                     & PKCS11Constants.CKK_VENDOR_DEFINED) != 0L) {
@@ -452,16 +451,16 @@ public class Key extends Storage {
      */
     protected static void putAttributesInTable(Key object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.KEY_TYPE, object.keyType_);
-        object.attributeTable_.put(Attribute.ID, object.id_);
-        object.attributeTable_.put(Attribute.START_DATE, object.startDate_);
-        object.attributeTable_.put(Attribute.END_DATE, object.endDate_);
-        object.attributeTable_.put(Attribute.DERIVE, object.derive_);
-        object.attributeTable_.put(Attribute.LOCAL, object.local_);
-        object.attributeTable_.put(Attribute.KEY_GEN_MECHANISM,
-                object.keyGenMechanism_);
-        object.attributeTable_.put(Attribute.ALLOWED_MECHANISMS,
-                object.allowedMechanisms_);
+        object.attributeTable.put(Attribute.KEY_TYPE, object.keyType);
+        object.attributeTable.put(Attribute.ID, object.id);
+        object.attributeTable.put(Attribute.START_DATE, object.startDate);
+        object.attributeTable.put(Attribute.END_DATE, object.endDate);
+        object.attributeTable.put(Attribute.DERIVE, object.derive);
+        object.attributeTable.put(Attribute.LOCAL, object.local);
+        object.attributeTable.put(Attribute.KEY_GEN_MECHANISM,
+                object.keyGenMechanism);
+        object.attributeTable.put(Attribute.ALLOWED_MECHANISMS,
+                object.allowedMechanisms);
     }
 
     /**
@@ -475,15 +474,15 @@ public class Key extends Storage {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        keyType_ = new KeyTypeAttribute();
-        id_ = new ByteArrayAttribute(Attribute.ID);
-        startDate_ = new DateAttribute(Attribute.START_DATE);
-        endDate_ = new DateAttribute(Attribute.END_DATE);
-        derive_ = new BooleanAttribute(Attribute.DERIVE);
-        local_ = new BooleanAttribute(Attribute.LOCAL);
-        keyGenMechanism_ = new MechanismAttribute(
+        keyType = new KeyTypeAttribute();
+        id = new ByteArrayAttribute(Attribute.ID);
+        startDate = new DateAttribute(Attribute.START_DATE);
+        endDate = new DateAttribute(Attribute.END_DATE);
+        derive = new BooleanAttribute(Attribute.DERIVE);
+        local = new BooleanAttribute(Attribute.LOCAL);
+        keyGenMechanism = new MechanismAttribute(
                 Attribute.KEY_GEN_MECHANISM);
-        allowedMechanisms_ = new MechanismArrayAttribute(
+        allowedMechanisms = new MechanismArrayAttribute(
                 Attribute.ALLOWED_MECHANISMS);
 
         putAttributesInTable(this);
@@ -502,16 +501,16 @@ public class Key extends Storage {
     public java.lang.Object clone() {
         Key clone = (Key) super.clone();
 
-        clone.keyType_ = (KeyTypeAttribute) this.keyType_.clone();
-        clone.id_ = (ByteArrayAttribute) this.id_.clone();
-        clone.startDate_ = (DateAttribute) this.startDate_.clone();
-        clone.endDate_ = (DateAttribute) this.endDate_.clone();
-        clone.derive_ = (BooleanAttribute) this.derive_.clone();
-        clone.local_ = (BooleanAttribute) this.local_.clone();
-        clone.keyGenMechanism_ = (MechanismAttribute)
-                this.keyGenMechanism_.clone();
-        clone.allowedMechanisms_ = (MechanismArrayAttribute)
-                this.allowedMechanisms_.clone();
+        clone.keyType = (KeyTypeAttribute) this.keyType.clone();
+        clone.id = (ByteArrayAttribute) this.id.clone();
+        clone.startDate = (DateAttribute) this.startDate.clone();
+        clone.endDate = (DateAttribute) this.endDate.clone();
+        clone.derive = (BooleanAttribute) this.derive.clone();
+        clone.local = (BooleanAttribute) this.local.clone();
+        clone.keyGenMechanism = (MechanismAttribute)
+                this.keyGenMechanism.clone();
+        clone.allowedMechanisms = (MechanismArrayAttribute)
+                this.allowedMechanisms.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -542,14 +541,14 @@ public class Key extends Storage {
 
         Key other = (Key) otherObject;
         return super.equals(other)
-                && this.keyType_.equals(other.keyType_)
-                && this.id_.equals(other.id_)
-                && this.startDate_.equals(other.startDate_)
-                && this.endDate_.equals(other.endDate_)
-                && this.derive_.equals(other.derive_)
-                && this.local_.equals(other.local_)
-                && this.keyGenMechanism_.equals(other.keyGenMechanism_)
-                && this.allowedMechanisms_.equals(other.allowedMechanisms_);
+                && this.keyType.equals(other.keyType)
+                && this.id.equals(other.id)
+                && this.startDate.equals(other.startDate)
+                && this.endDate.equals(other.endDate)
+                && this.derive.equals(other.derive)
+                && this.local.equals(other.local)
+                && this.keyGenMechanism.equals(other.keyGenMechanism)
+                && this.allowedMechanisms.equals(other.allowedMechanisms);
     }
 
     /**
@@ -562,7 +561,7 @@ public class Key extends Storage {
      * @postconditions (result <> null)
      */
     public LongAttribute getKeyType() {
-        return keyType_;
+        return keyType;
     }
 
     /**
@@ -573,7 +572,7 @@ public class Key extends Storage {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getId() {
-        return id_;
+        return id;
     }
 
     /**
@@ -584,7 +583,7 @@ public class Key extends Storage {
      * @postconditions (result <> null)
      */
     public DateAttribute getStartDate() {
-        return startDate_;
+        return startDate;
     }
 
     /**
@@ -595,7 +594,7 @@ public class Key extends Storage {
      * @postconditions (result <> null)
      */
     public DateAttribute getEndDate() {
-        return endDate_;
+        return endDate;
     }
 
     /**
@@ -606,7 +605,7 @@ public class Key extends Storage {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getDerive() {
-        return derive_;
+        return derive;
     }
 
     /**
@@ -618,7 +617,7 @@ public class Key extends Storage {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getLocal() {
-        return local_;
+        return local;
     }
 
     /**
@@ -630,7 +629,7 @@ public class Key extends Storage {
      * @postconditions (result <> null)
      */
     public MechanismAttribute getKeyGenMechanism() {
-        return keyGenMechanism_;
+        return keyGenMechanism;
     }
 
     /**
@@ -643,7 +642,7 @@ public class Key extends Storage {
      * @postconditions (result <> null)
      */
     public MechanismArrayAttribute getAllowedMechanisms() {
-        return allowedMechanisms_;
+        return allowedMechanisms;
     }
 
     /**
@@ -656,7 +655,7 @@ public class Key extends Storage {
      */
     @Override
     public int hashCode() {
-        return keyType_.hashCode() ^ id_.hashCode();
+        return keyType.hashCode() ^ id.hashCode();
     }
 
     /**
@@ -676,13 +675,13 @@ public class Key extends Storage {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            id_, startDate_, endDate_, derive_, local_, keyGenMechanism_ });
-        Object.getAttributeValue(session, objectHandle_, allowedMechanisms_);
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            id, startDate, endDate, derive, local, keyGenMechanism });
+        Object.getAttributeValue(session, objectHandle, allowedMechanisms);
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -698,39 +697,39 @@ public class Key extends Storage {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Key Type: ");
-        if (keyType_ != null) {
-            buffer.append(keyType_.toString());
+        if (keyType != null) {
+            buffer.append(keyType.toString());
         } else {
             buffer.append("<unavailable>");
         }
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("ID: ");
-        buffer.append(id_.toString());
+        buffer.append(id.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Start Date: ");
-        buffer.append(startDate_.toString());
+        buffer.append(startDate.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("End Date: ");
-        buffer.append(endDate_.toString());
+        buffer.append(endDate.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Derive: ");
-        buffer.append(derive_.toString());
+        buffer.append(derive.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Local: ");
-        buffer.append(local_.toString());
+        buffer.append(local.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Key Generation Mechanism: ");
-        buffer.append(keyGenMechanism_.toString());
+        buffer.append(keyGenMechanism.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Allowed Mechanisms: ");
-        buffer.append(allowedMechanisms_.toString());
+        buffer.append(allowedMechanisms.toString());
 
         return buffer.toString();
     }

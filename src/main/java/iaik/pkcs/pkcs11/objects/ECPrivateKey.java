@@ -53,21 +53,22 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (ecdsaParams_ <> null)
- *             and (value_ <> null)
+ * @invariants (ecdsaParams <> null)
+ *             and (value <> null)
  *
  */
+// CHECKSTYLE:SKIP
 public class ECPrivateKey extends PrivateKey {
 
     /**
      * The DER-encoding of an X9.62 ECParameters value of this ECDSA key.
      */
-    protected ByteArrayAttribute ecdsaParams_;
+    protected ByteArrayAttribute ecdsaParams;
 
     /**
      * The X9.62 private value (d) of this ECDSA key.
      */
-    protected ByteArrayAttribute value_;
+    protected ByteArrayAttribute value;
 
     /**
      * Default Constructor.
@@ -77,7 +78,7 @@ public class ECPrivateKey extends PrivateKey {
      */
     public ECPrivateKey() {
         super();
-        keyType_.setLongValue(thisKeyType());
+        keyType.setLongValue(thisKeyType());
     }
 
     /**
@@ -98,7 +99,7 @@ public class ECPrivateKey extends PrivateKey {
     protected ECPrivateKey(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        keyType_.setLongValue(thisKeyType());
+        keyType.setLongValue(thisKeyType());
     }
 
     protected Long thisKeyType() {
@@ -141,8 +142,8 @@ public class ECPrivateKey extends PrivateKey {
      */
     protected static void putAttributesInTable(ECPrivateKey object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.EC_PARAMS, object.ecdsaParams_);
-        object.attributeTable_.put(Attribute.VALUE, object.value_);
+        object.attributeTable.put(Attribute.EC_PARAMS, object.ecdsaParams);
+        object.attributeTable.put(Attribute.VALUE, object.value);
     }
 
     /**
@@ -156,8 +157,8 @@ public class ECPrivateKey extends PrivateKey {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        ecdsaParams_ = new ByteArrayAttribute(Attribute.EC_PARAMS);
-        value_ = new ByteArrayAttribute(Attribute.VALUE);
+        ecdsaParams = new ByteArrayAttribute(Attribute.EC_PARAMS);
+        value = new ByteArrayAttribute(Attribute.VALUE);
 
         putAttributesInTable(this);
     }
@@ -175,8 +176,8 @@ public class ECPrivateKey extends PrivateKey {
     public java.lang.Object clone() {
         ECPrivateKey clone = (ECPrivateKey) super.clone();
 
-        clone.ecdsaParams_ = (ByteArrayAttribute) this.ecdsaParams_.clone();
-        clone.value_ = (ByteArrayAttribute) this.value_.clone();
+        clone.ecdsaParams = (ByteArrayAttribute) this.ecdsaParams.clone();
+        clone.value = (ByteArrayAttribute) this.value.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -207,8 +208,8 @@ public class ECPrivateKey extends PrivateKey {
 
         ECPrivateKey other = (ECPrivateKey) otherObject;
         return super.equals(other)
-                && this.ecdsaParams_.equals(other.ecdsaParams_)
-                && this.value_.equals(other.value_);
+                && this.ecdsaParams.equals(other.ecdsaParams)
+                && this.value.equals(other.value);
     }
 
     /**
@@ -219,7 +220,7 @@ public class ECPrivateKey extends PrivateKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getEcdsaParams() {
-        return ecdsaParams_;
+        return ecdsaParams;
     }
 
     /**
@@ -230,7 +231,7 @@ public class ECPrivateKey extends PrivateKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getValue() {
-        return value_;
+        return value;
     }
 
     /**
@@ -250,12 +251,12 @@ public class ECPrivateKey extends PrivateKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValue(session, objectHandle_, ecdsaParams_);
-        Object.getAttributeValue(session, objectHandle_, value_);
+        Object.getAttributeValue(session, objectHandle, ecdsaParams);
+        Object.getAttributeValue(session, objectHandle, value);
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -271,11 +272,11 @@ public class ECPrivateKey extends PrivateKey {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("ECDSA Params (DER, hex): ");
-        buffer.append(ecdsaParams_.toString());
+        buffer.append(ecdsaParams.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Private Value d (hex): ");
-        buffer.append(value_.toString());
+        buffer.append(value.toString());
 
         return buffer.toString();
     }

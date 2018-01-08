@@ -54,6 +54,7 @@ import iaik.pkcs.pkcs11.TokenException;
  * @invariants (ecdsaParams_ <> null)
  *             and (ecPoint_ <> null)
  */
+// CHECKSTYLE:SKIP
 public class SM2PublicKey extends ECPublicKey {
 
     public SM2PublicKey() {

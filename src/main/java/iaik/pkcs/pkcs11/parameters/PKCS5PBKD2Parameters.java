@@ -54,12 +54,13 @@ import sun.security.pkcs11.wrapper.CK_PKCS5_PBKD2_PARAMS;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (saltSource_ == SaltSourceType.SaltSpecified)
- *           and (saltSourceData_ <> null)
- *           and (pseudoRandomFunction_ == PseudoRandomFunctionType.HMACSha1)
- *           and (pseudoRandomFunctionData_ <> null)
+ * @invariants (saltSource == SaltSourceType.SaltSpecified)
+ *           and (saltSourceData <> null)
+ *           and (pseudoRandomFunction == PseudoRandomFunctionType.HMACSha1)
+ *           and (pseudoRandomFunctionData <> null)
  */
 @SuppressWarnings("restriction")
+// CHECKSTYLE:SKIP
 public class PKCS5PBKD2Parameters implements Parameters {
 
     /**
@@ -101,28 +102,28 @@ public class PKCS5PBKD2Parameters implements Parameters {
     /**
      * The source of the salt value.
      */
-    protected long saltSource_;
+    protected long saltSource;
 
     /**
      * The data used as the input for the salt source.
      */
-    protected byte[] saltSourceData_;
+    protected byte[] saltSourceData;
 
     /**
      * The number of iterations to perform when generating each block of random
      * data.
      */
-    protected long iterations_;
+    protected long iterations;
 
     /**
      * The pseudo-random function (PRF) to used to generate the key.
      */
-    protected long pseudoRandomFunction_;
+    protected long pseudoRandomFunction;
 
     /**
      * The data used as the input for PRF in addition to the salt value.
      */
-    protected byte[] pseudoRandomFunctionData_;
+    protected byte[] pseudoRandomFunctionData;
 
     /**
      * Create a new PBEDeriveParameters object with the given attributes.
@@ -164,11 +165,12 @@ public class PKCS5PBKD2Parameters implements Parameters {
                 "Illegal value for argument\"pseudoRandomFunction\": "
                     + Functions.toHexString(pseudoRandomFunction));
         }
-        saltSource_ = saltSource;
-        saltSourceData_ = Util.requireNonNull("saltSourceData", saltSourceData);
-        iterations_ = iterations;
-        pseudoRandomFunction_ = pseudoRandomFunction;
-        pseudoRandomFunctionData_ = Util.requireNonNull(
+        this.saltSource = saltSource;
+        this.saltSourceData = Util.requireNonNull("saltSourceData",
+                saltSourceData);
+        this.iterations = iterations;
+        this.pseudoRandomFunction = pseudoRandomFunction;
+        this.pseudoRandomFunctionData = Util.requireNonNull(
                 "pseudoRandomFunctionData", pseudoRandomFunctionData);
     }
 
@@ -188,9 +190,9 @@ public class PKCS5PBKD2Parameters implements Parameters {
         try {
             clone = (PKCS5PBKD2Parameters) super.clone();
 
-            clone.saltSourceData_ = (byte[]) this.saltSourceData_.clone();
-            clone.pseudoRandomFunctionData_
-                    = (byte[]) this.pseudoRandomFunctionData_.clone();
+            clone.saltSourceData = (byte[]) this.saltSourceData.clone();
+            clone.pseudoRandomFunctionData
+                    = (byte[]) this.pseudoRandomFunctionData.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
             throw new TokenRuntimeException(
@@ -212,11 +214,11 @@ public class PKCS5PBKD2Parameters implements Parameters {
     public Object getPKCS11ParamsObject() {
         CK_PKCS5_PBKD2_PARAMS params = new CK_PKCS5_PBKD2_PARAMS();
 
-        params.saltSource = saltSource_;
-        params.pSaltSourceData = saltSourceData_;
-        params.iterations = iterations_;
-        params.prf = pseudoRandomFunction_;
-        params.pPrfData = pseudoRandomFunctionData_;
+        params.saltSource = saltSource;
+        params.pSaltSourceData = saltSourceData;
+        params.iterations = iterations;
+        params.prf = pseudoRandomFunction;
+        params.pPrfData = pseudoRandomFunctionData;
 
         return params;
     }
@@ -229,7 +231,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
      * @postconditions (result == SaltSourceType.SaltSpecified)
      */
     public long getSaltSource() {
-        return saltSource_;
+        return saltSource;
     }
 
     /**
@@ -240,7 +242,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
      * @postconditions (result <> null)
      */
     public byte[] getSaltSourceData() {
-        return saltSourceData_;
+        return saltSourceData;
     }
 
     /**
@@ -253,7 +255,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
      * @postconditions
      */
     public long getIterations() {
-        return iterations_;
+        return iterations;
     }
 
     /**
@@ -264,7 +266,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
      * @postconditions (result == PseudoRandomFunctionType.HMACSha1)
      */
     public long getPseudoRandomFunction() {
-        return pseudoRandomFunction_;
+        return pseudoRandomFunction;
     }
 
     /**
@@ -275,7 +277,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
      * @postconditions (result <> null)
      */
     public byte[] getPseudoRandomFunctionData() {
-        return pseudoRandomFunctionData_;
+        return pseudoRandomFunctionData;
     }
 
     /**
@@ -293,7 +295,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
                     "Illegal value for argument\"saltSource\": "
                     + Functions.toHexString(saltSource));
         }
-        saltSource_ = saltSource;
+        this.saltSource = saltSource;
     }
 
     /**
@@ -305,7 +307,8 @@ public class PKCS5PBKD2Parameters implements Parameters {
      * @postconditions
      */
     public void setSaltSourceData(byte[] saltSourceData) {
-        saltSourceData_ = Util.requireNonNull("saltSourceData", saltSourceData);
+        this.saltSourceData = Util.requireNonNull("saltSourceData",
+                saltSourceData);
     }
 
     /**
@@ -319,7 +322,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
      * @postconditions
      */
     public void setIterations(long iterations) {
-        iterations_ = iterations;
+        this.iterations = iterations;
     }
 
     /**
@@ -339,7 +342,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
                 "Illegal value for argument\"pseudoRandomFunction\": "
                 + Functions.toHexString(pseudoRandomFunction));
         }
-        pseudoRandomFunction_ = pseudoRandomFunction;
+        this.pseudoRandomFunction = pseudoRandomFunction;
     }
 
     /**
@@ -352,7 +355,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
      * @postconditions
      */
     public void setPseudoRandomFunctionData(byte[] pseudoRandomFunctionData) {
-        pseudoRandomFunctionData_ = Util.requireNonNull(
+        this.pseudoRandomFunctionData = Util.requireNonNull(
                 "pseudoRandomFunctionData", pseudoRandomFunctionData);
     }
 
@@ -368,7 +371,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
 
         buffer.append(Constants.INDENT);
         buffer.append("Salt Source: ");
-        if (saltSource_ == SaltSourceType.SALT_SPECIFIED) {
+        if (saltSource == SaltSourceType.SALT_SPECIFIED) {
             buffer.append("Salt Specified");
         } else {
             buffer.append("<unknown>");
@@ -376,15 +379,15 @@ public class PKCS5PBKD2Parameters implements Parameters {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Salt Source Data (hex): ");
-        buffer.append(Functions.toHexString(saltSourceData_));
+        buffer.append(Functions.toHexString(saltSourceData));
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Iterations (dec): ");
-        buffer.append(iterations_);
+        buffer.append(iterations);
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Pseudo-Random Function: ");
-        if (pseudoRandomFunction_ == PseudoRandomFunctionType.HMAC_SHA1) {
+        if (pseudoRandomFunction == PseudoRandomFunctionType.HMAC_SHA1) {
             buffer.append("HMAC SHA-1");
         } else {
             buffer.append("<unknown>");
@@ -392,7 +395,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Pseudo-Random Function Data (hex): ");
-        buffer.append(Functions.toHexString(pseudoRandomFunctionData_));
+        buffer.append(Functions.toHexString(pseudoRandomFunctionData));
 
         return buffer.toString();
     }
@@ -419,12 +422,12 @@ public class PKCS5PBKD2Parameters implements Parameters {
         }
 
         PKCS5PBKD2Parameters other = (PKCS5PBKD2Parameters) otherObject;
-        return (this.saltSource_ == other.saltSource_)
-                && Functions.equals(this.saltSourceData_, other.saltSourceData_)
-                && (this.iterations_ == other.iterations_)
-                && (this.pseudoRandomFunction_ == other.pseudoRandomFunction_)
-                && Functions.equals(this.pseudoRandomFunctionData_,
-                        other.pseudoRandomFunctionData_);
+        return (this.saltSource == other.saltSource)
+                && Functions.equals(this.saltSourceData, other.saltSourceData)
+                && (this.iterations == other.iterations)
+                && (this.pseudoRandomFunction == other.pseudoRandomFunction)
+                && Functions.equals(this.pseudoRandomFunctionData,
+                        other.pseudoRandomFunctionData);
     }
 
     /**
@@ -437,9 +440,9 @@ public class PKCS5PBKD2Parameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return ((int) saltSource_) ^ Functions.hashCode(saltSourceData_)
-            ^ ((int) iterations_) ^ ((int) pseudoRandomFunction_)
-            ^ Functions.hashCode(pseudoRandomFunctionData_);
+        return ((int) saltSource) ^ Functions.hashCode(saltSourceData)
+            ^ ((int) iterations) ^ ((int) pseudoRandomFunction)
+            ^ Functions.hashCode(pseudoRandomFunctionData);
     }
 
 }

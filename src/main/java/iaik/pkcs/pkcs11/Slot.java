@@ -64,7 +64,7 @@ import sun.security.pkcs11.wrapper.CK_SLOT_INFO;
  * @see iaik.pkcs.pkcs11.Token
  * @author  Karl Scheibelhofer
  * @version 1.0
- * @invariants (module_ <> null)
+ * @invariants (module <> null)
  */
 @SuppressWarnings("restriction")
 public class Slot {
@@ -72,18 +72,19 @@ public class Slot {
     /**
      * The module that created this slot object.
      */
-    protected Module module_;
+    protected Module module;
 
     /**
      * The identifier of the slot.
      */
-    protected long slotID_;
+    // CHECKSTYLE:SKIP
+    protected long slotID;
 
     /**
      * True, if UTF8 encoding is used as character encoding for character array
      * attributes and PINs.
      */
-    protected boolean useUtf8Encoding_ = true;
+    protected boolean useUtf8Encoding = true;
 
     /**
      * The constructor that takes a reference to the module and the slot ID.
@@ -95,9 +96,10 @@ public class Slot {
      * @preconditions (pkcs11Module <> null)
      * @postconditions
      */
-    protected Slot(Module module, long slotID) {
-        module_ = Util.requireNonNull("module", module);
-        slotID_ = slotID;
+    protected Slot(Module module,
+            long slotID) { // CHECKSTYLE:SKIP
+        this.module = Util.requireNonNull("module", module);
+        this.slotID = slotID;
     }
 
     /**
@@ -122,8 +124,8 @@ public class Slot {
         }
 
         Slot other = (Slot) otherObject;
-        return (this.slotID_ == other.slotID_)
-                && this.module_.equals(other.module_);
+        return (this.slotID == other.slotID)
+                && this.module.equals(other.module);
     }
 
     /**
@@ -133,7 +135,7 @@ public class Slot {
      *          true, if UTF8 shall be used
      */
     public void setUtf8Encoding(boolean useUtf8Encoding) {
-        useUtf8Encoding_ = useUtf8Encoding;
+        this.useUtf8Encoding = useUtf8Encoding;
     }
 
     /**
@@ -142,7 +144,7 @@ public class Slot {
      *         attributes and PINs.
      */
     public boolean isSetUtf8Encoding() {
-        return useUtf8Encoding_;
+        return useUtf8Encoding;
     }
 
     /**
@@ -153,7 +155,7 @@ public class Slot {
      * @postconditions
      */
     public Module getModule() {
-        return module_;
+        return module;
     }
 
     /**
@@ -163,8 +165,9 @@ public class Slot {
      * @preconditions
      * @postconditions
      */
+    // CHECKSTYLE:SKIP
     public long getSlotID() {
-        return slotID_;
+        return slotID;
     }
 
     /**
@@ -180,7 +183,7 @@ public class Slot {
         throws TokenException {
         CK_SLOT_INFO ckSlotInfo;
         try {
-            ckSlotInfo = module_.getPKCS11Module().C_GetSlotInfo(slotID_);
+            ckSlotInfo = module.getPKCS11Module().C_GetSlotInfo(slotID);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -220,7 +223,7 @@ public class Slot {
      */
     @Override
     public int hashCode() {
-        return (int) slotID_;
+        return (int) slotID;
     }
 
     /**
@@ -233,11 +236,11 @@ public class Slot {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append("Slot ID: 0x");
-        buffer.append(Functions.toHexString(slotID_));
+        buffer.append(Functions.toHexString(slotID));
         buffer.append(Constants.NEWLINE);
 
         buffer.append("Module: ");
-        buffer.append(module_.toString());
+        buffer.append(module.toString());
 
         return buffer.toString();
     }

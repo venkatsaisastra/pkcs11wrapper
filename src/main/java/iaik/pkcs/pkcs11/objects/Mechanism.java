@@ -58,7 +58,7 @@ public class Mechanism extends Object {
     /**
      * The mechanism Type of this Mechanism object.
      */
-    protected LongAttribute mechanismType_;
+    protected LongAttribute mechanismType;
 
     /**
      * The default constructor. An application use this constructor to
@@ -101,8 +101,8 @@ public class Mechanism extends Object {
      */
     protected static void putAttributesInTable(Mechanism object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.MECHANISM_TYPE,
-                object.mechanismType_);
+        object.attributeTable.put(Attribute.MECHANISM_TYPE,
+                object.mechanismType);
     }
 
     /**
@@ -113,7 +113,7 @@ public class Mechanism extends Object {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        mechanismType_ = new LongAttribute(Attribute.MECHANISM_TYPE);
+        mechanismType = new LongAttribute(Attribute.MECHANISM_TYPE);
 
         putAttributesInTable(this);
     }
@@ -127,7 +127,7 @@ public class Mechanism extends Object {
     public java.lang.Object clone() {
         Mechanism clone = (Mechanism) super.clone();
 
-        clone.mechanismType_ = (LongAttribute) this.mechanismType_.clone();
+        clone.mechanismType = (LongAttribute) this.mechanismType.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -156,7 +156,7 @@ public class Mechanism extends Object {
 
         Mechanism other = (Mechanism) otherObject;
         return super.equals(other)
-                && this.mechanismType_.equals(other.mechanismType_);
+                && this.mechanismType.equals(other.mechanismType);
     }
 
     /**
@@ -178,18 +178,18 @@ public class Mechanism extends Object {
          * read multiple attributes at once might cause a performance gain
          * but we only have one attribute here.
          */
-        Object.getAttributeValue(session, objectHandle_, mechanismType_);
+        Object.getAttributeValue(session, objectHandle, mechanismType);
     }
 
     /**
      * @return returns the mechanism type of this mechanism object.
      */
     public LongAttribute getMechanismType() {
-        return mechanismType_;
+        return mechanismType;
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -203,7 +203,7 @@ public class Mechanism extends Object {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Mechanism Type: ");
-        buffer.append(mechanismType_.toString());
+        buffer.append(mechanismType.toString());
 
         return buffer.toString();
     }
@@ -216,6 +216,6 @@ public class Mechanism extends Object {
      */
     @Override
     public int hashCode() {
-        return mechanismType_.hashCode();
+        return mechanismType.hashCode();
     }
 }

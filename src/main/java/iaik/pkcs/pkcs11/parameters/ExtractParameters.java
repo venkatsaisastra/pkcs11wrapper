@@ -58,7 +58,7 @@ public class ExtractParameters implements Parameters {
      * The bit of the base key that should be used as the first bit of the
      * derived key.
      */
-    protected long bitIndex_;
+    protected long bitIndex;
 
     /**
      * Create a new ExtractParameters object with the given bit index.
@@ -70,7 +70,7 @@ public class ExtractParameters implements Parameters {
      * @postconditions
      */
     public ExtractParameters(long bitIndex) {
-        bitIndex_ = bitIndex;
+        this.bitIndex = bitIndex;
     }
 
     /**
@@ -106,7 +106,7 @@ public class ExtractParameters implements Parameters {
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        return new Long(bitIndex_);
+        return new Long(bitIndex);
     }
 
     /**
@@ -119,7 +119,7 @@ public class ExtractParameters implements Parameters {
      * @postconditions
      */
     public long getBitIndex() {
-        return bitIndex_;
+        return bitIndex;
     }
 
     /**
@@ -133,7 +133,7 @@ public class ExtractParameters implements Parameters {
      * @postconditions
      */
     public void setBitIndex(long bitIndex) {
-        bitIndex_ = bitIndex;
+        this.bitIndex = bitIndex;
     }
 
     /**
@@ -148,7 +148,7 @@ public class ExtractParameters implements Parameters {
 
         buffer.append(Constants.INDENT);
         buffer.append("Bit Index (dec): ");
-        buffer.append(bitIndex_);
+        buffer.append(bitIndex);
 
         return buffer.toString();
     }
@@ -175,7 +175,7 @@ public class ExtractParameters implements Parameters {
         }
 
         ExtractParameters other = (ExtractParameters) otherObject;
-        return this.bitIndex_ == other.bitIndex_;
+        return this.bitIndex == other.bitIndex;
     }
 
     /**
@@ -188,7 +188,7 @@ public class ExtractParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return (int) bitIndex_;
+        return (int) bitIndex;
     }
 
 }

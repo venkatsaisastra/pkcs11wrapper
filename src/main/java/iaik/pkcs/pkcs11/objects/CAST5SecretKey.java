@@ -53,6 +53,7 @@ package iaik.pkcs.pkcs11.objects;
  *             and (valueLen_ <> null)
  */
 @Deprecated
+// CHECKSTYLE:SKIP
 public class CAST5SecretKey extends CAST128SecretKey {
 
 }

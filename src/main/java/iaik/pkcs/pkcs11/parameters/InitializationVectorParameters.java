@@ -55,27 +55,26 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (initializationVector_ <> null)
+ * @invariants (initializationVector <> null)
  */
 public class InitializationVectorParameters implements Parameters {
 
     /**
      * The initialization vector.
      */
-    protected byte[] initializationVector_;
+    protected byte[] iv;
 
     /**
      * Create a new InitializationVectorParameters object with the given
      * initialization vector.
      *
-     * @param initializationVector
+     * @param iv
      *          The initialization vector.
      * @preconditions (initializationVector <> null)
      * @postconditions
      */
-    public InitializationVectorParameters(byte[] initializationVector) {
-        initializationVector_ = Util.requireNonNull("initializationVector",
-                initializationVector);
+    public InitializationVectorParameters(byte[] iv) {
+        this.iv = Util.requireNonNull("iv", iv);
     }
 
     /**
@@ -93,8 +92,7 @@ public class InitializationVectorParameters implements Parameters {
 
         try {
             clone = (InitializationVectorParameters) super.clone();
-            clone.initializationVector_
-                    = (byte[]) this.initializationVector_.clone();
+            clone.iv = (byte[]) this.iv.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
             throw new TokenRuntimeException(
@@ -113,7 +111,7 @@ public class InitializationVectorParameters implements Parameters {
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        return initializationVector_;
+        return iv;
     }
 
     /**
@@ -124,20 +122,19 @@ public class InitializationVectorParameters implements Parameters {
      * @postconditions (result <> null)
      */
     public byte[] getInitializationVector() {
-        return initializationVector_;
+        return iv;
     }
 
     /**
      * Set the initialization vector.
      *
-     * @param initializationVector
+     * @param iv
      *          The initialization vector.
      * @preconditions (initializationVector <> null)
      * @postconditions
      */
-    public void setInitializationVector(byte[] initializationVector) {
-        initializationVector_ = Util.requireNonNull("initializationVector",
-                initializationVector);
+    public void setInitializationVector(byte[] iv) {
+        this.iv = Util.requireNonNull("iv", iv);
     }
 
     /**
@@ -152,7 +149,7 @@ public class InitializationVectorParameters implements Parameters {
 
         buffer.append(Constants.INDENT);
         buffer.append("Initialization Vector (hex): ");
-        buffer.append(Functions.toHexString(initializationVector_));
+        buffer.append(Functions.toHexString(iv));
 
         return buffer.toString();
     }
@@ -180,8 +177,7 @@ public class InitializationVectorParameters implements Parameters {
 
         InitializationVectorParameters other
                 = (InitializationVectorParameters) otherObject;
-        return Functions.equals(this.initializationVector_,
-                    other.initializationVector_);
+        return Functions.equals(this.iv, other.iv);
     }
 
     /**
@@ -194,7 +190,7 @@ public class InitializationVectorParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return Functions.hashCode(initializationVector_);
+        return Functions.hashCode(iv);
     }
 
 }

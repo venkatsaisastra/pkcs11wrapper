@@ -56,10 +56,10 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  */
 public class OpaqueParameters implements Parameters {
 
-    protected byte[] bytes_;
+    protected byte[] bytes;
 
     public OpaqueParameters(byte[] bytes) {
-        bytes_ = bytes;
+        this.bytes = bytes;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class OpaqueParameters implements Parameters {
         try {
             clone = (OpaqueParameters) super.clone();
 
-            clone.bytes_ = (byte[]) this.bytes_.clone();
+            clone.bytes = (byte[]) this.bytes.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
             throw new TokenRuntimeException(
@@ -88,7 +88,7 @@ public class OpaqueParameters implements Parameters {
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        return bytes_;
+        return bytes;
     }
 
     /**
@@ -100,11 +100,11 @@ public class OpaqueParameters implements Parameters {
      * @postconditions (result <> null)
      */
     public byte[] getBytes() {
-        return bytes_;
+        return bytes;
     }
 
-    public void setIDA(byte[] bytes) {
-        bytes_ = Util.requireNonNull("bytes_", bytes);
+    public void setBytes(byte[] bytes) {
+        this.bytes = Util.requireNonNull("bytes", bytes);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class OpaqueParameters implements Parameters {
 
         buffer.append(Constants.INDENT);
         buffer.append("Bytes (hex): ");
-        buffer.append(Functions.toHexString(bytes_));
+        buffer.append(Functions.toHexString(bytes));
 
         return buffer.toString();
     }
@@ -129,12 +129,12 @@ public class OpaqueParameters implements Parameters {
         }
 
         OpaqueParameters other = (OpaqueParameters) otherObject;
-        return Functions.equals(this.bytes_, other.bytes_);
+        return Functions.equals(this.bytes, other.bytes);
     }
 
     @Override
     public int hashCode() {
-        return Functions.hashCode(bytes_);
+        return Functions.hashCode(bytes);
     }
 
 }

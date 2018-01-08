@@ -58,8 +58,8 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (keyType_ <> null)
- *             and (local_ <> null)
+ * @invariants (keyType <> null)
+ *             and (local <> null)
  */
 public class DomainParameters extends Storage {
 
@@ -103,19 +103,19 @@ public class DomainParameters extends Storage {
      * The currently set vendor defined DomainParameters builder, or null.
      */
     protected static VendorDefinedDomainParametersBuilder
-            vendorDomainParametersBuilder_;
+            vendorDomainParametersBuilder;
 
     /**
      * The type of this key. Its value is one of KeyType, or one that has a
      * bigger value than VENDOR_DEFINED.
      */
-    protected KeyTypeAttribute keyType_;
+    protected KeyTypeAttribute keyType;
 
     /**
      * True, if this key was created (generated or copied from a different key)
      * on the token.
      */
-    protected BooleanAttribute local_;
+    protected BooleanAttribute local;
 
     /**
      * The default constructor. An application uses this constructor to
@@ -127,7 +127,7 @@ public class DomainParameters extends Storage {
      */
     public DomainParameters() {
         super();
-        objectClass_.setLongValue(ObjectClass.DOMAIN_PARAMETERS);
+        objectClass.setLongValue(ObjectClass.DOMAIN_PARAMETERS);
     }
 
     /**
@@ -147,7 +147,7 @@ public class DomainParameters extends Storage {
     protected DomainParameters(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        objectClass_.setLongValue(ObjectClass.DOMAIN_PARAMETERS);
+        objectClass.setLongValue(ObjectClass.DOMAIN_PARAMETERS);
     }
 
     /**
@@ -163,7 +163,7 @@ public class DomainParameters extends Storage {
      */
     public static void setVendorDefinedDomainParametersBuilder(
         VendorDefinedDomainParametersBuilder builder) {
-        vendorDomainParametersBuilder_ = builder;
+        vendorDomainParametersBuilder = builder;
     }
 
     /**
@@ -176,7 +176,7 @@ public class DomainParameters extends Storage {
      */
     public static VendorDefinedDomainParametersBuilder
         getVendorDefinedDomainParametersBuilder() {
-        return vendorDomainParametersBuilder_;
+        return vendorDomainParametersBuilder;
     }
 
     /**
@@ -186,7 +186,7 @@ public class DomainParameters extends Storage {
      * sub-class.
      * If the key type is a vendor defined or an unknown it uses the
      * VendorDefinedDomainParametersBuilder set by the application. If no
-     * domain parameters could be constructed, this method returns null.
+     * domain parameters could be constructed, Returns null.
      *
      * @param session
      *          The session to use for reading attributes. This session must
@@ -258,9 +258,9 @@ public class DomainParameters extends Storage {
         Util.requireNonNull("session", session);
 
         Object newObject;
-        if (vendorDomainParametersBuilder_ != null) {
+        if (vendorDomainParametersBuilder != null) {
             try {
-                newObject = vendorDomainParametersBuilder_.build(session,
+                newObject = vendorDomainParametersBuilder.build(session,
                         objectHandle);
             } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
                 // we can just treat it like some unknown type of domain
@@ -288,8 +288,8 @@ public class DomainParameters extends Storage {
      */
     protected static void putAttributesInTable(DomainParameters object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.KEY_TYPE, object.keyType_);
-        object.attributeTable_.put(Attribute.LOCAL, object.local_);
+        object.attributeTable.put(Attribute.KEY_TYPE, object.keyType);
+        object.attributeTable.put(Attribute.LOCAL, object.local);
     }
 
     /**
@@ -303,8 +303,8 @@ public class DomainParameters extends Storage {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        keyType_ = new KeyTypeAttribute();
-        local_ = new BooleanAttribute(Attribute.LOCAL);
+        keyType = new KeyTypeAttribute();
+        local = new BooleanAttribute(Attribute.LOCAL);
 
         putAttributesInTable(this);
     }
@@ -322,8 +322,8 @@ public class DomainParameters extends Storage {
     public java.lang.Object clone() {
         DomainParameters clone = (DomainParameters) super.clone();
 
-        clone.keyType_ = (KeyTypeAttribute) this.keyType_.clone();
-        clone.local_ = (BooleanAttribute) this.local_.clone();
+        clone.keyType = (KeyTypeAttribute) this.keyType.clone();
+        clone.local = (BooleanAttribute) this.local.clone();
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
 
@@ -353,8 +353,8 @@ public class DomainParameters extends Storage {
 
         DomainParameters other = (DomainParameters) otherObject;
         return super.equals(other)
-                && this.keyType_.equals(other.keyType_)
-                && this.local_.equals(other.local_);
+                && this.keyType.equals(other.keyType)
+                && this.local.equals(other.local);
     }
 
     /**
@@ -367,7 +367,7 @@ public class DomainParameters extends Storage {
      * @postconditions (result <> null)
      */
     public LongAttribute getKeyType() {
-        return keyType_;
+        return keyType;
     }
 
     /**
@@ -380,7 +380,7 @@ public class DomainParameters extends Storage {
      */
     @Override
     public int hashCode() {
-        return keyType_.hashCode() ^ local_.hashCode();
+        return keyType.hashCode() ^ local.hashCode();
     }
 
     /**
@@ -392,7 +392,7 @@ public class DomainParameters extends Storage {
      * @postconditions (result <> null)
      */
     public BooleanAttribute isLocal() {
-        return local_;
+        return local;
     }
 
     /**
@@ -412,11 +412,11 @@ public class DomainParameters extends Storage {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValue(session, objectHandle_, local_);
+        Object.getAttributeValue(session, objectHandle, local);
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -432,15 +432,15 @@ public class DomainParameters extends Storage {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Key Type: ");
-        if (keyType_ != null) {
-            buffer.append(keyType_.toString());
+        if (keyType != null) {
+            buffer.append(keyType.toString());
         } else {
             buffer.append("<unavailable>");
         }
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Local: ");
-        buffer.append(local_.toString());
+        buffer.append(local.toString());
 
         return buffer.toString();
     }

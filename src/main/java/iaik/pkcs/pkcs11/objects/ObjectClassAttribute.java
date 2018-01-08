@@ -75,8 +75,8 @@ public class ObjectClassAttribute extends LongAttribute {
     protected String getValueString() {
         String valueString;
 
-        if ((ckAttribute_ != null) && (ckAttribute_.pValue != null)) {
-            valueString = Object.getObjectClassName((Long) ckAttribute_.pValue);
+        if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
+            valueString = Object.getObjectClassName((Long) ckAttribute.pValue);
         } else {
             valueString = "<NULL_PTR>";
         }

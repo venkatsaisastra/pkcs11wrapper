@@ -62,7 +62,7 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (attributes_ <> null)
+ * @invariants (attributes <> null)
  */
 public class GenericTemplate extends Object {
 
@@ -75,7 +75,7 @@ public class GenericTemplate extends Object {
     public GenericTemplate() {
         super();
         // we do not want any attributes in this object by default
-        attributeTable_.clear();
+        attributeTable.clear();
     }
 
     /**
@@ -88,8 +88,8 @@ public class GenericTemplate extends Object {
      */
     public void addAttribute(Attribute attribute) {
         Util.requireNonNull("attribute", attribute);
-        //attributes_.addElement(attribute);
-        attributeTable_.put(attribute.getType(), attribute);
+        //attributes.addElement(attribute);
+        attributeTable.put(attribute.getType(), attribute);
     }
 
     /**
@@ -105,12 +105,12 @@ public class GenericTemplate extends Object {
     public void addAllAttributes(Object object) {
         Util.requireNonNull("object", object);
         Enumeration<Long> newAttributeKeysEnumeration
-            = object.attributeTable_.keys();
+            = object.attributeTable.keys();
         while (newAttributeKeysEnumeration.hasMoreElements()) {
             Long newKey = newAttributeKeysEnumeration.nextElement();
-            attributeTable_.put(newKey, object.attributeTable_.get(newKey));
+            attributeTable.put(newKey, object.attributeTable.get(newKey));
         }
-        // attributeTable_.putAll(); does not exist in JDK 1.1
+        // attributeTable.putAll(); does not exist in JDK 1.1
     }
 
     /**
@@ -127,11 +127,11 @@ public class GenericTemplate extends Object {
     public void addAllPresentAttributes(Object object) {
         Util.requireNonNull("object", object);
         Enumeration<Attribute> attributeEnumaeration
-            = object.attributeTable_.elements();
+            = object.attributeTable.elements();
         while (attributeEnumaeration.hasMoreElements()) {
             Attribute attribute = attributeEnumaeration.nextElement();
             if (attribute.isPresent()) {
-                attributeTable_.put(attribute.getType(), attribute);
+                attributeTable.put(attribute.getType(), attribute);
             }
         }
     }
@@ -149,16 +149,16 @@ public class GenericTemplate extends Object {
     public java.lang.Object clone() {
         GenericTemplate clone = (GenericTemplate) super.clone();
         // we do not want any attributes in this object by default
-        clone.attributeTable_.clear();
+        clone.attributeTable.clear();
 
         // make a deep clone of all attributes
         Enumeration<Attribute> attributesEnumeration
-            = attributeTable_.elements();
+            = attributeTable.elements();
         while (attributesEnumeration.hasMoreElements()) {
             Attribute attribute = attributesEnumeration.nextElement();
             Attribute clonedAttribute = (Attribute) attribute.clone();
             // put all cloned attributes into the new table
-            clone.attributeTable_.put(clonedAttribute.getType(),
+            clone.attributeTable.put(clonedAttribute.getType(),
                 clonedAttribute);
         }
 
@@ -178,7 +178,7 @@ public class GenericTemplate extends Object {
      */
     public boolean containsAttribute(Attribute attribute) {
         Util.requireNonNull("attribute", attribute);
-        return attributeTable_.containsKey(attribute.getType());
+        return attributeTable.containsKey(attribute.getType());
     }
 
     /**
@@ -203,7 +203,7 @@ public class GenericTemplate extends Object {
         }
 
         GenericTemplate other = (GenericTemplate) otherObject;
-        return this.attributeTable_.equals(other.attributeTable_);
+        return this.attributeTable.equals(other.attributeTable);
     }
 
     /**
@@ -216,7 +216,7 @@ public class GenericTemplate extends Object {
      */
     @Override
     public int hashCode() {
-        return attributeTable_.hashCode();
+        return attributeTable.hashCode();
     }
 
     /**
@@ -234,7 +234,7 @@ public class GenericTemplate extends Object {
     @Override
     public void readAttributes(Session session)
         throws TokenException {
-        if (objectHandle_ == -1) {
+        if (objectHandle == -1) {
             throw new TokenException(
                 "Object handle is not set to an valid value. "
                 + "Use setObjectHandle(long) to set.");
@@ -243,10 +243,10 @@ public class GenericTemplate extends Object {
         super.readAttributes(session);
 
         Enumeration<Attribute> attributeEnumeration
-            = attributeTable_.elements();
+            = attributeTable.elements();
         while (attributeEnumeration.hasMoreElements()) {
             Attribute attribute = attributeEnumeration.nextElement();
-            Object.getAttributeValue(session, objectHandle_, attribute);
+            Object.getAttributeValue(session, objectHandle, attribute);
         }
     }
 
@@ -267,7 +267,7 @@ public class GenericTemplate extends Object {
     public Attribute removeAttribute(Attribute attribute) {
         Util.requireNonNull("attribute", attribute);
 
-        return (Attribute) attributeTable_.remove(attribute.getType());
+        return (Attribute) attributeTable.remove(attribute.getType());
     }
 
     /**
@@ -285,9 +285,9 @@ public class GenericTemplate extends Object {
      */
     public void removeAllAttributes(Object object) {
         Util.requireNonNull("object", object);
-        Enumeration<Long> keysToRemove = object.attributeTable_.keys();
+        Enumeration<Long> keysToRemove = object.attributeTable.keys();
         while (keysToRemove.hasMoreElements()) {
-            attributeTable_.remove(keysToRemove.nextElement());
+            attributeTable.remove(keysToRemove.nextElement());
         }
     }
 
@@ -307,12 +307,12 @@ public class GenericTemplate extends Object {
      */
     public void removeAllPresentAttributes(Object object) {
         Util.requireNonNull("object", object);
-        Enumeration<Long> keysToRemove = object.attributeTable_.keys();
+        Enumeration<Long> keysToRemove = object.attributeTable.keys();
         while (keysToRemove.hasMoreElements()) {
-            Attribute attribute = object.attributeTable_.get(keysToRemove
+            Attribute attribute = object.attributeTable.get(keysToRemove
                 .nextElement());
             if (attribute.isPresent()) {
-                attributeTable_.remove(attribute);
+                attributeTable.remove(attribute);
             }
         }
     }
@@ -329,7 +329,7 @@ public class GenericTemplate extends Object {
     protected void setAllPresentFlags(boolean present) {
         // make a deep clone of all attributes
         Enumeration<Attribute> attributesEnumeration
-            = attributeTable_.elements();
+            = attributeTable.elements();
         while (attributesEnumeration.hasMoreElements()) {
             Attribute attribute = attributesEnumeration.nextElement();
             attribute.setPresent(present);
@@ -337,7 +337,7 @@ public class GenericTemplate extends Object {
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -351,7 +351,7 @@ public class GenericTemplate extends Object {
     }
 
     /**
-     * This method returns a string representation of the current object.
+     * Returns a string representation of the current object.
      * Some parameters can be set to manipulate the output. The output is
      * only for debugging purposes and should not be used for other
      * purposes.
@@ -371,7 +371,7 @@ public class GenericTemplate extends Object {
         StringBuilder buffer = new StringBuilder(1024);
 
         Enumeration<Attribute> attributesEnumeration
-            = attributeTable_.elements();
+            = attributeTable.elements();
         boolean firstAttribute = !newline;
         while (attributesEnumeration.hasMoreElements()) {
             Attribute attribute = attributesEnumeration.nextElement();

@@ -63,22 +63,23 @@ public class Storage extends Object {
     /**
      * True, if object is a token object (not a session object).
      */
-    protected BooleanAttribute token_;
+    protected BooleanAttribute token;
 
     /**
      * True, if this is a private object.
      */
+    // CHECKSTYLE:SKIP
     protected BooleanAttribute private_;
 
     /**
      * True, if this object is modifiable.
      */
-    protected BooleanAttribute modifiable_;
+    protected BooleanAttribute modifiable;
 
     /**
      * The label of this object.
      */
-    protected CharArrayAttribute label_;
+    protected CharArrayAttribute label;
 
     /**
      * The default constructor. An application use this constructor to
@@ -127,10 +128,10 @@ public class Storage extends Object {
      */
     protected static void putAttributesInTable(Storage object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.TOKEN, object.token_);
-        object.attributeTable_.put(Attribute.PRIVATE, object.private_);
-        object.attributeTable_.put(Attribute.MODIFIABLE, object.modifiable_);
-        object.attributeTable_.put(Attribute.LABEL, object.label_);
+        object.attributeTable.put(Attribute.TOKEN, object.token);
+        object.attributeTable.put(Attribute.PRIVATE, object.private_);
+        object.attributeTable.put(Attribute.MODIFIABLE, object.modifiable);
+        object.attributeTable.put(Attribute.LABEL, object.label);
     }
 
     /**
@@ -144,10 +145,10 @@ public class Storage extends Object {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        token_ = new BooleanAttribute(Attribute.TOKEN);
+        token = new BooleanAttribute(Attribute.TOKEN);
         private_ = new BooleanAttribute(Attribute.PRIVATE);
-        modifiable_ = new BooleanAttribute(Attribute.MODIFIABLE);
-        label_ = new CharArrayAttribute(Attribute.LABEL);
+        modifiable = new BooleanAttribute(Attribute.MODIFIABLE);
+        label = new CharArrayAttribute(Attribute.LABEL);
 
         putAttributesInTable(this);
     }
@@ -165,10 +166,10 @@ public class Storage extends Object {
     public java.lang.Object clone() {
         Storage clone = (Storage) super.clone();
 
-        clone.token_ = (BooleanAttribute) this.token_.clone();
+        clone.token = (BooleanAttribute) this.token.clone();
         clone.private_ = (BooleanAttribute) this.private_.clone();
-        clone.modifiable_ = (BooleanAttribute) this.modifiable_.clone();
-        clone.label_ = (CharArrayAttribute) this.label_.clone();
+        clone.modifiable = (BooleanAttribute) this.modifiable.clone();
+        clone.label = (CharArrayAttribute) this.label.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -199,10 +200,10 @@ public class Storage extends Object {
 
         Storage other = (Storage) otherObject;
         return super.equals(other)
-                && this.token_.equals(other.token_)
+                && this.token.equals(other.token)
                 && this.private_.equals(other.private_)
-                && this.modifiable_.equals(other.modifiable_)
-                && this.label_.equals(other.label_);
+                && this.modifiable.equals(other.modifiable)
+                && this.label.equals(other.label);
     }
 
     /**
@@ -213,7 +214,7 @@ public class Storage extends Object {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getToken() {
-        return token_;
+        return token;
     }
 
     /**
@@ -235,7 +236,7 @@ public class Storage extends Object {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getModifiable() {
-        return modifiable_;
+        return modifiable;
     }
 
     /**
@@ -246,7 +247,7 @@ public class Storage extends Object {
      * @postconditions (result <> null)
      */
     public CharArrayAttribute getLabel() {
-        return label_;
+        return label;
     }
 
     /**
@@ -266,12 +267,12 @@ public class Storage extends Object {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            token_, private_, modifiable_, label_ });
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            token, private_, modifiable, label });
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -287,7 +288,7 @@ public class Storage extends Object {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Token: ");
-        buffer.append(token_.toString());
+        buffer.append(token.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Private: ");
@@ -295,11 +296,11 @@ public class Storage extends Object {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Modifiable: ");
-        buffer.append(modifiable_.toString());
+        buffer.append(modifiable.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Label: ");
-        buffer.append(label_.toString());
+        buffer.append(label.toString());
 
         return buffer.toString();
     }
@@ -314,8 +315,8 @@ public class Storage extends Object {
      */
     @Override
     public int hashCode() {
-        return token_.hashCode() ^ private_.hashCode() ^ modifiable_.hashCode()
-            ^ label_.hashCode();
+        return token.hashCode() ^ private_.hashCode() ^ modifiable.hashCode()
+            ^ label.hashCode();
     }
 
 }

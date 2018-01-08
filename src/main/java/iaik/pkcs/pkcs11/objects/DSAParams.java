@@ -53,32 +53,33 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (prime_ <> null)
- *             and (subprime_ <> null)
- *             and (base_ <> null)
- *             and (primeBits_ <> null)
+ * @invariants (prime <> null)
+ *             and (subprime <> null)
+ *             and (base <> null)
+ *             and (primeBits <> null)
  */
+// CHECKSTYLE:SKIP
 public class DSAParams extends DomainParameters {
 
     /**
      * The prime (p) of this DSA key.
      */
-    protected ByteArrayAttribute prime_;
+    protected ByteArrayAttribute prime;
 
     /**
      * The sub-prime (q) of this DSA key.
      */
-    protected ByteArrayAttribute subprime_;
+    protected ByteArrayAttribute subprime;
 
     /**
      * The base (g) of this DSA key.
      */
-    protected ByteArrayAttribute base_;
+    protected ByteArrayAttribute base;
 
     /**
      * The bit length of the prime value.
      */
-    protected LongAttribute primeBits_;
+    protected LongAttribute primeBits;
 
     /**
      * Default Constructor.
@@ -88,7 +89,7 @@ public class DSAParams extends DomainParameters {
      */
     public DSAParams() {
         super();
-        keyType_.setLongValue(Key.KeyType.DSA);
+        keyType.setLongValue(Key.KeyType.DSA);
     }
 
     /**
@@ -108,7 +109,7 @@ public class DSAParams extends DomainParameters {
     protected DSAParams(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        keyType_.setLongValue(Key.KeyType.DSA);
+        keyType.setLongValue(Key.KeyType.DSA);
     }
 
     /**
@@ -147,10 +148,10 @@ public class DSAParams extends DomainParameters {
      */
     protected static void putAttributesInTable(DSAParams object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.PRIME, object.prime_);
-        object.attributeTable_.put(Attribute.SUBPRIME, object.subprime_);
-        object.attributeTable_.put(Attribute.BASE, object.base_);
-        object.attributeTable_.put(Attribute.PRIME_BITS, object.primeBits_);
+        object.attributeTable.put(Attribute.PRIME, object.prime);
+        object.attributeTable.put(Attribute.SUBPRIME, object.subprime);
+        object.attributeTable.put(Attribute.BASE, object.base);
+        object.attributeTable.put(Attribute.PRIME_BITS, object.primeBits);
     }
 
     /**
@@ -164,10 +165,10 @@ public class DSAParams extends DomainParameters {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        prime_ = new ByteArrayAttribute(Attribute.PRIME);
-        subprime_ = new ByteArrayAttribute(Attribute.SUBPRIME);
-        base_ = new ByteArrayAttribute(Attribute.BASE);
-        primeBits_ = new LongAttribute(Attribute.PRIME_BITS);
+        prime = new ByteArrayAttribute(Attribute.PRIME);
+        subprime = new ByteArrayAttribute(Attribute.SUBPRIME);
+        base = new ByteArrayAttribute(Attribute.BASE);
+        primeBits = new LongAttribute(Attribute.PRIME_BITS);
 
         putAttributesInTable(this);
     }
@@ -185,10 +186,10 @@ public class DSAParams extends DomainParameters {
     public java.lang.Object clone() {
         DSAParams clone = (DSAParams) super.clone();
 
-        clone.prime_ = (ByteArrayAttribute) this.prime_.clone();
-        clone.subprime_ = (ByteArrayAttribute) this.subprime_.clone();
-        clone.base_ = (ByteArrayAttribute) this.base_.clone();
-        clone.primeBits_ = (LongAttribute) this.primeBits_.clone();
+        clone.prime = (ByteArrayAttribute) this.prime.clone();
+        clone.subprime = (ByteArrayAttribute) this.subprime.clone();
+        clone.base = (ByteArrayAttribute) this.base.clone();
+        clone.primeBits = (LongAttribute) this.primeBits.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -219,10 +220,10 @@ public class DSAParams extends DomainParameters {
 
         DSAParams other = (DSAParams) otherObject;
         return super.equals(other)
-                && this.prime_.equals(other.prime_)
-                && this.subprime_.equals(other.subprime_)
-                && this.base_.equals(other.base_)
-                && this.primeBits_.equals(other.primeBits_);
+                && this.prime.equals(other.prime)
+                && this.subprime.equals(other.subprime)
+                && this.base.equals(other.base)
+                && this.primeBits.equals(other.primeBits);
     }
 
     /**
@@ -233,7 +234,7 @@ public class DSAParams extends DomainParameters {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getPrime() {
-        return prime_;
+        return prime;
     }
 
     /**
@@ -244,7 +245,7 @@ public class DSAParams extends DomainParameters {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getSubprime() {
-        return subprime_;
+        return subprime;
     }
 
     /**
@@ -255,7 +256,7 @@ public class DSAParams extends DomainParameters {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getBase() {
-        return base_;
+        return base;
     }
 
     /**
@@ -266,7 +267,7 @@ public class DSAParams extends DomainParameters {
      * @postconditions (result <> null)
      */
     public LongAttribute getPrimeBits() {
-        return primeBits_;
+        return primeBits;
     }
 
     /**
@@ -286,12 +287,12 @@ public class DSAParams extends DomainParameters {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            prime_, subprime_, base_, primeBits_});
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            prime, subprime, base, primeBits});
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -307,19 +308,19 @@ public class DSAParams extends DomainParameters {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Prime (hex): ");
-        buffer.append(prime_.toString());
+        buffer.append(prime.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Subprime (hex): ");
-        buffer.append(subprime_.toString());
+        buffer.append(subprime.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Base (hex): ");
-        buffer.append(base_.toString());
+        buffer.append(base.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Prime Bits (dec): ");
-        buffer.append(primeBits_.toString(10));
+        buffer.append(primeBits.toString(10));
 
         return buffer.toString();
     }

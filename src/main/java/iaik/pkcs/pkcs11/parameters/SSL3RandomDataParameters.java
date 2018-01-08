@@ -54,21 +54,22 @@ import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (clientRandom_ <> null)
- *             and (serverRandom_ <> null)
+ * @invariants (clientRandom <> null)
+ *             and (serverRandom <> null)
  */
 @SuppressWarnings("restriction")
+// CHECKSTYLE:SKIP
 public class SSL3RandomDataParameters implements Parameters {
 
     /**
      * The client's random data.
      */
-    protected byte[] clientRandom_;
+    protected byte[] clientRandom;
 
     /**
      * The server's random data.
      */
-    protected byte[] serverRandom_;
+    protected byte[] serverRandom;
 
     /**
      * Create a new SSL3RandomDataParameters object with the given client and
@@ -83,8 +84,8 @@ public class SSL3RandomDataParameters implements Parameters {
      * @postconditions
      */
     public SSL3RandomDataParameters(byte[] clientRandom, byte[] serverRandom) {
-        clientRandom_ = Util.requireNonNull("clientRandom", clientRandom);
-        serverRandom_ = Util.requireNonNull("serverRandom", serverRandom);
+        this.clientRandom = Util.requireNonNull("clientRandom", clientRandom);
+        this.serverRandom = Util.requireNonNull("serverRandom", serverRandom);
     }
 
     /**
@@ -103,8 +104,8 @@ public class SSL3RandomDataParameters implements Parameters {
         try {
             clone = (SSL3RandomDataParameters) super.clone();
 
-            clone.clientRandom_ = (byte[]) this.clientRandom_.clone();
-            clone.serverRandom_ = (byte[]) this.serverRandom_.clone();
+            clone.clientRandom = (byte[]) this.clientRandom.clone();
+            clone.serverRandom = (byte[]) this.serverRandom.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
             throw new TokenRuntimeException(
@@ -123,7 +124,7 @@ public class SSL3RandomDataParameters implements Parameters {
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        return new CK_SSL3_RANDOM_DATA(clientRandom_, serverRandom_);
+        return new CK_SSL3_RANDOM_DATA(clientRandom, serverRandom);
     }
 
     /**
@@ -134,7 +135,7 @@ public class SSL3RandomDataParameters implements Parameters {
      * @postconditions (result <> null)
      */
     public byte[] getClientRandom() {
-        return clientRandom_;
+        return clientRandom;
     }
 
     /**
@@ -145,7 +146,7 @@ public class SSL3RandomDataParameters implements Parameters {
      * @postconditions (result <> null)
      */
     public byte[] getServerRandom() {
-        return serverRandom_;
+        return serverRandom;
     }
 
     /**
@@ -157,7 +158,7 @@ public class SSL3RandomDataParameters implements Parameters {
      * @postconditions
      */
     public void setClientRandom(byte[] clientRandom) {
-        clientRandom_ = Util.requireNonNull("clientRandom", clientRandom);
+        this.clientRandom = Util.requireNonNull("clientRandom", clientRandom);
     }
 
     /**
@@ -169,7 +170,7 @@ public class SSL3RandomDataParameters implements Parameters {
      * @postconditions
      */
     public void setServerRandom(byte[] serverRandom) {
-        serverRandom_ = Util.requireNonNull("serverRandom", serverRandom);
+        this.serverRandom = Util.requireNonNull("serverRandom", serverRandom);
     }
 
     /**
@@ -184,11 +185,11 @@ public class SSL3RandomDataParameters implements Parameters {
 
         buffer.append(Constants.INDENT);
         buffer.append("Client Random (hex): ");
-        buffer.append(Functions.toHexString(clientRandom_));
+        buffer.append(Functions.toHexString(clientRandom));
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Server Random (hex): ");
-        buffer.append(Functions.toHexString(serverRandom_));
+        buffer.append(Functions.toHexString(serverRandom));
 
         return buffer.toString();
     }
@@ -215,8 +216,8 @@ public class SSL3RandomDataParameters implements Parameters {
         }
 
         SSL3RandomDataParameters other = (SSL3RandomDataParameters) otherObject;
-        return Functions.equals(this.clientRandom_, other.clientRandom_)
-                && Functions.equals(this.serverRandom_, other.serverRandom_);
+        return Functions.equals(this.clientRandom, other.clientRandom)
+                && Functions.equals(this.serverRandom, other.serverRandom);
     }
 
     /**
@@ -229,8 +230,8 @@ public class SSL3RandomDataParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return Functions.hashCode(clientRandom_)
-                ^ Functions.hashCode(serverRandom_);
+        return Functions.hashCode(clientRandom)
+                ^ Functions.hashCode(serverRandom);
     }
 
 }

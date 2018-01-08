@@ -53,14 +53,15 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Lijun Liao
  * @version 1.4.1
- * @invariants (value_ <> null)
+ * @invariants (value <> null)
  */
+// CHECKSTYLE:SKIP
 public class SM4SecretKey extends SecretKey {
 
     /**
      * The value attribute of this secret key.
      */
-    protected ByteArrayAttribute value_;
+    protected ByteArrayAttribute value;
 
     /**
      * Default Constructor.
@@ -70,7 +71,7 @@ public class SM4SecretKey extends SecretKey {
      */
     public SM4SecretKey() {
         super();
-        keyType_.setLongValue(KeyType.VENDOR_SM4);
+        keyType.setLongValue(KeyType.VENDOR_SM4);
     }
 
     /**
@@ -90,7 +91,7 @@ public class SM4SecretKey extends SecretKey {
     protected SM4SecretKey(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        keyType_.setLongValue(KeyType.VENDOR_SM4);
+        keyType.setLongValue(KeyType.VENDOR_SM4);
     }
 
     /**
@@ -130,7 +131,7 @@ public class SM4SecretKey extends SecretKey {
     protected static void putAttributesInTable(SM4SecretKey object) {
         Util.requireNonNull("object", object);
 
-        object.attributeTable_.put(Attribute.VALUE, object.value_);
+        object.attributeTable.put(Attribute.VALUE, object.value);
     }
 
     /**
@@ -143,7 +144,7 @@ public class SM4SecretKey extends SecretKey {
     @Override
     protected void allocateAttributes() {
         super.allocateAttributes();
-        value_ = new ByteArrayAttribute(Attribute.VALUE);
+        value = new ByteArrayAttribute(Attribute.VALUE);
         putAttributesInTable(this);
     }
 
@@ -160,7 +161,7 @@ public class SM4SecretKey extends SecretKey {
     public java.lang.Object clone() {
         SM4SecretKey clone = (SM4SecretKey) super.clone();
 
-        clone.value_ = (ByteArrayAttribute) this.value_.clone();
+        clone.value = (ByteArrayAttribute) this.value.clone();
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
 
@@ -190,7 +191,7 @@ public class SM4SecretKey extends SecretKey {
 
         SM4SecretKey other = (SM4SecretKey) otherObject;
         return super.equals(other)
-                && this.value_.equals(other.value_);
+                && this.value.equals(other.value);
     }
 
     /**
@@ -201,7 +202,7 @@ public class SM4SecretKey extends SecretKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getValue() {
-        return value_;
+        return value;
     }
 
     /**
@@ -221,11 +222,11 @@ public class SM4SecretKey extends SecretKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValue(session, objectHandle_, value_);
+        Object.getAttributeValue(session, objectHandle, value);
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -240,7 +241,7 @@ public class SM4SecretKey extends SecretKey {
         buffer.append(super.toString());
 
         buffer.append(Constants.NEWLINE_INDENT_HEXVALUE);
-        buffer.append(value_.toString());
+        buffer.append(value.toString());
 
         return buffer.toString();
     }

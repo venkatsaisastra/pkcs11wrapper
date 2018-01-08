@@ -53,23 +53,24 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (prime_ <> null)
- *             and (base_ <> null)
- *             and (subprime_ <> null)
- *             and (primeBits_ <> null)
- *             and (subprimeBits_ <> null)
+ * @invariants (prime <> null)
+ *             and (base <> null)
+ *             and (subprime <> null)
+ *             and (primeBits <> null)
+ *             and (subprimeBits <> null)
  */
+// CHECKSTYLE:SKIP
 public class X942DHParams extends DHParams {
 
     /**
      * The subprime (q) of this DH key.
      */
-    protected ByteArrayAttribute subprime_;
+    protected ByteArrayAttribute subprime;
 
     /**
      * The length of the subprime value in bits.
      */
-    protected LongAttribute subprimeBits_;
+    protected LongAttribute subprimeBits;
 
     /**
      * Default Constructor.
@@ -79,7 +80,7 @@ public class X942DHParams extends DHParams {
      */
     public X942DHParams() {
         super();
-        keyType_.setLongValue(Key.KeyType.X9_42_DH);
+        keyType.setLongValue(Key.KeyType.X9_42_DH);
     }
 
     /**
@@ -99,7 +100,7 @@ public class X942DHParams extends DHParams {
     protected X942DHParams(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        keyType_.setLongValue(Key.KeyType.X9_42_DH);
+        keyType.setLongValue(Key.KeyType.X9_42_DH);
     }
 
     /**
@@ -138,12 +139,12 @@ public class X942DHParams extends DHParams {
      */
     protected static void putAttributesInTable(X942DHParams object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.PRIME, object.prime_);
-        object.attributeTable_.put(Attribute.BASE, object.base_);
-        object.attributeTable_.put(Attribute.SUBPRIME, object.subprime_);
-        object.attributeTable_.put(Attribute.PRIME_BITS, object.primeBits_);
-        object.attributeTable_.put(Attribute.SUB_PRIME_BITS,
-                object.subprimeBits_);
+        object.attributeTable.put(Attribute.PRIME, object.prime);
+        object.attributeTable.put(Attribute.BASE, object.base);
+        object.attributeTable.put(Attribute.SUBPRIME, object.subprime);
+        object.attributeTable.put(Attribute.PRIME_BITS, object.primeBits);
+        object.attributeTable.put(Attribute.SUB_PRIME_BITS,
+                object.subprimeBits);
     }
 
     /**
@@ -157,11 +158,11 @@ public class X942DHParams extends DHParams {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        prime_ = new ByteArrayAttribute(Attribute.PRIME);
-        base_ = new ByteArrayAttribute(Attribute.BASE);
-        subprime_ = new ByteArrayAttribute(Attribute.SUBPRIME);
-        primeBits_ = new LongAttribute(Attribute.PRIME_BITS);
-        subprimeBits_ = new LongAttribute(Attribute.SUB_PRIME_BITS);
+        prime = new ByteArrayAttribute(Attribute.PRIME);
+        base = new ByteArrayAttribute(Attribute.BASE);
+        subprime = new ByteArrayAttribute(Attribute.SUBPRIME);
+        primeBits = new LongAttribute(Attribute.PRIME_BITS);
+        subprimeBits = new LongAttribute(Attribute.SUB_PRIME_BITS);
 
         putAttributesInTable(this);
     }
@@ -179,11 +180,11 @@ public class X942DHParams extends DHParams {
     public java.lang.Object clone() {
         X942DHParams clone = (X942DHParams) super.clone();
 
-        clone.prime_ = (ByteArrayAttribute) this.prime_.clone();
-        clone.base_ = (ByteArrayAttribute) this.base_.clone();
-        clone.subprime_ = (ByteArrayAttribute) this.subprime_.clone();
-        clone.primeBits_ = (LongAttribute) this.primeBits_.clone();
-        clone.subprimeBits_ = (LongAttribute) this.subprimeBits_.clone();
+        clone.prime = (ByteArrayAttribute) this.prime.clone();
+        clone.base = (ByteArrayAttribute) this.base.clone();
+        clone.subprime = (ByteArrayAttribute) this.subprime.clone();
+        clone.primeBits = (LongAttribute) this.primeBits.clone();
+        clone.subprimeBits = (LongAttribute) this.subprimeBits.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -214,11 +215,11 @@ public class X942DHParams extends DHParams {
 
         X942DHParams other = (X942DHParams) otherObject;
         return super.equals(other)
-                && this.prime_.equals(other.prime_)
-                && this.base_.equals(other.base_)
-                && this.subprime_.equals(other.subprime_)
-                && this.primeBits_.equals(other.primeBits_)
-                && this.subprimeBits_.equals(other.subprimeBits_);
+                && this.prime.equals(other.prime)
+                && this.base.equals(other.base)
+                && this.subprime.equals(other.subprime)
+                && this.primeBits.equals(other.primeBits)
+                && this.subprimeBits.equals(other.subprimeBits);
     }
 
     /**
@@ -230,7 +231,7 @@ public class X942DHParams extends DHParams {
      */
     @Override
     public ByteArrayAttribute getPrime() {
-        return prime_;
+        return prime;
     }
 
     /**
@@ -242,7 +243,7 @@ public class X942DHParams extends DHParams {
      */
     @Override
     public ByteArrayAttribute getBase() {
-        return base_;
+        return base;
     }
 
     /**
@@ -253,7 +254,7 @@ public class X942DHParams extends DHParams {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getSubprime() {
-        return subprime_;
+        return subprime;
     }
 
     /**
@@ -265,7 +266,7 @@ public class X942DHParams extends DHParams {
      */
     @Override
     public LongAttribute getPrimeBits() {
-        return primeBits_;
+        return primeBits;
     }
 
     /**
@@ -276,7 +277,7 @@ public class X942DHParams extends DHParams {
      * @postconditions (result <> null)
      */
     public LongAttribute getSubprimeBits() {
-        return subprimeBits_;
+        return subprimeBits;
     }
 
     /**
@@ -296,12 +297,12 @@ public class X942DHParams extends DHParams {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            prime_, base_, subprime_, primeBits_, subprimeBits_ });
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            prime, base, subprime, primeBits, subprimeBits });
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -317,23 +318,23 @@ public class X942DHParams extends DHParams {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Prime (hex): ");
-        buffer.append(prime_.toString());
+        buffer.append(prime.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Base (hex): ");
-        buffer.append(base_.toString());
+        buffer.append(base.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Subprime (hex): ");
-        buffer.append(subprime_.toString());
+        buffer.append(subprime.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Prime Bits (dec): ");
-        buffer.append(primeBits_.toString(10));
+        buffer.append(primeBits.toString(10));
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Subprime Bits (dec): ");
-        buffer.append(subprimeBits_.toString(10));
+        buffer.append(subprimeBits.toString(10));
 
         return buffer.toString();
     }

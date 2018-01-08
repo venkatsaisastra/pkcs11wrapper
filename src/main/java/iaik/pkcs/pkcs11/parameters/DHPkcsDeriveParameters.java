@@ -53,14 +53,15 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (publicValue_ <> null)
+ * @invariants (publicValue <> null)
  */
+// CHECKSTYLE:SKIP
 public class DHPkcsDeriveParameters implements Parameters {
 
     /**
      * The initialization vector.
      */
-    protected byte[] publicValue_;
+    protected byte[] publicValue;
 
     /**
      * Create a new DHPkcsDeriveParameters object with the given public value.
@@ -72,7 +73,7 @@ public class DHPkcsDeriveParameters implements Parameters {
      * @postconditions
      */
     public DHPkcsDeriveParameters(byte[] publicValue) {
-        publicValue_ = publicValue;
+        this.publicValue = publicValue;
     }
 
     /**
@@ -91,7 +92,7 @@ public class DHPkcsDeriveParameters implements Parameters {
         try {
             clone = (DHPkcsDeriveParameters) super.clone();
 
-            clone.publicValue_ = (byte[]) this.publicValue_.clone();
+            clone.publicValue = (byte[]) this.publicValue.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
             throw new TokenRuntimeException(
@@ -110,7 +111,7 @@ public class DHPkcsDeriveParameters implements Parameters {
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        return publicValue_;
+        return publicValue;
     }
 
     /**
@@ -122,7 +123,7 @@ public class DHPkcsDeriveParameters implements Parameters {
      * @postconditions (result <> null)
      */
     public byte[] getPublicValue() {
-        return publicValue_;
+        return publicValue;
     }
 
     /**
@@ -135,7 +136,7 @@ public class DHPkcsDeriveParameters implements Parameters {
      * @postconditions
      */
     public void setPublicValue(byte[] publicValue) {
-        publicValue_ = Util.requireNonNull("publicValue", publicValue);
+        this.publicValue = Util.requireNonNull("publicValue", publicValue);
     }
 
     /**
@@ -150,7 +151,7 @@ public class DHPkcsDeriveParameters implements Parameters {
 
         buffer.append(Constants.INDENT);
         buffer.append("Public Value (hex): ");
-        buffer.append(Functions.toHexString(publicValue_));
+        buffer.append(Functions.toHexString(publicValue));
 
         return buffer.toString();
     }
@@ -177,7 +178,7 @@ public class DHPkcsDeriveParameters implements Parameters {
         }
 
         DHPkcsDeriveParameters other = (DHPkcsDeriveParameters) otherObject;
-        return Functions.equals(this.publicValue_, other.publicValue_);
+        return Functions.equals(this.publicValue, other.publicValue);
     }
 
     /**
@@ -190,7 +191,7 @@ public class DHPkcsDeriveParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return Functions.hashCode(publicValue_);
+        return Functions.hashCode(publicValue);
     }
 
 }

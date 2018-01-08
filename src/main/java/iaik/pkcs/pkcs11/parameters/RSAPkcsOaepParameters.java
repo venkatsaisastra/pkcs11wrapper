@@ -57,6 +57,7 @@ import sun.security.pkcs11.wrapper.CK_RSA_PKCS_OAEP_PARAMS;
  *             or (source_ == SourceType.DataSpecified)
  */
 @SuppressWarnings("restriction")
+// CHECKSTYLE:SKIP
 public class RSAPkcsOaepParameters extends RSAPkcsParameters {
 
     /**
@@ -82,7 +83,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
                 = PKCS11Constants.CKZ_SALT_SPECIFIED;
 
         /**
-         * @deprecated use SALT_SPECIFIED instead
+         * @deprecated use SALT_SPECIFIED instead.
          */
         public static final long DATA_SPECIFIED
                 = PKCS11Constants.CKZ_SALT_SPECIFIED;
@@ -91,12 +92,12 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
     /**
      * The source of the encoding parameter.
      */
-    protected long source_;
+    protected long source;
 
     /**
      * The data used as the input for the encoding parameter source.
      */
-    protected byte[] sourceData_;
+    protected byte[] sourceData;
 
     /**
      * Create a new RSAPkcsOaepParameters object with the given attributes.
@@ -130,8 +131,8 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
                     "Illegal value for argument\"source\": "
                     + Functions.toHexString(source));
         }
-        source_ = source;
-        sourceData_ = sourceData;
+        this.source = source;
+        this.sourceData = sourceData;
     }
 
     /**
@@ -147,7 +148,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
     public java.lang.Object clone() {
         RSAPkcsOaepParameters clone = (RSAPkcsOaepParameters) super.clone();
 
-        clone.sourceData_ = (byte[]) this.sourceData_.clone();
+        clone.sourceData = (byte[]) this.sourceData.clone();
 
         return clone;
     }
@@ -164,10 +165,10 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
     public Object getPKCS11ParamsObject() {
         CK_RSA_PKCS_OAEP_PARAMS params = new CK_RSA_PKCS_OAEP_PARAMS();
 
-        params.hashAlg = hashAlgorithm_.getMechanismCode();
-        params.mgf = maskGenerationFunction_;
-        params.source = source_;
-        params.pSourceData = sourceData_;
+        params.hashAlg = hashAlg.getMechanismCode();
+        params.mgf = mgf;
+        params.source = source;
+        params.pSourceData = sourceData;
 
         return params;
     }
@@ -180,7 +181,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
      * @postconditions
      */
     public long getSource() {
-        return source_;
+        return source;
     }
 
     /**
@@ -191,7 +192,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
      * @postconditions
      */
     public byte[] getSourceData() {
-        return sourceData_;
+        return sourceData;
     }
 
     /**
@@ -211,7 +212,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
                 "Illegal value for argument\"source\": "
                 + Functions.toHexString(source));
         }
-        source_ = source;
+        this.source = source;
     }
 
     /**
@@ -223,7 +224,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
      * @postconditions
      */
     public void setSourceData(byte[] sourceData) {
-        sourceData_ = sourceData;
+        this.sourceData = sourceData;
     }
 
     /**
@@ -240,9 +241,9 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Source: ");
-        if (source_ == SourceType.EMPTY) {
+        if (source == SourceType.EMPTY) {
             buffer.append("Empty");
-        } else if (source_ == SourceType.DATA_SPECIFIED) {
+        } else if (source == SourceType.DATA_SPECIFIED) {
             buffer.append("Data Specified");
         } else {
             buffer.append("<unknown>");
@@ -250,7 +251,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Source Data (hex): ");
-        buffer.append(Functions.toHexString(sourceData_));
+        buffer.append(Functions.toHexString(sourceData));
 
         return buffer.toString();
     }
@@ -278,8 +279,8 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
 
         RSAPkcsOaepParameters other = (RSAPkcsOaepParameters) otherObject;
         return super.equals(other)
-                && (this.source_ == other.source_)
-                && Functions.equals(this.sourceData_, other.sourceData_);
+                && (this.source == other.source)
+                && Functions.equals(this.sourceData, other.sourceData);
     }
 
     /**
@@ -292,8 +293,8 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
      */
     @Override
     public int hashCode() {
-        return super.hashCode() ^ ((int) source_)
-                ^ Functions.hashCode(sourceData_);
+        return super.hashCode() ^ ((int) source)
+                ^ Functions.hashCode(sourceData);
     }
 
 }

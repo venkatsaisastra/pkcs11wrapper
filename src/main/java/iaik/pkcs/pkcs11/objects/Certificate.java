@@ -145,12 +145,12 @@ public class Certificate extends Storage {
      * The type of this certificate. One of CertificateType, or one that has a
      * bigger value than VENDOR_DEFINED.
      */
-    protected CertificateTypeAttribute certificateType_;
+    protected CertificateTypeAttribute certificateType;
 
     /**
      * Indicates, if this certificate can be trusted.
      */
-    protected BooleanAttribute trusted_;
+    protected BooleanAttribute trusted;
 
     /**
      * Categorization of the certificate:
@@ -159,22 +159,22 @@ public class Certificate extends Storage {
      * 2 = authority,
      * 3 = other entity.
      */
-    protected LongAttribute certificateCategory_;
+    protected LongAttribute certificateCategory;
 
     /**
      * Checksum of this certificate.
      */
-    protected ByteArrayAttribute checkValue_;
+    protected ByteArrayAttribute checkValue;
 
     /**
      * The start date of this certificate's validity.
      */
-    protected DateAttribute startDate_;
+    protected DateAttribute startDate;
 
     /**
      * The end date of this certificate's validity.
      */
-    protected DateAttribute endDate_;
+    protected DateAttribute endDate;
 
     /**
      * The default constructor. An application use this constructor to
@@ -186,7 +186,7 @@ public class Certificate extends Storage {
      */
     public Certificate() {
         super();
-        objectClass_.setLongValue(ObjectClass.CERTIFICATE);
+        objectClass.setLongValue(ObjectClass.CERTIFICATE);
     }
 
     /**
@@ -209,7 +209,7 @@ public class Certificate extends Storage {
     protected Certificate(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        objectClass_.setLongValue(ObjectClass.CERTIFICATE);
+        objectClass.setLongValue(ObjectClass.CERTIFICATE);
     }
 
     /**
@@ -247,7 +247,7 @@ public class Certificate extends Storage {
      * type attribute and calls the getInstance method of the according
      * sub-class. If the certificate type is a vendor defined it uses the
      * VendorDefinedCertificateBuilder set by the application. If no certificate
-     * could be constructed, this method returns null.
+     * could be constructed, Returns null.
      *
      * @param session
      *          The session to use for reading attributes. This session must
@@ -383,14 +383,14 @@ public class Certificate extends Storage {
     protected static void putAttributesInTable(Certificate object) {
         Util.requireNonNull("object", object);
 
-        object.attributeTable_.put(Attribute.CERTIFICATE_TYPE,
-            object.certificateType_);
-        object.attributeTable_.put(Attribute.TRUSTED, object.trusted_);
-        object.attributeTable_.put(Attribute.CERTIFICATE_CATEGORY,
-            object.certificateCategory_);
-        object.attributeTable_.put(Attribute.CHECK_VALUE, object.checkValue_);
-        object.attributeTable_.put(Attribute.START_DATE, object.startDate_);
-        object.attributeTable_.put(Attribute.END_DATE, object.endDate_);
+        object.attributeTable.put(Attribute.CERTIFICATE_TYPE,
+            object.certificateType);
+        object.attributeTable.put(Attribute.TRUSTED, object.trusted);
+        object.attributeTable.put(Attribute.CERTIFICATE_CATEGORY,
+            object.certificateCategory);
+        object.attributeTable.put(Attribute.CHECK_VALUE, object.checkValue);
+        object.attributeTable.put(Attribute.START_DATE, object.startDate);
+        object.attributeTable.put(Attribute.END_DATE, object.endDate);
     }
 
     /**
@@ -404,13 +404,13 @@ public class Certificate extends Storage {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        certificateType_ = new CertificateTypeAttribute();
-        trusted_ = new BooleanAttribute(Attribute.TRUSTED);
-        certificateCategory_
+        certificateType = new CertificateTypeAttribute();
+        trusted = new BooleanAttribute(Attribute.TRUSTED);
+        certificateCategory
                 = new LongAttribute(Attribute.CERTIFICATE_CATEGORY);
-        checkValue_ = new ByteArrayAttribute(Attribute.CHECK_VALUE);
-        startDate_ = new DateAttribute(Attribute.START_DATE);
-        endDate_ = new DateAttribute(Attribute.END_DATE);
+        checkValue = new ByteArrayAttribute(Attribute.CHECK_VALUE);
+        startDate = new DateAttribute(Attribute.START_DATE);
+        endDate = new DateAttribute(Attribute.END_DATE);
 
         putAttributesInTable(this);
     }
@@ -428,14 +428,14 @@ public class Certificate extends Storage {
     public java.lang.Object clone() {
         Certificate clone = (Certificate) super.clone();
 
-        clone.certificateType_ = (CertificateTypeAttribute)
-            this.certificateType_.clone();
-        clone.trusted_ = (BooleanAttribute) this.trusted_.clone();
-        clone.certificateCategory_ = (LongAttribute)
-            this.certificateCategory_.clone();
-        clone.checkValue_ = (ByteArrayAttribute) this.checkValue_.clone();
-        clone.startDate_ = (DateAttribute) this.startDate_.clone();
-        clone.endDate_ = (DateAttribute) this.endDate_.clone();
+        clone.certificateType = (CertificateTypeAttribute)
+            this.certificateType.clone();
+        clone.trusted = (BooleanAttribute) this.trusted.clone();
+        clone.certificateCategory = (LongAttribute)
+            this.certificateCategory.clone();
+        clone.checkValue = (ByteArrayAttribute) this.checkValue.clone();
+        clone.startDate = (DateAttribute) this.startDate.clone();
+        clone.endDate = (DateAttribute) this.endDate.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -465,12 +465,12 @@ public class Certificate extends Storage {
 
         Certificate other = (Certificate) otherObject;
         return super.equals(other)
-                && this.certificateType_.equals(other.certificateType_)
-                && this.trusted_.equals(other.trusted_)
-                && this.certificateCategory_.equals(other.certificateCategory_)
-                && this.checkValue_.equals(other.checkValue_)
-                && this.startDate_.equals(other.startDate_)
-                && this.endDate_.equals(other.endDate_);
+                && this.certificateType.equals(other.certificateType)
+                && this.trusted.equals(other.trusted)
+                && this.certificateCategory.equals(other.certificateCategory)
+                && this.checkValue.equals(other.checkValue)
+                && this.startDate.equals(other.startDate)
+                && this.endDate.equals(other.endDate);
     }
 
     /**
@@ -483,7 +483,7 @@ public class Certificate extends Storage {
      * @postconditions (result <> null)
      */
     public LongAttribute getCertificateType() {
-        return certificateType_;
+        return certificateType;
     }
 
     /**
@@ -494,7 +494,7 @@ public class Certificate extends Storage {
      * @postconditions (result <> null)
      */
     public BooleanAttribute getTrusted() {
-        return trusted_;
+        return trusted;
     }
 
     /**
@@ -505,7 +505,7 @@ public class Certificate extends Storage {
      * @postconditions (result <> null)
      */
     public LongAttribute getCertificateCategory() {
-        return certificateCategory_;
+        return certificateCategory;
     }
 
     /**
@@ -516,7 +516,7 @@ public class Certificate extends Storage {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getCheckValue() {
-        return checkValue_;
+        return checkValue;
     }
 
     /**
@@ -527,7 +527,7 @@ public class Certificate extends Storage {
      * @postconditions (result <> null)
      */
     public DateAttribute getStartDate() {
-        return startDate_;
+        return startDate;
     }
 
     /**
@@ -538,7 +538,7 @@ public class Certificate extends Storage {
      * @postconditions (result <> null)
      */
     public DateAttribute getEndDate() {
-        return endDate_;
+        return endDate;
     }
 
     /**
@@ -551,7 +551,7 @@ public class Certificate extends Storage {
      */
     @Override
     public int hashCode() {
-        return certificateType_.hashCode();
+        return certificateType.hashCode();
     }
 
     /**
@@ -571,12 +571,12 @@ public class Certificate extends Storage {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            trusted_, certificateCategory_, checkValue_, startDate_, endDate_});
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            trusted, certificateCategory, checkValue, startDate, endDate});
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -592,31 +592,31 @@ public class Certificate extends Storage {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Certificate Type: ");
-        if (certificateType_ != null) {
-            buffer.append(certificateType_.toString());
+        if (certificateType != null) {
+            buffer.append(certificateType.toString());
         } else {
             buffer.append("<unavailable>");
         }
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Trusted: ");
-        buffer.append(trusted_.toString());
+        buffer.append(trusted.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Certificate Category: ");
-        buffer.append(certificateCategory_.toString());
+        buffer.append(certificateCategory.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Check Value: ");
-        buffer.append(checkValue_.toString());
+        buffer.append(checkValue.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Start Date: ");
-        buffer.append(startDate_.toString());
+        buffer.append(startDate.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("End Date: ");
-        buffer.append(endDate_.toString());
+        buffer.append(endDate.toString());
 
         return buffer.toString();
     }

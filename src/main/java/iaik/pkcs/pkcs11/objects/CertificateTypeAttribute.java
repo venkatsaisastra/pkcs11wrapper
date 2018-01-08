@@ -56,7 +56,6 @@ public class CertificateTypeAttribute extends LongAttribute {
     /**
      * Empty constructor.
      *
-     * @preconditions
      * @postconditions
      */
     public CertificateTypeAttribute() {
@@ -75,9 +74,9 @@ public class CertificateTypeAttribute extends LongAttribute {
     protected String getValueString() {
         String valueString;
 
-        if ((ckAttribute_ != null) && (ckAttribute_.pValue != null)) {
+        if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
             valueString = Certificate.getCertificateTypeName(
-                (Long) ckAttribute_.pValue);
+                (Long) ckAttribute.pValue);
         } else {
             valueString = "<NULL_PTR>";
         }

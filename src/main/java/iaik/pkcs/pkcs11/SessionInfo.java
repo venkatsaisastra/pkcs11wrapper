@@ -54,7 +54,7 @@ import sun.security.pkcs11.wrapper.CK_SESSION_INFO;
  *
  * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
  * @version 1.0
- * @invariants (state_ <> null)
+ * @invariants (state <> null)
  */
 @SuppressWarnings("restriction")
 public class SessionInfo implements Cloneable {
@@ -63,28 +63,29 @@ public class SessionInfo implements Cloneable {
      * The identifier of the slot in which the token resides this session is
      * bound to.
      */
-    protected long slotID_;
+    // CHECKSTYLE:SKIP
+    protected long slotID;
 
     /**
      * The current session state.
      */
-    protected State state_;
+    protected State state;
 
     /**
      * An token specific error-code. The meaning of this value is not defined in
      * PKCS#11.
      */
-    protected long deviceError_;
+    protected long deviceError;
 
     /**
      * True, if this is a read-write session.
      */
-    protected boolean rwSession_;
+    protected boolean rwSession;
 
     /**
      * True, if this a serial session. Always true, for this version of PKCS#11.
      */
-    protected boolean serialSession_;
+    protected boolean serialSession;
 
     /**
      * Constructor taking a CK_SESSION_INFO object that provides the
@@ -98,12 +99,12 @@ public class SessionInfo implements Cloneable {
      */
     protected SessionInfo(CK_SESSION_INFO ckSessionInfo) {
         Util.requireNonNull("ckSessionInfo", ckSessionInfo);
-        slotID_ = ckSessionInfo.slotID;
-        state_ = new State(ckSessionInfo.state);
-        deviceError_ = ckSessionInfo.ulDeviceError;
+        this.slotID = ckSessionInfo.slotID;
+        this.state = new State(ckSessionInfo.state);
+        this.deviceError = ckSessionInfo.ulDeviceError;
         long flags = ckSessionInfo.flags;
-        rwSession_ = (flags & PKCS11Constants.CKF_RW_SESSION) != 0L;
-        serialSession_ = (flags & PKCS11Constants.CKF_SERIAL_SESSION) != 0L;
+        this.rwSession = (flags & PKCS11Constants.CKF_RW_SESSION) != 0L;
+        this.serialSession = (flags & PKCS11Constants.CKF_SERIAL_SESSION) != 0L;
     }
 
     /**
@@ -122,7 +123,7 @@ public class SessionInfo implements Cloneable {
         try {
             clone = (SessionInfo) super.clone();
 
-            clone.state_ = (State) this.state_.clone();
+            clone.state = (State) this.state.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is clone-able
             throw new TokenRuntimeException(
@@ -140,7 +141,7 @@ public class SessionInfo implements Cloneable {
      * @postconditions (result <> null)
      */
     public State getState() {
-        return state_;
+        return state;
     }
 
     /**
@@ -152,7 +153,7 @@ public class SessionInfo implements Cloneable {
      * @postconditions
      */
     public long getDeviceError() {
-        return deviceError_;
+        return deviceError;
     }
 
     /**
@@ -164,7 +165,7 @@ public class SessionInfo implements Cloneable {
      * @postconditions
      */
     public boolean isRwSession() {
-        return rwSession_;
+        return rwSession;
     }
 
     /**
@@ -178,7 +179,7 @@ public class SessionInfo implements Cloneable {
      * @postconditions
      */
     public boolean isSerialSession() {
-        return serialSession_;
+        return serialSession;
     }
 
     /**
@@ -191,19 +192,19 @@ public class SessionInfo implements Cloneable {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append("State: ");
-        buffer.append(state_);
+        buffer.append(state);
         buffer.append(Constants.NEWLINE);
 
         buffer.append("Device Error: 0x");
-        buffer.append(Functions.toHexString(deviceError_));
+        buffer.append(Functions.toHexString(deviceError));
         buffer.append(Constants.NEWLINE);
 
         buffer.append("Read/Write Session: ");
-        buffer.append(rwSession_);
+        buffer.append(rwSession);
         buffer.append(Constants.NEWLINE);
 
         buffer.append("Serial Session: ");
-        buffer.append(serialSession_);
+        buffer.append(serialSession);
 
         return buffer.toString();
     }
@@ -230,25 +231,25 @@ public class SessionInfo implements Cloneable {
         }
 
         SessionInfo other = (SessionInfo) otherObject;
-        return (this.slotID_ == other.slotID_)
-                && this.state_.equals(other.state_)
-                && (this.deviceError_ == other.deviceError_)
-                && (this.rwSession_ == other.rwSession_)
-                && (this.serialSession_ == other.serialSession_);
+        return (this.slotID == other.slotID)
+                && this.state.equals(other.state)
+                && (this.deviceError == other.deviceError)
+                && (this.rwSession == other.rwSession)
+                && (this.serialSession == other.serialSession);
     }
 
     /**
      * The overriding of this method should ensure that the objects of this
      * class work correctly in a hashtable.
      *
-     * @return The hash code of this object. Gained from the slotID_, state_ and
-     *         deviceError_.
+     * @return The hash code of this object. Gained from the slotID, state and
+     *         deviceError.
      * @preconditions
      * @postconditions
      */
     @Override
     public int hashCode() {
-        return ((int) slotID_) ^ state_.hashCode() ^ ((int) deviceError_);
+        return ((int) slotID) ^ state.hashCode() ^ ((int) deviceError);
     }
 
 }

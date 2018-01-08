@@ -55,10 +55,10 @@ import sun.security.pkcs11.wrapper.CK_SLOT_INFO;
  *
  * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
  * @version 1.0
- * @invariants (slotDescription_ <> null)
- *             and (manufacturerID_ <> null)
- *             and (hardwareVersion_ <> null)
- *             and (firmwareVersion_ <> null)
+ * @invariants (slotDescription <> null)
+ *             and (manufacturerID <> null)
+ *             and (hardwareVersion <> null)
+ *             and (firmwareVersion <> null)
  */
 @SuppressWarnings("restriction")
 public class SlotInfo {
@@ -66,38 +66,39 @@ public class SlotInfo {
     /**
      * A short description of this slot.
      */
-    protected String slotDescription_;
+    protected String slotDescription;
 
     /**
      * A string identifying the manufacturer of this slot.
      */
-    protected String manufacturerID_;
+    // CHECKSTYLE:SKIP
+    protected String manufacturerID;
 
     /**
      * The version of the slot's hardware.
      */
-    protected Version hardwareVersion_;
+    protected Version hardwareVersion;
 
     /**
      * The version of the slot's firmware.
      */
-    protected Version firmwareVersion_;
+    protected Version firmwareVersion;
 
     /**
      * Indicates, if a token is present.
      */
-    protected boolean tokenPresent_;
+    protected boolean tokenPresent;
 
     /**
      * Indicates, if the token's in this slot are removable or not.
      */
-    protected boolean removableDevice_;
+    protected boolean removableDevice;
 
     /**
      * Indicate, if this slot is a hardware device or if it is just pure
      * software; i.e. no hardware involved, e.g. a software token.
      */
-    protected boolean hwSlot_;
+    protected boolean hwSlot;
 
     /**
      * Constructor that takes the CK_SLOT_INFO object as given by
@@ -110,15 +111,15 @@ public class SlotInfo {
      */
     protected SlotInfo(CK_SLOT_INFO ckSlotInfo) {
         Util.requireNonNull("ckSlotInfo", ckSlotInfo);
-        slotDescription_ = new String(ckSlotInfo.slotDescription);
-        manufacturerID_ = new String(ckSlotInfo.manufacturerID);
-        hardwareVersion_ = new Version(ckSlotInfo.hardwareVersion);
-        firmwareVersion_ = new Version(ckSlotInfo.firmwareVersion);
-        tokenPresent_
+        this.slotDescription = new String(ckSlotInfo.slotDescription);
+        this.manufacturerID = new String(ckSlotInfo.manufacturerID);
+        this.hardwareVersion = new Version(ckSlotInfo.hardwareVersion);
+        this.firmwareVersion = new Version(ckSlotInfo.firmwareVersion);
+        this.tokenPresent
             = (ckSlotInfo.flags & PKCS11Constants.CKF_TOKEN_PRESENT) != 0L;
-        removableDevice_
+        this.removableDevice
             = (ckSlotInfo.flags & PKCS11Constants.CKF_REMOVABLE_DEVICE) != 0L;
-        hwSlot_ = (ckSlotInfo.flags & PKCS11Constants.CKF_HW_SLOT) != 0L;
+        this.hwSlot = (ckSlotInfo.flags & PKCS11Constants.CKF_HW_SLOT) != 0L;
     }
 
     /**
@@ -129,7 +130,7 @@ public class SlotInfo {
      * @postconditions (result <> null)
      */
     public String getSlotDescription() {
-        return slotDescription_;
+        return slotDescription;
     }
 
     /**
@@ -139,8 +140,9 @@ public class SlotInfo {
      * @preconditions
      * @postconditions (result <> null)
      */
+    // CHECKSTYLE:SKIP
     public String getManufacturerID() {
-        return manufacturerID_;
+        return manufacturerID;
     }
 
     /**
@@ -151,7 +153,7 @@ public class SlotInfo {
      * @postconditions (result <> null)
      */
     public Version getHardwareVersion() {
-        return hardwareVersion_;
+        return hardwareVersion;
     }
 
     /**
@@ -162,7 +164,7 @@ public class SlotInfo {
      * @postconditions (result <> null)
      */
     public Version getFirmwareVersion() {
-        return firmwareVersion_;
+        return firmwareVersion;
     }
 
     /**
@@ -176,7 +178,7 @@ public class SlotInfo {
      * @postconditions
      */
     public boolean isTokenPresent() {
-        return tokenPresent_;
+        return tokenPresent;
     }
 
     /**
@@ -188,7 +190,7 @@ public class SlotInfo {
      * @postconditions
      */
     public boolean isRemovableDevice() {
-        return removableDevice_;
+        return removableDevice;
     }
 
     /**
@@ -200,7 +202,7 @@ public class SlotInfo {
      * @postconditions
      */
     public boolean isHwSlot() {
-        return hwSlot_;
+        return hwSlot;
     }
 
     /**
@@ -213,31 +215,31 @@ public class SlotInfo {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append("Slot Description: ");
-        buffer.append(slotDescription_);
+        buffer.append(slotDescription);
         buffer.append(Constants.NEWLINE);
 
         buffer.append("Manufacturer ID: ");
-        buffer.append(manufacturerID_);
+        buffer.append(manufacturerID);
         buffer.append(Constants.NEWLINE);
 
         buffer.append("Hardware Version: ");
-        buffer.append(hardwareVersion_);
+        buffer.append(hardwareVersion);
         buffer.append(Constants.NEWLINE);
 
         buffer.append("Firmware Version: ");
-        buffer.append(firmwareVersion_);
+        buffer.append(firmwareVersion);
         buffer.append(Constants.NEWLINE);
 
         buffer.append("Token present: ");
-        buffer.append(tokenPresent_);
+        buffer.append(tokenPresent);
         buffer.append(Constants.NEWLINE);
 
         buffer.append("Removable Device: ");
-        buffer.append(removableDevice_);
+        buffer.append(removableDevice);
         buffer.append(Constants.NEWLINE);
 
         buffer.append("Hardware Slot: ");
-        buffer.append(hwSlot_);
+        buffer.append(hwSlot);
 
         return buffer.toString();
     }
@@ -264,28 +266,28 @@ public class SlotInfo {
         }
 
         SlotInfo other = (SlotInfo) otherObject;
-        return this.slotDescription_.equals(other.slotDescription_)
-                && this.manufacturerID_.equals(other.manufacturerID_)
-                && this.hardwareVersion_.equals(other.hardwareVersion_)
-                && this.firmwareVersion_.equals(other.firmwareVersion_)
-                && (this.tokenPresent_ == other.tokenPresent_)
-                && (this.removableDevice_ == other.removableDevice_)
-                && (this.hwSlot_ == other.hwSlot_);
+        return this.slotDescription.equals(other.slotDescription)
+                && this.manufacturerID.equals(other.manufacturerID)
+                && this.hardwareVersion.equals(other.hardwareVersion)
+                && this.firmwareVersion.equals(other.firmwareVersion)
+                && (this.tokenPresent == other.tokenPresent)
+                && (this.removableDevice == other.removableDevice)
+                && (this.hwSlot == other.hwSlot);
     }
 
     /**
      * The overriding of this method should ensure that the objects of this
      * class work correctly in a hashtable.
      *
-     * @return The hash code of this object. Gained from the slotDescription_,
-     *         manufacturerID_, hardwareVersion_ and firmwareVersion_.
+     * @return The hash code of this object. Gained from the slotDescription,
+     *         manufacturerID, hardwareVersion and firmwareVersion.
      * @preconditions
      * @postconditions
      */
     @Override
     public int hashCode() {
-        return slotDescription_.hashCode() ^ manufacturerID_.hashCode()
-            ^ hardwareVersion_.hashCode() ^ firmwareVersion_.hashCode();
+        return slotDescription.hashCode() ^ manufacturerID.hashCode()
+            ^ hardwareVersion.hashCode() ^ firmwareVersion.hashCode();
     }
 
 }

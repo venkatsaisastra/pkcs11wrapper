@@ -54,35 +54,34 @@ import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
  * @invariants
  */
 @SuppressWarnings("restriction")
+// CHECKSTYLE:SKIP
 public class RSAPkcsPssParameters extends RSAPkcsParameters {
 
     /**
      * The length of the salt value in octets.
      */
-    protected long saltLength_;
+    protected long saltLength;
 
     /**
      * Create a new RSAPkcsOaepParameters object with the given attributes.
      *
-     * @param hashAlgorithm
+     * @param hashAlg
      *          The message digest algorithm used to calculate the digest of the
      *          encoding parameter.
-     * @param maskGenerationFunction
+     * @param mgf
      *          The mask to apply to the encoded block. One of the constants
      *          defined in the MessageGenerationFunctionType interface.
      * @param saltLength
      *          The length of the salt value in octets.
-     * @preconditions (hashAlgorithm <> null)
-     *                and (maskGenerationFunction
-     *                      == MessageGenerationFunctionType.Sha1)
+     * @preconditions (hashAlg <> null)
+     *                and (mgf == MessageGenerationFunctionType.Sha1)
      * @postconditions
      */
-    public RSAPkcsPssParameters(Mechanism hashAlgorithm,
-                                long maskGenerationFunction,
-                                long saltLength)
-    {
-        super(hashAlgorithm, maskGenerationFunction);
-        saltLength_ = saltLength;
+    public RSAPkcsPssParameters(Mechanism hashAlg,
+                                long mgf,
+                                long saltLength) {
+        super(hashAlg, mgf);
+        this.saltLength = saltLength;
     }
 
     /**
@@ -97,9 +96,9 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
     public Object getPKCS11ParamsObject() {
         CK_RSA_PKCS_PSS_PARAMS params = new CK_RSA_PKCS_PSS_PARAMS();
 
-        params.hashAlg = hashAlgorithm_.getMechanismCode();
-        params.mgf = maskGenerationFunction_;
-        params.sLen = saltLength_;
+        params.hashAlg = hashAlg.getMechanismCode();
+        params.mgf = mgf;
+        params.sLen = saltLength;
 
         return params;
     }
@@ -112,7 +111,7 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
      * @postconditions
      */
     public long getSaltLength() {
-        return saltLength_;
+        return saltLength;
     }
 
     /**
@@ -124,7 +123,7 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
      * @postconditions
      */
     public void setSaltLength(long saltLength) {
-        saltLength_ = saltLength;
+        this.saltLength = saltLength;
     }
 
     /**
@@ -141,7 +140,7 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Salt Length (octets, dec): ");
-        buffer.append(saltLength_);
+        buffer.append(saltLength);
 
         return buffer.toString();
     }
@@ -168,8 +167,7 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
         }
 
         RSAPkcsPssParameters other = (RSAPkcsPssParameters) otherObject;
-        return super.equals(other)
-                && (this.saltLength_ == other.saltLength_);
+        return super.equals(other) && (this.saltLength == other.saltLength);
     }
 
     /**
@@ -182,7 +180,7 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
      */
     @Override
     public int hashCode() {
-        return super.hashCode() ^ ((int) saltLength_);
+        return super.hashCode() ^ ((int) saltLength);
     }
 
 }

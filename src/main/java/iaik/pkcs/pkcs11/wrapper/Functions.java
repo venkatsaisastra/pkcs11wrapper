@@ -56,8 +56,8 @@ import sun.security.pkcs11.wrapper.CK_DATE;
  * This class contains only static methods. It is the place for all functions
  * that are used by several classes in this package.
  *
- * @author Karl Scheibelhofer <Karl.Scheibelhofer@iaik.at>
- * @author Martin Schlaeffer <schlaeff@sbox.tugraz.at>
+ * @author Karl Scheibelhofer &lt;Karl.Scheibelhofer@iaik.at&gt;
+ * @author Martin Schlaeffer &lt;schlaeff@sbox.tugraz.at&gt;
  */
 @SuppressWarnings("restriction")
 public class Functions {
@@ -149,7 +149,7 @@ public class Functions {
     /**
      * For converting numbers to their hex presentation.
      */
-    private static final char HEX_DIGITS[] = {
+    private static final char[] HEX_DIGITS = {
         '0', '1', '2', '3', '4', '5', '6', '7',
         '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
@@ -1123,7 +1123,7 @@ public class Functions {
      * This method checks, if the mechanism with the given code is a full
      * encrypt/decrypt mechanism; i.e. it supports the encryptUpdate() and
      * decryptUpdate() functions.
-     * If this method returns true, the mechanism can be used with the encrypt
+     * If Returns true, the mechanism can be used with the encrypt
      * and decrypt functions including encryptUpdate and decryptUpdate.
      *
      * @param mechanismCode
@@ -1190,7 +1190,7 @@ public class Functions {
      * This method checks, if the mechanism with the given code is a
      * single-operation encrypt/decrypt mechanism; i.e. it does not support the
      * encryptUpdate() and decryptUpdate() functions.
-     * If this method returns true, the mechanism can be used with the encrypt
+     * If Returns true, the mechanism can be used with the encrypt
      * and decrypt functions excluding encryptUpdate and decryptUpdate.
      *
      * @param mechanismCode
@@ -1232,7 +1232,7 @@ public class Functions {
      * This method checks, if the mechanism with the given code is a full
      * sign/verify mechanism; i.e. it supports the signUpdate()
      * and verifyUpdate() functions.
-     * If this method returns true, the mechanism can be used with the sign and
+     * If Returns true, the mechanism can be used with the sign and
      * verify functions including signUpdate and verifyUpdate.
      *
      * @param mechanismCode
@@ -1363,7 +1363,7 @@ public class Functions {
      * This method checks, if the mechanism with the given code is a
      * single-operation sign/verify mechanism; i.e. it does not support the
      * signUpdate() and encryptUpdate() functions.
-     * If this method returns true, the mechanism can be used with the sign and
+     * If Returns true, the mechanism can be used with the sign and
      * verify functions excluding signUpdate and encryptUpdate.
      *
      * @param mechanismCode
@@ -1407,7 +1407,7 @@ public class Functions {
     /**
      * This method checks, if the mechanism with the given code is a sign/verify
      * mechanism with message recovery.
-     * If this method returns true, the mechanism can be used with the
+     * If Returns true, the mechanism can be used with the
      * signRecover and verifyRecover functions.
      *
      * @param mechanismCode
@@ -1449,7 +1449,7 @@ public class Functions {
     /**
      * This method checks, if the mechanism with the given code is a digest
      * mechanism.
-     * If this method returns true, the mechanism can be used with the digest
+     * If Returns true, the mechanism can be used with the digest
      * functions.
      *
      * @param mechanismCode
@@ -1500,7 +1500,7 @@ public class Functions {
     /**
      * This method checks, if the mechanism with the given code is a key
      * generation mechanism for generating symmetric keys.
-     * If this method returns true, the mechanism can be used with the
+     * If Returns true, the mechanism can be used with the
      * generateKey function.
      *
      * @param mechanismCode
@@ -1558,7 +1558,7 @@ public class Functions {
     /**
      * This method checks, if the mechanism with the given code is a key-pair
      * generation mechanism for generating key-pairs.
-     * If this method returns true, the mechanism can be used with the
+     * If Returns true, the mechanism can be used with the
      * generateKeyPair function.
      *
      * @param mechanismCode
@@ -1601,7 +1601,7 @@ public class Functions {
      * This method checks, if the mechanism with the given code is a
      * wrap/unwrap mechanism; i.e. it supports the wrapKey()
      * and unwrapKey() functions.
-     * If this method returns true, the mechanism can be used with the wrapKey
+     * If Returns true, the mechanism can be used with the wrapKey
      * and unwrapKey functions.
      *
      * @param mechanismCode
@@ -1670,7 +1670,7 @@ public class Functions {
     /**
      * This method checks, if the mechanism with the given code is a key
      * derivation mechanism.
-     * If this method returns true, the mechanism can be used with the deriveKey
+     * If Returns true, the mechanism can be used with the deriveKey
      * function.
      *
      * @param mechanismCode

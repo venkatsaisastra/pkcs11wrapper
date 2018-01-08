@@ -58,7 +58,7 @@ public class TokenException extends Exception {
      * An encapsulated (inner) exception. Possibly, an exception from a lower
      * layer that can be propagated to a higher layer only in wrapped form.
      */
-    protected Exception encapsulatedException_;
+    protected Exception encapsulatedException;
 
     /**
      * The default constructor.
@@ -93,7 +93,7 @@ public class TokenException extends Exception {
      */
     public TokenException(Exception encapsulatedException) {
         super();
-        encapsulatedException_ = encapsulatedException;
+        this.encapsulatedException = encapsulatedException;
     }
 
     /**
@@ -110,7 +110,7 @@ public class TokenException extends Exception {
      */
     public TokenException(String message, Exception encapsulatedException) {
         super(message);
-        encapsulatedException_ = encapsulatedException;
+        this.encapsulatedException = encapsulatedException;
     }
 
     /**
@@ -122,7 +122,7 @@ public class TokenException extends Exception {
      * @postconditions
      */
     public Exception getEncapsulatedException() {
-        return encapsulatedException_;
+        return encapsulatedException;
     }
 
     /**
@@ -135,9 +135,9 @@ public class TokenException extends Exception {
     public String toString() {
         StringBuilder buffer = new StringBuilder(super.toString());
 
-        if (encapsulatedException_ != null) {
+        if (encapsulatedException != null) {
             buffer.append(", Encasulated Exception: ");
-            buffer.append(encapsulatedException_.toString());
+            buffer.append(encapsulatedException.toString());
         }
 
         return buffer.toString();

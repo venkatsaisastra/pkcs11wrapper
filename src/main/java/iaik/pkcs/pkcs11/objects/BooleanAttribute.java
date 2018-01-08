@@ -84,8 +84,8 @@ public class BooleanAttribute extends Attribute {
      */
     @SuppressWarnings("restriction")
     public void setBooleanValue(Boolean value) {
-        ckAttribute_.pValue = value;
-        present_ = true;
+        ckAttribute.pValue = value;
+        present = true;
     }
 
     /**
@@ -97,12 +97,11 @@ public class BooleanAttribute extends Attribute {
      */
     @SuppressWarnings("restriction")
     public Boolean getBooleanValue() {
-        return (Boolean) ckAttribute_.pValue;
+        return (Boolean) ckAttribute.pValue;
     }
 
     @Override
-    public void setValue(java.lang.Object value)
-        throws UnsupportedOperationException {
+    public void setValue(java.lang.Object value) {
         setBooleanValue((Boolean) value);
     }
 

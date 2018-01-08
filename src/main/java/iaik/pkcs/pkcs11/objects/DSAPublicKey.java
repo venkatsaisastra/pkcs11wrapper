@@ -53,32 +53,33 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (prime_ <> null)
- *             and (subprime_ <> null)
- *             and (base_ <> null)
- *             and (value_ <> null)
+ * @invariants (prime <> null)
+ *             and (subprime <> null)
+ *             and (base <> null)
+ *             and (value <> null)
  */
+// CHECKSTYLE:SKIP
 public class DSAPublicKey extends PublicKey {
 
     /**
      * The prime (p) of this DSA key.
      */
-    protected ByteArrayAttribute prime_;
+    protected ByteArrayAttribute prime;
 
     /**
      * The sub-prime (q) of this DSA key.
      */
-    protected ByteArrayAttribute subprime_;
+    protected ByteArrayAttribute subprime;
 
     /**
      * The base (g) of this DSA key.
      */
-    protected ByteArrayAttribute base_;
+    protected ByteArrayAttribute base;
 
     /**
      * The public value (y) of this DSA key.
      */
-    protected ByteArrayAttribute value_;
+    protected ByteArrayAttribute value;
 
     /**
      * Default Constructor.
@@ -88,7 +89,7 @@ public class DSAPublicKey extends PublicKey {
      */
     public DSAPublicKey() {
         super();
-        keyType_.setLongValue(KeyType.DSA);
+        keyType.setLongValue(KeyType.DSA);
     }
 
     /**
@@ -108,7 +109,7 @@ public class DSAPublicKey extends PublicKey {
     protected DSAPublicKey(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        keyType_.setLongValue(KeyType.DSA);
+        keyType.setLongValue(KeyType.DSA);
     }
 
     /**
@@ -147,10 +148,10 @@ public class DSAPublicKey extends PublicKey {
      */
     protected static void putAttributesInTable(DSAPublicKey object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.PRIME, object.prime_);
-        object.attributeTable_.put(Attribute.SUBPRIME, object.subprime_);
-        object.attributeTable_.put(Attribute.BASE, object.base_);
-        object.attributeTable_.put(Attribute.VALUE, object.value_);
+        object.attributeTable.put(Attribute.PRIME, object.prime);
+        object.attributeTable.put(Attribute.SUBPRIME, object.subprime);
+        object.attributeTable.put(Attribute.BASE, object.base);
+        object.attributeTable.put(Attribute.VALUE, object.value);
     }
 
     /**
@@ -164,10 +165,10 @@ public class DSAPublicKey extends PublicKey {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        prime_ = new ByteArrayAttribute(Attribute.PRIME);
-        subprime_ = new ByteArrayAttribute(Attribute.SUBPRIME);
-        base_ = new ByteArrayAttribute(Attribute.BASE);
-        value_ = new ByteArrayAttribute(Attribute.VALUE);
+        prime = new ByteArrayAttribute(Attribute.PRIME);
+        subprime = new ByteArrayAttribute(Attribute.SUBPRIME);
+        base = new ByteArrayAttribute(Attribute.BASE);
+        value = new ByteArrayAttribute(Attribute.VALUE);
 
         putAttributesInTable(this);
     }
@@ -185,10 +186,10 @@ public class DSAPublicKey extends PublicKey {
     public java.lang.Object clone() {
         DSAPublicKey clone = (DSAPublicKey) super.clone();
 
-        clone.prime_ = (ByteArrayAttribute) this.prime_.clone();
-        clone.subprime_ = (ByteArrayAttribute) this.subprime_.clone();
-        clone.base_ = (ByteArrayAttribute) this.base_.clone();
-        clone.value_ = (ByteArrayAttribute) this.value_.clone();
+        clone.prime = (ByteArrayAttribute) this.prime.clone();
+        clone.subprime = (ByteArrayAttribute) this.subprime.clone();
+        clone.base = (ByteArrayAttribute) this.base.clone();
+        clone.value = (ByteArrayAttribute) this.value.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -219,10 +220,10 @@ public class DSAPublicKey extends PublicKey {
 
         DSAPublicKey other = (DSAPublicKey) otherObject;
         return super.equals(other)
-                && this.prime_.equals(other.prime_)
-                && this.subprime_.equals(other.subprime_)
-                && this.base_.equals(other.base_)
-                && this.value_.equals(other.value_);
+                && this.prime.equals(other.prime)
+                && this.subprime.equals(other.subprime)
+                && this.base.equals(other.base)
+                && this.value.equals(other.value);
     }
 
     /**
@@ -233,7 +234,7 @@ public class DSAPublicKey extends PublicKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getPrime() {
-        return prime_;
+        return prime;
     }
 
     /**
@@ -244,7 +245,7 @@ public class DSAPublicKey extends PublicKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getSubprime() {
-        return subprime_;
+        return subprime;
     }
 
     /**
@@ -255,7 +256,7 @@ public class DSAPublicKey extends PublicKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getBase() {
-        return base_;
+        return base;
     }
 
     /**
@@ -266,7 +267,7 @@ public class DSAPublicKey extends PublicKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getValue() {
-        return value_;
+        return value;
     }
 
     /**
@@ -286,12 +287,12 @@ public class DSAPublicKey extends PublicKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            prime_, subprime_, base_, value_ });
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            prime, subprime, base, value });
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -307,18 +308,18 @@ public class DSAPublicKey extends PublicKey {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Prime (hex): ");
-        buffer.append(prime_.toString());
+        buffer.append(prime.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Subprime (hex): ");
-        buffer.append(subprime_.toString());
+        buffer.append(subprime.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Base (hex): ");
-        buffer.append(base_.toString());
+        buffer.append(base.toString());
 
         buffer.append(Constants.NEWLINE_INDENT_HEXVALUE);
-        buffer.append(value_.toString());
+        buffer.append(value.toString());
 
         return buffer.toString();
     }

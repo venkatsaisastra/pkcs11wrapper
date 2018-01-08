@@ -66,7 +66,7 @@ public class AttributeArray extends Attribute {
      * The attributes of this attribute array in their object class
      * representation. Needed for printing and comparing this attribute array.
      */
-    protected Object template_;
+    protected Object template;
 
     /**
      * Default constructor - only for internal use.
@@ -99,20 +99,20 @@ public class AttributeArray extends Attribute {
      * @postconditions
      */
     public void setAttributeArrayValue(Object value) {
-        template_ = value;
+        template = value;
 
         List<CK_ATTRIBUTE> attributeList = new ArrayList<>();
         Enumeration<Attribute> attributeEnumeration
-                = template_.attributeTable_.elements();
+                = template.attributeTable.elements();
         while (attributeEnumeration.hasMoreElements()) {
             Attribute attribute = attributeEnumeration.nextElement();
-            if (attribute.present_) {
+            if (attribute.present) {
                 attributeList.add(attribute.getCkAttribute());
             }
         }
-        ckAttribute_.pValue = (CK_ATTRIBUTE[])
+        ckAttribute.pValue = (CK_ATTRIBUTE[])
                 attributeList.toArray(new CK_ATTRIBUTE[0]);
-        present_ = true;
+        present = true;
     }
 
     /**
@@ -123,16 +123,16 @@ public class AttributeArray extends Attribute {
      * @postconditions
      */
     public Object getAttributeArrayValue() {
-        if (template_ != null) {
-            return template_;
+        if (template != null) {
+            return template;
         }
 
-        if (!(ckAttribute_.pValue != null
-                && ((CK_ATTRIBUTE[]) ckAttribute_.pValue).length > 0)) {
+        if (!(ckAttribute.pValue != null
+                && ((CK_ATTRIBUTE[]) ckAttribute.pValue).length > 0)) {
             return null;
         }
 
-        CK_ATTRIBUTE[] attributesArray = (CK_ATTRIBUTE[]) ckAttribute_.pValue;
+        CK_ATTRIBUTE[] attributesArray = (CK_ATTRIBUTE[]) ckAttribute.pValue;
         GenericTemplate template = new GenericTemplate();
         for (int i = 0; i < attributesArray.length; i++) {
             Long type = new Long(attributesArray[i].type);
@@ -170,16 +170,16 @@ public class AttributeArray extends Attribute {
      */
     protected String getValueString() {
         String valueString = "";
-        if (template_ == null) {
-            template_ = getAttributeArrayValue();
+        if (template == null) {
+            template = getAttributeArrayValue();
         }
 
-        if (template_ == null) {
+        if (template == null) {
             valueString = "<NULL_PTR>";
         } else {
             String indent
                     = Constants.INDENT + Constants.INDENT + Constants.INDENT;
-            valueString += template_.toString(true, true, indent);
+            valueString += template.toString(true, true, indent);
         }
         return valueString;
     }
@@ -207,27 +207,27 @@ public class AttributeArray extends Attribute {
 
         AttributeArray other = (AttributeArray) otherObject;
 
-        if (this.template_ == null) {
-            this.template_ = this.getAttributeArrayValue();
+        if (this.template == null) {
+            this.template = this.getAttributeArrayValue();
         }
 
-        if (other.template_ == null) {
-            other.template_ = other.getAttributeArrayValue();
+        if (other.template == null) {
+            other.template = other.getAttributeArrayValue();
         }
 
-        if (!this.present_ && !other.present_) {
+        if (!this.present && !other.present) {
             return true;
         }
 
-        if (!(this.present_ && other.present_)) {
+        if (!(this.present && other.present)) {
             return false;
         }
 
-        if (this.sensitive_ != other.sensitive_) {
+        if (this.sensitive != other.sensitive) {
             return false;
         }
 
-        return this.template_.equals(other.template_);
+        return this.template.equals(other.template);
     }
 
     /**
@@ -240,10 +240,10 @@ public class AttributeArray extends Attribute {
      */
     @Override
     public int hashCode() {
-        if (template_ == null) {
-            template_ = getAttributeArrayValue();
+        if (template == null) {
+            template = getAttributeArrayValue();
         }
-        return template_.hashCode();
+        return template.hashCode();
     }
 
     /**
@@ -262,11 +262,11 @@ public class AttributeArray extends Attribute {
         AttributeArray clone;
 
         clone = (AttributeArray) super.clone();
-        if (template_ == null) {
-            template_ = getAttributeArrayValue();
+        if (template == null) {
+            template = getAttributeArrayValue();
         }
-        if (template_ != null) {
-            clone.template_ = (GenericTemplate) this.template_.clone();
+        if (template != null) {
+            clone.template = (GenericTemplate) this.template.clone();
         }
         return clone;
     }

@@ -55,13 +55,13 @@ import sun.security.pkcs11.wrapper.CK_TOKEN_INFO;
  *
  * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
  * @version 1.0
- * @invariants (label_ <> null)
- *             and (manufacturerID_ <> null)
- *             and (model_ <> null)
- *             and (serialNumber_ <> null)
- *             and (hardwareVersion_ <> null)
- *             and (firmwareVersion_ <> null)
- *             and (time_ <> null)
+ * @invariants (label <> null)
+ *             and (manufacturerID <> null)
+ *             and (model <> null)
+ *             and (serialNumber <> null)
+ *             and (hardwareVersion <> null)
+ *             and (firmwareVersion <> null)
+ *             and (time <> null)
  */
 @SuppressWarnings("restriction")
 public class TokenInfo implements Cloneable {
@@ -85,188 +85,189 @@ public class TokenInfo implements Cloneable {
     /**
      * The label of this token.
      */
-    protected String label_;
+    protected String label;
 
     /**
      * The identifier of the manufacturer of this token.
      */
-    protected String manufacturerID_;
+    // CHECKSTYLE:SKIP
+    protected String manufacturerID;
 
     /**
      * The model of this token.
      */
-    protected String model_;
+    protected String model;
 
     /**
      * The serial number of this token.
      */
-    protected String serialNumber_;
+    protected String serialNumber;
 
     /**
      * The maximum number of concurrent (open) sessions.
      */
-    protected long maxSessionCount_;
+    protected long maxSessionCount;
 
     /**
      * The current number of open sessions.
      */
-    protected long sessionCount_;
+    protected long sessionCount;
 
     /**
      * Maximum number of concurrent (open) read-write sessions.
      */
-    protected long maxRwSessionCount_;
+    protected long maxRwSessionCount;
 
     /**
      * The current number of open read-write sessions.
      */
-    protected long rwSessionCount_;
+    protected long rwSessionCount;
 
     /**
      * The maximum PIN length that this token allows.
      */
-    protected long maxPinLen_;
+    protected long maxPinLen;
 
     /**
      * The minimum PIN length that this token allows.
      */
-    protected long minPinLen_;
+    protected long minPinLen;
 
     /**
      * The total amount of memory for public objects on this token.
      */
-    protected long totalPublicMemory_;
+    protected long totalPublicMemory;
 
     /**
      * The amount of free memory for public objects on this token.
      */
-    protected long freePublicMemory_;
+    protected long freePublicMemory;
 
     /**
      * The total amount of memory for private objects on this token.
      */
-    protected long totalPrivateMemory_;
+    protected long totalPrivateMemory;
 
     /**
      * The amount of free memory for private objects on this token.
      */
-    protected long freePrivateMemory_;
+    protected long freePrivateMemory;
 
     /**
      * The version of the hardware of this token.
      */
-    protected Version hardwareVersion_;
+    protected Version hardwareVersion;
 
     /**
      * The version of the firmware of this token.
      */
-    protected Version firmwareVersion_;
+    protected Version firmwareVersion;
 
     /**
      * The current time on the token. This value only makes sense, if the token
      * contains a clock.
      */
-    protected Date time_;
+    protected Date time;
 
     /**
      * True, if the token has a random number generator.
      */
-    protected boolean rng_;
+    protected boolean rng;
 
     /**
      * True, if the token is write protected.
      */
-    protected boolean writeProtected_;
+    protected boolean writeProtected;
 
     /**
      * True, if the token requires the user to login to perform certain
      * operations.
      */
-    protected boolean loginRequired_;
+    protected boolean loginRequired;
 
     /**
      * True, if the user-PIN is already initialized.
      */
-    protected boolean userPinInitialized_;
+    protected boolean userPinInitialized;
 
     /**
      * True, if a successful save of a session's cryptographic operations state
      * always contains all keys needed to restore the state of the session.
      */
-    protected boolean restoreKeyNotNeeded_;
+    protected boolean restoreKeyNotNeeded;
 
     /**
      * True, if the token has a clock.
      */
-    protected boolean clockOnToken_;
+    protected boolean clockOnToken;
 
     /**
      * True, if there are different means to authenticate the user than passing
      * the user-PIN to a login operation.
      */
-    protected boolean protectedAuthenticationPath_;
+    protected boolean protectedAuthenticationPath;
 
     /**
      * True, if the token supports dual cryptographic operations.
      */
-    protected boolean dualCryptoOperations_;
+    protected boolean dualCryptoOperations;
 
     /**
      * True, if the token is already initialized.
      */
-    protected boolean tokenInitialized_;
+    protected boolean tokenInitialized;
 
     /**
      * True, if the token supports secondary authentication for private key
      * objects.
      */
-    protected boolean secondaryAuthentication_;
+    protected boolean secondaryAuthentication;
 
     /**
      * True, if the user-PIN has been entered incorrectly at least once since
      * the last successful authentication.
      */
-    protected boolean userPinCountLow_;
+    protected boolean userPinCountLow;
 
     /**
      * True, if the user has just one try left to supply the correct PIN before
      * the user-PIN gets locked.
      */
-    protected boolean userPinFinalTry_;
+    protected boolean userPinFinalTry;
 
     /**
      * True, if the user-PIN is locked.
      */
-    protected boolean userPinLocked_;
+    protected boolean userPinLocked;
 
     /**
      * True, if the user PIN value is the default value set by token
      * initialization or manufacturing.
      */
-    protected boolean userPinToBeChanged_;
+    protected boolean userPinToBeChanged;
 
     /**
      * True, if the security officer-PIN has been entered incorrectly at least
      * once since the last successful authentication.
      */
-    protected boolean soPinCountLow_;
+    protected boolean soPinCountLow;
 
     /**
      * True, if the security officer has just one try left to supply the correct
      * PIN before the security officer-PIN gets locked.
      */
-    protected boolean soPinFinalTry_;
+    protected boolean soPinFinalTry;
 
     /**
      * True, if the security officer-PIN is locked.
      */
-    protected boolean soPinLocked_;
+    protected boolean soPinLocked;
 
     /**
      * True, if the security officer-PIN value is the default value set by token
      * initialization or manufacturing.
      */
-    protected boolean soPinToBeChanged_;
+    protected boolean soPinToBeChanged;
 
     /**
      * Constructor taking CK_TOKEN_INFO as given returned by
@@ -280,57 +281,57 @@ public class TokenInfo implements Cloneable {
      */
     protected TokenInfo(CK_TOKEN_INFO ckTokenInfo) {
         Util.requireNonNull("ckTokenInfo", ckTokenInfo);
-        label_ = new String(ckTokenInfo.label);
-        manufacturerID_ = new String(ckTokenInfo.manufacturerID);
-        model_ = new String(ckTokenInfo.model);
-        serialNumber_ = new String(ckTokenInfo.serialNumber);
-        maxSessionCount_ = ckTokenInfo.ulMaxSessionCount;
-        sessionCount_ = ckTokenInfo.ulSessionCount;
-        maxRwSessionCount_ = ckTokenInfo.ulMaxRwSessionCount;
-        rwSessionCount_ = ckTokenInfo.ulRwSessionCount;
-        maxPinLen_ = ckTokenInfo.ulMaxPinLen;
-        minPinLen_ = ckTokenInfo.ulMinPinLen;
-        totalPublicMemory_ = ckTokenInfo.ulTotalPublicMemory;
-        freePublicMemory_ = ckTokenInfo.ulFreePublicMemory;
-        totalPrivateMemory_ = ckTokenInfo.ulTotalPrivateMemory;
-        freePrivateMemory_ = ckTokenInfo.ulFreePrivateMemory;
-        hardwareVersion_ = new Version(ckTokenInfo.hardwareVersion);
-        firmwareVersion_ = new Version(ckTokenInfo.firmwareVersion);
-        time_ = Util.parseTime(ckTokenInfo.utcTime);
-        rng_ = (ckTokenInfo.flags & PKCS11Constants.CKF_RNG) != 0L;
+        label = new String(ckTokenInfo.label);
+        manufacturerID = new String(ckTokenInfo.manufacturerID);
+        model = new String(ckTokenInfo.model);
+        serialNumber = new String(ckTokenInfo.serialNumber);
+        maxSessionCount = ckTokenInfo.ulMaxSessionCount;
+        sessionCount = ckTokenInfo.ulSessionCount;
+        maxRwSessionCount = ckTokenInfo.ulMaxRwSessionCount;
+        rwSessionCount = ckTokenInfo.ulRwSessionCount;
+        maxPinLen = ckTokenInfo.ulMaxPinLen;
+        minPinLen = ckTokenInfo.ulMinPinLen;
+        totalPublicMemory = ckTokenInfo.ulTotalPublicMemory;
+        freePublicMemory = ckTokenInfo.ulFreePublicMemory;
+        totalPrivateMemory = ckTokenInfo.ulTotalPrivateMemory;
+        freePrivateMemory = ckTokenInfo.ulFreePrivateMemory;
+        hardwareVersion = new Version(ckTokenInfo.hardwareVersion);
+        firmwareVersion = new Version(ckTokenInfo.firmwareVersion);
+        time = Util.parseTime(ckTokenInfo.utcTime);
+        rng = (ckTokenInfo.flags & PKCS11Constants.CKF_RNG) != 0L;
         final long flags = ckTokenInfo.flags;
-        writeProtected_ = (flags & PKCS11Constants.CKF_WRITE_PROTECTED) != 0L;
-        loginRequired_ = (flags & PKCS11Constants.CKF_LOGIN_REQUIRED) != 0L;
-        userPinInitialized_ =
+        writeProtected = (flags & PKCS11Constants.CKF_WRITE_PROTECTED) != 0L;
+        loginRequired = (flags & PKCS11Constants.CKF_LOGIN_REQUIRED) != 0L;
+        userPinInitialized =
                 (flags & PKCS11Constants.CKF_USER_PIN_INITIALIZED) != 0L;
-        restoreKeyNotNeeded_ =
+        restoreKeyNotNeeded =
                 (flags & PKCS11Constants.CKF_RESTORE_KEY_NOT_NEEDED) != 0L;
-        clockOnToken_ =
+        clockOnToken =
                 (flags & PKCS11Constants.CKF_CLOCK_ON_TOKEN) != 0L;
-        protectedAuthenticationPath_ =
+        protectedAuthenticationPath =
                 (flags & PKCS11Constants.CKF_PROTECTED_AUTHENTICATION_PATH)
                     != 0L;
-        dualCryptoOperations_ =
+        dualCryptoOperations =
                 (flags & PKCS11Constants.CKF_DUAL_CRYPTO_OPERATIONS) != 0L;
-        tokenInitialized_ =
+        tokenInitialized =
                 (flags & PKCS11Constants.CKF_TOKEN_INITIALIZED) != 0L;
-        secondaryAuthentication_ =
+        secondaryAuthentication =
                 (flags & PKCS11Constants.CKF_SECONDARY_AUTHENTICATION) != 0L;
-        userPinCountLow_ =
+        userPinCountLow =
                 (flags & PKCS11Constants.CKF_USER_PIN_COUNT_LOW) != 0L;
-        userPinFinalTry_ =
+        userPinFinalTry =
                 (flags & PKCS11Constants.CKF_USER_PIN_FINAL_TRY) != 0L;
-        userPinLocked_ =
+        userPinLocked =
                 (flags & PKCS11Constants.CKF_USER_PIN_LOCKED) != 0L;
-        userPinToBeChanged_ =
+        userPinToBeChanged =
                 (flags & PKCS11Constants.CKF_USER_PIN_TO_BE_CHANGED) != 0L;
-        soPinCountLow_ =
+        soPinCountLow =
                 (flags & PKCS11Constants.CKF_SO_PIN_COUNT_LOW) != 0L;
-        soPinFinalTry_ =
+        soPinFinalTry =
                 (flags & PKCS11Constants.CKF_SO_PIN_FINAL_TRY) != 0L;
-        soPinLocked_ =
+        soPinLocked =
                 (flags & PKCS11Constants.CKF_SO_PIN_LOCKED) != 0L;
-        soPinToBeChanged_ =
+        soPinToBeChanged =
                 (flags & PKCS11Constants.CKF_SO_PIN_TO_BE_CHANGED) != 0L;
     }
 
@@ -350,9 +351,9 @@ public class TokenInfo implements Cloneable {
         try {
             clone = (TokenInfo) super.clone();
 
-            clone.hardwareVersion_ = (Version) this.hardwareVersion_.clone();
-            clone.firmwareVersion_ = (Version) this.firmwareVersion_.clone();
-            clone.time_ = new Date(this.time_.getTime());
+            clone.hardwareVersion = (Version) this.hardwareVersion.clone();
+            clone.firmwareVersion = (Version) this.firmwareVersion.clone();
+            clone.time = new Date(this.time.getTime());
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is clone-able
             throw new TokenRuntimeException(
@@ -370,7 +371,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions (result <> null)
      */
     public String getLabel() {
-        return label_;
+        return label;
     }
 
     /**
@@ -380,8 +381,9 @@ public class TokenInfo implements Cloneable {
      * @preconditions
      * @postconditions (result <> null)
      */
+    // CHECKSTYLE:SKIP
     public String getManufacturerID() {
-        return manufacturerID_;
+        return manufacturerID;
     }
 
     /**
@@ -392,7 +394,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions (result <> null)
      */
     public String getModel() {
-        return model_;
+        return model;
     }
 
     /**
@@ -403,7 +405,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions (result <> null)
      */
     public String getSerialNumber() {
-        return serialNumber_;
+        return serialNumber;
     }
 
     /**
@@ -414,7 +416,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public long getMaxSessionCount() {
-        return maxSessionCount_;
+        return maxSessionCount;
     }
 
     /**
@@ -425,7 +427,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public long getSessionCount() {
-        return sessionCount_;
+        return sessionCount;
     }
 
     /**
@@ -437,7 +439,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public long getMaxRwSessionCount() {
-        return maxRwSessionCount_;
+        return maxRwSessionCount;
     }
 
     /**
@@ -448,7 +450,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public long getRwSessionCount() {
-        return rwSessionCount_;
+        return rwSessionCount;
     }
 
     /**
@@ -459,7 +461,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public long getMaxPinLen() {
-        return maxPinLen_;
+        return maxPinLen;
     }
 
     /**
@@ -470,7 +472,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public long getMinPinLen() {
-        return minPinLen_;
+        return minPinLen;
     }
 
     /**
@@ -481,7 +483,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public long getTotalPublicMemory() {
-        return totalPublicMemory_;
+        return totalPublicMemory;
     }
 
     /**
@@ -492,7 +494,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public long getFreePublicMemory() {
-        return freePublicMemory_;
+        return freePublicMemory;
     }
 
     /**
@@ -503,7 +505,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public long getTotalPrivateMemory() {
-        return totalPrivateMemory_;
+        return totalPrivateMemory;
     }
 
     /**
@@ -514,7 +516,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public long getFreePrivateMemory() {
-        return freePrivateMemory_;
+        return freePrivateMemory;
     }
 
     /**
@@ -525,7 +527,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions (result <> null)
      */
     public Version getHardwareVersion() {
-        return hardwareVersion_;
+        return hardwareVersion;
     }
 
     /**
@@ -536,7 +538,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions (result <> null)
      */
     public Version getFirmwareVersion() {
-        return firmwareVersion_;
+        return firmwareVersion;
     }
 
     /**
@@ -550,7 +552,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions (result <> null)
      */
     public Date getTime() {
-        return time_;
+        return time;
     }
 
     /**
@@ -561,8 +563,9 @@ public class TokenInfo implements Cloneable {
      * @preconditions
      * @postconditions
      */
+    // CHECKSTYLE:SKIP
     public boolean isRNG() {
-        return rng_;
+        return rng;
     }
 
     /**
@@ -573,7 +576,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isWriteProtected() {
-        return writeProtected_;
+        return writeProtected;
     }
 
     /**
@@ -586,7 +589,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isLoginRequired() {
-        return loginRequired_;
+        return loginRequired;
     }
 
     /**
@@ -597,7 +600,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isUserPinInitialized() {
-        return userPinInitialized_;
+        return userPinInitialized;
     }
 
     /**
@@ -612,7 +615,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isRestoreKeyNotNeeded() {
-        return restoreKeyNotNeeded_;
+        return restoreKeyNotNeeded;
     }
 
     /**
@@ -623,7 +626,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isClockOnToken() {
-        return clockOnToken_;
+        return clockOnToken;
     }
 
     /**
@@ -638,7 +641,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isProtectedAuthenticationPath() {
-        return protectedAuthenticationPath_;
+        return protectedAuthenticationPath;
     }
 
     /**
@@ -650,7 +653,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isDualCryptoOperations() {
-        return dualCryptoOperations_;
+        return dualCryptoOperations;
     }
 
     /**
@@ -661,7 +664,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isTokenInitialized() {
-        return tokenInitialized_;
+        return tokenInitialized;
     }
 
     /**
@@ -674,7 +677,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isSecondaryAuthentication() {
-        return secondaryAuthentication_;
+        return secondaryAuthentication;
     }
 
     /**
@@ -687,7 +690,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isUserPinCountLow() {
-        return userPinCountLow_;
+        return userPinCountLow;
     }
 
     /**
@@ -700,7 +703,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isUserPinFinalTry() {
-        return userPinFinalTry_;
+        return userPinFinalTry;
     }
 
     /**
@@ -711,7 +714,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isUserPinLocked() {
-        return userPinLocked_;
+        return userPinLocked;
     }
 
     /**
@@ -724,7 +727,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isUserPinToBeChanged() {
-        return userPinToBeChanged_;
+        return userPinToBeChanged;
     }
 
     /**
@@ -738,7 +741,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isSoPinCountLow() {
-        return soPinCountLow_;
+        return soPinCountLow;
     }
 
     /**
@@ -752,7 +755,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isSoPinFinalTry() {
-        return soPinFinalTry_;
+        return soPinFinalTry;
     }
 
     /**
@@ -763,7 +766,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isSoPinLocked() {
-        return soPinLocked_;
+        return soPinLocked;
     }
 
     /**
@@ -776,7 +779,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isSoPinToBeChanged() {
-        return soPinToBeChanged_;
+        return soPinToBeChanged;
     }
 
     /**
@@ -789,160 +792,160 @@ public class TokenInfo implements Cloneable {
         StringBuilder buffer = new StringBuilder();
 
         buffer.append("Label: ");
-        buffer.append(label_);
+        buffer.append(label);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Manufacturer ID: ");
-        buffer.append(manufacturerID_);
+        buffer.append(manufacturerID);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Model: ");
-        buffer.append(model_);
+        buffer.append(model);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Serial Number: ");
-        buffer.append(serialNumber_);
+        buffer.append(serialNumber);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Random Number Generator: ");
-        buffer.append(rng_);
+        buffer.append(rng);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Write protected: ");
-        buffer.append(writeProtected_);
+        buffer.append(writeProtected);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Login required: ");
-        buffer.append(loginRequired_);
+        buffer.append(loginRequired);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("User PIN initialized: ");
-        buffer.append(userPinInitialized_);
+        buffer.append(userPinInitialized);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Restore Key not needed: ");
-        buffer.append(restoreKeyNotNeeded_);
+        buffer.append(restoreKeyNotNeeded);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Clock on Token: ");
-        buffer.append(clockOnToken_);
+        buffer.append(clockOnToken);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Protected Authentication Path: ");
-        buffer.append(protectedAuthenticationPath_);
+        buffer.append(protectedAuthenticationPath);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Dual Crypto Operations: ");
-        buffer.append(dualCryptoOperations_);
+        buffer.append(dualCryptoOperations);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Token initialized: ");
-        buffer.append(tokenInitialized_);
+        buffer.append(tokenInitialized);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Secondary Authentication: ");
-        buffer.append(secondaryAuthentication_);
+        buffer.append(secondaryAuthentication);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("User PIN-Count low: ");
-        buffer.append(userPinCountLow_);
+        buffer.append(userPinCountLow);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("User PIN final Try: ");
-        buffer.append(userPinFinalTry_);
+        buffer.append(userPinFinalTry);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("User PIN locked: ");
-        buffer.append(userPinLocked_);
+        buffer.append(userPinLocked);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("User PIN to be changed: ");
-        buffer.append(userPinToBeChanged_);
+        buffer.append(userPinToBeChanged);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Security Officer PIN-Count low: ");
-        buffer.append(soPinCountLow_);
+        buffer.append(soPinCountLow);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Security Officer PIN final Try: ");
-        buffer.append(soPinFinalTry_);
+        buffer.append(soPinFinalTry);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Security Officer PIN locked: ");
-        buffer.append(soPinLocked_);
+        buffer.append(soPinLocked);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Security Officer PIN to be changed: ");
-        buffer.append(soPinToBeChanged_);
+        buffer.append(soPinToBeChanged);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Maximum Session Count: ");
 
-        if (maxSessionCount_ == UNAVAILABLE_INFORMATION) {
+        if (maxSessionCount == UNAVAILABLE_INFORMATION) {
             buffer.append("<Information unavailable>");
         } else {
-            buffer.append((maxSessionCount_ == EFFECTIVELY_INFINITE)
-                ? "<effectively infinite>" : Long.toString(maxSessionCount_));
+            buffer.append((maxSessionCount == EFFECTIVELY_INFINITE)
+                ? "<effectively infinite>" : Long.toString(maxSessionCount));
         }
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Session Count: ");
-        buffer.append((sessionCount_ == UNAVAILABLE_INFORMATION)
-            ? "<Information unavailable>" : Long.toString(sessionCount_));
+        buffer.append((sessionCount == UNAVAILABLE_INFORMATION)
+            ? "<Information unavailable>" : Long.toString(sessionCount));
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Maximum Read/Write Session Count: ");
-        if (maxRwSessionCount_ == UNAVAILABLE_INFORMATION) {
+        if (maxRwSessionCount == UNAVAILABLE_INFORMATION) {
             buffer.append("<Information unavailable>");
         } else {
-            buffer.append((maxRwSessionCount_ == EFFECTIVELY_INFINITE)
-                ? "<effectively infinite>" : Long.toString(maxRwSessionCount_));
+            buffer.append((maxRwSessionCount == EFFECTIVELY_INFINITE)
+                ? "<effectively infinite>" : Long.toString(maxRwSessionCount));
         }
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Read/Write Session Count: ");
-        buffer.append((rwSessionCount_ == UNAVAILABLE_INFORMATION)
-            ? "<Information unavailable>" : Long.toString(rwSessionCount_));
+        buffer.append((rwSessionCount == UNAVAILABLE_INFORMATION)
+            ? "<Information unavailable>" : Long.toString(rwSessionCount));
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Maximum PIN Length: ");
-        buffer.append(maxPinLen_);
+        buffer.append(maxPinLen);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Minimum PIN Length: ");
-        buffer.append(minPinLen_);
+        buffer.append(minPinLen);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Total Public Memory: ");
-        buffer.append((totalPublicMemory_ == UNAVAILABLE_INFORMATION)
-            ? "<Information unavailable>" : Long.toString(totalPublicMemory_));
+        buffer.append((totalPublicMemory == UNAVAILABLE_INFORMATION)
+            ? "<Information unavailable>" : Long.toString(totalPublicMemory));
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Free Public Memory: ");
-        buffer .append((freePublicMemory_ == UNAVAILABLE_INFORMATION)
-            ? "<Information unavailable>" : Long.toString(freePublicMemory_));
+        buffer .append((freePublicMemory == UNAVAILABLE_INFORMATION)
+            ? "<Information unavailable>" : Long.toString(freePublicMemory));
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Total Private Memory: ");
-        buffer.append((totalPrivateMemory_ == UNAVAILABLE_INFORMATION)
-            ? "<Information unavailable>" : Long.toString(totalPrivateMemory_));
+        buffer.append((totalPrivateMemory == UNAVAILABLE_INFORMATION)
+            ? "<Information unavailable>" : Long.toString(totalPrivateMemory));
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Free Private Memory: ");
-        buffer.append((freePrivateMemory_ == UNAVAILABLE_INFORMATION)
-            ? "<Information unavailable>" : Long.toString(freePrivateMemory_));
+        buffer.append((freePrivateMemory == UNAVAILABLE_INFORMATION)
+            ? "<Information unavailable>" : Long.toString(freePrivateMemory));
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Hardware Version: ");
-        buffer.append(hardwareVersion_);
+        buffer.append(hardwareVersion);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Firmware Version: ");
-        buffer.append(firmwareVersion_);
+        buffer.append(firmwareVersion);
 
         buffer.append(Constants.NEWLINE);
         buffer.append("Time: ");
-        buffer.append(time_);
+        buffer.append(time);
 
         return buffer.toString();
     }
@@ -969,58 +972,58 @@ public class TokenInfo implements Cloneable {
         }
 
         TokenInfo other = (TokenInfo) otherObject;
-        return this.label_.equals(other.label_)
-                && this.manufacturerID_.equals(other.manufacturerID_)
-                && this.model_.equals(other.model_)
-                && this.serialNumber_.equals(other.serialNumber_)
-                && (this.maxSessionCount_ == other.maxSessionCount_)
-                && (this.sessionCount_ == other.sessionCount_)
-                && (this.maxRwSessionCount_ == other.maxRwSessionCount_)
-                && (this.rwSessionCount_ == other.rwSessionCount_)
-                && (this.maxPinLen_ == other.maxPinLen_)
-                && (this.minPinLen_ == other.minPinLen_)
-                && (this.totalPublicMemory_ == other.totalPublicMemory_)
-                && (this.freePublicMemory_ == other.freePublicMemory_)
-                && (this.totalPrivateMemory_ == other.totalPrivateMemory_)
-                && (this.freePrivateMemory_ == other.freePrivateMemory_)
-                && this.hardwareVersion_.equals(other.hardwareVersion_)
-                && this.firmwareVersion_.equals(other.firmwareVersion_)
-                && this.time_.equals(other.time_)
-                && (this.rng_ == other.rng_)
-                && (this.writeProtected_ == other.writeProtected_)
-                && (this.loginRequired_ == other.loginRequired_)
-                && (this.userPinInitialized_ == other.userPinInitialized_)
-                && (this.restoreKeyNotNeeded_ == other.restoreKeyNotNeeded_)
-                && (this.clockOnToken_ == other.clockOnToken_)
-                && (this.protectedAuthenticationPath_
-                        == other.protectedAuthenticationPath_)
-                && (this.dualCryptoOperations_ == other.dualCryptoOperations_)
-                && (this.tokenInitialized_ == other.tokenInitialized_)
-                && (this.secondaryAuthentication_
-                        == other.secondaryAuthentication_)
-                && (this.userPinCountLow_ == other.userPinCountLow_)
-                && (this.userPinFinalTry_ == other.userPinFinalTry_)
-                && (this.userPinLocked_ == other.userPinLocked_)
-                && (this.userPinToBeChanged_ == other.userPinToBeChanged_)
-                && (this.soPinCountLow_ == other.soPinCountLow_)
-                && (this.soPinFinalTry_ == other.soPinFinalTry_)
-                && (this.soPinLocked_ == other.soPinLocked_)
-                && (this.soPinToBeChanged_ == other.soPinToBeChanged_);
+        return this.label.equals(other.label)
+                && this.manufacturerID.equals(other.manufacturerID)
+                && this.model.equals(other.model)
+                && this.serialNumber.equals(other.serialNumber)
+                && (this.maxSessionCount == other.maxSessionCount)
+                && (this.sessionCount == other.sessionCount)
+                && (this.maxRwSessionCount == other.maxRwSessionCount)
+                && (this.rwSessionCount == other.rwSessionCount)
+                && (this.maxPinLen == other.maxPinLen)
+                && (this.minPinLen == other.minPinLen)
+                && (this.totalPublicMemory == other.totalPublicMemory)
+                && (this.freePublicMemory == other.freePublicMemory)
+                && (this.totalPrivateMemory == other.totalPrivateMemory)
+                && (this.freePrivateMemory == other.freePrivateMemory)
+                && this.hardwareVersion.equals(other.hardwareVersion)
+                && this.firmwareVersion.equals(other.firmwareVersion)
+                && this.time.equals(other.time)
+                && (this.rng == other.rng)
+                && (this.writeProtected == other.writeProtected)
+                && (this.loginRequired == other.loginRequired)
+                && (this.userPinInitialized == other.userPinInitialized)
+                && (this.restoreKeyNotNeeded == other.restoreKeyNotNeeded)
+                && (this.clockOnToken == other.clockOnToken)
+                && (this.protectedAuthenticationPath
+                        == other.protectedAuthenticationPath)
+                && (this.dualCryptoOperations == other.dualCryptoOperations)
+                && (this.tokenInitialized == other.tokenInitialized)
+                && (this.secondaryAuthentication
+                        == other.secondaryAuthentication)
+                && (this.userPinCountLow == other.userPinCountLow)
+                && (this.userPinFinalTry == other.userPinFinalTry)
+                && (this.userPinLocked == other.userPinLocked)
+                && (this.userPinToBeChanged == other.userPinToBeChanged)
+                && (this.soPinCountLow == other.soPinCountLow)
+                && (this.soPinFinalTry == other.soPinFinalTry)
+                && (this.soPinLocked == other.soPinLocked)
+                && (this.soPinToBeChanged == other.soPinToBeChanged);
     }
 
     /**
      * The overriding of this method should ensure that the objects of this
      * class work correctly in a hashtable.
      *
-     * @return The hash code of this object. Gained from the label_,
-     *         manufacturerID_, model_ and serialNumber_.
+     * @return The hash code of this object. Gained from the label,
+     *         manufacturerID, model and serialNumber.
      * @preconditions
      * @postconditions
      */
     @Override
     public int hashCode() {
-        return label_.hashCode() ^ manufacturerID_.hashCode()
-                ^ model_.hashCode() ^ serialNumber_.hashCode();
+        return label.hashCode() ^ manufacturerID.hashCode()
+                ^ model.hashCode() ^ serialNumber.hashCode();
     }
 
 }

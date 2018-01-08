@@ -58,7 +58,7 @@ public class ObjectHandleParameters implements Parameters {
     /**
      * The PKCS#11 object.
      */
-    protected iaik.pkcs.pkcs11.objects.Object object_;
+    protected iaik.pkcs.pkcs11.objects.Object object;
 
     /**
      * Create a new ObjectHandleParameters object using the given object.
@@ -69,7 +69,7 @@ public class ObjectHandleParameters implements Parameters {
      * @postconditions
      */
     public ObjectHandleParameters(iaik.pkcs.pkcs11.objects.Object object) {
-        object_ = object;
+        this.object = object;
     }
 
     /**
@@ -88,8 +88,8 @@ public class ObjectHandleParameters implements Parameters {
         try {
             clone = (ObjectHandleParameters) super.clone();
 
-            clone.object_ = (iaik.pkcs.pkcs11.objects.Object)
-                                this.object_.clone();
+            clone.object = (iaik.pkcs.pkcs11.objects.Object)
+                                this.object.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
             throw new TokenRuntimeException(
@@ -109,7 +109,7 @@ public class ObjectHandleParameters implements Parameters {
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        return new Long(object_.getObjectHandle());
+        return new Long(object.getObjectHandle());
     }
 
     /**
@@ -120,7 +120,7 @@ public class ObjectHandleParameters implements Parameters {
      * @postconditions
      */
     public iaik.pkcs.pkcs11.objects.Object getObject() {
-        return object_;
+        return object;
     }
 
     /**
@@ -132,7 +132,7 @@ public class ObjectHandleParameters implements Parameters {
      * @postconditions
      */
     public void setObjectHandle(iaik.pkcs.pkcs11.objects.Object object) {
-        object_ = object;
+        this.object = object;
     }
 
     /**
@@ -148,7 +148,7 @@ public class ObjectHandleParameters implements Parameters {
         buffer.append(Constants.INDENT);
         buffer.append("The Object: ");
         buffer.append(Constants.NEWLINE);
-        buffer.append(object_);
+        buffer.append(object);
 
         return buffer.toString();
     }
@@ -176,7 +176,7 @@ public class ObjectHandleParameters implements Parameters {
 
         ObjectHandleParameters other = (ObjectHandleParameters) otherObject;
         return (this != null)
-                && this.object_.equals(other.object_);
+                && this.object.equals(other.object);
     }
 
     /**
@@ -189,7 +189,7 @@ public class ObjectHandleParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return (object_ != null) ? object_.hashCode() : 0;
+        return (object != null) ? object.hashCode() : 0;
     }
 
 }

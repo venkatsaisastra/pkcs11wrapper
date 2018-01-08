@@ -86,8 +86,8 @@ public class CharArrayAttribute extends Attribute {
      */
     @SuppressWarnings("restriction")
     public void setCharArrayValue(char[] value) {
-        ckAttribute_.pValue = value;
-        present_ = true;
+        ckAttribute.pValue = value;
+        present = true;
     }
 
     /**
@@ -99,7 +99,7 @@ public class CharArrayAttribute extends Attribute {
      */
     @SuppressWarnings("restriction")
     public char[] getCharArrayValue() {
-        return (char[]) ckAttribute_.pValue;
+        return (char[]) ckAttribute.pValue;
     }
 
     /**
@@ -114,8 +114,8 @@ public class CharArrayAttribute extends Attribute {
     protected String getValueString() {
         String valueString;
 
-        if ((ckAttribute_ != null) && (ckAttribute_.pValue != null)) {
-            valueString = new String((char[]) ckAttribute_.pValue);
+        if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
+            valueString = new String((char[]) ckAttribute.pValue);
         } else {
             valueString = "<NULL_PTR>";
         }
@@ -146,24 +146,24 @@ public class CharArrayAttribute extends Attribute {
         }
 
         CharArrayAttribute other = (CharArrayAttribute) otherObject;
-        if (!this.present_ && !other.present_) {
+        if (!this.present && !other.present) {
             return true;
         }
 
-        if (!(this.present_ && other.present_)) {
+        if (!(this.present && other.present)) {
             return false;
         }
 
-        if (this.sensitive_ != other.sensitive_) {
+        if (this.sensitive != other.sensitive) {
             return false;
         }
 
-        if (this.ckAttribute_.type != other.ckAttribute_.type) {
+        if (this.ckAttribute.type != other.ckAttribute.type) {
             return false;
         }
 
-        return Functions.equals((char[]) this.ckAttribute_.pValue,
-                (char[]) other.ckAttribute_.pValue);
+        return Functions.equals((char[]) this.ckAttribute.pValue,
+                (char[]) other.ckAttribute.pValue);
     }
 
     /**
@@ -177,8 +177,8 @@ public class CharArrayAttribute extends Attribute {
     @SuppressWarnings("restriction")
     @Override
     public int hashCode() {
-        return (ckAttribute_.pValue != null) ? Functions
-            .hashCode((char[]) ckAttribute_.pValue) : 0;
+        return (ckAttribute.pValue != null) ? Functions
+            .hashCode((char[]) ckAttribute.pValue) : 0;
     }
 
     @Override

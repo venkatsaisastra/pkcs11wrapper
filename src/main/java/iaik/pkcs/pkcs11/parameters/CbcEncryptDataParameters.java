@@ -60,18 +60,18 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      * This is the block size in byte of the underlying cipher,
      * e.g. 8 for DES and Triple DES and 16 for AES.
      */
-    protected int blockSize_;
+    protected int blockSize;
 
     /**
      * The initialization vector for CBC mode of the cipher.
      */
-    protected byte[] iv_;
+    protected byte[] iv;
 
     /**
      * The data to be used in the key derivation. It must have a length that is
      * a multiple of the block-size of the underlying cipher.
      */
-    protected byte[] data_;
+    protected byte[] data;
 
     /**
      * Create a new CbcEncryptDataParameters object with the given IV and
@@ -101,9 +101,9 @@ public abstract class CbcEncryptDataParameters implements Parameters {
                 "Argument \"data\" must have a length that is a multiple of"
                 + " blockSize.");
         }
-        blockSize_ = blockSize;
-        iv_ = iv;
-        data_ = data;
+        this.blockSize = blockSize;
+        this.iv = iv;
+        this.data = data;
     }
 
     /**
@@ -132,7 +132,7 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      * @return The block size in bytes.
      */
     public int getBlockSize() {
-        return blockSize_;
+        return blockSize;
     }
 
     /**
@@ -143,7 +143,7 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      * @postconditions (result <> null) and (result.length == getBlockSize())
      */
     public byte[] getInitializationVector() {
-        return iv_;
+        return iv;
     }
 
     /**
@@ -156,11 +156,11 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      */
     public void setInitializationVector(byte[] iv) {
         Util.requireNonNull("iv", iv);
-        if (iv.length != blockSize_) {
+        if (iv.length != blockSize) {
             throw new IllegalArgumentException(
                 "Argument \"iv\" must have length getBlockSize().");
         }
-        iv_ = iv;
+        this.iv = iv;
     }
 
     /**
@@ -171,7 +171,7 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      * @postconditions (result <> null) and (result.length%getBlockSize() == 0)
      */
     public byte[] getData() {
-        return data_;
+        return data;
     }
 
     /**
@@ -184,12 +184,12 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      */
     public void setData(byte[] data) {
         Util.requireNonNull("data", data);
-        if (data.length % blockSize_ != 0) {
+        if (data.length % blockSize != 0) {
             throw new IllegalArgumentException(
                 "Argument \"data\" must have a length that is a multiple of"
                 + " getBlockSize().");
         }
-        data_ = data;
+        this.data = data;
     }
 
     /**
@@ -204,11 +204,11 @@ public abstract class CbcEncryptDataParameters implements Parameters {
 
         buffer.append(Constants.INDENT);
         buffer.append("Initialization Vector (hex): ");
-        buffer.append(Functions.toHexString(iv_));
+        buffer.append(Functions.toHexString(iv));
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Data (hex): ");
-        buffer.append(Functions.toHexString(data_));
+        buffer.append(Functions.toHexString(data));
 
         return buffer.toString();
     }
@@ -235,9 +235,9 @@ public abstract class CbcEncryptDataParameters implements Parameters {
         }
 
         CbcEncryptDataParameters other = (CbcEncryptDataParameters) otherObject;
-        return (this.blockSize_ == other.blockSize_)
-                && Functions.equals(this.iv_, other.iv_)
-                && Functions.equals(this.data_, other.data_);
+        return (this.blockSize == other.blockSize)
+                && Functions.equals(this.iv, other.iv)
+                && Functions.equals(this.data, other.data);
     }
 
     /**
@@ -250,7 +250,7 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return Functions.hashCode(iv_) ^ Functions.hashCode(data_);
+        return Functions.hashCode(iv) ^ Functions.hashCode(data);
     }
 
 }

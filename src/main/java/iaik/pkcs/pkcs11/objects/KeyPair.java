@@ -52,20 +52,20 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (publicKey_ <> null)
- *             and (privateKey_ <> null)
+ * @invariants (publicKey <> null)
+ *             and (privateKey <> null)
  */
 public class KeyPair implements Cloneable {
 
     /**
      * The public key of this key-pair.
      */
-    protected PublicKey publicKey_;
+    protected PublicKey publicKey;
 
     /**
      * The private key of this key-pair.
      */
-    protected PrivateKey privateKey_;
+    protected PrivateKey privateKey;
 
     /**
      * Constructor that takes a public and a private key. None can be null.
@@ -79,8 +79,8 @@ public class KeyPair implements Cloneable {
      * @postconditions
      */
     public KeyPair(PublicKey publicKey, PrivateKey privateKey) {
-        publicKey_ = Util.requireNonNull("publicKey", publicKey);
-        privateKey_ = Util.requireNonNull("privateKey", privateKey);
+        this.publicKey = Util.requireNonNull("publicKey", publicKey);
+        this.privateKey = Util.requireNonNull("privateKey", privateKey);
     }
 
     /**
@@ -98,8 +98,8 @@ public class KeyPair implements Cloneable {
         try {
             clone = (KeyPair) super.clone();
 
-            clone.privateKey_ = (PrivateKey) this.privateKey_.clone();
-            clone.publicKey_ = (PublicKey) this.publicKey_.clone();
+            clone.privateKey = (PrivateKey) this.privateKey.clone();
+            clone.publicKey = (PublicKey) this.publicKey.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
             throw new TokenRuntimeException(
@@ -117,7 +117,7 @@ public class KeyPair implements Cloneable {
      * @postconditions (result <> null)
      */
     public PublicKey getPublicKey() {
-        return publicKey_;
+        return publicKey;
     }
 
     /**
@@ -129,8 +129,7 @@ public class KeyPair implements Cloneable {
      * @postconditions
      */
     public void setPublicKey(PublicKey publicKey) {
-        Util.requireNonNull("publicKey", publicKey);
-        publicKey_ = publicKey;
+        this.publicKey = Util.requireNonNull("publicKey", publicKey);
     }
 
     /**
@@ -141,7 +140,7 @@ public class KeyPair implements Cloneable {
      * @postconditions (result <> null)
      */
     public PrivateKey getPrivateKey() {
-        return privateKey_;
+        return privateKey;
     }
 
     /**
@@ -153,12 +152,11 @@ public class KeyPair implements Cloneable {
      * @postconditions
      */
     public void setPrivateKey(PrivateKey privateKey) {
-        Util.requireNonNull("privateKey", privateKey);
-        privateKey_ = privateKey;
+        this.privateKey = Util.requireNonNull("privateKey", privateKey);
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -171,10 +169,10 @@ public class KeyPair implements Cloneable {
         StringBuilder buffer = new StringBuilder(128);
 
         buffer.append(Constants.INDENT);
-        buffer.append(publicKey_);
+        buffer.append(publicKey);
 
         buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append(privateKey_);
+        buffer.append(privateKey);
 
         return buffer.toString();
     }
@@ -201,8 +199,8 @@ public class KeyPair implements Cloneable {
         }
 
         KeyPair other = (KeyPair) otherObject;
-        return this.publicKey_.equals(other.publicKey_)
-                && this.privateKey_.equals(other.privateKey_);
+        return this.publicKey.equals(other.publicKey)
+                && this.privateKey.equals(other.privateKey);
     }
 
     /**
@@ -215,7 +213,7 @@ public class KeyPair implements Cloneable {
      */
     @Override
     public int hashCode() {
-        return publicKey_.hashCode() ^ privateKey_.hashCode();
+        return publicKey.hashCode() ^ privateKey.hashCode();
     }
 
 }

@@ -53,26 +53,27 @@ import iaik.pkcs.pkcs11.wrapper.Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (modulus_ <> null)
- *             and (publicExponent_ <> null)
- *             and (modulusBits_ <> null)
+ * @invariants (modulus <> null)
+ *             and (publicExponent <> null)
+ *             and (modulusBits <> null)
  */
+// CHECKSTYLE:SKIP
 public class RSAPublicKey extends PublicKey {
 
     /**
      * The modulus (n) of this RSA key.
      */
-    protected ByteArrayAttribute modulus_;
+    protected ByteArrayAttribute modulus;
 
     /**
      * The public exponent (e) of this RSA key.
      */
-    protected ByteArrayAttribute publicExponent_;
+    protected ByteArrayAttribute publicExponent;
 
     /**
      * The bit-length of the modulus of this RSA key.
      */
-    protected LongAttribute modulusBits_;
+    protected LongAttribute modulusBits;
 
     /**
      * Default Constructor.
@@ -82,7 +83,7 @@ public class RSAPublicKey extends PublicKey {
      */
     public RSAPublicKey() {
         super();
-        keyType_.setLongValue(KeyType.RSA);
+        keyType.setLongValue(KeyType.RSA);
     }
 
     /**
@@ -102,7 +103,7 @@ public class RSAPublicKey extends PublicKey {
     protected RSAPublicKey(Session session, long objectHandle)
         throws TokenException {
         super(session, objectHandle);
-        keyType_.setLongValue(KeyType.RSA);
+        keyType.setLongValue(KeyType.RSA);
     }
 
     /**
@@ -141,10 +142,10 @@ public class RSAPublicKey extends PublicKey {
      */
     protected static void putAttributesInTable(RSAPublicKey object) {
         Util.requireNonNull("object", object);
-        object.attributeTable_.put(Attribute.MODULUS, object.modulus_);
-        object.attributeTable_.put(Attribute.PUBLIC_EXPONENT,
-                object.publicExponent_);
-        object.attributeTable_.put(Attribute.MODULUS_BITS, object.modulusBits_);
+        object.attributeTable.put(Attribute.MODULUS, object.modulus);
+        object.attributeTable.put(Attribute.PUBLIC_EXPONENT,
+                object.publicExponent);
+        object.attributeTable.put(Attribute.MODULUS_BITS, object.modulusBits);
     }
 
     /**
@@ -158,9 +159,9 @@ public class RSAPublicKey extends PublicKey {
     protected void allocateAttributes() {
         super.allocateAttributes();
 
-        modulus_ = new ByteArrayAttribute(Attribute.MODULUS);
-        publicExponent_ = new ByteArrayAttribute(Attribute.PUBLIC_EXPONENT);
-        modulusBits_ = new LongAttribute(Attribute.MODULUS_BITS);
+        modulus = new ByteArrayAttribute(Attribute.MODULUS);
+        publicExponent = new ByteArrayAttribute(Attribute.PUBLIC_EXPONENT);
+        modulusBits = new LongAttribute(Attribute.MODULUS_BITS);
 
         putAttributesInTable(this);
     }
@@ -178,10 +179,10 @@ public class RSAPublicKey extends PublicKey {
     public java.lang.Object clone() {
         RSAPublicKey clone = (RSAPublicKey) super.clone();
 
-        clone.modulus_ = (ByteArrayAttribute) this.modulus_.clone();
-        clone.publicExponent_
-            = (ByteArrayAttribute) this.publicExponent_.clone();
-        clone.modulusBits_ = (LongAttribute) this.modulusBits_.clone();
+        clone.modulus = (ByteArrayAttribute) this.modulus.clone();
+        clone.publicExponent
+            = (ByteArrayAttribute) this.publicExponent.clone();
+        clone.modulusBits = (LongAttribute) this.modulusBits.clone();
 
         // put all cloned attributes into the new table
         putAttributesInTable(clone);
@@ -212,9 +213,9 @@ public class RSAPublicKey extends PublicKey {
 
         RSAPublicKey other = (RSAPublicKey) otherObject;
         return super.equals(other)
-                && this.modulus_.equals(other.modulus_)
-                && this.publicExponent_.equals(other.publicExponent_)
-                && this.modulusBits_.equals(other.modulusBits_);
+                && this.modulus.equals(other.modulus)
+                && this.publicExponent.equals(other.publicExponent)
+                && this.modulusBits.equals(other.modulusBits);
     }
 
     /**
@@ -225,7 +226,7 @@ public class RSAPublicKey extends PublicKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getModulus() {
-        return modulus_;
+        return modulus;
     }
 
     /**
@@ -236,7 +237,7 @@ public class RSAPublicKey extends PublicKey {
      * @postconditions (result <> null)
      */
     public ByteArrayAttribute getPublicExponent() {
-        return publicExponent_;
+        return publicExponent;
     }
 
     /**
@@ -248,7 +249,7 @@ public class RSAPublicKey extends PublicKey {
      * @postconditions (result <> null)
      */
     public LongAttribute getModulusBits() {
-        return modulusBits_;
+        return modulusBits;
     }
 
     /**
@@ -268,12 +269,12 @@ public class RSAPublicKey extends PublicKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle_, new Attribute[] {
-            modulus_, publicExponent_, modulusBits_ });
+        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+            modulus, publicExponent, modulusBits });
     }
 
     /**
-     * This method returns a string representation of the current object. The
+     * Returns a string representation of the current object. The
      * output is only for debugging purposes and should not be used for other
      * purposes.
      *
@@ -289,15 +290,15 @@ public class RSAPublicKey extends PublicKey {
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Modulus (hex): ");
-        buffer.append(modulus_.toString());
+        buffer.append(modulus.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Public Exponent (hex): ");
-        buffer.append(publicExponent_.toString());
+        buffer.append(publicExponent.toString());
 
         buffer.append(Constants.NEWLINE_INDENT);
         buffer.append("Modulus Bits (dec): ");
-        buffer.append(modulusBits_.toString(10));
+        buffer.append(modulusBits.toString(10));
 
         return buffer.toString();
     }
