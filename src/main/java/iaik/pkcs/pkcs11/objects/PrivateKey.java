@@ -211,7 +211,7 @@ public class PrivateKey extends Key {
             } else if (keyType.equals(Key.KeyType.DSA)) {
                 newObject = DSAPrivateKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.EC)) {
-                newObject = ECDSAPrivateKey.getInstance(session, objectHandle);
+                newObject = ECPrivateKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.DH)) {
                 newObject = DHPrivateKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.KEA)) {

@@ -165,7 +165,7 @@ public class PublicKey extends Key {
             } else if (keyType.equals(Key.KeyType.DSA)) {
                 newObject = DSAPublicKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.EC)) {
-                newObject = ECDSAPublicKey.getInstance(session, objectHandle);
+                newObject = ECPublicKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.DH)) {
                 newObject = DHPublicKey.getInstance(session, objectHandle);
             } else if (keyType.equals(Key.KeyType.KEA)) {
