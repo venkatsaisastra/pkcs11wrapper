@@ -43,7 +43,6 @@
 package iaik.pkcs.pkcs11.objects;
 
 import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
@@ -134,16 +133,13 @@ public class MechanismArrayAttribute extends Attribute {
      */
     @Override
     protected String getValueString() {
-        StringBuilder buffer = new StringBuilder(1024);
+        StringBuilder sb = new StringBuilder(1024);
         Mechanism[] allowedMechanisms = getMechanismAttributeArrayValue();
         if (allowedMechanisms != null && allowedMechanisms.length > 0) {
             for (int i = 0; i < allowedMechanisms.length; i++) {
-                buffer.append(Constants.NEWLINE_INDENT);
-                buffer.append(Constants.INDENT);
-                buffer.append(Constants.INDENT);
-                buffer.append(allowedMechanisms[i].getName());
+                sb.append("\n      ").append(allowedMechanisms[i].getName());
             }
-            return buffer.toString();
+            return sb.toString();
         } else {
             return "<NULL_PTR>";
         }

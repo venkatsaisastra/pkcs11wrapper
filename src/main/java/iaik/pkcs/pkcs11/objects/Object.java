@@ -52,7 +52,6 @@ import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.UnsupportedAttributeException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
@@ -701,17 +700,15 @@ public class Object implements Cloneable {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(32);
-
-        buffer.append(Constants.INDENT);
-        buffer.append("Object Class: ");
+        StringBuilder sb = new StringBuilder(32);
+        sb.append("  Object Class: ");
         if (objectClass != null) {
-            buffer.append(objectClass.toString());
+            sb.append(objectClass.toString());
         } else {
-            buffer.append("<unavailable>");
+            sb.append("<unavailable>");
         }
 
-        return buffer.toString();
+        return sb.toString();
     }
 
     /**
@@ -730,7 +727,7 @@ public class Object implements Cloneable {
      * @postconditions (result <> null)
      */
     public String toString(boolean newline, boolean withName, String indent) {
-        StringBuilder buffer = new StringBuilder(1024);
+        StringBuilder sb = new StringBuilder(1024);
 
         Enumeration<Attribute> attributesEnumeration
             = attributeTable.elements();
@@ -739,15 +736,15 @@ public class Object implements Cloneable {
             Attribute attribute = attributesEnumeration.nextElement();
             if (attribute.isPresent()) {
                 if (!firstAttribute) {
-                    buffer.append(Constants.NEWLINE);
+                    sb.append("\n");
                 }
-                buffer.append(indent);
-                buffer.append(attribute.toString(withName));
+                sb.append(indent);
+                sb.append(attribute.toString(withName));
                 firstAttribute = false;
             }
         }
 
-        return buffer.toString();
+        return sb.toString();
     }
 
     /**

@@ -43,7 +43,6 @@
 package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * This class encapsulates parameters for Mechanisms.EXTRACT_KEY_FROM_KEY.
@@ -144,13 +143,9 @@ public class ExtractParameters implements Parameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append(Constants.INDENT);
-        buffer.append("Bit Index (dec): ");
-        buffer.append(bitIndex);
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("  Bit Index (dec): ").append(bitIndex);
+        return sb.toString();
     }
 
     /**

@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
@@ -200,17 +199,11 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append(Constants.INDENT);
-        buffer.append("Initialization Vector (hex): ");
-        buffer.append(Functions.toHexString(iv));
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Data (hex): ");
-        buffer.append(Functions.toHexString(data));
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("  Initialization Vector (hex): ")
+            .append(Functions.toHexString(iv));
+        sb.append("\n  Data (hex): ").append(Functions.toHexString(data));
+        return sb.toString();
     }
 
     /**

@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent DH public keys as specified by PKCS#11
@@ -280,22 +279,11 @@ public class DHPublicKey extends PublicKey {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(1024);
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Prime (hex): ");
-        buffer.append(prime.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Base (hex): ");
-        buffer.append(base.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT_HEXVALUE);
-        buffer.append(value.toString());
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Prime (hex): ").append(prime);
+        sb.append("\n  Base (hex): ").append(base);
+        sb.append("\n  Value (hex): ").append(value);
+        return sb.toString();
     }
 
 }

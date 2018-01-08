@@ -42,8 +42,6 @@
 
 package iaik.pkcs.pkcs11;
 
-import iaik.pkcs.pkcs11.wrapper.Constants;
-import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import sun.security.pkcs11.wrapper.CK_SESSION_INFO;
 
@@ -189,24 +187,12 @@ public class SessionInfo implements Cloneable {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append("State: ");
-        buffer.append(state);
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("Device Error: 0x");
-        buffer.append(Functions.toHexString(deviceError));
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("Read/Write Session: ");
-        buffer.append(rwSession);
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("Serial Session: ");
-        buffer.append(serialSession);
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(100);
+        sb.append("State: ").append(state);
+        sb.append("\nDevice Error: 0x").append(Long.toHexString(deviceError));
+        sb.append("\nRead/Write Session: ").append(rwSession);
+        sb.append("\nSerial Session: ").append(serialSession);
+        return sb.toString();
     }
 
     /**

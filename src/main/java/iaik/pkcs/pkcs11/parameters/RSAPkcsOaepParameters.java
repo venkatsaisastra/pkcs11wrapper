@@ -43,7 +43,6 @@
 package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import sun.security.pkcs11.wrapper.CK_RSA_PKCS_OAEP_PARAMS;
@@ -129,7 +128,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
                 && (source != SourceType.DATA_SPECIFIED)) {
             throw new IllegalArgumentException(
                     "Illegal value for argument\"source\": "
-                    + Functions.toHexString(source));
+                    + Long.toHexString(source));
         }
         this.source = source;
         this.sourceData = sourceData;
@@ -210,7 +209,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
                 && (source != SourceType.DATA_SPECIFIED)) {
             throw new IllegalArgumentException(
                 "Illegal value for argument\"source\": "
-                + Functions.toHexString(source));
+                + Long.toHexString(source));
         }
         this.source = source;
     }
@@ -235,25 +234,21 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
+        StringBuilder sb = new StringBuilder(super.toString());
 
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Source: ");
+        sb.append("\n  Source: ");
         if (source == SourceType.EMPTY) {
-            buffer.append("Empty");
+            sb.append("Empty");
         } else if (source == SourceType.DATA_SPECIFIED) {
-            buffer.append("Data Specified");
+            sb.append("Data Specified");
         } else {
-            buffer.append("<unknown>");
+            sb.append("<unknown>");
         }
 
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Source Data (hex): ");
-        buffer.append(Functions.toHexString(sourceData));
+        sb.append("\n  Source Data (hex): ")
+            .append(Functions.toHexString(sourceData));
 
-        return buffer.toString();
+        return sb.toString();
     }
 
     /**

@@ -705,24 +705,23 @@ public abstract class Attribute implements Cloneable {
      * @postconditions (result <> null)
      */
     public String toString(boolean withName) {
-        StringBuilder buffer = new StringBuilder(32);
+        StringBuilder sb = new StringBuilder(32);
 
         if (withName) {
             String typeName = getAttributeName(new Long(ckAttribute.type));
-            buffer.append(typeName);
-            buffer.append(": ");
+            sb.append(typeName).append(": ");
         }
         if (present) {
             if (sensitive) {
-                buffer.append("<Value is sensitive>");
+                sb.append("<Value is sensitive>");
             } else {
-                buffer.append(getValueString());
+                sb.append(getValueString());
             }
         } else {
-            buffer.append("<Attribute not present>");
+            sb.append("<Attribute not present>");
         }
 
-        return buffer.toString();
+        return sb.toString();
     }
 
     /**

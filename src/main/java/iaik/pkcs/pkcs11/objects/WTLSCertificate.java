@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent WTLS public key certificates as specified by
@@ -367,35 +366,16 @@ public class WTLSCertificate extends Certificate {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(256);
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Subject (DER, hex): ");
-        buffer.append(subject.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Issuer (DER, hex): ");
-        buffer.append(issuer.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Value (BER, hex): ");
-        buffer.append(value.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("URL: ");
-        buffer.append(url.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Hash Of Subject Public Key: ");
-        buffer.append(hashOfSubjectPublicKey.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Hash Of Issuer Public Key: ");
-        buffer.append(hashOfIssuerPublicKey.toString());
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Subject (DER, hex): ").append(subject);
+        sb.append("\n  Issuer (DER, hex): ").append(issuer);
+        sb.append("\n  Value (BER, hex): ").append(value);
+        sb.append("\n  URL: ").append(url);
+        sb.append("\n  Hash Of Subject Public Key: ")
+            .append(hashOfSubjectPublicKey);
+        sb.append("\n  Hash Of Issuer Public Key: ")
+            .append(hashOfIssuerPublicKey);
+        return sb.toString();
     }
 
 }

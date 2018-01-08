@@ -42,7 +42,6 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_X9_42_DH1_DERIVE_PARAMS;
 
@@ -158,15 +157,9 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Other Info: ");
-        buffer.append(Functions.toHexString(otherInfo));
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Other Info: ").append(Functions.toHexString(otherInfo));
+        return sb.toString();
     }
 
     /**

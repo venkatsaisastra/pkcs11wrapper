@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent PKCS#11 objects of type storage as defined
@@ -282,27 +281,12 @@ public class Storage extends Object {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(128);
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Token: ");
-        buffer.append(token.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Private: ");
-        buffer.append(private_.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Modifiable: ");
-        buffer.append(modifiable.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Label: ");
-        buffer.append(label.toString());
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Token: ").append(token);
+        sb.append("\n  Private: ").append(private_);
+        sb.append("\n  Modifiable: ").append(modifiable);
+        sb.append("\n  Label: ").append(label);
+        return sb.toString();
     }
 
     /**

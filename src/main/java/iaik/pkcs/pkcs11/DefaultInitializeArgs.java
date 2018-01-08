@@ -42,8 +42,6 @@
 
 package iaik.pkcs.pkcs11;
 
-import iaik.pkcs.pkcs11.wrapper.Constants;
-
 /**
  * This class is a simple implementation of InitializeArgs.
  *
@@ -238,24 +236,16 @@ public class DefaultInitializeArgs implements InitializeArgs {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append("Mutex Handler: ");
-        buffer.append((mutexHandler != null) ? "present" : "not present");
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("Library can't create OS-Threads: ");
-        buffer.append(libraryCantCreateOsThreads);
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("OS-Locking OK: ");
-        buffer.append(osLockingOk);
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("The reserved parameter is: ");
-        buffer.append((reserved != null) ? reserved.toString() : "null");
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Mutex Handler: ")
+            .append((mutexHandler != null) ? "present" : "not present");
+        sb.append("\nLibrary can't create OS-Threads: ")
+            .append(libraryCantCreateOsThreads);
+        sb.append("\nOS-Locking OK: ")
+            .append(osLockingOk);
+        sb.append("\nThe reserved parameter is: ")
+            .append((reserved != null) ? reserved : "null");
+        return sb.toString();
     }
 
 }

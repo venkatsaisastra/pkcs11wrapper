@@ -43,7 +43,6 @@
 package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_ECDH2_DERIVE_PARAMS;
 
@@ -232,23 +231,12 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Private Data Length (dec): ");
-        buffer.append(privateDataLength);
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Private Data: ");
-        buffer.append(privateData);
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Public Data 2: ");
-        buffer.append(Functions.toHexString(publicData2));
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Private Data Length (dec): ").append(privateDataLength);
+        sb.append("\n  Private Data: ").append(privateData);
+        sb.append("\n  Public Data 2: ")
+            .append(Functions.toHexString(publicData2));
+        return sb.toString();
     }
 
     /**

@@ -42,7 +42,6 @@
 
 package iaik.pkcs.pkcs11;
 
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import sun.security.pkcs11.wrapper.CK_INFO;
 
 /**
@@ -176,15 +175,10 @@ public class Info implements Cloneable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-
-        sb.append("Cryptoki Version: ").append(cryptokiVersion)
-            .append(Constants.NEWLINE);
-        sb.append("ManufacturerID: ").append(manufacturerID)
-            .append(Constants.NEWLINE);
-        sb.append("Library Description: ").append(libraryDescription)
-            .append(Constants.NEWLINE);
-        sb.append("Library Version: ").append(libraryVersion);
-
+        sb.append("Cryptoki Version: ").append(cryptokiVersion);
+        sb.append("\nManufacturerID: ").append(manufacturerID);
+        sb.append("\nLibrary Description: ").append(libraryDescription);
+        sb.append("\nLibrary Version: ").append(libraryVersion);
         return sb.toString();
     }
 

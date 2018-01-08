@@ -163,8 +163,7 @@ public class DateAttribute extends Attribute {
     }
 
     @Override
-    public void setValue(java.lang.Object value)
-        throws UnsupportedOperationException {
+    public void setValue(java.lang.Object value) {
         setDateValue((Date) value);
     }
 

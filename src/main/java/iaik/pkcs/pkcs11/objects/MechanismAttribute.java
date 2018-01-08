@@ -118,21 +118,17 @@ public class MechanismAttribute extends LongAttribute {
     @SuppressWarnings("restriction")
     @Override
     protected String getValueString() {
-        String valueString;
-
         if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
             if (((Long) ckAttribute.pValue).longValue()
                     != PKCS11Constants.CK_UNAVAILABLE_INFORMATION) {
-                valueString = Functions.mechanismCodeToString(
+                return Functions.mechanismCodeToString(
                         ((Long) ckAttribute.pValue).longValue());
             } else {
-                valueString = "<Information unavailable>";
+                return "<Information unavailable>";
             }
         } else {
-            valueString = "<NULL_PTR>";
+            return "<NULL_PTR>";
         }
-
-        return valueString;
     }
 
 }

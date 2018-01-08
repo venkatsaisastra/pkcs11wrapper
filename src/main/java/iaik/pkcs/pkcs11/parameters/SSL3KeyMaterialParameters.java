@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
 import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_PARAMS;
 import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
@@ -357,34 +356,17 @@ public class SSL3KeyMaterialParameters implements Parameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append(Constants.INDENT);
-        buffer.append("MAC Size in Bits (dec): ");
-        buffer.append(macSizeInBits);
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Key Size in Bits (dec): ");
-        buffer.append(keySizeInBits);
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Initialization Vector Size in Bits (dec): ");
-        buffer.append(initializationVectorSizeInBits);
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("For Export Version: ");
-        buffer.append(export);
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Client's and Server'S Random Information (hex): ");
-        buffer.append(Constants.NEWLINE);
-        buffer.append(randomInfo);
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Handles of the generated Keys and IVs: ");
-        buffer.append(returnedKeyMaterial);
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("  MAC Size in Bits (dec): ").append(macSizeInBits);
+        sb.append("\n  Key Size in Bits (dec): ").append(keySizeInBits);
+        sb.append("\n  Initialization Vector Size in Bits (dec): ")
+            .append(initializationVectorSizeInBits);
+        sb.append("\n  For Export Version: ").append(export);
+        sb.append("\n  Client's and Server'S Random Information (hex):\n")
+            .append(randomInfo);
+        sb.append("\n  Handles of the generated Keys and IVs: ")
+            .append(returnedKeyMaterial);
+        return sb.toString();
     }
 
     /**

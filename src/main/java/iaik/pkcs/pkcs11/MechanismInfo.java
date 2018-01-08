@@ -42,7 +42,6 @@
 
 package iaik.pkcs.pkcs11;
 
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import sun.security.pkcs11.wrapper.CK_MECHANISM_INFO;
 
@@ -807,97 +806,30 @@ public class MechanismInfo implements Cloneable {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(256);
-
-        buffer.append(Constants.INDENT);
-        buffer.append("Minimum Key-Size: ");
-        buffer.append(minKeySize);
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Maximum Key-Size: ");
-        buffer.append(maxKeySize);
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Hardware: ");
-        buffer.append(isHw());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Encrypt: ");
-        buffer.append(isEncrypt());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Decrypt: ");
-        buffer.append(isDecrypt());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Digest: ");
-        buffer.append(isDigest());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Sign: ");
-        buffer.append(isSign());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Sign Recover: ");
-        buffer.append(isSignRecover());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Verify: ");
-        buffer.append(isVerify());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Verify Recover: ");
-        buffer.append(isVerifyRecover());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Generate: ");
-        buffer.append(isGenerate());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Generate Key-Pair: ");
-        buffer.append(isGenerateKeyPair());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Wrap: ");
-        buffer.append(isWrap());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Unwrap: ");
-        buffer.append(isUnwrap());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Derive: ");
-        buffer.append(isDerive());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("EC F(p): ");
-        buffer.append(isEcFp());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("EC F(2^m): ");
-        buffer.append(isEcF2m());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("EC Parameters: ");
-        buffer.append(isEcEcParameters());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("EC Named Curve: ");
-        buffer.append(isEcNamedCurve());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("EC Uncompress: ");
-        buffer.append(isEcUncompress());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("EC Compress: ");
-        buffer.append(isEcCompress());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Extension: ");
-        buffer.append(isExtension());
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(1024);
+        sb.append("  Minimum Key-Size: ").append(minKeySize);
+        sb.append("\n  Maximum Key-Size: ").append(maxKeySize);
+        sb.append("\n  Hardware: ").append(isHw());
+        sb.append("\n  Encrypt: ").append(isEncrypt());
+        sb.append("\n  Decrypt: ").append(isDecrypt());
+        sb.append("\n  Digest: ").append(isDigest());
+        sb.append("\n  Sign: ").append(isSign());
+        sb.append("\n  Sign Recover: ").append(isSignRecover());
+        sb.append("\n  Verify: ").append(isVerify());
+        sb.append("\n  Verify Recover: ").append(isVerifyRecover());
+        sb.append("\n  Generate: ").append(isGenerate());
+        sb.append("\n  Generate Key-Pair: ").append(isGenerateKeyPair());
+        sb.append("\n  Wrap: ").append(isWrap());
+        sb.append("\n  Unwrap: ").append(isUnwrap());
+        sb.append("\n  Derive: ").append(isDerive());
+        sb.append("\n  EC F(p): ").append(isEcFp());
+        sb.append("\n  EC F(2^m): ").append(isEcF2m());
+        sb.append("\n  EC Parameters: ").append(isEcEcParameters());
+        sb.append("\n  EC Named Curve: ").append(isEcNamedCurve());
+        sb.append("\n  EC Uncompress: ").append(isEcUncompress());
+        sb.append("\n  EC Compress: ").append(isEcCompress());
+        sb.append("\n  Extension: ").append(isExtension());
+        return sb.toString();
     }
 
     /**

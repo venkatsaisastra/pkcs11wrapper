@@ -43,7 +43,6 @@
 package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * This class encapsulates parameters for the MAC algorithms for the following
@@ -140,13 +139,9 @@ public class MacGeneralParameters implements Parameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append(Constants.INDENT);
-        buffer.append("Mac Length (dec): ");
-        buffer.append(macLength);
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("  Mac Length (dec): ").append(macLength);
+        return sb.toString();
     }
 
     /**

@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent AES secret keys as specified by PKCS#11
@@ -260,17 +259,10 @@ public class AESSecretKey extends SecretKey {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(1024);
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT_HEXVALUE);
-        buffer.append(value.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT_VALUELEN);
-        buffer.append(valueLen.toString(10));
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Value (hex): ").append(value);
+        sb.append("\n  Value Length (dec): ").append(valueLen.toString(10));
+        return sb.toString();
     }
 
 }

@@ -72,16 +72,12 @@ public class CertificateTypeAttribute extends LongAttribute {
     @SuppressWarnings("restriction")
     @Override
     protected String getValueString() {
-        String valueString;
-
         if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
-            valueString = Certificate.getCertificateTypeName(
+            return Certificate.getCertificateTypeName(
                 (Long) ckAttribute.pValue);
         } else {
-            valueString = "<NULL_PTR>";
+            return "<NULL_PTR>";
         }
-
-        return valueString;
     }
 
 }

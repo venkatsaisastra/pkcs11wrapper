@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
@@ -608,93 +607,43 @@ public class PrivateKey extends Key {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(1024);
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Subject (DER, hex): ");
-        buffer.append(subject.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Sensitive: ");
-        buffer.append(sensitive.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Secondary Authentication: ");
-        buffer.append(secondaryAuth.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Secondary Authentication PIN Flags: ");
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Subject (DER, hex): ").append(subject);
+        sb.append("\n  Sensitive: ").append(sensitive);
+        sb.append("\n  Secondary Authentication: ").append(secondaryAuth);
+        sb.append("\n  Secondary Authentication PIN Flags: ");
         if (authPinFlags.isPresent() && !authPinFlags.isSensitive()
             && (authPinFlags.getLongValue() != null)) {
             long authFlagsValue = authPinFlags.getLongValue().longValue();
 
-            final String prefix = Constants.NEWLINE_INDENT + Constants.INDENT;
-            buffer.append(prefix);
-            buffer.append("User PIN-Count low: ");
-            buffer.append((authFlagsValue
+            sb.append("\n    User PIN-Count low: ")
+                .append((authFlagsValue
                         & PKCS11Constants.CKF_USER_PIN_COUNT_LOW) != 0L);
-
-            buffer.append(prefix);
-            buffer.append("User PIN final Try: ");
-            buffer.append((authFlagsValue
+            sb.append("\n    User PIN final Try: ")
+                .append((authFlagsValue
                         & PKCS11Constants.CKF_USER_PIN_FINAL_TRY) != 0L);
-
-            buffer.append(prefix);
-            buffer.append("User PIN locked: ");
-            buffer.append((authFlagsValue
+            sb.append("\n    User PIN locked: ")
+                .append((authFlagsValue
                         & PKCS11Constants.CKF_USER_PIN_LOCKED) != 0L);
-
-            buffer.append(prefix);
-            buffer.append("User PIN to be changed: ");
-            buffer.append((authFlagsValue
+            sb.append("\n    User PIN to be changed: ")
+                .append((authFlagsValue
                         & PKCS11Constants.CKF_USER_PIN_TO_BE_CHANGED) != 0L);
         } else {
-            buffer.append(authPinFlags.toString());
+            sb.append(authPinFlags);
         }
 
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Decrypt: ");
-        buffer.append(decrypt.toString());
+        sb.append("\n  Decrypt: ").append(decrypt);
+        sb.append("\n  Sign: ").append(sign);
+        sb.append("\n  Sign Recover: ").append(signRecover);
+        sb.append("\n  Unwrap: ").append(unwrap);
+        sb.append("\n  Extractable: ").append(extractable);
+        sb.append("\n  Always Sensitive: ").append(alwaysSensitive);
+        sb.append("\n  Never Extractable: ").append(neverExtractable);
+        sb.append("\n  Wrap With Trusted: ").append(wrapWithTrusted);
+        sb.append("\n  Unwrap Template: ").append(unwrapTemplate);
+        sb.append("\n  Always Authenticate: ").append(alwaysAuthenticate);
 
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Sign: ");
-        buffer.append(sign.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Sign Recover: ");
-        buffer.append(signRecover.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Unwrap: ");
-        buffer.append(unwrap.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Extractable: ");
-        buffer.append(extractable.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Always Sensitive: ");
-        buffer.append(alwaysSensitive.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Never Extractable: ");
-        buffer.append(neverExtractable.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Wrap With Trusted: ");
-        buffer.append(wrapWithTrusted.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Unwrap Template: ");
-        buffer.append(unwrapTemplate.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Always Authenticate: ");
-        buffer.append(alwaysAuthenticate.toString());
-
-        return buffer.toString();
+        return sb.toString();
     }
 
 }

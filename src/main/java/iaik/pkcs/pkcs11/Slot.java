@@ -42,8 +42,6 @@
 
 package iaik.pkcs.pkcs11;
 
-import iaik.pkcs.pkcs11.wrapper.Constants;
-import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import sun.security.pkcs11.wrapper.CK_SLOT_INFO;
 
@@ -233,16 +231,10 @@ public class Slot {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append("Slot ID: 0x");
-        buffer.append(Functions.toHexString(slotID));
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("Module: ");
-        buffer.append(module.toString());
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Slot ID: 0x").append(Long.toHexString(slotID));
+        sb.append("\nModule: ").append(module);
+        return sb.toString();
     }
 
 }

@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
 
@@ -181,17 +180,12 @@ public class SSL3RandomDataParameters implements Parameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append(Constants.INDENT);
-        buffer.append("Client Random (hex): ");
-        buffer.append(Functions.toHexString(clientRandom));
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Server Random (hex): ");
-        buffer.append(Functions.toHexString(serverRandom));
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("  Client Random (hex): ")
+            .append(Functions.toHexString(clientRandom));
+        sb.append("\n  Server Random (hex): ")
+            .append(Functions.toHexString(serverRandom));
+        return sb.toString();
     }
 
     /**

@@ -47,7 +47,6 @@ import java.util.Hashtable;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import iaik.pkcs.pkcs11.wrapper.PKCS11VendorConstants;
@@ -691,47 +690,24 @@ public class Key extends Storage {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(256);
+        StringBuilder sb = new StringBuilder(super.toString());
 
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Key Type: ");
+        sb.append("\n  Key Type: ");
         if (keyType != null) {
-            buffer.append(keyType.toString());
+            sb.append(keyType.toString());
         } else {
-            buffer.append("<unavailable>");
+            sb.append("<unavailable>");
         }
 
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("ID: ");
-        buffer.append(id.toString());
+        sb.append("\n  ID: ").append(id);
+        sb.append("\n  Start Date: ").append(startDate);
+        sb.append("\n  End Date: ").append(endDate);
+        sb.append("\n  Derive: ").append(derive);
+        sb.append("\n  Local: ").append(local);
+        sb.append("\n  Key Generation Mechanism: ").append(keyGenMechanism);
+        sb.append("\n  Allowed Mechanisms: ").append(allowedMechanisms);
 
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Start Date: ");
-        buffer.append(startDate.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("End Date: ");
-        buffer.append(endDate.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Derive: ");
-        buffer.append(derive.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Local: ");
-        buffer.append(local.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Key Generation Mechanism: ");
-        buffer.append(keyGenMechanism.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Allowed Mechanisms: ");
-        buffer.append(allowedMechanisms.toString());
-
-        return buffer.toString();
+        return sb.toString();
     }
 
 }

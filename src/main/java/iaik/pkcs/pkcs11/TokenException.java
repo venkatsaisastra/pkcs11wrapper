@@ -133,14 +133,12 @@ public class TokenException extends Exception {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(super.toString());
-
+        StringBuilder sb = new StringBuilder(super.toString());
         if (encapsulatedException != null) {
-            buffer.append(", Encasulated Exception: ");
-            buffer.append(encapsulatedException.toString());
+            sb.append(", Encasulated Exception: ");
+            sb.append(encapsulatedException);
         }
-
-        return buffer.toString();
+        return sb.toString();
     }
 
 }

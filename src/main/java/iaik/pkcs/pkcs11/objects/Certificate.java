@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 
@@ -586,39 +585,22 @@ public class Certificate extends Storage {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(128);
+        StringBuilder sb = new StringBuilder(super.toString());
 
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Certificate Type: ");
+        sb.append("\nCertificate Type: ");
         if (certificateType != null) {
-            buffer.append(certificateType.toString());
+            sb.append(certificateType);
         } else {
-            buffer.append("<unavailable>");
+            sb.append("<unavailable>");
         }
 
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Trusted: ");
-        buffer.append(trusted.toString());
+        sb.append("\nTrusted: ").append(trusted);
+        sb.append("\nCertificate Category: ").append(certificateCategory);
+        sb.append("\nCheck Value: ").append(checkValue);
+        sb.append("\nStart Date: ").append(startDate);
+        sb.append("\nEnd Date: ").append(endDate);
 
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Certificate Category: ");
-        buffer.append(certificateCategory.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Check Value: ");
-        buffer.append(checkValue.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Start Date: ");
-        buffer.append(startDate.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("End Date: ");
-        buffer.append(endDate.toString());
-
-        return buffer.toString();
+        return sb.toString();
     }
 
 }

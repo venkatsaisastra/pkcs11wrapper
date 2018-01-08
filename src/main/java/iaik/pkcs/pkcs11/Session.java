@@ -54,8 +54,6 @@ import iaik.pkcs.pkcs11.parameters.Parameters;
 import iaik.pkcs.pkcs11.parameters.SSL3KeyMaterialParameters;
 import iaik.pkcs.pkcs11.parameters.SSL3MasterKeyDeriveParameters;
 import iaik.pkcs.pkcs11.parameters.VersionParameters;
-import iaik.pkcs.pkcs11.wrapper.Constants;
-import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
@@ -1890,17 +1888,10 @@ public class Session {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append("Session Handle: ");
-        buffer.append("0x");
-        buffer.append(Functions.toHexString(sessionHandle));
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("Token: ");
-        buffer.append(token.toString());
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(100);
+        sb.append("Session Handle: 0x").append(Long.toHexString(sessionHandle));
+        sb.append("\nToken: ").append(token.toString());
+        return sb.toString();
     }
 
     private static CK_MECHANISM getCkMechanism(Mechanism mechanism) {

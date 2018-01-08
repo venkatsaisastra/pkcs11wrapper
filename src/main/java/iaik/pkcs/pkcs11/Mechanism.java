@@ -43,7 +43,6 @@
 package iaik.pkcs.pkcs11;
 
 import iaik.pkcs.pkcs11.parameters.Parameters;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
@@ -384,13 +383,9 @@ public class Mechanism implements Cloneable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(128);
-
         sb.append("    Mechanism: ")
-            .append(Functions.mechanismCodeToString(pkcs11MechanismCode))
-            .append(Constants.NEWLINE);
-        sb.append("    Parameters: ").append(Constants.NEWLINE)
-            .append(parameters);
-
+            .append(Functions.mechanismCodeToString(pkcs11MechanismCode));
+        sb.append("\n    Parameters:\n").append(parameters);
         return sb.toString();
     }
 

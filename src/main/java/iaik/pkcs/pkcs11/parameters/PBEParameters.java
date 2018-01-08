@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_PBE_PARAMS;
 
@@ -273,25 +272,15 @@ public class PBEParameters implements Parameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append(Constants.INDENT);
-        buffer.append("Initialization Vector: ");
-        buffer.append((iv != null) ? new String(iv) : null);
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Password: ");
-        buffer.append((password != null) ? new String(password) : null);
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Salt: ");
-        buffer.append((salt != null) ? new String(salt) : null);
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Iterations (dec): ");
-        buffer.append(iterations);
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("  Initialization Vector: ")
+            .append((iv != null) ? new String(iv) : null);
+        sb.append("\n  Password: ")
+            .append((password != null) ? new String(password) : null);
+        sb.append("\n  Salt: ")
+            .append((salt != null) ? new String(salt) : null);
+        sb.append("\n  Iterations (dec): ").append(iterations);
+        return sb.toString();
     }
 
     /**

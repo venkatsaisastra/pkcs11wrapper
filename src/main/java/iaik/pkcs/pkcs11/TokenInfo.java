@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11;
 
 import java.util.Date;
 
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import sun.security.pkcs11.wrapper.CK_TOKEN_INFO;
 
@@ -789,165 +788,80 @@ public class TokenInfo implements Cloneable {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Label: ").append(label);
+        sb.append("\nManufacturer ID: ").append(manufacturerID);
+        sb.append("\nModel: ").append(model);
+        sb.append("\nSerial Number: ").append(serialNumber);
+        sb.append("\nRandom Number Generator: ").append(rng);
+        sb.append("\nWrite protected: ").append(writeProtected);
+        sb.append("\nLogin required: ").append(loginRequired);
+        sb.append("\nUser PIN initialized: ").append(userPinInitialized);
+        sb.append("\nRestore Key not needed: ").append(restoreKeyNotNeeded);
+        sb.append("\nClock on Token: ").append(clockOnToken);
+        sb.append("\nProtected Authentication Path: ")
+            .append(protectedAuthenticationPath);
+        sb.append("\nDual Crypto Operations: ").append(dualCryptoOperations);
+        sb.append("\nToken initialized: ").append(tokenInitialized);
+        sb.append("\nSecondary Authentication: ").append(secondaryAuthentication);
+        sb.append("\nUser PIN-Count low: ").append(userPinCountLow);
+        sb.append("\nUser PIN final Try: ").append(userPinFinalTry);
+        sb.append("\nUser PIN locked: ").append(userPinLocked);
+        sb.append("\nUser PIN to be changed: ").append(userPinToBeChanged);
+        sb.append("\nSecurity Officer PIN-Count low: ").append(soPinCountLow);
+        sb.append("\nSecurity Officer PIN final Try: ").append(soPinFinalTry);
+        sb.append("\nSecurity Officer PIN locked: ").append(soPinLocked);
+        sb.append("\nSecurity Officer PIN to be changed: ")
+            .append(soPinToBeChanged);
 
-        buffer.append("Label: ");
-        buffer.append(label);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Manufacturer ID: ");
-        buffer.append(manufacturerID);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Model: ");
-        buffer.append(model);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Serial Number: ");
-        buffer.append(serialNumber);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Random Number Generator: ");
-        buffer.append(rng);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Write protected: ");
-        buffer.append(writeProtected);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Login required: ");
-        buffer.append(loginRequired);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("User PIN initialized: ");
-        buffer.append(userPinInitialized);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Restore Key not needed: ");
-        buffer.append(restoreKeyNotNeeded);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Clock on Token: ");
-        buffer.append(clockOnToken);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Protected Authentication Path: ");
-        buffer.append(protectedAuthenticationPath);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Dual Crypto Operations: ");
-        buffer.append(dualCryptoOperations);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Token initialized: ");
-        buffer.append(tokenInitialized);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Secondary Authentication: ");
-        buffer.append(secondaryAuthentication);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("User PIN-Count low: ");
-        buffer.append(userPinCountLow);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("User PIN final Try: ");
-        buffer.append(userPinFinalTry);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("User PIN locked: ");
-        buffer.append(userPinLocked);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("User PIN to be changed: ");
-        buffer.append(userPinToBeChanged);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Security Officer PIN-Count low: ");
-        buffer.append(soPinCountLow);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Security Officer PIN final Try: ");
-        buffer.append(soPinFinalTry);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Security Officer PIN locked: ");
-        buffer.append(soPinLocked);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Security Officer PIN to be changed: ");
-        buffer.append(soPinToBeChanged);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Maximum Session Count: ");
-
+        sb.append("\nMaximum Session Count: ");
         if (maxSessionCount == UNAVAILABLE_INFORMATION) {
-            buffer.append("<Information unavailable>");
+            sb.append("<Information unavailable>");
         } else {
-            buffer.append((maxSessionCount == EFFECTIVELY_INFINITE)
+            sb.append((maxSessionCount == EFFECTIVELY_INFINITE)
                 ? "<effectively infinite>" : Long.toString(maxSessionCount));
         }
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Session Count: ");
-        buffer.append((sessionCount == UNAVAILABLE_INFORMATION)
+        sb.append("\nSession Count: ");
+        sb.append((sessionCount == UNAVAILABLE_INFORMATION)
             ? "<Information unavailable>" : Long.toString(sessionCount));
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Maximum Read/Write Session Count: ");
+        sb.append("\nMaximum Read/Write Session Count: ");
         if (maxRwSessionCount == UNAVAILABLE_INFORMATION) {
-            buffer.append("<Information unavailable>");
+            sb.append("<Information unavailable>");
         } else {
-            buffer.append((maxRwSessionCount == EFFECTIVELY_INFINITE)
+            sb.append((maxRwSessionCount == EFFECTIVELY_INFINITE)
                 ? "<effectively infinite>" : Long.toString(maxRwSessionCount));
         }
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Read/Write Session Count: ");
-        buffer.append((rwSessionCount == UNAVAILABLE_INFORMATION)
+        sb.append("\nRead/Write Session Count: ");
+        sb.append((rwSessionCount == UNAVAILABLE_INFORMATION)
             ? "<Information unavailable>" : Long.toString(rwSessionCount));
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Maximum PIN Length: ");
-        buffer.append(maxPinLen);
+        sb.append("\nMaximum PIN Length: ").append(maxPinLen);
+        sb.append("\nMinimum PIN Length: ").append(minPinLen);
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Minimum PIN Length: ");
-        buffer.append(minPinLen);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Total Public Memory: ");
-        buffer.append((totalPublicMemory == UNAVAILABLE_INFORMATION)
+        sb.append("\nTotal Public Memory: ");
+        sb.append((totalPublicMemory == UNAVAILABLE_INFORMATION)
             ? "<Information unavailable>" : Long.toString(totalPublicMemory));
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Free Public Memory: ");
-        buffer .append((freePublicMemory == UNAVAILABLE_INFORMATION)
+        sb.append("\nFree Public Memory: ");
+        sb .append((freePublicMemory == UNAVAILABLE_INFORMATION)
             ? "<Information unavailable>" : Long.toString(freePublicMemory));
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Total Private Memory: ");
-        buffer.append((totalPrivateMemory == UNAVAILABLE_INFORMATION)
+        sb.append("\nTotal Private Memory: ");
+        sb.append((totalPrivateMemory == UNAVAILABLE_INFORMATION)
             ? "<Information unavailable>" : Long.toString(totalPrivateMemory));
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Free Private Memory: ");
-        buffer.append((freePrivateMemory == UNAVAILABLE_INFORMATION)
+        sb.append("\nFree Private Memory: ");
+        sb.append((freePrivateMemory == UNAVAILABLE_INFORMATION)
             ? "<Information unavailable>" : Long.toString(freePrivateMemory));
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Hardware Version: ");
-        buffer.append(hardwareVersion);
+        sb.append("\nHardware Version: ").append(hardwareVersion);
+        sb.append("\nFirmware Version: ").append(firmwareVersion);
+        sb.append("\nTime: ").append(time);
 
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Firmware Version: ");
-        buffer.append(firmwareVersion);
-
-        buffer.append(Constants.NEWLINE);
-        buffer.append("Time: ");
-        buffer.append(time);
-
-        return buffer.toString();
+        return sb.toString();
     }
 
     /**

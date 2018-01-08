@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent X.509 public key certificate as specified by
@@ -444,47 +443,20 @@ public class X509PublicKeyCertificate extends Certificate {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(256);
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Subject (DER, hex): ");
-        buffer.append(subject.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("ID (hex): ");
-        buffer.append(id.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Issuer (DER, hex): ");
-        buffer.append(issuer.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Serial Number (DER, hex): ");
-        buffer.append(serialNumber.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Value (BER, hex): ");
-        buffer.append(value.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("URL: ");
-        buffer.append(url.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Hash Of Subject Public Key: ");
-        buffer.append(hashOfSubjectPublicKey.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Hash Of Issuer Public Key: ");
-        buffer.append(hashOfIssuerPublicKey.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Java MIDP Security Domain: ");
-        buffer.append(javaMidpSecurityDomain.toString());
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Subject (DER, hex): ").append(subject);
+        sb.append("\n  ID (hex): ").append(id);
+        sb.append("\n  Issuer (DER, hex): ").append(issuer);
+        sb.append("\n  Serial Number (DER, hex): ").append(serialNumber);
+        sb.append("\n  Value (BER, hex): ").append(value);
+        sb.append("\n  URL: ").append(url);
+        sb.append("\n  Hash Of Subject Public Key: ")
+            .append(hashOfSubjectPublicKey);
+        sb.append("\n  Hash Of Issuer Public Key: ")
+            .append(hashOfIssuerPublicKey);
+        sb.append("\n  Java MIDP Security Domain: ")
+            .append(javaMidpSecurityDomain);
+        return sb.toString();
     }
 
 }

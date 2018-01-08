@@ -45,8 +45,6 @@ package iaik.pkcs.pkcs11.parameters;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
-import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
@@ -157,8 +155,7 @@ abstract public class RSAPkcsParameters implements Parameters {
             && (mgf != MessageGenerationFunctionType.SHA3_384)
             && (mgf != MessageGenerationFunctionType.SHA3_512)) {
             throw new IllegalArgumentException(
-                "Illegal value for argument\"mgf\": "
-                    + Functions.toHexString(mgf));
+                "Illegal value for argument\"mgf\": " + Long.toHexString(mgf));
         }
         this.hashAlg = Util.requireNonNull("hashAlg", hashAlg);
         this.mgf = mgf;
@@ -245,8 +242,7 @@ abstract public class RSAPkcsParameters implements Parameters {
             && (mgf
                     != MessageGenerationFunctionType.SHA512)) {
             throw new IllegalArgumentException(
-                "Illegal value for argument\"mgf\": "
-                    + Functions.toHexString(mgf));
+                "Illegal value for argument\"mgf\": " + Long.toHexString(mgf));
         }
         this.mgf = mgf;
     }
@@ -259,37 +255,33 @@ abstract public class RSAPkcsParameters implements Parameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
+        sb.append("  Hash Algorithm: ").append(hashAlg.toString());
 
-        buffer.append(Constants.INDENT);
-        buffer.append("Hash Algorithm: ");
-        buffer.append(hashAlg.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Mask Generation Function: ");
+        sb.append("\n  Mask Generation Function: ");
         if (mgf == MessageGenerationFunctionType.SHA1) {
-            buffer.append("SHA-1");
+            sb.append("SHA-1");
         } else if (mgf == MessageGenerationFunctionType.SHA224) {
-            buffer.append("SHA-224");
+            sb.append("SHA-224");
         } else if (mgf == MessageGenerationFunctionType.SHA256) {
-            buffer.append("SHA-256");
+            sb.append("SHA-256");
         } else if (mgf == MessageGenerationFunctionType.SHA384) {
-            buffer.append("SHA-384");
+            sb.append("SHA-384");
         } else if (mgf == MessageGenerationFunctionType.SHA512) {
-            buffer.append("SHA-512");
+            sb.append("SHA-512");
         } else if (mgf == MessageGenerationFunctionType.SHA3_224) {
-            buffer.append("SHA3-224");
+            sb.append("SHA3-224");
         } else if (mgf == MessageGenerationFunctionType.SHA3_256) {
-            buffer.append("SHA3-256");
+            sb.append("SHA3-256");
         } else if (mgf == MessageGenerationFunctionType.SHA3_384) {
-            buffer.append("SHA3-384");
+            sb.append("SHA3-384");
         } else if (mgf == MessageGenerationFunctionType.SHA3_512) {
-            buffer.append("SHA3-512");
+            sb.append("SHA3-512");
         } else {
-            buffer.append("<unknown>");
+            sb.append("<unknown>");
         }
 
-        return buffer.toString();
+        return sb.toString();
     }
 
     /**

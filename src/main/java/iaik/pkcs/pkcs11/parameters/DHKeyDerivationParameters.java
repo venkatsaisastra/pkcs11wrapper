@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
@@ -136,8 +135,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
             && (kdf != KeyDerivationFunctionType.SHA1_KDF_ASN1)
             && (kdf != KeyDerivationFunctionType.SHA1_KDF_CONCATENATE)) {
             throw new IllegalArgumentException(
-                "Illegal value for argument\"kdf\": "
-                    + Functions.toHexString(kdf));
+                "Illegal value for argument\"kdf\": " + Long.toHexString(kdf));
         }
 
         this.publicData = Util.requireNonNull("publicData", publicData);
@@ -211,8 +209,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
             && (kdf != KeyDerivationFunctionType.SHA1_KDF_ASN1)
             && (kdf != KeyDerivationFunctionType.SHA1_KDF_CONCATENATE)) {
             throw new IllegalArgumentException(
-                "Illegal value for argument\"kdf\": "
-                    + Functions.toHexString(kdf));
+                "Illegal value for argument\"kdf\": " + Long.toHexString(kdf));
         }
         this.kdf = kdf;
     }
@@ -237,27 +234,24 @@ abstract public class DHKeyDerivationParameters implements Parameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append(Constants.INDENT);
-        buffer.append("Key Derivation Function: ");
+        StringBuilder sb = new StringBuilder();
+        sb.append("  Key Derivation Function: ");
         if (kdf == KeyDerivationFunctionType.NULL) {
-            buffer.append("NULL");
+            sb.append("NULL");
         } else if (kdf == KeyDerivationFunctionType.SHA1_KDF) {
-            buffer.append("SHA1_KDF");
+            sb.append("SHA1_KDF");
         } else if (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1) {
-            buffer.append("SHA1_KDF_ASN1");
+            sb.append("SHA1_KDF_ASN1");
         } else if (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE) {
-            buffer.append("SHA1_KDF_CONCATENATE");
+            sb.append("SHA1_KDF_CONCATENATE");
         } else {
-            buffer.append("<unknown>");
+            sb.append("<unknown>");
         }
 
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Public Data: ");
-        buffer.append(Functions.toHexString(publicData));
+        sb.append("\n  Public Data: ")
+            .append(Functions.toHexString(publicData));
 
-        return buffer.toString();
+        return sb.toString();
     }
 
     /**

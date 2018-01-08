@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import sun.security.pkcs11.wrapper.CK_SSL3_MASTER_KEY_DERIVE_PARAMS;
 import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
 import sun.security.pkcs11.wrapper.CK_VERSION;
@@ -189,18 +188,10 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append(Constants.INDENT);
-        buffer.append("Random Information:");
-        buffer.append(Constants.NEWLINE);
-        buffer.append(randomInfo);
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Version: ");
-        buffer.append(version);
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("  Random Information:\n").append(randomInfo);
+        sb.append("\n  Version: ").append(version);
+        return sb.toString();
     }
 
     /**

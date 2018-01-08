@@ -134,14 +134,14 @@ public class TokenRuntimeException extends RuntimeException {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(super.toString());
+        StringBuilder sb = new StringBuilder(super.toString());
 
         if (encapsulatedException != null) {
-            buffer.append(", Encasulated Exception: ");
-            buffer.append(encapsulatedException.toString());
+            sb.append(", Encasulated Exception: ");
+            sb.append(encapsulatedException.toString());
         }
 
-        return buffer.toString();
+        return sb.toString();
     }
 
 }

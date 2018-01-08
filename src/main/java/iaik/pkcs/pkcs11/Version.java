@@ -141,16 +141,15 @@ public class Version implements Cloneable {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-        buffer.append(major & 0xff);
-        buffer.append('.');
+        sb.append(major & 0xff).append('.');
         if (minor < 10) {
-            buffer.append('0');
+            sb.append('0');
         }
-        buffer.append(minor & 0xff);
+        sb.append(minor & 0xff);
 
-        return buffer.toString();
+        return sb.toString();
     }
 
     /**

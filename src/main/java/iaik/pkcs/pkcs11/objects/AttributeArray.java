@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
 
 /**
@@ -177,9 +176,7 @@ public class AttributeArray extends Attribute {
         if (template == null) {
             valueString = "<NULL_PTR>";
         } else {
-            String indent
-                    = Constants.INDENT + Constants.INDENT + Constants.INDENT;
-            valueString += template.toString(true, true, indent);
+            valueString += template.toString(true, true, "      ");
         }
         return valueString;
     }

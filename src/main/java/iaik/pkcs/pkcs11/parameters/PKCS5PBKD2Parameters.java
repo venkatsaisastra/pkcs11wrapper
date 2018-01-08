@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import sun.security.pkcs11.wrapper.CK_PKCS5_PBKD2_PARAMS;
@@ -158,12 +157,12 @@ public class PKCS5PBKD2Parameters implements Parameters {
         if (saltSource != SaltSourceType.SALT_SPECIFIED) {
             throw new IllegalArgumentException(
                     "Illegal value for argument\"saltSource\": "
-                    + Functions.toHexString(saltSource));
+                    + Long.toHexString(saltSource));
         }
         if (pseudoRandomFunction != PseudoRandomFunctionType.HMAC_SHA1) {
             throw new IllegalArgumentException(
                 "Illegal value for argument\"pseudoRandomFunction\": "
-                    + Functions.toHexString(pseudoRandomFunction));
+                    + Long.toHexString(pseudoRandomFunction));
         }
         this.saltSource = saltSource;
         this.saltSourceData = Util.requireNonNull("saltSourceData",
@@ -293,7 +292,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
         if (saltSource != SaltSourceType.SALT_SPECIFIED) {
             throw new IllegalArgumentException(
                     "Illegal value for argument\"saltSource\": "
-                    + Functions.toHexString(saltSource));
+                    + Long.toHexString(saltSource));
         }
         this.saltSource = saltSource;
     }
@@ -340,7 +339,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
         if (pseudoRandomFunction != PseudoRandomFunctionType.HMAC_SHA1) {
             throw new IllegalArgumentException(
                 "Illegal value for argument\"pseudoRandomFunction\": "
-                + Functions.toHexString(pseudoRandomFunction));
+                + Long.toHexString(pseudoRandomFunction));
         }
         this.pseudoRandomFunction = pseudoRandomFunction;
     }
@@ -367,37 +366,30 @@ public class PKCS5PBKD2Parameters implements Parameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-        buffer.append(Constants.INDENT);
-        buffer.append("Salt Source: ");
+        sb.append("  Salt Source: ");
         if (saltSource == SaltSourceType.SALT_SPECIFIED) {
-            buffer.append("Salt Specified");
+            sb.append("Salt Specified");
         } else {
-            buffer.append("<unknown>");
+            sb.append("<unknown>");
         }
 
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Salt Source Data (hex): ");
-        buffer.append(Functions.toHexString(saltSourceData));
+        sb.append("\n  Salt Source Data (hex): ")
+            .append(Functions.toHexString(saltSourceData));
+        sb.append("\n  Iterations (dec): ").append(iterations);
 
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Iterations (dec): ");
-        buffer.append(iterations);
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Pseudo-Random Function: ");
+        sb.append("\n  Pseudo-Random Function: ");
         if (pseudoRandomFunction == PseudoRandomFunctionType.HMAC_SHA1) {
-            buffer.append("HMAC SHA-1");
+            sb.append("HMAC SHA-1");
         } else {
-            buffer.append("<unknown>");
+            sb.append("<unknown>");
         }
 
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Pseudo-Random Function Data (hex): ");
-        buffer.append(Functions.toHexString(pseudoRandomFunctionData));
+        sb.append("\n  Pseudo-Random Function Data (hex): ")
+            .append(Functions.toHexString(pseudoRandomFunctionData));
 
-        return buffer.toString();
+        return sb.toString();
     }
 
     /**

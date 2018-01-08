@@ -194,17 +194,6 @@ public class Functions {
     }
 
     /**
-     * Converts a long value to a hexadecimal String.
-     *
-     * @param value
-     *          The long value to be converted.
-     * @return The hexadecimal string representation of the long value.
-     */
-    public static String toHexString(long value) {
-        return Long.toHexString(value);
-    }
-
-    /**
      * Converts a byte array to a hexadecimal String. Each byte is presented by
      * its two digit hex-code; 0x0A -> "0a", 0x00 -> "00". No leading "0x" is
      * included in the result.

@@ -42,7 +42,6 @@
 
 package iaik.pkcs.pkcs11;
 
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import sun.security.pkcs11.wrapper.CK_SLOT_INFO;
 
@@ -212,36 +211,15 @@ public class SlotInfo {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append("Slot Description: ");
-        buffer.append(slotDescription);
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("Manufacturer ID: ");
-        buffer.append(manufacturerID);
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("Hardware Version: ");
-        buffer.append(hardwareVersion);
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("Firmware Version: ");
-        buffer.append(firmwareVersion);
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("Token present: ");
-        buffer.append(tokenPresent);
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("Removable Device: ");
-        buffer.append(removableDevice);
-        buffer.append(Constants.NEWLINE);
-
-        buffer.append("Hardware Slot: ");
-        buffer.append(hwSlot);
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(200);
+        sb.append("Slot Description: ").append(slotDescription);
+        sb.append("\nManufacturer ID: ").append(manufacturerID);
+        sb.append("\nHardware Version: ").append(hardwareVersion);
+        sb.append("\nFirmware Version: ").append(firmwareVersion);
+        sb.append("\nToken present: ").append(tokenPresent);
+        sb.append("\nRemovable Device: ").append(removableDevice);
+        sb.append("\nHardware Slot: ").append(hwSlot);
+        return sb.toString();
     }
 
     /**

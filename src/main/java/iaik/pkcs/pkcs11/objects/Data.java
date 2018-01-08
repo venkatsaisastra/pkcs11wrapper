@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent a data object as specified by PKCS#11
@@ -297,22 +296,11 @@ public class Data extends Storage {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(128);
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Application: ");
-        buffer.append(application.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Object ID (DER, hex): ");
-        buffer.append(objectID.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT_HEXVALUE);
-        buffer.append(value.toString());
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Application: ").append(application);
+        sb.append("\n  Object ID (DER, hex): ").append(objectID);
+        sb.append("\n  Value (hex): ").append(value);
+        return sb.toString();
     }
 
 }

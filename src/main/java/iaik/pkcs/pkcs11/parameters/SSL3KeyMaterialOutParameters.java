@@ -47,7 +47,6 @@ import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.objects.SecretKey;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
 
@@ -286,37 +285,18 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-        final String prefix = Constants.NEWLINE + Constants.NEWLINE_INDENT;
-        buffer.append(Constants.INDENT);
-        buffer.append("Client MAC Secret key: ");
-        buffer.append(Constants.NEWLINE);
-        buffer.append(clientMacSecret);
+        StringBuilder sb = new StringBuilder();
+        sb.append("  Client MAC Secret key:\n").append(clientMacSecret);
+        sb.append("\n\n  Server MAC Secret key:\n")
+            .append(serverMacSecret);
+        sb.append("\n\n  Client Secret key:\n").append(clientKey);
+        sb.append("\n\n  Server Secret key:\n").append(serverKey);
+        sb.append("\n\n  Client Initializatin Vector (hex):\n")
+            .append(Functions.toHexString(clientIV));
+        sb.append("\n  Server Initializatin Vector (hex): ")
+            .append(Functions.toHexString(serverIV));
 
-        buffer.append(prefix);
-        buffer.append("Server MAC Secret key: ");
-        buffer.append(Constants.NEWLINE);
-        buffer.append(serverMacSecret);
-
-        buffer.append(prefix);
-        buffer.append("Client Secret key: ");
-        buffer.append(Constants.NEWLINE);
-        buffer.append(clientKey);
-
-        buffer.append(prefix);
-        buffer.append("Server Secret key: ");
-        buffer.append(Constants.NEWLINE);
-        buffer.append(serverKey);
-
-        buffer.append(prefix);
-        buffer.append("Client Initializatin Vector (hex): ");
-        buffer.append(Functions.toHexString(clientIV));
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Server Initializatin Vector (hex): ");
-        buffer.append(Functions.toHexString(serverIV));
-
-        return buffer.toString();
+        return sb.toString();
     }
 
     /**

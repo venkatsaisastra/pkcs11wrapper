@@ -47,7 +47,6 @@ import java.io.UnsupportedEncodingException;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent a user interface as specified by PKCS#11
@@ -350,63 +349,36 @@ public class UserInterface extends HardwareFeature {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(256);
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Pixel X: ");
-        buffer.append(pixelX.getValueString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Pixel Y: ");
-        buffer.append(pixelY.getValueString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Resolution: ");
-        buffer.append(resolution.getValueString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Char Rows: ");
-        buffer.append(charRows.getValueString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Char Columns: ");
-        buffer.append(charColumns.getValueString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Color: ");
-        buffer.append(color.getValueString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Bits per Pixel: ");
-        buffer.append(bitsPerPixel.getValueString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Char sets:");
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Pixel X: ").append(pixelX.getValueString());
+        sb.append("\n  Pixel Y: ").append(pixelY.getValueString());
+        sb.append("\n  Resolution: ").append(resolution.getValueString());
+        sb.append("\n  Char Rows: ").append(charRows.getValueString());
+        sb.append("\n  Char Columns: ").append(charColumns.getValueString());
+        sb.append("\n  Color: ").append(color.getValueString());
+        sb.append("\n  Bits per Pixel: ").append(bitsPerPixel.getValueString());
+        sb.append("\n  Char sets:");
         try {
-            buffer.append(new String(charSets.getByteArrayValue(), "ASCII"));
+            sb.append(new String(charSets.getByteArrayValue(), "ASCII"));
         } catch (UnsupportedEncodingException ex) {
-            buffer.append(new String(charSets.getByteArrayValue()));
+            sb.append(new String(charSets.getByteArrayValue()));
         }
 
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Encoding methods: ");
+        sb.append("\n  Encoding methods: ");
         try {
-            buffer.append(
+            sb.append(
                     new String(encodingMethods.getByteArrayValue(), "ASCII"));
         } catch (UnsupportedEncodingException ex) {
-            buffer.append(new String(encodingMethods.getByteArrayValue()));
+            sb.append(new String(encodingMethods.getByteArrayValue()));
         }
 
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Mime Types: ");
+        sb.append("\n  Mime Types: ");
         try {
-            buffer.append(new String(mimeTypes.getByteArrayValue(), "ASCII"));
+            sb.append(new String(mimeTypes.getByteArrayValue(), "ASCII"));
         } catch (UnsupportedEncodingException ex) {
-            buffer.append(new String(mimeTypes.getByteArrayValue()));
+            sb.append(new String(mimeTypes.getByteArrayValue()));
         }
 
-        return buffer.toString();
+        return sb.toString();
     }
 }

@@ -428,12 +428,9 @@ public class Token {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append("Token in Slot: ");
-        buffer.append(slot.toString());
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Token in Slot: ").append(slot);
+        return sb.toString();
     }
 
 }

@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * This is the base class for public (asymmetric) keys. Objects of this class
@@ -443,39 +442,15 @@ public class PublicKey extends Key {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(256);
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Subject (DER, hex): ");
-        buffer.append(subject.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Encrypt: ");
-        buffer.append(encrypt.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Verify: ");
-        buffer.append(verify.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Verify Recover: ");
-        buffer.append(verifyRecover.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Wrap: ");
-        buffer.append(wrap.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Trusted: ");
-        buffer.append(trusted.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Wrap Template: ");
-        buffer.append(wrapTemplate.toString());
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Subject (DER, hex): ").append(subject);
+        sb.append("\n  Encrypt: ").append(encrypt);
+        sb.append("\n  Verify: ").append(verify);
+        sb.append("\n  Verify Recover: ").append(verifyRecover);
+        sb.append("\n  Wrap: ").append(wrap);
+        sb.append("\n  Trusted: ").append(trusted);
+        sb.append("\n  Wrap Template: ").append(wrapTemplate);
+        return sb.toString();
     }
 
 }

@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
@@ -147,13 +146,10 @@ public class DHPkcsDeriveParameters implements Parameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append(Constants.INDENT);
-        buffer.append("Public Value (hex): ");
-        buffer.append(Functions.toHexString(publicValue));
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("  Public Value (hex): ")
+            .append(Functions.toHexString(publicValue));
+        return sb.toString();
     }
 
     /**

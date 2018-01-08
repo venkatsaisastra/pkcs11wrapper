@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent Mechanism Objects as introduced in
@@ -197,15 +196,9 @@ public class Mechanism extends Object {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(32);
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Mechanism Type: ");
-        buffer.append(mechanismType.toString());
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Mechanism Type: ").append(mechanismType);
+        return sb.toString();
     }
 
     /**

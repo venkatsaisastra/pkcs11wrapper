@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 
@@ -460,18 +459,13 @@ public class HardwareFeature extends Object {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(128);
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Hardware Feature Type: ");
+        StringBuilder buffer = new StringBuilder(super.toString());
+        buffer.append("\n  Hardware Feature Type: ");
         if (hardwareFeatureType != null) {
             buffer.append(hardwareFeatureType.toString());
         } else {
             buffer.append("<unavailable>");
         }
-
         return buffer.toString();
     }
 

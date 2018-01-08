@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent DH domain parameters as specified by PKCS#11
@@ -278,23 +277,11 @@ public class DHParams extends DomainParameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(1024);
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Prime (hex): ");
-        buffer.append(prime.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Base (hex): ");
-        buffer.append(base.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Prime Bits (dec): ");
-        buffer.append(primeBits.toString(10));
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Prime (hex): ").append(prime);
+        sb.append("\n  Base (hex): ").append(base);
+        sb.append("\n  Prime Bits (dec): ").append(primeBits.toString(10));
+        return sb.toString();
     }
 
 }

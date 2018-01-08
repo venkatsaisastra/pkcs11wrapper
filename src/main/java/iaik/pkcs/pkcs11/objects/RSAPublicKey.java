@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent RSA public keys as specified by PKCS#11
@@ -284,23 +283,11 @@ public class RSAPublicKey extends PublicKey {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(1024);
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Modulus (hex): ");
-        buffer.append(modulus.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Public Exponent (hex): ");
-        buffer.append(publicExponent.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Modulus Bits (dec): ");
-        buffer.append(modulusBits.toString(10));
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Modulus (hex): ").append(modulus);
+        sb.append("\n  Public Exponent (hex): ").append(publicExponent);
+        sb.append("\n  Modulus Bits (dec): ").append(modulusBits.toString(10));
+        return sb.toString();
     }
 
 }

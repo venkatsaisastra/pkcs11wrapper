@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 
 /**
@@ -426,23 +425,17 @@ public class DomainParameters extends Storage {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(256);
+        StringBuilder sb = new StringBuilder(super.toString());
 
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Key Type: ");
+        sb.append("\n  Key Type: ");
         if (keyType != null) {
-            buffer.append(keyType.toString());
+            sb.append(keyType);
         } else {
-            buffer.append("<unavailable>");
+            sb.append("<unavailable>");
         }
 
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Local: ");
-        buffer.append(local.toString());
-
-        return buffer.toString();
+        sb.append("\n  Local: ").append(local);
+        return sb.toString();
     }
 
 }

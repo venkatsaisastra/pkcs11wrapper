@@ -48,7 +48,6 @@ import java.util.Enumeration;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * An object of this class is a generic template. Its purpose is to serve
@@ -347,7 +346,7 @@ public class GenericTemplate extends Object {
      */
     @Override
     public String toString() {
-        return toString(false, true, Constants.INDENT);
+        return toString(false, true, "  ");
     }
 
     /**
@@ -368,7 +367,7 @@ public class GenericTemplate extends Object {
      */
     @Override
     public String toString(boolean newline, boolean withName, String indent) {
-        StringBuilder buffer = new StringBuilder(1024);
+        StringBuilder sb = new StringBuilder(1024);
 
         Enumeration<Attribute> attributesEnumeration
             = attributeTable.elements();
@@ -377,15 +376,15 @@ public class GenericTemplate extends Object {
             Attribute attribute = attributesEnumeration.nextElement();
             if (attribute.isPresent()) {
                 if (!firstAttribute) {
-                    buffer.append(Constants.NEWLINE);
+                    sb.append("\n");
                 }
-                buffer.append(indent);
-                buffer.append(attribute.toString(withName));
+                sb.append(indent);
+                sb.append(attribute.toString(withName));
                 firstAttribute = false;
             }
         }
 
-        return buffer.toString();
+        return sb.toString();
     }
 
 }

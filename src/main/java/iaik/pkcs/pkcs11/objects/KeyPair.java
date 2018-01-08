@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.objects;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * This class does not correspond to any PKCS#11 object. It is only a pair of
@@ -166,15 +165,10 @@ public class KeyPair implements Cloneable {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(128);
-
-        buffer.append(Constants.INDENT);
-        buffer.append(publicKey);
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append(privateKey);
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(128);
+        sb.append("  ").append(publicKey);
+        sb.append("\n   ").append(privateKey);
+        return sb.toString();
     }
 
     /**

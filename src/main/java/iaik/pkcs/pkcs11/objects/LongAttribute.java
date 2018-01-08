@@ -136,19 +136,15 @@ public class LongAttribute extends Attribute {
      * @postconditions (result <> null)
      */
     public String toString(int radix) {
-        StringBuilder buffer = new StringBuilder(32);
-
         if (present) {
             if (sensitive) {
-                buffer.append("<Value is sensitive>");
+                return "<Value is sensitive>";
             } else {
-                buffer.append(getValueString(radix));
+                return getValueString(radix);
             }
         } else {
-            buffer.append("<Attribute not present>");
+            return "<Attribute not present>";
         }
-
-        return buffer.toString();
     }
 
     @Override

@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
@@ -109,13 +108,9 @@ public class OpaqueParameters implements Parameters {
 
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append(Constants.INDENT);
-        buffer.append("Bytes (hex): ");
-        buffer.append(Functions.toHexString(bytes));
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("  Bytes (hex): ").append(Functions.toHexString(bytes));
+        return sb.toString();
     }
 
     @Override

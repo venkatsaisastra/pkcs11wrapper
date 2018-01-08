@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * This is the base class for secret (symmetric) keys. Objects of this class
@@ -649,71 +648,23 @@ public class SecretKey extends Key {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(1024);
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Sensitive: ");
-        buffer.append(sensitive.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Encrypt: ");
-        buffer.append(encrypt.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Decrypt: ");
-        buffer.append(decrypt.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Sign: ");
-        buffer.append(sign.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Verify: ");
-        buffer.append(verify.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Wrap: ");
-        buffer.append(wrap.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Unwrap: ");
-        buffer.append(unwrap.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Extractable: ");
-        buffer.append(extractable.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Always Sensitive: ");
-        buffer.append(alwaysSensitive.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Never Extractable: ");
-        buffer.append(neverExtractable.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Check Value: ");
-        buffer.append(checkValue.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Wrap With Trusted: ");
-        buffer.append(wrapWithTrusted.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Trusted: ");
-        buffer.append(trusted.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Wrap Template: ");
-        buffer.append(wrapTemplate.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Unwrap Template: ");
-        buffer.append(unwrapTemplate.toString());
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Sensitive: ").append(sensitive);
+        sb.append("\n  Encrypt: ").append(encrypt);
+        sb.append("\n  Decrypt: ").append(decrypt);
+        sb.append("\n  Sign: ").append(sign);
+        sb.append("\n  Verify: ").append(verify);
+        sb.append("\n  Wrap: ").append(wrap);
+        sb.append("\n  Unwrap: ").append(unwrap);
+        sb.append("\n  Extractable: ").append(extractable);
+        sb.append("\n  Always Sensitive: ").append(alwaysSensitive);
+        sb.append("\n  Never Extractable: ").append(neverExtractable);
+        sb.append("\n  Check Value: ").append(checkValue);
+        sb.append("\n  Wrap With Trusted: ").append(wrapWithTrusted);
+        sb.append("\n  Trusted: ").append(trusted);
+        sb.append("\n  Wrap Template: ").append(wrapTemplate);
+        sb.append("\n  Unwrap Template: ").append(unwrapTemplate);
+        return sb.toString();
     }
 
 }

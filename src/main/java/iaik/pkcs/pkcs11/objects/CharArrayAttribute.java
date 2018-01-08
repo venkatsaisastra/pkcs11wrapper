@@ -182,8 +182,7 @@ public class CharArrayAttribute extends Attribute {
     }
 
     @Override
-    public void setValue(java.lang.Object value)
-        throws UnsupportedOperationException {
+    public void setValue(java.lang.Object value) {
         setCharArrayValue((char[]) value);
     }
 

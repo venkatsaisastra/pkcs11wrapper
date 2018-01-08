@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.parameters;
 
 //import iaik.pkcs.pkcs11.objects.Object;
 import iaik.pkcs.pkcs11.TokenRuntimeException;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * This class encapsulates parameters for Mechanisms.CONCATENATE_BASE_AND_KEY.
@@ -143,14 +142,9 @@ public class ObjectHandleParameters implements Parameters {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-
-        buffer.append(Constants.INDENT);
-        buffer.append("The Object: ");
-        buffer.append(Constants.NEWLINE);
-        buffer.append(object);
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("  The Object:\n").append(object);
+        return sb.toString();
     }
 
     /**

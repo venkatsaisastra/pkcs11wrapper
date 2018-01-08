@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Constants;
 
 /**
  * Objects of this class represent RSA private keys as specified by PKCS#11
@@ -393,43 +392,16 @@ public class RSAPrivateKey extends PrivateKey {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(1024);
-
-        buffer.append(super.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Modulus (hex): ");
-        buffer.append(modulus.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Public Exponent (hex): ");
-        buffer.append(publicExponent.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Private Exponent (hex): ");
-        buffer.append(privateExponent.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Prime 1 (hex): ");
-        buffer.append(prime1.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Prime 2 (hex): ");
-        buffer.append(prime2.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Exponent 1 (hex): ");
-        buffer.append(exponent1.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Exponent 2 (hex): ");
-        buffer.append(exponent2.toString());
-
-        buffer.append(Constants.NEWLINE_INDENT);
-        buffer.append("Coefficient (hex): ");
-        buffer.append(coefficient.toString());
-
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Modulus (hex): ").append(modulus);
+        sb.append("\n  Public Exponent (hex): ").append(publicExponent);
+        sb.append("\n  Private Exponent (hex): ").append(privateExponent);
+        sb.append("\n  Prime 1 (hex): ").append(prime1);
+        sb.append("\n  Prime 2 (hex): ").append(prime2);
+        sb.append("\n  Exponent 1 (hex): ").append(exponent1);
+        sb.append("\n  Exponent 2 (hex): ").append(exponent2);
+        sb.append("\n  Coefficient (hex): ").append(coefficient);
+        return sb.toString();
     }
 
 }
