@@ -59,25 +59,25 @@ import iaik.pkcs.pkcs11.TokenException;
  */
 public class InitArgs implements InitializeArgs {
 
-  static PrintWriter output_;
+  static PrintWriter output;
 
   static {
     try {
-      // output_ = new PrintWriter(new FileWriter("GetInfo_output.txt"), true);
-      output_ = new PrintWriter(System.out, true);
+      // output = new PrintWriter(new FileWriter("GetInfo_output.txt"), true);
+      output = new PrintWriter(System.out, true);
     } catch (Throwable thr) {
       thr.printStackTrace();
-      output_ = new PrintWriter(System.out, true);
+      output = new PrintWriter(System.out, true);
     }
   }
 
   public static void main(String[] args) throws TokenException, IOException {
     if ((args.length == 1) || (args.length == 2)) {
-      output_
+      output
           .println("################################################################################");
-      output_.println("load and initialize module \"" + args[0]
+      output.println("load and initialize module \"" + args[0]
           + "\" using InitializeArgs");
-      output_.flush();
+      output.flush();
       Module pkcs11Module = Module.getInstance(args[0]);
       byte[] reservedParameter = (args.length >= 2) ? readStream(new FileInputStream(
           args[1])) : null;
@@ -85,8 +85,8 @@ public class InitArgs implements InitializeArgs {
       pkcs11Module.initialize(initArgs);
 
       Info info = pkcs11Module.getInfo();
-      output_.println(info);
-      output_
+      output.println(info);
+      output
           .println("################################################################################");
     } else {
       printUsage();
@@ -95,9 +95,9 @@ public class InitArgs implements InitializeArgs {
   }
 
   protected static void printUsage() {
-    output_
+    output
         .println("InitArgs <PKCS#11 module name> [<file providing reserved parameter>]");
-    output_.println("e.g.: InitArgs slbck.dll");
+    output.println("e.g.: InitArgs slbck.dll");
   }
 
   /**
@@ -113,10 +113,10 @@ public class InitArgs implements InitializeArgs {
     return bufferStream.toByteArray();
   }
 
-  protected byte[] reservedParameter_;
+  protected byte[] reservedParameter;
 
   public InitArgs(byte[] reservedParameter) {
-    reservedParameter_ = reservedParameter;
+    this.reservedParameter = reservedParameter;
   }
 
   /**
@@ -125,7 +125,7 @@ public class InitArgs implements InitializeArgs {
    * @return The mutex handler object or null, if there is none set.
    */
   public MutexHandler getMutexHandler() {
-    output_.println("getMutexHandler() called");
+    output.println("getMutexHandler() called");
     return null;
   }
 
@@ -136,7 +136,7 @@ public class InitArgs implements InitializeArgs {
    *         otherwise.
    */
   public boolean isLibraryCantCreateOsThreads() {
-    output_.println("isLibraryCantCreateOsThreads() called");
+    output.println("isLibraryCantCreateOsThreads() called");
     return false;
   }
 
@@ -146,7 +146,7 @@ public class InitArgs implements InitializeArgs {
    * @return True, if the library is allowed to use locking mechanisms of the operating system.
    */
   public boolean isOsLockingOk() {
-    output_.println("isOsLockingOk() called");
+    output.println("isOsLockingOk() called");
     return true;
   }
 
@@ -157,9 +157,9 @@ public class InitArgs implements InitializeArgs {
    *
    * @postconditions (result == null)
    */
-  public java.lang.Object getReserved() {
-    output_.println("getReserved() called");
-    return reservedParameter_;
+  public Object getReserved() {
+    output.println("getReserved() called");
+    return reservedParameter;
   }
 
 }

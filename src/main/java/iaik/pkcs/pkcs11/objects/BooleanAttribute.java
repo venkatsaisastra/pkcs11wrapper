@@ -101,7 +101,7 @@ public class BooleanAttribute extends Attribute {
     }
 
     @Override
-    public void setValue(java.lang.Object value) {
+    public void setValue(Object value) {
         setBooleanValue((Boolean) value);
     }
 

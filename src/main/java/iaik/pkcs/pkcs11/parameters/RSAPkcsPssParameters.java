@@ -150,7 +150,7 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

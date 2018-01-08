@@ -61,7 +61,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
  * @version 1.0
  * @invariants (hardwareFeatureType <> null)
  */
-public class HardwareFeature extends Object {
+public class HardwareFeature extends PKCS11Object {
 
     /**
      * This interface defines the available hardware feature types as defined by
@@ -113,8 +113,8 @@ public class HardwareFeature extends Object {
     public interface VendorDefinedHardwareFeatureBuilder {
 
         /**
-         * This method should instantiate an Object of this class or of any
-         * sub-class. It can use the given handles and PKCS#11 module to
+         * This method should instantiate an PKCS11Object of this class or of
+         * any sub-class. It can use the given handles and PKCS#11 module to
          * retrieve attributes of the PKCS#11 object from the token.
          *
          * @param session
@@ -132,7 +132,7 @@ public class HardwareFeature extends Object {
          * @postconditions (result <> null)
          */
         @SuppressWarnings("restriction")
-        public Object build(Session session, long objectHandle)
+        public PKCS11Object build(Session session, long objectHandle)
             throws sun.security.pkcs11.wrapper.PKCS11Exception;
 
     }
@@ -234,7 +234,7 @@ public class HardwareFeature extends Object {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         Util.requireNonNull("session", session);
 
@@ -244,7 +244,7 @@ public class HardwareFeature extends Object {
 
         Long hardwareFeatureType = hardwareFeatureTypeAttribute.getLongValue();
 
-        Object newObject;
+        PKCS11Object newObject;
 
         if (hardwareFeatureTypeAttribute.isPresent()
                 && (hardwareFeatureType != null)) {
@@ -281,19 +281,19 @@ public class HardwareFeature extends Object {
      *          The session to use.
      * @param objectHandle
      *          The handle of the object
-     * @return A new Object.
+     * @return A new PKCS11Object.
      * @throws TokenException
      *           If no object could be created.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
     @SuppressWarnings("restriction")
-    protected static Object getUnknownHardwareFeature(Session session,
+    protected static PKCS11Object getUnknownHardwareFeature(Session session,
             long objectHandle)
         throws TokenException {
         Util.requireNonNull("session", session);
 
-        Object newObject;
+        PKCS11Object newObject;
         if (vendorHardwareFeatureBuilder != null) {
             try {
                 newObject = vendorHardwareFeatureBuilder.build(session,
@@ -384,7 +384,7 @@ public class HardwareFeature extends Object {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         HardwareFeature clone = (HardwareFeature) super.clone();
 
         clone.hardwareFeatureType = (HardwareFeatureTypeAttribute)
@@ -408,7 +408,7 @@ public class HardwareFeature extends Object {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

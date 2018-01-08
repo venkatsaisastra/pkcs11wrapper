@@ -136,7 +136,7 @@ public class CharArrayAttribute extends Attribute {
      */
     @SuppressWarnings("restriction")
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -182,7 +182,7 @@ public class CharArrayAttribute extends Attribute {
     }
 
     @Override
-    public void setValue(java.lang.Object value) {
+    public void setValue(Object value) {
         setCharArrayValue((char[]) value);
     }
 

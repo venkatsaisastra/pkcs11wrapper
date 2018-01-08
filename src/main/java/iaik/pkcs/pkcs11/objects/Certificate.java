@@ -111,8 +111,8 @@ public class Certificate extends Storage {
     public interface VendorDefinedCertificateBuilder {
 
         /**
-         * This method should instantiate an Object of this class or of any
-         * sub-class. It can use the given handles and PKCS#11 module to
+         * This method should instantiate an PKCS11Object of this class or of
+         * any sub-class. It can use the given handles and PKCS#11 module to
          * retrieve attributes of the PKCS#11 object from the token.
          *
          * @param session
@@ -130,7 +130,7 @@ public class Certificate extends Storage {
          * @postconditions (result <> null)
          */
         @SuppressWarnings("restriction")
-        public Object build(Session session, long objectHandle)
+        public PKCS11Object build(Session session, long objectHandle)
             throws sun.security.pkcs11.wrapper.PKCS11Exception;
 
     }
@@ -241,12 +241,12 @@ public class Certificate extends Storage {
     }
 
     /**
-     * The getInstance method of the Object class uses this method to create
-     * an instance of a PKCS#11 certificate. This method reads the certificate
-     * type attribute and calls the getInstance method of the according
-     * sub-class. If the certificate type is a vendor defined it uses the
-     * VendorDefinedCertificateBuilder set by the application. If no certificate
-     * could be constructed, Returns null.
+     * The getInstance method of the PKCS11Object class uses this method to 
+     * create an instance of a PKCS#11 certificate. This method reads the
+     * certificate type attribute and calls the getInstance method of the
+     * according sub-class. If the certificate type is a vendor defined it
+     * uses the VendorDefinedCertificateBuilder set by the application. If
+     * no certificate could be constructed, Returns null.
      *
      * @param session
      *          The session to use for reading attributes. This session must
@@ -262,7 +262,7 @@ public class Certificate extends Storage {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         Util.requireNonNull("session", session);
 
@@ -272,7 +272,7 @@ public class Certificate extends Storage {
 
         Long certificateType = certificateTypeAttribute.getLongValue();
 
-        Object newObject;
+        PKCS11Object newObject;
 
         if (certificateTypeAttribute.isPresent() && (certificateType != null)) {
             if (certificateType.equals(CertificateType.X_509_PUBLIC_KEY)) {
@@ -310,19 +310,19 @@ public class Certificate extends Storage {
      *          it is a private object.
      * @param objectHandle
      *          The object handle as given from the PKCS#111 module.
-     * @return A new Object.
+     * @return A new PKCS11Object.
      * @throws TokenException
      *           If no object could be created.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
     @SuppressWarnings("restriction")
-    protected static Object getUnknownCertificate(Session session,
+    protected static PKCS11Object getUnknownCertificate(Session session,
             long objectHandle)
         throws TokenException {
         Util.requireNonNull("session", session);
 
-        Object newObject;
+        PKCS11Object newObject;
         if (vendorCertificateBuilder_ != null) {
             try {
                 newObject = vendorCertificateBuilder_.build(session,
@@ -424,7 +424,7 @@ public class Certificate extends Storage {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         Certificate clone = (Certificate) super.clone();
 
         clone.certificateType = (CertificateTypeAttribute)
@@ -454,7 +454,7 @@ public class Certificate extends Storage {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -570,7 +570,7 @@ public class Certificate extends Storage {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             trusted, certificateCategory, checkValue, startDate, endDate});
     }
 

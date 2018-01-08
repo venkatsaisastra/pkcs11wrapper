@@ -344,7 +344,7 @@ public class TokenInfo implements Cloneable {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         TokenInfo clone;
 
         try {
@@ -804,7 +804,8 @@ public class TokenInfo implements Cloneable {
         sb.append("\nDual Crypto Operations: ")
             .append(dualCryptoOperations);
         sb.append("\nToken initialized: ").append(tokenInitialized);
-        sb.append("\nSecondary Authentication: ").append(secondaryAuthentication);
+        sb.append("\nSecondary Authentication: ")
+            .append(secondaryAuthentication);
         sb.append("\nUser PIN-Count low: ").append(userPinCountLow);
         sb.append("\nUser PIN final Try: ").append(userPinFinalTry);
         sb.append("\nUser PIN locked: ").append(userPinLocked);
@@ -877,7 +878,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

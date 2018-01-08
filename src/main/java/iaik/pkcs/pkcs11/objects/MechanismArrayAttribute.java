@@ -158,7 +158,7 @@ public class MechanismArrayAttribute extends Attribute {
      */
     @SuppressWarnings("restriction")
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -212,7 +212,7 @@ public class MechanismArrayAttribute extends Attribute {
      */
     @SuppressWarnings("restriction")
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         MechanismArrayAttribute clone;
 
         clone = (MechanismArrayAttribute) super.clone();
@@ -226,7 +226,7 @@ public class MechanismArrayAttribute extends Attribute {
     }
 
     @Override
-    public void setValue(java.lang.Object value) {
+    public void setValue(Object value) {
         setMechanismAttributeArrayValue((Mechanism[]) value);
     }
 

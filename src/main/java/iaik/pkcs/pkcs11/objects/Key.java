@@ -245,8 +245,8 @@ public class Key extends Storage {
     public interface VendorDefinedKeyBuilder {
 
         /**
-         * This method should instantiate an Object of this class or of any
-         * sub-class. It can use the given handles and PKCS#11 module to
+         * This method should instantiate an PKCS11Object of this class or of
+         * any sub-class. It can use the given handles and PKCS#11 module to
          * retrieve attributes of the PKCS#11 object from the token.
          *
          * @param session
@@ -264,7 +264,7 @@ public class Key extends Storage {
          * @postconditions (result <> null)
          */
         @SuppressWarnings("restriction")
-        public Object build(Session session, long objectHandle)
+        public PKCS11Object build(Session session, long objectHandle)
             throws sun.security.pkcs11.wrapper.PKCS11Exception;
 
     }
@@ -497,7 +497,7 @@ public class Key extends Storage {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         Key clone = (Key) super.clone();
 
         clone.keyType = (KeyTypeAttribute) this.keyType.clone();
@@ -529,7 +529,7 @@ public class Key extends Storage {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -674,9 +674,10 @@ public class Key extends Storage {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             id, startDate, endDate, derive, local, keyGenMechanism });
-        Object.getAttributeValue(session, objectHandle, allowedMechanisms);
+        PKCS11Object.getAttributeValue(session, objectHandle,
+                allowedMechanisms);
     }
 
     /**

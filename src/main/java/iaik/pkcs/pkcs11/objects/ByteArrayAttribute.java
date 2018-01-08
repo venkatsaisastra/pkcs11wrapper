@@ -136,7 +136,7 @@ public class ByteArrayAttribute extends Attribute {
      */
     @SuppressWarnings("restriction")
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -183,7 +183,7 @@ public class ByteArrayAttribute extends Attribute {
     }
 
     @Override
-    public void setValue(java.lang.Object value) {
+    public void setValue(Object value) {
         setByteArrayValue((byte[]) value);
     }
 

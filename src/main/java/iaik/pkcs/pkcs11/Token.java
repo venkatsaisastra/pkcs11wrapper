@@ -355,7 +355,7 @@ public class Token {
      *          sessions or SessionReadWriteBehavior.RW_SESSION for read-write
      *          sessions.
      * @param application
-     *          Object to be supplied upon notify callback. May be null.
+     *          PKCS11Object to be supplied upon notify callback. May be null.
      *          (Not implemented yet!).
      * @param notify
      *          For notifications via callback. may be null.

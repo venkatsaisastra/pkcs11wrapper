@@ -137,7 +137,7 @@ public class WTLSCertificate extends Certificate {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         return new WTLSCertificate(session, objectHandle);
     }
@@ -198,7 +198,7 @@ public class WTLSCertificate extends Certificate {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         WTLSCertificate clone = (WTLSCertificate) super.clone();
 
         clone.subject = (ByteArrayAttribute) this.subject.clone();
@@ -228,7 +228,7 @@ public class WTLSCertificate extends Certificate {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -349,9 +349,9 @@ public class WTLSCertificate extends Certificate {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             subject, issuer, value });
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             url, hashOfSubjectPublicKey, hashOfIssuerPublicKey });
     }
 

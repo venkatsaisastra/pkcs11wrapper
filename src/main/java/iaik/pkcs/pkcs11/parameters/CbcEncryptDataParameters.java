@@ -115,7 +115,7 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         try {
             return super.clone();
         } catch (CloneNotSupportedException ex) {
@@ -218,7 +218,7 @@ public abstract class CbcEncryptDataParameters implements Parameters {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

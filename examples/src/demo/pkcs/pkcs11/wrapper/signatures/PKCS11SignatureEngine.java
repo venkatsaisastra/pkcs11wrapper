@@ -128,7 +128,7 @@ public class PKCS11SignatureEngine extends Signature {
   /**
    * SPI: see documentation of java.security.Signature.
    */
-  protected java.lang.Object engineGetParameter(String name)
+  protected Object engineGetParameter(String name)
       throws InvalidParameterException {
     throw new UnsupportedOperationException();
   }
@@ -136,7 +136,7 @@ public class PKCS11SignatureEngine extends Signature {
   /**
    * SPI: see documentation of java.security.Signature.
    */
-  protected void engineSetParameter(String param, java.lang.Object value)
+  protected void engineSetParameter(String param, Object value)
       throws InvalidParameterException {
     throw new UnsupportedOperationException();
   }

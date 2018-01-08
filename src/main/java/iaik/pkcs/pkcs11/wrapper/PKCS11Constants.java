@@ -73,7 +73,7 @@ package iaik.pkcs.pkcs11.wrapper;
  *   CK_KEY_TYPE ................................... long
  *   CK_CERTIFICATE_TYPE ........................... long
  *   CK_ATTRIBUTE_TYPE ............................. long
- *   CK_VOID_PTR ................................... Object[]
+ *   CK_VOID_PTR ................................... PKCS11Object[]
  *   CK_BYTE_PTR ................................... byte[]
  *   CK_CHAR_PTR ................................... char[]
  *   CK_UTF8CHAR_PTR ............................... char[]

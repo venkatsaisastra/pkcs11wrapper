@@ -114,7 +114,7 @@ public class Clock extends HardwareFeature {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         return new Clock(session, objectHandle);
     }
@@ -161,7 +161,7 @@ public class Clock extends HardwareFeature {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         Clock clone = (Clock) super.clone();
         clone.value = (ByteArrayAttribute) this.value.clone();
         // put all cloned attributes into the new table
@@ -181,7 +181,7 @@ public class Clock extends HardwareFeature {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -236,7 +236,7 @@ public class Clock extends HardwareFeature {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValue(session, objectHandle, value);
+        PKCS11Object.getAttributeValue(session, objectHandle, value);
     }
 
     /**

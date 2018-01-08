@@ -52,7 +52,7 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Florian Reimair
  */
-public class Mechanism extends Object {
+public class Mechanism extends PKCS11Object {
 
     /**
      * The mechanism Type of this Mechanism object.
@@ -123,7 +123,7 @@ public class Mechanism extends Object {
      * @return A clone of this object.
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         Mechanism clone = (Mechanism) super.clone();
 
         clone.mechanismType = (LongAttribute) this.mechanismType.clone();
@@ -144,7 +144,7 @@ public class Mechanism extends Object {
      *         variables of both objects are equal. False, otherwise.
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -177,7 +177,7 @@ public class Mechanism extends Object {
          * read multiple attributes at once might cause a performance gain
          * but we only have one attribute here.
          */
-        Object.getAttributeValue(session, objectHandle, mechanismType);
+        PKCS11Object.getAttributeValue(session, objectHandle, mechanismType);
     }
 
     /**

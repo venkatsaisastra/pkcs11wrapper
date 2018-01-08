@@ -98,7 +98,7 @@ public class Version implements Cloneable {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         Version clone;
 
         try {
@@ -164,7 +164,7 @@ public class Version implements Cloneable {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

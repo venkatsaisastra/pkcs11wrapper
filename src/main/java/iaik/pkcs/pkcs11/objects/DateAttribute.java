@@ -117,7 +117,7 @@ public class DateAttribute extends Attribute {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -163,7 +163,7 @@ public class DateAttribute extends Attribute {
     }
 
     @Override
-    public void setValue(java.lang.Object value) {
+    public void setValue(Object value) {
         setDateValue((Date) value);
     }
 

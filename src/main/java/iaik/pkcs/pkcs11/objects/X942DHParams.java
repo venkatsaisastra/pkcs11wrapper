@@ -120,7 +120,7 @@ public class X942DHParams extends DHParams {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         return new X942DHParams(session, objectHandle);
     }
@@ -176,7 +176,7 @@ public class X942DHParams extends DHParams {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         X942DHParams clone = (X942DHParams) super.clone();
 
         clone.prime = (ByteArrayAttribute) this.prime.clone();
@@ -203,7 +203,7 @@ public class X942DHParams extends DHParams {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -296,7 +296,7 @@ public class X942DHParams extends DHParams {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             prime, base, subprime, primeBits, subprimeBits });
     }
 

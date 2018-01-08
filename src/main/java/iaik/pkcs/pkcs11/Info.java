@@ -105,7 +105,7 @@ public class Info implements Cloneable {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         Info clone;
 
         try {
@@ -194,7 +194,7 @@ public class Info implements Cloneable {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

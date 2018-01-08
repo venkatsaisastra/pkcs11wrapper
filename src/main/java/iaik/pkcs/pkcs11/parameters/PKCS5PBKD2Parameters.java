@@ -183,7 +183,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         PKCS5PBKD2Parameters clone;
 
         try {
@@ -404,7 +404,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

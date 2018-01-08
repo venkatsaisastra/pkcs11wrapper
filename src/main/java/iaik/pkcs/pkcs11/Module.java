@@ -399,7 +399,7 @@ public class Module {
      * @postconditions (result <> null)
      */
     /*
-    public Slot waitForSlotEvent(boolean dontBlock, Object reserved)
+    public Slot waitForSlotEvent(boolean dontBlock, PKCS11Object reserved)
         throws TokenException {
         long flags = (dontBlock) ? PKCS11Constants.CKF_DONT_BLOCK : 0L;
         long slotID = pkcs11Module_.C_WaitForSlotEvent(flags, reserved);
@@ -431,8 +431,9 @@ public class Module {
     /**
      * This finalize method tries to finalize the module by calling
      * <code>finalize()</code> of the Java object of the PKCS11 module.
-     * Note that this method does not call the <code>finalize(Object)</code>
-     * (<code>C_Finalize(Object)</code>) method of the PKCS11 module!
+     * Note that this method does not call the
+     * <code>finalize(PKCS11Object)</code>
+     * (<code>C_Finalize(PKCS11Object)</code>) method of the PKCS11 module!
      * This method is the reserved Java method called by the garbage collector.
      * Don't get confused by the same name.
      *
@@ -440,7 +441,7 @@ public class Module {
      *              If finalization fails.
      * @preconditions
      * @postconditions
-     * @see #finalize(Object)
+     * @see #finalize(PKCS11Object)
      */
     // CHECKSTYLE:SKIP
     public void finalize()
@@ -458,7 +459,7 @@ public class Module {
      * finished using the module.
      * Note that this method is different from the <code>finalize</code> method,
      * which is the reserved Java method called by the garbage collector.
-     * This method calls the <code>C_Finalize(Object)</code> method of the
+     * This method calls the <code>C_Finalize(PKCS11Object)</code> method of the
      * underlying PKCS11 module.
      *
      * @param args
@@ -489,7 +490,7 @@ public class Module {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

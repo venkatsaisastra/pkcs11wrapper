@@ -123,7 +123,7 @@ public class RSAPublicKey extends PublicKey {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         return new RSAPublicKey(session, objectHandle);
     }
@@ -175,7 +175,7 @@ public class RSAPublicKey extends PublicKey {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         RSAPublicKey clone = (RSAPublicKey) super.clone();
 
         clone.modulus = (ByteArrayAttribute) this.modulus.clone();
@@ -201,7 +201,7 @@ public class RSAPublicKey extends PublicKey {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -268,7 +268,7 @@ public class RSAPublicKey extends PublicKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             modulus, publicExponent, modulusBits });
     }
 

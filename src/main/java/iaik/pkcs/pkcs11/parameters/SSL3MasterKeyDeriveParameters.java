@@ -99,7 +99,7 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         SSL3MasterKeyDeriveParameters clone;
 
         try {
@@ -206,7 +206,7 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

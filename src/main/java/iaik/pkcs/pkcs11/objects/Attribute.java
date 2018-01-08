@@ -271,7 +271,7 @@ public abstract class Attribute implements Cloneable {
             attributeNames.put(Attribute.LABEL, "Label");
             attributeNames.put(Attribute.APPLICATION, "Application");
             attributeNames.put(Attribute.VALUE, "Value");
-            attributeNames.put(Attribute.OBJECT_ID, "Object ID");
+            attributeNames.put(Attribute.OBJECT_ID, "PKCS11Object ID");
             attributeNames.put(Attribute.CERTIFICATE_TYPE, "Certificate Type");
             attributeNames.put(Attribute.ISSUER, "Issuer");
             attributeNames.put(Attribute.SERIAL_NUMBER, "Serial Number");
@@ -554,7 +554,7 @@ public abstract class Attribute implements Cloneable {
      *                 and (result instanceof Attribute)
      *                 and (result.equals(this))
      */
-    public java.lang.Object clone() {
+    public Object clone() {
         Attribute clone;
 
         try {
@@ -609,7 +609,7 @@ public abstract class Attribute implements Cloneable {
      *           the {@link OtherAttribute} implementation does not support
      *           setting a value directly.
      */
-    public abstract void setValue(java.lang.Object value);
+    public abstract void setValue(Object value);
 
     /**
      * Set the CK_ATTRIBUTE of this Attribute. Only for internal use.
@@ -760,7 +760,7 @@ public abstract class Attribute implements Cloneable {
      * @preconditions
      * @postconditions
      */
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

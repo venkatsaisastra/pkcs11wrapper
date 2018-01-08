@@ -92,7 +92,7 @@ public class KeyPair implements Cloneable {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         KeyPair clone;
         try {
             clone = (KeyPair) super.clone();
@@ -183,7 +183,7 @@ public class KeyPair implements Cloneable {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

@@ -42,8 +42,8 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-//import iaik.pkcs.pkcs11.objects.Object;
 import iaik.pkcs.pkcs11.TokenRuntimeException;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
 
 /**
  * This class encapsulates parameters for Mechanisms.CONCATENATE_BASE_AND_KEY.
@@ -57,7 +57,7 @@ public class ObjectHandleParameters implements Parameters {
     /**
      * The PKCS#11 object.
      */
-    protected iaik.pkcs.pkcs11.objects.Object object;
+    protected PKCS11Object object;
 
     /**
      * Create a new ObjectHandleParameters object using the given object.
@@ -67,7 +67,7 @@ public class ObjectHandleParameters implements Parameters {
      * @preconditions
      * @postconditions
      */
-    public ObjectHandleParameters(iaik.pkcs.pkcs11.objects.Object object) {
+    public ObjectHandleParameters(PKCS11Object object) {
         this.object = object;
     }
 
@@ -81,14 +81,13 @@ public class ObjectHandleParameters implements Parameters {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         ObjectHandleParameters clone;
 
         try {
             clone = (ObjectHandleParameters) super.clone();
 
-            clone.object = (iaik.pkcs.pkcs11.objects.Object)
-                                this.object.clone();
+            clone.object = (PKCS11Object) this.object.clone();
         } catch (CloneNotSupportedException ex) {
             // this must not happen, because this class is cloneable
             throw new TokenRuntimeException(
@@ -118,7 +117,7 @@ public class ObjectHandleParameters implements Parameters {
      * @preconditions
      * @postconditions
      */
-    public iaik.pkcs.pkcs11.objects.Object getObject() {
+    public PKCS11Object getObject() {
         return object;
     }
 
@@ -130,7 +129,7 @@ public class ObjectHandleParameters implements Parameters {
      * @preconditions
      * @postconditions
      */
-    public void setObjectHandle(iaik.pkcs.pkcs11.objects.Object object) {
+    public void setObjectHandle(PKCS11Object object) {
         this.object = object;
     }
 
@@ -143,7 +142,7 @@ public class ObjectHandleParameters implements Parameters {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("  The Object:\n").append(object);
+        sb.append("  The PKCS11Object:\n").append(object);
         return sb.toString();
     }
 
@@ -159,7 +158,7 @@ public class ObjectHandleParameters implements Parameters {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

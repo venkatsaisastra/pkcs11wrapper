@@ -46,7 +46,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import sun.security.pkcs11.wrapper.PKCS11Exception;
 
 /**
- * Interface for notification callbacks. Object implementing this interface
+ * Interface for notification callbacks. 11Object implementing this interface
  * can be passed to the openSession method of a token.
  *
  * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>

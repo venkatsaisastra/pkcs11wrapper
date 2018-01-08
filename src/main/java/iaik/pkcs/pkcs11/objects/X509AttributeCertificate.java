@@ -135,7 +135,7 @@ public class X509AttributeCertificate extends Certificate {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         return new X509AttributeCertificate(session, objectHandle);
     }
@@ -192,7 +192,7 @@ public class X509AttributeCertificate extends Certificate {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         X509AttributeCertificate clone
             = (X509AttributeCertificate) super.clone();
 
@@ -220,7 +220,7 @@ public class X509AttributeCertificate extends Certificate {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -326,7 +326,7 @@ public class X509AttributeCertificate extends Certificate {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             owner, acIssuer, serialNumber, attrTypes, value });
     }
 

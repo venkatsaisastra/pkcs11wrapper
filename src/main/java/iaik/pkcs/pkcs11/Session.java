@@ -46,7 +46,7 @@ import java.util.Vector;
 
 import iaik.pkcs.pkcs11.objects.Key;
 import iaik.pkcs.pkcs11.objects.KeyPair;
-import iaik.pkcs.pkcs11.objects.Object;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
 import iaik.pkcs.pkcs11.objects.SecretKey;
@@ -103,7 +103,7 @@ import sun.security.pkcs11.wrapper.PKCS11;
  *   privateSignatureKeyTemplate.getSign().setBooleanValue(Boolean.TRUE);
  *
  *   session.findObjectsInit(privateSignatureKeyTemplate);
- *   Object[] privateSignatureKeys;
+ *   PKCS11Object[] privateSignatureKeys;
  *
  *   List signatureKeyList = new Vector(4);
  *   while ((privateSignatureKeys = session.findObjects(1)).length > 0) {
@@ -145,7 +145,7 @@ import sun.security.pkcs11.wrapper.PKCS11;
  * </code>
  * </pre>
  *
- * @see iaik.pkcs.pkcs11.objects.Object
+ * @see iaik.pkcs.pkcs11.objects.PKCS11Object
  * @see iaik.pkcs.pkcs11.parameters.Parameters
  * @see iaik.pkcs.pkcs11.Session
  * @see iaik.pkcs.pkcs11.SessionInfo
@@ -284,7 +284,7 @@ public class Session {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -501,8 +501,8 @@ public class Session {
      *
      * @param templateObject
      *          The template object that holds all values that the new object on
-     *          the token should contain. (this is not a java.lang.Object!)
-     * @return A new PKCS#11 Object (this is not a java.lang.Object!) that
+     *          the token should contain. (this is not a Object!)
+     * @return A new PKCS#11 PKCS11Object (this is not a Object!) that
      *         serves holds all the (readable) attributes of the object on the
      *         token. In contrast to the templateObject, this object might have
      *         certain attributes set to token-dependent default-values.
@@ -512,9 +512,10 @@ public class Session {
      * @preconditions (templateObject <> null)
      * @postconditions (result <> null)
      */
-    public Object createObject(Object templateObject)
+    public PKCS11Object createObject(PKCS11Object templateObject)
         throws TokenException {
-        CK_ATTRIBUTE[] ckAttributes = Object.getSetAttributes(templateObject);
+        CK_ATTRIBUTE[] ckAttributes =
+                PKCS11Object.getSetAttributes(templateObject);
         long objectHandle;
         try {
             objectHandle = pkcs11Module.C_CreateObject(sessionHandle,
@@ -523,7 +524,7 @@ public class Session {
             throw new PKCS11Exception(ex);
         }
 
-        return Object.getInstance(this, objectHandle);
+        return PKCS11Object.getInstance(this, objectHandle);
     }
 
     /**
@@ -546,10 +547,12 @@ public class Session {
      * @preconditions (sourceObject <> null)
      * @postconditions
      */
-    public Object copyObject(Object sourceObject, Object templateObject)
+    public PKCS11Object copyObject(PKCS11Object sourceObject,
+            PKCS11Object templateObject)
         throws TokenException {
         long sourceObjectHandle = sourceObject.getObjectHandle();
-        CK_ATTRIBUTE[] ckAttributes = Object.getSetAttributes(templateObject);
+        CK_ATTRIBUTE[] ckAttributes =
+                PKCS11Object.getSetAttributes(templateObject);
         long newObjectHandle;
         try {
             newObjectHandle = pkcs11Module.C_CopyObject(sessionHandle,
@@ -558,7 +561,7 @@ public class Session {
             throw new PKCS11Exception(ex);
         }
 
-        return Object.getInstance(this, newObjectHandle);
+        return PKCS11Object.getInstance(this, newObjectHandle);
     }
 
     /**
@@ -583,11 +586,12 @@ public class Session {
      * @preconditions (objectToUpdate <> null) and (template <> null)
      * @postconditions
      */
-    public void setAttributeValues(Object objectToUpdate, Object templateObject)
+    public void setAttributeValues(PKCS11Object objectToUpdate,
+            PKCS11Object templateObject)
         throws TokenException {
         long objectToUpdateHandle = objectToUpdate.getObjectHandle();
         CK_ATTRIBUTE[] ckAttributesTemplates =
-                Object.getSetAttributes(templateObject);
+                PKCS11Object.getSetAttributes(templateObject);
         try {
             pkcs11Module.C_SetAttributeValue(sessionHandle,
                     objectToUpdateHandle, ckAttributesTemplates);
@@ -597,25 +601,25 @@ public class Session {
     }
 
     /**
-     * Reads all the attributes of the given Object from the token and returns a
-     * new Object that contains all these attributes. The given objectToRead and
-     * the returned Object are different Java objects. This method just uses the
-     * object handle of the given object, it does not modify anything in this
-     * object.
+     * Reads all the attributes of the given PKCS11Object from the token and
+     * returns a new PKCS11Object that contains all these attributes. The
+     * given objectToRead and the returned PKCS11Object are different Java
+     * objects. This method just uses the object handle of the given object,
+     * it does not modify anything in this object.
      *
      * @param objectToRead
      *          The object to newly read from the token.
-     * @return A new Object holding all attributes that this method just read
-     *         from the token.
+     * @return A new PKCS11Object holding all attributes that this method just
+     *         read from the token.
      * @exception TokenException
      *              If reading the attributes fails.
      * @preconditions (objectToRead <> null)
      * @postconditions (result <> null)
      */
-    public Object getAttributeValues(Object objectToRead)
+    public PKCS11Object getAttributeValues(PKCS11Object objectToRead)
         throws TokenException {
         long objectHandle = objectToRead.getObjectHandle();
-        return Object.getInstance(this, objectHandle);
+        return PKCS11Object.getInstance(this, objectHandle);
     }
 
     /**
@@ -630,7 +634,7 @@ public class Session {
      * @preconditions (object <> null)
      * @postconditions
      */
-    public void destroyObject(Object object)
+    public void destroyObject(PKCS11Object object)
         throws TokenException {
         long objectHandle = object.getObjectHandle();
         try {
@@ -653,7 +657,7 @@ public class Session {
      * @postconditions
      */
     /*
-    public long getObjectSize(Object object)
+    public long getObjectSize(PKCS11Object object)
         throws TokenException {
         long objectHandle = object.getObjectHandle();
         return pkcs11Module.C_GetObjectSize(sessionHandle, objectHandle);
@@ -675,9 +679,10 @@ public class Session {
      * @preconditions
      * @postconditions
      */
-    public void findObjectsInit(Object templateObject)
+    public void findObjectsInit(PKCS11Object templateObject)
         throws TokenException {
-        CK_ATTRIBUTE[] ckAttributes = Object.getSetAttributes(templateObject);
+        CK_ATTRIBUTE[] ckAttributes = 
+                PKCS11Object.getSetAttributes(templateObject);
         try {
             pkcs11Module.C_FindObjectsInit(sessionHandle, ckAttributes);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
@@ -704,9 +709,9 @@ public class Session {
      * @preconditions
      * @postconditions (result <> null)
      */
-    public Object[] findObjects(int maxObjectCount)
+    public PKCS11Object[] findObjects(int maxObjectCount)
         throws TokenException {
-        Vector<Object> foundObjects = new Vector<>();
+        Vector<PKCS11Object> foundObjects = new Vector<>();
         long[] objectHandles;
         try {
             objectHandles = pkcs11Module.C_FindObjects(sessionHandle,
@@ -717,10 +722,11 @@ public class Session {
 
         try {
             for (int i = 0; i < objectHandles.length; i++) {
-                Object object = Object.getInstance(this, objectHandles[i]);
+                PKCS11Object object = 
+                        PKCS11Object.getInstance(this, objectHandles[i]);
                 foundObjects.addElement(object);
             }
-            Object[] objectArray = new Object[foundObjects.size()];
+            PKCS11Object[] objectArray = new PKCS11Object[foundObjects.size()];
             foundObjects.copyInto(objectArray);
 
             return objectArray;
@@ -1567,14 +1573,14 @@ public class Session {
      * @postconditions (result instanceof SecretKey) or (result instanceof
      *                 DomainParameters)
      */
-    public Object generateKey(Mechanism mechanism, Object template)
+    public PKCS11Object generateKey(Mechanism mechanism, PKCS11Object template)
         throws TokenException {
         CK_MECHANISM ckMechanism = new CK_MECHANISM();
         ckMechanism.mechanism = mechanism.getMechanismCode();
         Parameters parameters = mechanism.getParameters();
         ckMechanism.pParameter = (parameters != null)
                 ? parameters.getPKCS11ParamsObject() : null;
-        CK_ATTRIBUTE[] ckAttributes = Object.getSetAttributes(template);
+        CK_ATTRIBUTE[] ckAttributes = PKCS11Object.getSetAttributes(template);
 
         long objectHandle;
         try {
@@ -1584,7 +1590,7 @@ public class Session {
             throw new PKCS11Exception(ex);
         }
 
-        return Object.getInstance(this, objectHandle);
+        return PKCS11Object.getInstance(this, objectHandle);
     }
 
     /**
@@ -1610,8 +1616,8 @@ public class Session {
      * @postconditions
      */
     public KeyPair generateKeyPair(Mechanism mechanism,
-            Object publicKeyTemplate,
-            Object privateKeyTemplate)
+            PKCS11Object publicKeyTemplate,
+            PKCS11Object privateKeyTemplate)
         throws TokenException {
         CK_MECHANISM ckMechanism = new CK_MECHANISM();
         ckMechanism.mechanism = mechanism.getMechanismCode();
@@ -1619,9 +1625,9 @@ public class Session {
         ckMechanism.pParameter = (parameters != null)
                 ? parameters.getPKCS11ParamsObject() : null;
         CK_ATTRIBUTE[] ckPublicKeyAttributes =
-                Object.getSetAttributes(publicKeyTemplate);
+                PKCS11Object.getSetAttributes(publicKeyTemplate);
         CK_ATTRIBUTE[] ckPrivateKeyAttributes =
-                Object.getSetAttributes(privateKeyTemplate);
+                PKCS11Object.getSetAttributes(privateKeyTemplate);
 
         long[] objectHandles;
         try {
@@ -1632,9 +1638,9 @@ public class Session {
         }
 
         PublicKey publicKey =
-                (PublicKey) Object.getInstance(this, objectHandles[0]);
+                (PublicKey) PKCS11Object.getInstance(this, objectHandles[0]);
         PrivateKey privateKey =
-                (PrivateKey) Object.getInstance(this, objectHandles[1]);
+                (PrivateKey) PKCS11Object.getInstance(this, objectHandles[1]);
 
         return new KeyPair(publicKey, privateKey);
     }
@@ -1696,7 +1702,7 @@ public class Session {
     public Key unwrapKey(Mechanism mechanism,
             Key unwrappingKey,
             byte[] wrappedKey,
-            Object keyTemplate)
+            PKCS11Object keyTemplate)
         throws TokenException {
         Util.requireNonNull("wrappedKey", wrappedKey);
 
@@ -1705,7 +1711,8 @@ public class Session {
         Parameters parameters = mechanism.getParameters();
         ckMechanism.pParameter = (parameters != null)
                 ? parameters.getPKCS11ParamsObject() : null;
-        CK_ATTRIBUTE[] ckAttributes = Object.getSetAttributes(keyTemplate);
+        CK_ATTRIBUTE[] ckAttributes = 
+                PKCS11Object.getSetAttributes(keyTemplate);
 
         long objectHandle;
         try {
@@ -1716,7 +1723,7 @@ public class Session {
             throw new PKCS11Exception(ex);
         }
 
-        return (Key) Object.getInstance(this, objectHandle);
+        return (Key) PKCS11Object.getInstance(this, objectHandle);
     }
 
     /**
@@ -1748,7 +1755,7 @@ public class Session {
         Parameters parameters = mechanism.getParameters();
         ckMechanism.pParameter = (parameters != null)
                 ? parameters.getPKCS11ParamsObject() : null;
-        CK_ATTRIBUTE[] ckAttributes = Object.getSetAttributes(template);
+        CK_ATTRIBUTE[] ckAttributes = PKCS11Object.getSetAttributes(template);
 
         long objectHandle;
         try {
@@ -1779,7 +1786,7 @@ public class Session {
             version.setPKCS11ParamsObject(
                     ((CK_SSL3_MASTER_KEY_DERIVE_PARAMS)
                             (ckMechanism.pParameter)).pVersion);
-            derivedKey = (Key) Object.getInstance(this, objectHandle);
+            derivedKey = (Key) PKCS11Object.getInstance(this, objectHandle);
         } else if (
                 (ckMechanism.mechanism
                         == PKCS11Constants.CKM_SSL3_KEY_AND_MAC_DERIVE
@@ -1803,7 +1810,7 @@ public class Session {
              */
             derivedKey = null;
         } else {
-            derivedKey = (Key) Object.getInstance(this, objectHandle);
+            derivedKey = (Key) PKCS11Object.getInstance(this, objectHandle);
         }
 
         return derivedKey;

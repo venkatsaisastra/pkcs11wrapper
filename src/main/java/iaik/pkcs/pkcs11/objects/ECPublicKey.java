@@ -122,7 +122,7 @@ public class ECPublicKey extends PublicKey {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         return new ECPublicKey(session, objectHandle);
     }
@@ -171,7 +171,7 @@ public class ECPublicKey extends PublicKey {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         ECPublicKey clone = (ECPublicKey) super.clone();
 
         clone.ecdsaParams = (ByteArrayAttribute) this.ecdsaParams.clone();
@@ -195,7 +195,7 @@ public class ECPublicKey extends PublicKey {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -249,7 +249,7 @@ public class ECPublicKey extends PublicKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             ecdsaParams, ecPoint });
     }
 

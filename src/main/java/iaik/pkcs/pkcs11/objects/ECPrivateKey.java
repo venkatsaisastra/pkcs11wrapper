@@ -123,7 +123,7 @@ public class ECPrivateKey extends PrivateKey {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         return new ECPrivateKey(session, objectHandle);
     }
@@ -172,7 +172,7 @@ public class ECPrivateKey extends PrivateKey {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         ECPrivateKey clone = (ECPrivateKey) super.clone();
 
         clone.ecdsaParams = (ByteArrayAttribute) this.ecdsaParams.clone();
@@ -196,7 +196,7 @@ public class ECPrivateKey extends PrivateKey {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -250,8 +250,8 @@ public class ECPrivateKey extends PrivateKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValue(session, objectHandle, ecdsaParams);
-        Object.getAttributeValue(session, objectHandle, value);
+        PKCS11Object.getAttributeValue(session, objectHandle, ecdsaParams);
+        PKCS11Object.getAttributeValue(session, objectHandle, value);
     }
 
     /**

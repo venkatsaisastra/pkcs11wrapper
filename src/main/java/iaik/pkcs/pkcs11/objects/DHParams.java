@@ -123,7 +123,7 @@ public class DHParams extends DomainParameters {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         return new DHParams(session, objectHandle);
     }
@@ -174,7 +174,7 @@ public class DHParams extends DomainParameters {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         DHParams clone = (DHParams) super.clone();
         clone.prime = (ByteArrayAttribute) this.prime.clone();
         clone.base = (ByteArrayAttribute) this.base.clone();
@@ -196,7 +196,7 @@ public class DHParams extends DomainParameters {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -262,7 +262,7 @@ public class DHParams extends DomainParameters {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             prime, base, primeBits });
     }
 

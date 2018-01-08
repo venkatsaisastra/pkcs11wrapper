@@ -96,7 +96,7 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         EcDH1KeyDerivationParameters clone
                 = (EcDH1KeyDerivationParameters) super.clone();
 
@@ -167,7 +167,7 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

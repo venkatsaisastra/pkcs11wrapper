@@ -110,11 +110,11 @@ public interface MutexHandler {
      * calling thread, that mutex object is unlocked and the function call
      * returns. Furthermore: If exactly one thread was blocking on that
      * particular mutex object, then that thread stops blocking, obtains a lock
-     * on that mutex object, and its lockMutex(Object) call returns.
+     * on that mutex object, and its lockMutex(PKCS11Object) call returns.
      * If more than one thread was blocking on that particular mutex object,
      * then exactly one of the blocking threads is selected somehow. That lucky
      * thread stops blocking, obtains a lock on the mutex object, and its
-     * lockMutex(Object) call returns. All other threads blocking on that
+     * lockMutex(PKCS11Object) call returns. All other threads blocking on that
      * particular mutex object continue to block.
      * If this method is called with a mutex object which is not locked, then
      * the method call throws an exception with the error code

@@ -115,7 +115,7 @@ public class X942DHPrivateKey extends DHPrivateKey {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         return new X942DHPrivateKey(session, objectHandle);
     }
@@ -168,7 +168,7 @@ public class X942DHPrivateKey extends DHPrivateKey {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         X942DHPrivateKey clone = (X942DHPrivateKey) super.clone();
 
         clone.prime = (ByteArrayAttribute) this.prime.clone();
@@ -194,7 +194,7 @@ public class X942DHPrivateKey extends DHPrivateKey {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -275,9 +275,9 @@ public class X942DHPrivateKey extends DHPrivateKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             prime, base, subprime });
-        Object.getAttributeValue(session, objectHandle, value);
+        PKCS11Object.getAttributeValue(session, objectHandle, value);
     }
 
     /**

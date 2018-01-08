@@ -62,7 +62,7 @@ public class OpaqueParameters implements Parameters {
     }
 
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         OpaqueParameters clone;
 
         try {
@@ -114,7 +114,7 @@ public class OpaqueParameters implements Parameters {
     }
 
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

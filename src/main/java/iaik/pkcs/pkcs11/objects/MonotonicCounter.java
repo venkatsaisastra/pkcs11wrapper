@@ -124,7 +124,7 @@ public class MonotonicCounter extends HardwareFeature {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         return new MonotonicCounter(session, objectHandle);
     }
@@ -176,7 +176,7 @@ public class MonotonicCounter extends HardwareFeature {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         MonotonicCounter clone = (MonotonicCounter) super.clone();
 
         clone.resetOnInit = (BooleanAttribute) this.resetOnInit.clone();
@@ -201,7 +201,7 @@ public class MonotonicCounter extends HardwareFeature {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -281,7 +281,7 @@ public class MonotonicCounter extends HardwareFeature {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             resetOnInit, hasReset, value });
     }
 

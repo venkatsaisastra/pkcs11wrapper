@@ -127,8 +127,8 @@ public class PublicKey extends Key {
     }
 
     /**
-     * The getInstance method of the Object class uses this method to create
-     * an instance of a PKCS#11 public key. This method reads the key
+     * The getInstance method of the PKCS11Object class uses this method to
+     * create an instance of a PKCS#11 public key. This method reads the key
      * type attribute and calls the getInstance method of the according
      * sub-class. If the key type is a vendor defined it uses the
      * VendorDefinedKeyBuilder set by the application. If no public key
@@ -148,7 +148,7 @@ public class PublicKey extends Key {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         Util.requireNonNull("session", session);
 
@@ -157,7 +157,7 @@ public class PublicKey extends Key {
 
         Long keyType = keyTypeAttribute.getLongValue();
 
-        Object newObject;
+        PKCS11Object newObject;
 
         if (keyTypeAttribute.isPresent() && (keyType != null)) {
             if (keyType.equals(Key.KeyType.RSA)) {
@@ -197,19 +197,19 @@ public class PublicKey extends Key {
      *          The session to use.
      * @param objectHandle
      *          The handle of the object
-     * @return A new Object.
+     * @return A new PKCS11Object.
      * @throws TokenException
      *           If no object could be created.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
     @SuppressWarnings("restriction")
-    protected static Object getUnknownPublicKey(Session session,
+    protected static PKCS11Object getUnknownPublicKey(Session session,
             long objectHandle)
         throws TokenException {
         Util.requireNonNull("session", session);
 
-        Object newObject;
+        PKCS11Object newObject;
         if (Key.vendorKeyBuilder != null) {
             try {
                 newObject = Key.vendorKeyBuilder.build(session, objectHandle);
@@ -281,7 +281,7 @@ public class PublicKey extends Key {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         PublicKey clone = (PublicKey) super.clone();
 
         clone.subject = (ByteArrayAttribute) this.subject.clone();
@@ -310,7 +310,7 @@ public class PublicKey extends Key {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -426,9 +426,9 @@ public class PublicKey extends Key {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             subject, encrypt, verify, verifyRecover, wrap, trusted });
-        Object.getAttributeValue(session, objectHandle, wrapTemplate);
+        PKCS11Object.getAttributeValue(session, objectHandle, wrapTemplate);
     }
 
     /**

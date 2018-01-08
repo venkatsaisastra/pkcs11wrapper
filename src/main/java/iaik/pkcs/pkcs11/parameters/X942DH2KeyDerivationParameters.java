@@ -43,6 +43,7 @@
 package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_X9_42_DH2_DERIVE_PARAMS;
 
@@ -67,7 +68,7 @@ public class X942DH2KeyDerivationParameters
     /**
      * The key for the second EC private key value.
      */
-    protected iaik.pkcs.pkcs11.objects.Object privateData;
+    protected PKCS11Object privateData;
 
     /**
      * The other party's second EC public key value.
@@ -107,7 +108,7 @@ public class X942DH2KeyDerivationParameters
             byte[] sharedData,
             byte[] publicData,
             long privateDataLength,
-            iaik.pkcs.pkcs11.objects.Object privateData,
+            PKCS11Object privateData,
             byte[] publicData2) {
         super(keyDerivationFunction, sharedData, publicData);
         this.privateDataLength = privateDataLength;
@@ -125,12 +126,11 @@ public class X942DH2KeyDerivationParameters
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         X942DH2KeyDerivationParameters clone
                 = (X942DH2KeyDerivationParameters) super.clone();
 
-        clone.privateData
-                = (iaik.pkcs.pkcs11.objects.Object) this.privateData.clone();
+        clone.privateData = (PKCS11Object) this.privateData.clone();
         clone.publicData2 = (byte[]) this.publicData2.clone();
 
         return clone;
@@ -165,7 +165,7 @@ public class X942DH2KeyDerivationParameters
      * @preconditions
      * @postconditions (result <> null)
      */
-    public iaik.pkcs.pkcs11.objects.Object getPrivateData() {
+    public PKCS11Object getPrivateData() {
         return privateData;
     }
 
@@ -199,7 +199,7 @@ public class X942DH2KeyDerivationParameters
      * @preconditions (privateData <> null)
      * @postconditions
      */
-    public void setPrivateData(iaik.pkcs.pkcs11.objects.Object privateData) {
+    public void setPrivateData(PKCS11Object privateData) {
         this.privateData = Util.requireNonNull("privateData", privateData);
     }
 
@@ -255,7 +255,7 @@ public class X942DH2KeyDerivationParameters
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

@@ -46,6 +46,7 @@ import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.objects.SecretKey;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
@@ -125,7 +126,7 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         SSL3KeyMaterialOutParameters clone;
 
         try {
@@ -193,17 +194,13 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
     public void setPKCS11ParamsObject(CK_SSL3_KEY_MAT_OUT input,
             Session session)
         throws TokenException {
-        clientMacSecret = (SecretKey)
-                iaik.pkcs.pkcs11.objects.Object.getInstance(session,
+        clientMacSecret = (SecretKey) PKCS11Object.getInstance(session,
                         input.hClientMacSecret);
-        serverMacSecret = (SecretKey)
-                iaik.pkcs.pkcs11.objects.Object.getInstance(session,
+        serverMacSecret = (SecretKey) PKCS11Object.getInstance(session,
                         input.hServerMacSecret);
-        clientKey = (SecretKey)
-                iaik.pkcs.pkcs11.objects.Object.getInstance(session,
+        clientKey = (SecretKey) PKCS11Object.getInstance(session,
                         input.hClientKey);
-        serverKey = (SecretKey)
-                iaik.pkcs.pkcs11.objects.Object.getInstance(session,
+        serverKey = (SecretKey) PKCS11Object.getInstance(session,
                         input.hServerKey);
         clientIV = input.pIVClient;
         serverIV = input.pIVServer;
@@ -311,7 +308,7 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

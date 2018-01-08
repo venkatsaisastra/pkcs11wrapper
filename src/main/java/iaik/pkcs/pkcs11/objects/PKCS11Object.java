@@ -70,7 +70,8 @@ import sun.security.pkcs11.wrapper.PKCS11;
  *             and (objectClass <> null)
  */
 @SuppressWarnings("restriction")
-public class Object implements Cloneable {
+// CHECKSTYLE:SKIP
+public class PKCS11Object implements Cloneable {
 
     /**
      * This interface defines the available object classes as defined by
@@ -153,8 +154,8 @@ public class Object implements Cloneable {
     public interface VendorDefinedObjectBuilder {
 
         /**
-         * This method should instantiate an Object of this class or of any
-         * sub-class. It can use the given handles and PKCS#11 module to
+         * This method should instantiate an PKCS11Object of this class or of
+         * any sub-class. It can use the given handles and PKCS#11 module to
          * retrieve attributes of the PKCS#11 object from the token.
          *
          * @param session
@@ -171,7 +172,7 @@ public class Object implements Cloneable {
          * @preconditions (session <> null)
          * @postconditions (result <> null)
          */
-        public Object build(Session session, long objectHandle)
+        public PKCS11Object build(Session session, long objectHandle)
             throws PKCS11Exception;
 
     }
@@ -213,7 +214,7 @@ public class Object implements Cloneable {
      * @preconditions
      * @postconditions
      */
-    public Object() {
+    public PKCS11Object() {
         attributeTable = new Hashtable<>(32);
 
         allocateAttributes();
@@ -237,7 +238,7 @@ public class Object implements Cloneable {
      * @preconditions (session <> null)
      * @postconditions
      */
-    protected Object(Session session, long objectHandle)
+    protected PKCS11Object(Session session, long objectHandle)
         throws TokenException {
         this.attributeTable = new Hashtable<>(32);
         allocateAttributes();
@@ -267,7 +268,7 @@ public class Object implements Cloneable {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         Util.requireNonNull("session", session);
 
@@ -276,7 +277,7 @@ public class Object implements Cloneable {
 
         Long objectClass = objectClassAttribute.getLongValue();
 
-        Object newObject;
+        PKCS11Object newObject;
 
         if (objectClassAttribute.isPresent() && (objectClass != null)) {
             if (objectClass.equals(ObjectClass.PRIVATE_KEY)) {
@@ -312,33 +313,35 @@ public class Object implements Cloneable {
      * Try to create an object which has no or an unknown object class
      * attribute. This implementation will try to use a vendor defined object
      * builder, if such has been set. If this is impossible or fails, it will
-     * create just a simple {@link iaik.pkcs.pkcs11.objects.Object Object }.
+     * create just a simple
+     * {@link iaik.pkcs.pkcs11.objects.PKCS11Object PKCS11Object }.
      *
      * @param session
      *          The session to use.
      * @param objectHandle
      *          The handle of the object
-     * @return A new Object.
+     * @return A new PKCS11Object.
      * @throws TokenException
      *           If no object could be created.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    protected static Object getUnknownObject(Session session, long objectHandle)
+    protected static PKCS11Object getUnknownObject(Session session,
+            long objectHandle)
         throws TokenException {
         Util.requireNonNull("session", session);
 
-        Object newObject;
+        PKCS11Object newObject;
         if (vendorObjectBuilder != null) {
             try {
                 newObject = vendorObjectBuilder.build(session, objectHandle);
             } catch (PKCS11Exception ex) {
                 // we can just treat it like some unknown type of object
-                newObject = new Object(session, objectHandle);
+                newObject = new PKCS11Object(session, objectHandle);
             }
         } else {
             // we can just treat it like some unknown type of object
-            newObject = new Object(session, objectHandle);
+            newObject = new PKCS11Object(session, objectHandle);
         }
 
         return newObject;
@@ -423,7 +426,7 @@ public class Object implements Cloneable {
      * @preconditions (object <> null)
      * @postconditions
      */
-    protected static void putAttributesInTable(Object object) {
+    protected static void putAttributesInTable(PKCS11Object object) {
         Util.requireNonNull("object", object);
         object.attributeTable.put(Attribute.CLASS, object.objectClass);
     }
@@ -451,11 +454,11 @@ public class Object implements Cloneable {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
-        Object clone;
+    public Object clone() {
+        PKCS11Object clone;
 
         try {
-            clone = (Object) super.clone();
+            clone = (PKCS11Object) super.clone();
 
             clone.objectClass = (ObjectClassAttribute)
                     this.objectClass.clone();
@@ -485,16 +488,16 @@ public class Object implements Cloneable {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
 
-        if (!(otherObject instanceof Object)) {
+        if (!(otherObject instanceof PKCS11Object)) {
             return false;
         }
 
-        Object other = (Object) otherObject;
+        PKCS11Object other = (PKCS11Object) otherObject;
         return (this.objectHandle == other.objectHandle)
                 && this.objectClass.equals(other.objectClass);
     }
@@ -523,14 +526,14 @@ public class Object implements Cloneable {
      *        the value
      * @throws UnsupportedAttributeException
      *         the specified attribute identifier is not available for this
-     *         {@link Object} instance.
+     *         {@link PKCS11Object} instance.
      * @throws ClassCastException
      *         the given value type is not valid for this {@link Attribute}
      *         instance.
      */
-    public void putAttribute(long attribute, java.lang.Object value)
+    public void putAttribute(long attribute, Object value)
         throws UnsupportedAttributeException {
-        java.lang.Object myAttribute = getAttribute(attribute);
+        Object myAttribute = getAttribute(attribute);
         if (null == myAttribute) {
             throw new UnsupportedAttributeException(
                     "Unsupported attribute 0x" + Long.toHexString(attribute)
@@ -647,7 +650,7 @@ public class Object implements Cloneable {
      * @preconditions
      * @postconditions
      */
-    public static CK_ATTRIBUTE[] getSetAttributes(Object object)
+    public static CK_ATTRIBUTE[] getSetAttributes(PKCS11Object object)
         throws PKCS11Exception {
         Vector<CK_ATTRIBUTE> setAttributes = (object != null)
                 ? object.getSetAttributes() : null;
@@ -701,7 +704,7 @@ public class Object implements Cloneable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(32);
-        sb.append("  Object Class: ");
+        sb.append("  PKCS11Object Class: ");
         if (objectClass != null) {
             sb.append(objectClass.toString());
         } else {

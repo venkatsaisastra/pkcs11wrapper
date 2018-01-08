@@ -143,7 +143,7 @@ public class Data extends Storage {
     }
 
     /**
-     * The getInstance method of the Object class uses this method to
+     * The getInstance method of the PKCS11Object class uses this method to
      * create an instance of a PKCS#11 data object.
      *
      * @param session
@@ -160,7 +160,7 @@ public class Data extends Storage {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         return new Data(session, objectHandle);
     }
@@ -175,7 +175,7 @@ public class Data extends Storage {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         Data clone = (Data) super.clone();
 
         clone.application = (CharArrayAttribute) this.application.clone();
@@ -199,7 +199,7 @@ public class Data extends Storage {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -280,9 +280,9 @@ public class Data extends Storage {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValue(session, objectHandle, application);
-        Object.getAttributeValue(session, objectHandle, objectID);
-        Object.getAttributeValue(session, objectHandle, value);
+        PKCS11Object.getAttributeValue(session, objectHandle, application);
+        PKCS11Object.getAttributeValue(session, objectHandle, objectID);
+        PKCS11Object.getAttributeValue(session, objectHandle, value);
     }
 
     /**
@@ -298,7 +298,7 @@ public class Data extends Storage {
     public String toString() {
         StringBuilder sb = new StringBuilder(super.toString());
         sb.append("\n  Application: ").append(application);
-        sb.append("\n  Object ID (DER, hex): ").append(objectID);
+        sb.append("\n  PKCS11Object ID (DER, hex): ").append(objectID);
         sb.append("\n  Value (hex): ").append(value);
         return sb.toString();
     }

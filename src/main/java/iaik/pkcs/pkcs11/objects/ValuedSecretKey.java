@@ -121,7 +121,7 @@ public class ValuedSecretKey extends SecretKey {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle,
+    public static PKCS11Object getInstance(Session session, long objectHandle,
             long keyType)
         throws TokenException {
         return new ValuedSecretKey(session, objectHandle, keyType);
@@ -171,7 +171,7 @@ public class ValuedSecretKey extends SecretKey {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         ValuedSecretKey clone = (ValuedSecretKey) super.clone();
 
         clone.value = (ByteArrayAttribute) this.value.clone();
@@ -195,7 +195,7 @@ public class ValuedSecretKey extends SecretKey {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -249,8 +249,8 @@ public class ValuedSecretKey extends SecretKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValue(session, objectHandle, value);
-        Object.getAttributeValue(session, objectHandle, valueLen);
+        PKCS11Object.getAttributeValue(session, objectHandle, value);
+        PKCS11Object.getAttributeValue(session, objectHandle, valueLen);
     }
 
     /**

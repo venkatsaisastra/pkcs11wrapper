@@ -110,7 +110,7 @@ public class UserInterface extends HardwareFeature {
      * @exception TokenException
      *              If getting the attributes failed.
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         return new UserInterface(session, objectHandle);
     }
@@ -168,7 +168,7 @@ public class UserInterface extends HardwareFeature {
      * @return A clone of this object.
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         UserInterface clone = (UserInterface) super.clone();
 
         clone.pixelX = (LongAttribute) this.pixelX.clone();
@@ -190,7 +190,7 @@ public class UserInterface extends HardwareFeature {
     }
 
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -335,7 +335,7 @@ public class UserInterface extends HardwareFeature {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             pixelX, pixelY, resolution, charRows, charColumns, color,
             bitsPerPixel, charSets, encodingMethods, mimeTypes });
     }

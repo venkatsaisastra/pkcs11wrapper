@@ -65,7 +65,7 @@ public class AttributeArray extends Attribute {
      * The attributes of this attribute array in their object class
      * representation. Needed for printing and comparing this attribute array.
      */
-    protected Object template;
+    protected PKCS11Object template;
 
     /**
      * Default constructor - only for internal use.
@@ -97,7 +97,7 @@ public class AttributeArray extends Attribute {
      * @preconditions
      * @postconditions
      */
-    public void setAttributeArrayValue(Object value) {
+    public void setAttributeArrayValue(PKCS11Object value) {
         template = value;
 
         List<CK_ATTRIBUTE> attributeList = new ArrayList<>();
@@ -121,7 +121,7 @@ public class AttributeArray extends Attribute {
      * @preconditions
      * @postconditions
      */
-    public Object getAttributeArrayValue() {
+    public PKCS11Object getAttributeArrayValue() {
         if (template != null) {
             return template;
         }
@@ -193,7 +193,7 @@ public class AttributeArray extends Attribute {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -255,7 +255,7 @@ public class AttributeArray extends Attribute {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         AttributeArray clone;
 
         clone = (AttributeArray) super.clone();
@@ -269,9 +269,9 @@ public class AttributeArray extends Attribute {
     }
 
     @Override
-    public void setValue(java.lang.Object value)
+    public void setValue(Object value)
         throws UnsupportedOperationException {
-        setAttributeArrayValue((Object) value);
+        setAttributeArrayValue((PKCS11Object) value);
     }
 
 }

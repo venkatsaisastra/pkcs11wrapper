@@ -115,7 +115,7 @@ public class SessionInfo implements Cloneable {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         SessionInfo clone;
 
         try {
@@ -207,7 +207,7 @@ public class SessionInfo implements Cloneable {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

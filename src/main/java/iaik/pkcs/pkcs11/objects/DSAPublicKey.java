@@ -129,7 +129,7 @@ public class DSAPublicKey extends PublicKey {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         return new DSAPublicKey(session, objectHandle);
     }
@@ -182,7 +182,7 @@ public class DSAPublicKey extends PublicKey {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         DSAPublicKey clone = (DSAPublicKey) super.clone();
 
         clone.prime = (ByteArrayAttribute) this.prime.clone();
@@ -208,7 +208,7 @@ public class DSAPublicKey extends PublicKey {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -286,7 +286,7 @@ public class DSAPublicKey extends PublicKey {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             prime, subprime, base, value });
     }
 

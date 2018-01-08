@@ -86,7 +86,7 @@ public class InitializationVectorParameters implements Parameters {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         InitializationVectorParameters clone;
 
         try {
@@ -162,7 +162,7 @@ public class InitializationVectorParameters implements Parameters {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

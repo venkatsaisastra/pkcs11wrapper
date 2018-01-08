@@ -99,7 +99,7 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         X942DH1KeyDerivationParameters clone
                 = (X942DH1KeyDerivationParameters) super.clone();
 
@@ -174,7 +174,7 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

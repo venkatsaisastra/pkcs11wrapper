@@ -145,7 +145,7 @@ public class SSL3KeyMaterialParameters implements Parameters {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         SSL3KeyMaterialParameters clone;
 
         try {
@@ -381,7 +381,7 @@ public class SSL3KeyMaterialParameters implements Parameters {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

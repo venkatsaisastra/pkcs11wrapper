@@ -106,7 +106,7 @@ public class MechanismInfo implements Cloneable {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         MechanismInfo clone;
 
         try {

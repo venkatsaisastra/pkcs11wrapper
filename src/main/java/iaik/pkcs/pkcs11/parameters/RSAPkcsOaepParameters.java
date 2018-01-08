@@ -144,7 +144,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         RSAPkcsOaepParameters clone = (RSAPkcsOaepParameters) super.clone();
 
         clone.sourceData = (byte[]) this.sourceData.clone();
@@ -263,7 +263,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

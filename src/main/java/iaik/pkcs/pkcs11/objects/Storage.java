@@ -57,7 +57,7 @@ import iaik.pkcs.pkcs11.Util;
  *             and (modifiable_ <> null)
  *             and (label_ <> null)
  */
-public class Storage extends Object {
+public class Storage extends PKCS11Object {
 
     /**
      * True, if object is a token object (not a session object).
@@ -162,7 +162,7 @@ public class Storage extends Object {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         Storage clone = (Storage) super.clone();
 
         clone.token = (BooleanAttribute) this.token.clone();
@@ -188,7 +188,7 @@ public class Storage extends Object {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -266,7 +266,7 @@ public class Storage extends Object {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             token, private_, modifiable, label });
     }
 

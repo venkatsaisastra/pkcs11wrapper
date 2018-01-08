@@ -97,7 +97,7 @@ public class SSL3RandomDataParameters implements Parameters {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         SSL3RandomDataParameters clone;
 
         try {
@@ -200,7 +200,7 @@ public class SSL3RandomDataParameters implements Parameters {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

@@ -74,8 +74,8 @@ public class DomainParameters extends Storage {
     public interface VendorDefinedDomainParametersBuilder {
 
         /**
-         * This method should instantiate an Object of this class or of any
-         * sub-class. It can use the given handles and PKCS#11 module to
+         * This method should instantiate an PKCS11Object of this class or of
+         * any sub-class. It can use the given handles and PKCS#11 module to
          * retrieve attributes of the PKCS#11 object from the token.
          *
          * @param session
@@ -93,7 +93,7 @@ public class DomainParameters extends Storage {
          * @postconditions (result <> null)
          */
         @SuppressWarnings("restriction")
-        public Object build(Session session, long objectHandle)
+        public PKCS11Object build(Session session, long objectHandle)
             throws sun.security.pkcs11.wrapper.PKCS11Exception;
 
     }
@@ -179,9 +179,9 @@ public class DomainParameters extends Storage {
     }
 
     /**
-     * The getInstance method of the Object class uses this method to create
-     * an instance of PKCS#11 domain parameters. This method reads the key
-     * type attribute and calls the getInstance method of the according
+     * The getInstance method of the PKCS11Object class uses this method to
+     * create an instance of PKCS#11 domain parameters. This method reads the
+     * key type attribute and calls the getInstance method of the according
      * sub-class.
      * If the key type is a vendor defined or an unknown it uses the
      * VendorDefinedDomainParametersBuilder set by the application. If no
@@ -201,7 +201,7 @@ public class DomainParameters extends Storage {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         Util.requireNonNull("session", session);
 
@@ -210,7 +210,7 @@ public class DomainParameters extends Storage {
 
         Long keyType = keyTypeAttribute.getLongValue();
 
-        Object newObject;
+        PKCS11Object newObject;
 
         if (keyTypeAttribute.isPresent() && (keyType != null)) {
             if (keyType.equals(Key.KeyType.DSA)) {
@@ -244,19 +244,19 @@ public class DomainParameters extends Storage {
      *          The session to use.
      * @param objectHandle
      *          The handle of the object
-     * @return A new Object.
+     * @return A new PKCS11Object.
      * @throws TokenException
      *           If no object could be created.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
     @SuppressWarnings("restriction")
-    protected static Object getUnknownDomainParameters(Session session,
+    protected static PKCS11Object getUnknownDomainParameters(Session session,
             long objectHandle)
         throws TokenException {
         Util.requireNonNull("session", session);
 
-        Object newObject;
+        PKCS11Object newObject;
         if (vendorDomainParametersBuilder != null) {
             try {
                 newObject = vendorDomainParametersBuilder.build(session,
@@ -318,7 +318,7 @@ public class DomainParameters extends Storage {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         DomainParameters clone = (DomainParameters) super.clone();
 
         clone.keyType = (KeyTypeAttribute) this.keyType.clone();
@@ -341,7 +341,7 @@ public class DomainParameters extends Storage {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -411,7 +411,7 @@ public class DomainParameters extends Storage {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValue(session, objectHandle, local);
+        PKCS11Object.getAttributeValue(session, objectHandle, local);
     }
 
     /**

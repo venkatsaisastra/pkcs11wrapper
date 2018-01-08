@@ -161,7 +161,7 @@ public class X509PublicKeyCertificate extends Certificate {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         return new X509PublicKeyCertificate(session, objectHandle);
     }
@@ -232,7 +232,7 @@ public class X509PublicKeyCertificate extends Certificate {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         X509PublicKeyCertificate clone
             = (X509PublicKeyCertificate) super.clone();
 
@@ -267,7 +267,7 @@ public class X509PublicKeyCertificate extends Certificate {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -425,9 +425,9 @@ public class X509PublicKeyCertificate extends Certificate {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             subject, id, issuer, serialNumber, value });
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             url, hashOfSubjectPublicKey, hashOfIssuerPublicKey,
             javaMidpSecurityDomain });
     }

@@ -44,7 +44,7 @@ package iaik.pkcs.pkcs11.objects;
 
 public class OtherAttribute extends Attribute {
 
-    public void setValue(java.lang.Object value) {
+    public void setValue(Object value) {
         /* since we do not know this kind of attribute, we just give up */
         throw new UnsupportedOperationException("message");
     }

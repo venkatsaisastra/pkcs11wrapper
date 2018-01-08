@@ -116,7 +116,7 @@ public class State implements Cloneable {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         State clone;
 
         try {

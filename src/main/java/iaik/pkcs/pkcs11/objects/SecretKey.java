@@ -173,9 +173,10 @@ public class SecretKey extends Key {
     }
 
     /**
-     * The getInstance method of the Object class uses this method to create
-     * an instance of a PKCS#11 secret key. This method reads the key type
-     * attribute and calls the getInstance method of the according sub-class.
+     * The getInstance method of the PKCS11Object class uses this method to
+     * create an instance of a PKCS#11 secret key. This method reads the key
+     * type attribute and calls the getInstance method of the according
+     * sub-class.
      * If the key type is a vendor defined it uses the
      * VendorDefinedKeyBuilder set by the application. If no secret key
      * could be constructed, Returns null.
@@ -194,7 +195,7 @@ public class SecretKey extends Key {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    public static Object getInstance(Session session, long objectHandle)
+    public static PKCS11Object getInstance(Session session, long objectHandle)
         throws TokenException {
         Util.requireNonNull("session", session);
 
@@ -203,7 +204,7 @@ public class SecretKey extends Key {
 
         Long keyType = keyTypeAttribute.getLongValue();
 
-        Object newObject;
+        PKCS11Object newObject;
 
         if (keyTypeAttribute.isPresent() && (keyType != null)) {
             newObject = ValuedSecretKey.getInstance(session, objectHandle,
@@ -227,19 +228,19 @@ public class SecretKey extends Key {
      *          The session to use.
      * @param objectHandle
      *          The handle of the object
-     * @return A new Object.
+     * @return A new PKCS11Object.
      * @throws TokenException
      *           If no object could be created.
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
     @SuppressWarnings("restriction")
-    protected static Object getUnknownSecretKey(Session session,
+    protected static PKCS11Object getUnknownSecretKey(Session session,
             long objectHandle)
         throws TokenException {
         Util.requireNonNull("session", session);
 
-        Object newObject;
+        PKCS11Object newObject;
         if (Key.vendorKeyBuilder != null) {
             try {
                 newObject = Key.vendorKeyBuilder.build(session, objectHandle);
@@ -330,7 +331,7 @@ public class SecretKey extends Key {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         SecretKey clone = (SecretKey) super.clone();
 
         clone.sensitive = (BooleanAttribute) this.sensitive.clone();
@@ -370,7 +371,7 @@ public class SecretKey extends Key {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -584,12 +585,12 @@ public class SecretKey extends Key {
         throws TokenException {
         super.readAttributes(session);
 
-        Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
             sensitive, encrypt, decrypt, sign, verify, wrap, unwrap,
             extractable, alwaysSensitive, neverExtractable, checkValue,
             wrapWithTrusted, trusted });
-        Object.getAttributeValue(session, objectHandle, wrapTemplate);
-        Object.getAttributeValue(session, objectHandle, unwrapTemplate);
+        PKCS11Object.getAttributeValue(session, objectHandle, wrapTemplate);
+        PKCS11Object.getAttributeValue(session, objectHandle, unwrapTemplate);
     }
 
     /**

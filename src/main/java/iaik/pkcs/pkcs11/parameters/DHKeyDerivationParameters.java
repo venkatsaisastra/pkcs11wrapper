@@ -152,7 +152,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         DHKeyDerivationParameters clone;
 
         try {
@@ -266,7 +266,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }

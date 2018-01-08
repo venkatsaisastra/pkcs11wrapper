@@ -63,7 +63,7 @@ import iaik.pkcs.pkcs11.Util;
  * @version 1.0
  * @invariants (attributes <> null)
  */
-public class GenericTemplate extends Object {
+public class GenericTemplate extends PKCS11Object {
 
     /**
      * The default constructor. Creates an object with no attributes.
@@ -101,7 +101,7 @@ public class GenericTemplate extends Object {
      * @preconditions (object <> null)
      * @postconditions
      */
-    public void addAllAttributes(Object object) {
+    public void addAllAttributes(PKCS11Object object) {
         Util.requireNonNull("object", object);
         Enumeration<Long> newAttributeKeysEnumeration
             = object.attributeTable.keys();
@@ -123,7 +123,7 @@ public class GenericTemplate extends Object {
      * @preconditions (object <> null)
      * @postconditions
      */
-    public void addAllPresentAttributes(Object object) {
+    public void addAllPresentAttributes(PKCS11Object object) {
         Util.requireNonNull("object", object);
         Enumeration<Attribute> attributeEnumaeration
             = object.attributeTable.elements();
@@ -145,7 +145,7 @@ public class GenericTemplate extends Object {
      *                 and (result.equals(this))
      */
     @Override
-    public java.lang.Object clone() {
+    public Object clone() {
         GenericTemplate clone = (GenericTemplate) super.clone();
         // we do not want any attributes in this object by default
         clone.attributeTable.clear();
@@ -192,7 +192,7 @@ public class GenericTemplate extends Object {
      * @postconditions
      */
     @Override
-    public boolean equals(java.lang.Object otherObject) {
+    public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
         }
@@ -235,7 +235,7 @@ public class GenericTemplate extends Object {
         throws TokenException {
         if (objectHandle == -1) {
             throw new TokenException(
-                "Object handle is not set to an valid value. "
+                "PKCS11Object handle is not set to an valid value. "
                 + "Use setObjectHandle(long) to set.");
         }
 
@@ -245,7 +245,7 @@ public class GenericTemplate extends Object {
             = attributeTable.elements();
         while (attributeEnumeration.hasMoreElements()) {
             Attribute attribute = attributeEnumeration.nextElement();
-            Object.getAttributeValue(session, objectHandle, attribute);
+            PKCS11Object.getAttributeValue(session, objectHandle, attribute);
         }
     }
 
@@ -282,7 +282,7 @@ public class GenericTemplate extends Object {
      * @preconditions (object <> null)
      * @postconditions
      */
-    public void removeAllAttributes(Object object) {
+    public void removeAllAttributes(PKCS11Object object) {
         Util.requireNonNull("object", object);
         Enumeration<Long> keysToRemove = object.attributeTable.keys();
         while (keysToRemove.hasMoreElements()) {
@@ -304,7 +304,7 @@ public class GenericTemplate extends Object {
      * @preconditions (object <> null)
      * @postconditions
      */
-    public void removeAllPresentAttributes(Object object) {
+    public void removeAllPresentAttributes(PKCS11Object object) {
         Util.requireNonNull("object", object);
         Enumeration<Long> keysToRemove = object.attributeTable.keys();
         while (keysToRemove.hasMoreElements()) {
