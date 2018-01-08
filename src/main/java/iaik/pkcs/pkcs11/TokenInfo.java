@@ -801,7 +801,8 @@ public class TokenInfo implements Cloneable {
         sb.append("\nClock on Token: ").append(clockOnToken);
         sb.append("\nProtected Authentication Path: ")
             .append(protectedAuthenticationPath);
-        sb.append("\nDual Crypto Operations: ").append(dualCryptoOperations);
+        sb.append("\nDual Crypto Operations: ")
+            .append(dualCryptoOperations);
         sb.append("\nToken initialized: ").append(tokenInitialized);
         sb.append("\nSecondary Authentication: ").append(secondaryAuthentication);
         sb.append("\nUser PIN-Count low: ").append(userPinCountLow);
