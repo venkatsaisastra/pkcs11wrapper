@@ -54,7 +54,7 @@ import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
  * cryptoki version 2.20.
  *
  *
- * @author <a href="mailto:Birgit.Haas@iaik.tugraz.at"> Birgit Haas </a>
+ * @author Birgit Haas
  * @version 1.0
  * @invariants
  */

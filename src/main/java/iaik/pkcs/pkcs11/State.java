@@ -48,7 +48,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  * Objects of this class show the state of a session. This state is only a
  * snapshot of the session's state at the time this state object was created.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */

@@ -48,7 +48,7 @@ import sun.security.pkcs11.wrapper.CK_INFO;
  * Objects of this class provide information about a PKCS#11 module; i.e. the
  * driver for a specific token.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants (cryptokiVersion <> null)
  *             and (manufacturerID <> null)

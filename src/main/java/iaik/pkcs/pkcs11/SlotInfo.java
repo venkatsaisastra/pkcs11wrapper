@@ -52,7 +52,7 @@ import sun.security.pkcs11.wrapper.CK_SLOT_INFO;
  * all information this object provides, is a snapshot at the object creation.
  * This is especially important when calling isTokenPresent().
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants (slotDescription <> null)
  *             and (manufacturerID <> null)

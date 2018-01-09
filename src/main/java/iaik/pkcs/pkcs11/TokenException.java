@@ -46,7 +46,7 @@ package iaik.pkcs.pkcs11;
  * The base class for all exceptions in this package. It is able to wrap a other
  * exception from a lower layer.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */

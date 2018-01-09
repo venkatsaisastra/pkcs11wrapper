@@ -50,7 +50,7 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  * Objects of this class represent a byte-array attribute of a PKCS#11 object
  * as specified by PKCS#11.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer</a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */

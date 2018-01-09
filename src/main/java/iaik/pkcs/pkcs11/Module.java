@@ -110,7 +110,7 @@ import sun.security.pkcs11.wrapper.PKCS11;
  *
  * @see iaik.pkcs.pkcs11.Info
  * @see iaik.pkcs.pkcs11.Slot
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants (pkcs11Module_ <> null)
  */
@@ -123,8 +123,6 @@ public class Module {
      * application uses one of the defined constants as parameter when calling
      * getSlotList.
      *
-     * @author <a href="mailto:Karl.Scheibelhofer@iaik.at">Karl
-     *         Scheibelhofer</a>
      * @version 1.0
      * @invariants
      */
@@ -149,8 +147,6 @@ public class Module {
      * This interface defines the allowed constants for the wanted waiting
      * behavior when calling waitForSlotEvent.
      *
-     * @author <a href="mailto:Karl.Scheibelhofer@iaik.at">Karl
-     *         Scheibelhofer</a>
      * @version 1.0
      * @invariants
      */

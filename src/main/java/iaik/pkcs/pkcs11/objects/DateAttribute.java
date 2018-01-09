@@ -52,7 +52,7 @@ import sun.security.pkcs11.wrapper.CK_DATE;
  * Objects of this class represent a date attribute of an PKCS#11 object
  * as specified by PKCS#11.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */

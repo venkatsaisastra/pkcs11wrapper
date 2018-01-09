@@ -45,7 +45,7 @@ package iaik.pkcs.pkcs11;
 /**
  * This class is a simple implementation of InitializeArgs.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */

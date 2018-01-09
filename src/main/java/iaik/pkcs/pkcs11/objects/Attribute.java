@@ -63,7 +63,7 @@ import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
  * Moreover, certain attributes can be sensitive; i.e. their values cannot
  * be read, e.g. the private exponent of a RSA private key.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants (ckAttribute_ <> null)
  */

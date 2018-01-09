@@ -48,7 +48,7 @@ import sun.security.pkcs11.wrapper.CK_VERSION;
  * Objects of this class represent a version. This consists of a major and a
  * minor version number.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */

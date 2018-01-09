@@ -56,8 +56,8 @@ import sun.security.pkcs11.wrapper.CK_DATE;
  * This class contains only static methods. It is the place for all functions
  * that are used by several classes in this package.
  *
- * @author Karl Scheibelhofer &lt;Karl.Scheibelhofer@iaik.at&gt;
- * @author Martin Schlaeffer &lt;schlaeff@sbox.tugraz.at&gt;
+ * @author Karl Scheibelhofer
+ * @author Martin Schlaeffer
  */
 @SuppressWarnings("restriction")
 public class Functions {

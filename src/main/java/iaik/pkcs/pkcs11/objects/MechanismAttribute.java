@@ -50,7 +50,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  * Objects of this class represent a mechanism attribute of an PKCS#11 object
  * as specified by PKCS#11.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants (ckAttribute_ <> null)
  */

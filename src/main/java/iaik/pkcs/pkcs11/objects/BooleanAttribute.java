@@ -46,7 +46,7 @@ package iaik.pkcs.pkcs11.objects;
  * Objects of this class represent a boolean attribute of a PKCS#11 object
  * as specified by PKCS#11.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */

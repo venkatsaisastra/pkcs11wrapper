@@ -47,7 +47,7 @@ package iaik.pkcs.pkcs11.objects;
  * of a key type.
  * It provides a better <code>toString()</code> implementation.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */

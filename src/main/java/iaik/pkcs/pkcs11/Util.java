@@ -58,7 +58,7 @@ import sun.security.pkcs11.wrapper.CK_DATE;
  * A class consisting of static methods only which provide certain static
  * pieces of code that are used frequently in this project.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */

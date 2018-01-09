@@ -60,7 +60,7 @@ import sun.security.pkcs11.wrapper.CK_SLOT_INFO;
  *
  * @see iaik.pkcs.pkcs11.SlotInfo
  * @see iaik.pkcs.pkcs11.Token
- * @author  Karl Scheibelhofer
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants (module <> null)
  */

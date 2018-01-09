@@ -46,7 +46,7 @@ package iaik.pkcs.pkcs11;
  * The interface that an object must implement to be a valid parameter for the
  * initialize method of a Module object.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */

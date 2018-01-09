@@ -57,7 +57,7 @@ import iaik.pkcs.pkcs11.TokenException;
  * PKCS#11 defines the meaning of an error-code, which may depend on the
  * context in which the error occurs.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */

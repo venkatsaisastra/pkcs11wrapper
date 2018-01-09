@@ -48,7 +48,7 @@ import sun.security.pkcs11.wrapper.PKCS11Exception;
  * Objects that implement this interface can be used in the InitializeArgs to
  * handle mutex functionality.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */

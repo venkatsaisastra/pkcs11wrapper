@@ -50,7 +50,7 @@ import sun.security.pkcs11.wrapper.CK_SESSION_INFO;
  * provided is just a snapshot at the time this information object was created;
  * it does not retrieve the information from the session on demand.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants (state <> null)
  */

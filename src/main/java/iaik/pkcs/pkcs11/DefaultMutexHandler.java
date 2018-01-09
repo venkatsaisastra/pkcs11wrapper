@@ -48,7 +48,7 @@ import sun.security.pkcs11.wrapper.PKCS11Exception;
 /**
  * This class offers a default-implementation of a MutexHandler.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */
@@ -59,10 +59,6 @@ public class DefaultMutexHandler implements MutexHandler {
      * A simple mutex implementation, but it satisfies the requirements stated
      * in PKCS#11 v2.11.
      *
-     * @author <a href="mailto:Karl.Scheibelhofer@iaik.at">Karl
-     *          Scheibelhofer</a>
-     * @version 1.0
-     * @invariants
      */
     class Mutex {
 

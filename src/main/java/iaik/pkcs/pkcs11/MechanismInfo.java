@@ -49,7 +49,7 @@ import sun.security.pkcs11.wrapper.CK_MECHANISM_INFO;
  * Objects of this class provide information about a certain mechanism that a
  * token implements.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */

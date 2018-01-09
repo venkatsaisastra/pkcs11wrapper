@@ -91,7 +91,7 @@ import sun.security.pkcs11.wrapper.CK_TOKEN_INFO;
  * @see iaik.pkcs.pkcs11.MechanismInfo
  * @see iaik.pkcs.pkcs11.Session
  * @see iaik.pkcs.pkcs11.TokenInfo
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants (slot <> null)
  */
@@ -104,8 +104,6 @@ public class Token {
      * allows serial sessions. Both types are defined just for the sake of
      * completeness.
      *
-     * @author <a href="mailto:Karl.Scheibelhofer@iaik.at">Karl
-     *         Scheibelhofer</a>
      * @version 1.0
      * @invariants
      */

@@ -90,7 +90,7 @@ package iaik.pkcs.pkcs11.wrapper;
  *   CK_X9_42_DH_KDF_TYPE .......................... long
  * </pre>
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */

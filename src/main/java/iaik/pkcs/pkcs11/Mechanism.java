@@ -50,7 +50,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  * Objects of this class represent a mechanism as defined in PKCS#11. There are
  * constants defined for all mechanisms that PKCS#11 version 2.11 defines.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */

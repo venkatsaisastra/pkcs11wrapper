@@ -52,7 +52,7 @@ import sun.security.pkcs11.wrapper.CK_TOKEN_INFO;
  * manufacturer, free memory,... . Notice that this is just a snapshot of the
  * token's status at the time this object was created.
  *
- * @author <a href="mailto:Karl.Scheibelhofer@iaik.at"> Karl Scheibelhofer </a>
+ * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants (label <> null)
  *             and (manufacturerID <> null)
