@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
@@ -124,7 +126,7 @@ public class OpaqueParameters implements Parameters {
         }
 
         OpaqueParameters other = (OpaqueParameters) otherObject;
-        return Functions.equals(this.bytes, other.bytes);
+        return Arrays.equals(this.bytes, other.bytes);
     }
 
     @Override

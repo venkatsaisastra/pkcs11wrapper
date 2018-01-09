@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.wrapper.Functions;
@@ -265,7 +267,7 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
         return super.equals(other)
                 && (this.privateDataLength == other.privateDataLength)
                 && this.privateData.equals(other.privateData)
-                && Functions.equals(this.publicData2, other.publicData2);
+                && Arrays.equals(this.publicData2, other.publicData2);
     }
 
     /**

@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
@@ -415,10 +417,10 @@ public class PKCS5PBKD2Parameters implements Parameters {
 
         PKCS5PBKD2Parameters other = (PKCS5PBKD2Parameters) otherObject;
         return (this.saltSource == other.saltSource)
-                && Functions.equals(this.saltSourceData, other.saltSourceData)
+                && Arrays.equals(this.saltSourceData, other.saltSourceData)
                 && (this.iterations == other.iterations)
                 && (this.pseudoRandomFunction == other.pseudoRandomFunction)
-                && Functions.equals(this.pseudoRandomFunctionData,
+                && Arrays.equals(this.pseudoRandomFunctionData,
                         other.pseudoRandomFunctionData);
     }
 

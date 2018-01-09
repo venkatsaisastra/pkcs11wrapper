@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
@@ -210,8 +212,8 @@ public class SSL3RandomDataParameters implements Parameters {
         }
 
         SSL3RandomDataParameters other = (SSL3RandomDataParameters) otherObject;
-        return Functions.equals(this.clientRandom, other.clientRandom)
-                && Functions.equals(this.serverRandom, other.serverRandom);
+        return Arrays.equals(this.clientRandom, other.clientRandom)
+                && Arrays.equals(this.serverRandom, other.serverRandom);
     }
 
     /**

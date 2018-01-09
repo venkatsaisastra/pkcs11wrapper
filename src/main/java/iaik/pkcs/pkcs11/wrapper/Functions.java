@@ -42,7 +42,7 @@
 
 package iaik.pkcs.pkcs11.wrapper;
 
-import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -73,78 +73,73 @@ public class Functions {
      * True, if the mapping of mechanism codes to PKCS#11 mechanism names is
      * available.
      */
-    private static boolean mechanismCodeNamesAvailable_;
+    private static boolean mechanismCodeNamesAvailable;
 
     /**
      * Maps mechanism codes as Long to their names as Strings.
      */
-    private static Map<Long, String> mechanismNames_;
-
-    /**
-     * Maps mechanism name as String to their code as Long.
-     */
-    private static Map<String, Long> mechanismNameToCodes_;
+    private static Map<Long, String> mechanismNames;
 
     /**
      * This set contains the mechanisms that are full encrypt/decrypt
      * mechanisms; i.e. mechanisms that support the update functions.
      */
-    private static Set<Long> fullEncryptDecryptMechanisms_;
+    private static Set<Long> fullEncryptDecryptMechanisms;
 
     /**
      * This set contains the mechanisms that are single-operation
      * encrypt/decrypt mechanisms; i.e. mechanisms that do not support the
      * update functions.
      */
-    private static Set<Long> singleOperationEncryptDecryptMechanisms_;
+    private static Set<Long> singleOperationEncryptDecryptMechanisms;
 
     /**
      * This set contains the mechanisms that are full sign/verify
      * mechanisms; i.e. mechanisms that support the update functions.
      */
-    private static Set<Long> fullSignVerifyMechanisms_;
+    private static Set<Long> fullSignVerifyMechanisms;
 
     /**
      * This set contains the mechanisms that are single-operation
      * sign/verify mechanisms; i.e. mechanisms that do not support the update
      * functions.
      */
-    private static Set<Long> singleOperationSignVerifyMechanisms_;
+    private static Set<Long> singleOperationSignVerifyMechanisms;
 
     /**
      * This table contains the mechanisms that are sign/verify mechanisms with
      * message recovery.
      */
-    private static Set<Long> signVerifyRecoverMechanisms_;
+    private static Set<Long> signVerifyRecoverMechanisms;
 
     /**
      * This set contains the mechanisms that are digest mechanisms.
      * The Long values of the mechanisms are the keys, and the mechanism
      * names are the values.
      */
-    private static Set<Long> digestMechanisms_;
+    private static Set<Long> digestMechanisms;
 
     /**
      * This table contains the mechanisms that key generation mechanisms; i.e.
      * mechanisms for generating symmetric keys.
      */
-    private static Set<Long> keyGenerationMechanisms_;
+    private static Set<Long> keyGenerationMechanisms;
 
     /**
      * This table contains the mechanisms that key-pair generation mechanisms;
      * i.e. mechanisms for generating key-pairs.
      */
-    private static Set<Long> keyPairGenerationMechanisms_;
+    private static Set<Long> keyPairGenerationMechanisms;
 
     /**
      * This table contains the mechanisms that are wrap/unwrap mechanisms.
      */
-    private static Set<Long> wrapUnwrapMechanisms_;
+    private static Set<Long> wrapUnwrapMechanisms;
 
     /**
      * This table contains the mechanisms that are key derivation mechanisms.
      */
-    private static Set<Long> keyDerivationMechanisms_;
+    private static Set<Long> keyDerivationMechanisms;
 
     /**
      * For converting numbers to their hex presentation.
@@ -166,26 +161,6 @@ public class Functions {
         StringBuilder stringBuffer = new StringBuilder(16);
         for (int j = 0; j < 16; j++) {
             int currentDigit = (int) currentValue & 0xf;
-            stringBuffer.append(HEX_DIGITS[currentDigit]);
-            currentValue >>>= 4;
-        }
-
-        return stringBuffer.reverse().toString();
-    }
-
-    /**
-     * Converts an int value to a hexadecimal String of length 8. Includes
-     * leading zeros if necessary.
-     *
-     * @param value
-     *         The int value to be converted.
-     * @return The hexadecimal string representation of the int value.
-     */
-    public static String toFullHexString(int value) {
-        int currentValue = value;
-        StringBuilder stringBuffer = new StringBuilder(8);
-        for (int i = 0; i < 8; i++) {
-            int currentDigit = currentValue & 0xf;
             stringBuffer.append(HEX_DIGITS[currentDigit]);
             currentValue >>>= 4;
         }
@@ -224,523 +199,6 @@ public class Functions {
     }
 
     /**
-     * Converts a long value to a binary String.
-     *
-     * @param value
-     *          The long value to be converted.
-     * @return the binary string representation of the long value.
-     */
-    public static String toBinaryString(long value) {
-        return Long.toString(value, 2);
-    }
-
-    /**
-     * Converts a byte array to a binary String.
-     *
-     * @param value
-     *          The byte array to be converted.
-     * @return The binary string representation of the byte array.
-     */
-    public static String toBinaryString(byte[] value) {
-        BigInteger helpBigInteger = new BigInteger(1, value);
-
-        return helpBigInteger.toString(2);
-    }
-
-    /**
-     * Converts the long value flags to a SlotInfoFlag string.
-     *
-     * @param flags
-     *          The flags to be converted.
-     * @return The SlotInfoFlag string representation of the flags.
-     */
-    public static String slotInfoFlagsToString(long flags) {
-        StringBuilder buffer = new StringBuilder();
-        boolean notFirst = false;
-
-        if ((flags & PKCS11Constants.CKF_TOKEN_PRESENT) != 0L) {
-            buffer.append("CKF_TOKEN_PRESENT");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_REMOVABLE_DEVICE) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_TOKEN_PRESENT");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_HW_SLOT) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_HW_SLOT");
-        }
-
-        return buffer.toString();
-    }
-
-    /**
-     * Converts long value flags to a TokenInfoFlag string.
-     *
-     * @param flags
-     *          The flags to be converted.
-     * @return The TokenInfoFlag string representation of the flags.
-     */
-    public static String tokenInfoFlagsToString(long flags) {
-        StringBuilder buffer = new StringBuilder();
-        boolean notFirst = false;
-
-        if ((flags & PKCS11Constants.CKF_RNG) != 0L) {
-            buffer.append("CKF_RNG");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_WRITE_PROTECTED) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_WRITE_PROTECTED");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_LOGIN_REQUIRED) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_LOGIN_REQUIRED");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_USER_PIN_INITIALIZED) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_USER_PIN_INITIALIZED");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_RESTORE_KEY_NOT_NEEDED) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_RESTORE_KEY_NOT_NEEDED");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_CLOCK_ON_TOKEN) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_CLOCK_ON_TOKEN");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_PROTECTED_AUTHENTICATION_PATH) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_PROTECTED_AUTHENTICATION_PATH");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_DUAL_CRYPTO_OPERATIONS) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_DUAL_CRYPTO_OPERATIONS");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_TOKEN_INITIALIZED) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_TOKEN_INITIALIZED");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_SECONDARY_AUTHENTICATION) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_SECONDARY_AUTHENTICATION");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_USER_PIN_COUNT_LOW) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_USER_PIN_COUNT_LOW");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_USER_PIN_FINAL_TRY) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_USER_PIN_FINAL_TRY");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_USER_PIN_LOCKED) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_USER_PIN_LOCKED");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_USER_PIN_TO_BE_CHANGED) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_USER_PIN_TO_BE_CHANGED");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_SO_PIN_COUNT_LOW) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_SO_PIN_COUNT_LOW");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_SO_PIN_FINAL_TRY) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_SO_PIN_FINAL_TRY");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_SO_PIN_LOCKED) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_USER_PIN_FINAL_TRY");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_SO_PIN_TO_BE_CHANGED) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_USER_PIN_LOCKED");
-
-            notFirst = true;
-        }
-
-        return buffer.toString();
-    }
-
-    /**
-     * Converts the long value flags to a SessionInfoFlag string.
-     *
-     * @param flags
-     *          The flags to be converted.
-     * @return The SessionInfoFlag string representation of the flags.
-     */
-    public static String sessionInfoFlagsToString(long flags) {
-        StringBuilder buffer = new StringBuilder();
-        boolean notFirst = false;
-
-        if ((flags & PKCS11Constants.CKF_RW_SESSION) != 0L) {
-            buffer.append("CKF_RW_SESSION");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_SERIAL_SESSION) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_SERIAL_SESSION");
-        }
-
-        return buffer.toString();
-    }
-
-    /**
-     * Converts the long value state to a SessionState string.
-     *
-     * @param state
-     *          The state to be converted.
-     * @return The SessionState string representation of the state.
-     */
-    public static String sessionStateToString(long state) {
-        String name;
-
-        if (state == PKCS11Constants.CKS_RO_PUBLIC_SESSION) {
-            name = "CKS_RO_PUBLIC_SESSION";
-        } else if (state == PKCS11Constants.CKS_RO_USER_FUNCTIONS) {
-            name = "CKS_RO_USER_FUNCTIONS";
-        } else if (state == PKCS11Constants.CKS_RW_PUBLIC_SESSION) {
-            name = "CKS_RW_PUBLIC_SESSION";
-        } else if (state == PKCS11Constants.CKS_RW_USER_FUNCTIONS) {
-            name = "CKS_RW_USER_FUNCTIONS";
-        } else if (state == PKCS11Constants.CKS_RW_SO_FUNCTIONS) {
-            name = "CKS_RW_SO_FUNCTIONS";
-        } else {
-            name = "ERROR: unknown session state 0x" + toFullHexString(state);
-        }
-
-        return name;
-    }
-
-    /**
-     * Converts the long value flags to a MechanismInfoFlag string.
-     *
-     * @param flags
-     *          The flags to be converted to a string representation.
-     * @return The MechanismInfoFlag string representation of the flags.
-     */
-    public static String mechanismInfoFlagsToString(long flags) {
-        StringBuilder buffer = new StringBuilder();
-        boolean notFirst = false;
-
-        if ((flags & PKCS11Constants.CKF_HW) != 0L) {
-            buffer.append("CKF_HW");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_ENCRYPT) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_ENCRYPT");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_DECRYPT) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_DECRYPT");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_DIGEST) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_DIGEST");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_SIGN) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_SIGN");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_SIGN_RECOVER) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_SIGN_RECOVER");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_VERIFY) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_VERIFY");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_VERIFY_RECOVER) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_VERIFY_RECOVER");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_GENERATE) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_GENERATE");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_GENERATE_KEY_PAIR) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_GENERATE_KEY_PAIR");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_WRAP) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_WRAP");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_UNWRAP) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_UNWRAP");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_DERIVE) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_DERIVE");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_EC_F_P) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_EC_F_P");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_EC_F_2M) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_EC_F_2M");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_EC_ECPARAMETERS) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_EC_ECPARAMETERS");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_EC_NAMEDCURVE) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_EC_NAMEDCURVE");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_EC_UNCOMPRESS) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_EC_UNCOMPRESS");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_EC_COMPRESS) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_EC_COMPRESS");
-
-            notFirst = true;
-        }
-
-        if ((flags & PKCS11Constants.CKF_EXTENSION) != 0L) {
-            if (notFirst) {
-                buffer.append(" | ");
-            }
-
-            buffer.append("CKF_EXTENSION");
-
-            notFirst = true;
-        }
-
-        return buffer.toString();
-    }
-
-    /**
      * Converts the long value code of a mechanism to a name.
      *
      * @param mechanismCode
@@ -749,8 +207,8 @@ public class Functions {
      */
     public static String mechanismCodeToString(long mechanismCode) {
         initMechanismMap();
-        String name = mechanismCodeNamesAvailable_
-                ? mechanismNames_.get(new Long(mechanismCode)) : null;
+        String name = mechanismCodeNamesAvailable
+                ? mechanismNames.get(new Long(mechanismCode)) : null;
         if (name == null) {
             name = PKCS11VendorConstants.mechanismCodeToString(mechanismCode);
         }
@@ -763,32 +221,14 @@ public class Functions {
         return name;
     }
 
-    /**
-     * Converts the mechanism name to code value.
-     *
-     * @param mechanismName
-     *          The name of the mechanism to be converted to a code.
-     * @return The code representation of the mechanism.
-     */
-    public static long mechanismStringToCode(String mechanismName) {
-        initMechanismMap();
-        Long code = mechanismCodeNamesAvailable_
-                ? mechanismNameToCodes_.get(mechanismName) : null;
-        if (code == null) {
-            code = PKCS11VendorConstants.mechanismStringToCode(mechanismName);
-        }
-        return (code != null) ? code : -1;
-    }
-
     private static void initMechanismMap() {
         // ensure that another thread has not loaded the codes meanwhile
-        if (mechanismNames_ != null) {
+        if (mechanismNames != null) {
             return;
         }
 
         // if the names of the defined error codes are not yet loaded, load them
         Map<Long, String> codeNameMap = new HashMap<>();
-        Map<String, Long> nameCodeMap = new HashMap<>();
 
         Properties props = new Properties();
         try {
@@ -812,174 +252,14 @@ public class Functions {
 
                 String mainMechName = tokens.nextToken();
                 codeNameMap.put(code, mainMechName);
-                nameCodeMap.put(mainMechName, code);
-
-                if (tokens.hasMoreTokens()) {
-                    nameCodeMap.put(tokens.nextToken(), code);
-                }
             }
-            mechanismNames_ = codeNameMap;
-            mechanismNameToCodes_ = nameCodeMap;
-            mechanismCodeNamesAvailable_ = true;
+            mechanismNames = codeNameMap;
+            mechanismCodeNamesAvailable = true;
         } catch (Exception exception) {
             System.err.println(
                 "Could not read properties for error code names: "
                 + exception.getMessage());
         }
-    }
-
-    /**
-     * Converts the long value classType to a string representation of it.
-     *
-     * @param classType
-     *          The classType to be converted.
-     * @return The string representation of the classType.
-     */
-    public static String classTypeToString(long classType) {
-        String name;
-
-        if (classType == PKCS11Constants.CKO_DATA) {
-            name = "CKO_DATA";
-        } else if (classType == PKCS11Constants.CKO_CERTIFICATE) {
-            name = "CKO_CERTIFICATE";
-        } else if (classType == PKCS11Constants.CKO_PUBLIC_KEY) {
-            name = "CKO_PUBLIC_KEY";
-        } else if (classType == PKCS11Constants.CKO_PRIVATE_KEY) {
-            name = "CKO_PRIVATE_KEY";
-        } else if (classType == PKCS11Constants.CKO_SECRET_KEY) {
-            name = "CKO_SECRET_KEY";
-        } else if (classType == PKCS11Constants.CKO_HW_FEATURE) {
-            name = "CKO_HW_FEATURE";
-        } else if (classType == PKCS11Constants.CKO_DOMAIN_PARAMETERS) {
-            name = "CKO_DOMAIN_PARAMETERS";
-        } else if (classType == PKCS11Constants.CKO_VENDOR_DEFINED) {
-            name = "CKO_VENDOR_DEFINED";
-        } else {
-            name = "ERROR: unknown classType with code: 0x"
-                    + toFullHexString(classType);
-        }
-
-        return name;
-    }
-
-    /**
-     * Check the given arrays for equality. This method considers both arrays as
-     * equal, if both are <code>null</code> or both have the same length and
-     * contain exactly the same byte values.
-     *
-     * @param array1
-     *          The first array.
-     * @param array2
-     *          The second array.
-     * @return True, if both arrays are <code>null</code> or both have the same
-     *         length and contain exactly the same byte values. False,
-     *         otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    public static boolean equals(byte[] array1, byte[] array2) {
-        boolean equal = false;
-
-        if (array1 == array2) {
-            equal = true;
-        } else if ((array1 != null) && (array2 != null)) {
-            int length = array1.length;
-            if (length == array2.length) {
-                equal = true;
-                for (int i = 0; i < length; i++) {
-                    if (array1[i] != array2[i]) {
-                        equal = false;
-                        break;
-                    }
-                }
-            } else {
-                equal = false;
-            }
-        } else {
-            equal = false;
-        }
-
-        return equal;
-    }
-
-    /**
-     * Check the given arrays for equality. This method considers both arrays as
-     * equal, if both are <code>null</code> or both have the same length and
-     * contain exactly the same char values.
-     *
-     * @param array1
-     *          The first array.
-     * @param array2
-     *          The second array.
-     * @return True, if both arrays are <code>null</code> or both have the same
-     *         length and contain exactly the same char values. False,
-     *         otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    public static boolean equals(char[] array1, char[] array2) {
-        boolean equal = false;
-
-        if (array1 == array2) {
-            equal = true;
-        } else if ((array1 != null) && (array2 != null)) {
-            int length = array1.length;
-            if (length == array2.length) {
-                equal = true;
-                for (int i = 0; i < length; i++) {
-                    if (array1[i] != array2[i]) {
-                        equal = false;
-                        break;
-                    }
-                }
-            } else {
-                equal = false;
-            }
-        } else {
-            equal = false;
-        }
-
-        return equal;
-    }
-
-    /**
-     * Check the given arrays for equality. This method considers both arrays as
-     * equal, if both are <code>null</code> or both have the same length and
-     * contain exactly the same byte values.
-     *
-     * @param array1
-     *          The first array.
-     * @param array2
-     *          The second array.
-     * @return True, if both arrays are <code>null</code> or both have the same
-     *         length and contain exactly the same byte values. False,
-     *         otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    public static boolean equals(long[] array1, long[] array2) {
-        boolean equal = false;
-
-        if (array1 == array2) {
-            equal = true;
-        } else if ((array1 != null) && (array2 != null)) {
-            int length = array1.length;
-            if (length == array2.length) {
-                equal = true;
-                for (int i = 0; i < length; i++) {
-                    if (array1[i] != array2[i]) {
-                        equal = false;
-                        break;
-                    }
-                }
-            } else {
-                equal = false;
-            }
-        } else {
-            equal = false;
-        }
-
-        return equal;
     }
 
     /**
@@ -1002,9 +282,9 @@ public class Functions {
         if (date1 == date2) {
             equal = true;
         } else if ((date1 != null) && (date2 != null)) {
-            equal = equals(date1.year, date2.year)
-                    && equals(date1.month, date2.month)
-                    && equals(date1.day, date2.day);
+            equal = Arrays.equals(date1.year, date2.year)
+                    && Arrays.equals(date1.month, date2.month)
+                    && Arrays.equals(date1.day, date2.day);
         } else {
             equal = false;
         }
@@ -1124,7 +404,7 @@ public class Functions {
      */
     public static boolean isFullEncryptDecryptMechanism(long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (fullEncryptDecryptMechanisms_ == null) {
+        if (fullEncryptDecryptMechanisms == null) {
             long[] mechs = new long[]{
                 PKCS11Constants.CKM_AES_ECB,
                 PKCS11Constants.CKM_AES_CBC,
@@ -1163,10 +443,10 @@ public class Functions {
             for (Long mech : mechs) {
                 mechanisms.add(mech);
             }
-            fullEncryptDecryptMechanisms_ = mechanisms;
+            fullEncryptDecryptMechanisms = mechanisms;
         }
 
-        boolean contained = fullEncryptDecryptMechanisms_.contains(
+        boolean contained = fullEncryptDecryptMechanisms.contains(
                 new Long(mechanismCode));
         if (!contained) {
             contained = PKCS11VendorConstants.isFullEncryptDecryptMechanism(
@@ -1192,7 +472,7 @@ public class Functions {
     public static boolean isSingleOperationEncryptDecryptMechanism(
             long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (singleOperationEncryptDecryptMechanisms_ == null) {
+        if (singleOperationEncryptDecryptMechanisms == null) {
             long[] mechs = new long[]{
                 PKCS11Constants.CKM_RSA_PKCS,
                 PKCS11Constants.CKM_RSA_PKCS_OAEP,
@@ -1205,10 +485,10 @@ public class Functions {
             for (Long mech : mechs) {
                 mechanisms.add(mech);
             }
-            singleOperationEncryptDecryptMechanisms_ = mechanisms;
+            singleOperationEncryptDecryptMechanisms = mechanisms;
         }
 
-        boolean contained = singleOperationEncryptDecryptMechanisms_.contains(
+        boolean contained = singleOperationEncryptDecryptMechanisms.contains(
                 new Long(mechanismCode));
         if (!contained) {
             contained = PKCS11VendorConstants
@@ -1233,7 +513,7 @@ public class Functions {
      */
     public static boolean isFullSignVerifyMechanism(long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (fullSignVerifyMechanisms_ == null) {
+        if (fullSignVerifyMechanisms == null) {
             long[] mechs = new long[]{
                 PKCS11Constants.CKM_SHA1_RSA_PKCS,
                 PKCS11Constants.CKM_SHA256_RSA_PKCS,
@@ -1336,10 +616,10 @@ public class Functions {
             for (Long mech : mechs) {
                 mechanisms.add(mech);
             }
-            fullSignVerifyMechanisms_ = mechanisms;
+            fullSignVerifyMechanisms = mechanisms;
         }
 
-        boolean contained = fullSignVerifyMechanisms_.contains(
+        boolean contained = fullSignVerifyMechanisms.contains(
                 new Long(mechanismCode));
         if (!contained) {
             contained = PKCS11VendorConstants.isFullEncryptDecryptMechanism(
@@ -1365,7 +645,7 @@ public class Functions {
     public static boolean isSingleOperationSignVerifyMechanism(
             long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (singleOperationSignVerifyMechanisms_ == null) {
+        if (singleOperationSignVerifyMechanisms == null) {
             long[] mechs = new long[]{
                 PKCS11Constants.CKM_RSA_PKCS,
                 PKCS11Constants.CKM_RSA_PKCS_PSS,
@@ -1381,10 +661,10 @@ public class Functions {
             for (Long mech : mechs) {
                 mechanisms.add(mech);
             }
-            singleOperationSignVerifyMechanisms_ = mechanisms;
+            singleOperationSignVerifyMechanisms = mechanisms;
         }
 
-        boolean contained = singleOperationSignVerifyMechanisms_.contains(
+        boolean contained = singleOperationSignVerifyMechanisms.contains(
                 new Long(mechanismCode));
         if (!contained) {
             contained = PKCS11VendorConstants
@@ -1408,7 +688,7 @@ public class Functions {
      */
     public static boolean isSignVerifyRecoverMechanism(long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (signVerifyRecoverMechanisms_ == null) {
+        if (signVerifyRecoverMechanisms == null) {
             long[] mechs = new long[]{
                 PKCS11Constants.CKM_RSA_PKCS,
                 PKCS11Constants.CKM_RSA_9796,
@@ -1423,10 +703,10 @@ public class Functions {
             for (Long mech : mechs) {
                 mechanisms.add(mech);
             }
-            signVerifyRecoverMechanisms_ = mechanisms;
+            signVerifyRecoverMechanisms = mechanisms;
         }
 
-        boolean contained = signVerifyRecoverMechanisms_.contains(
+        boolean contained = signVerifyRecoverMechanisms.contains(
                 new Long(mechanismCode));
         if (!contained) {
             contained = PKCS11VendorConstants.isSignVerifyRecoverMechanism(
@@ -1450,7 +730,7 @@ public class Functions {
      */
     public static boolean isDigestMechanism(long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (digestMechanisms_ == null) {
+        if (digestMechanisms == null) {
             long[] mechs = new long[]{
                 PKCS11Constants.CKM_SHA_1,
                 PKCS11Constants.CKM_SHA224,
@@ -1476,10 +756,10 @@ public class Functions {
             for (Long mech : mechs) {
                 mechanisms.add(mech);
             }
-            digestMechanisms_ = mechanisms;
+            digestMechanisms = mechanisms;
         }
 
-        boolean contained = digestMechanisms_.contains(new Long(mechanismCode));
+        boolean contained = digestMechanisms.contains(new Long(mechanismCode));
         if (!contained) {
             contained = PKCS11VendorConstants.isDigestMechanism(mechanismCode);
         }
@@ -1501,7 +781,7 @@ public class Functions {
      */
     public static boolean isKeyGenerationMechanism(long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (keyGenerationMechanisms_ == null) {
+        if (keyGenerationMechanisms == null) {
             long[] mechs = new long[]{
                 PKCS11Constants.CKM_DSA_PARAMETER_GEN,
                 PKCS11Constants.CKM_DSA_PROBABLISTIC_PARAMETER_GEN,
@@ -1532,10 +812,10 @@ public class Functions {
             for (Long mech : mechs) {
                 mechanisms.add(mech);
             }
-            keyGenerationMechanisms_ = mechanisms;
+            keyGenerationMechanisms = mechanisms;
         }
 
-        boolean contained = keyGenerationMechanisms_.contains(
+        boolean contained = keyGenerationMechanisms.contains(
                 new Long(mechanismCode));
         if (!contained) {
             contained = PKCS11VendorConstants.isKeyGenerationMechanism(
@@ -1559,7 +839,7 @@ public class Functions {
      */
     public static boolean isKeyPairGenerationMechanism(long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (keyPairGenerationMechanisms_ == null) {
+        if (keyPairGenerationMechanisms == null) {
             long[] mechs = new long[]{
                 PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN,
                 PKCS11Constants.CKM_RSA_X9_31_KEY_PAIR_GEN,
@@ -1574,10 +854,10 @@ public class Functions {
             for (Long mech : mechs) {
                 mechanisms.add(mech);
             }
-            keyPairGenerationMechanisms_ = mechanisms;
+            keyPairGenerationMechanisms = mechanisms;
         }
 
-        boolean contained = keyPairGenerationMechanisms_.contains(
+        boolean contained = keyPairGenerationMechanisms.contains(
                 new Long(mechanismCode));
         if (!contained) {
             contained = PKCS11VendorConstants.isKeyPairGenerationMechanism(
@@ -1602,7 +882,7 @@ public class Functions {
      */
     public static boolean isWrapUnwrapMechanism(long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (wrapUnwrapMechanisms_ == null) {
+        if (wrapUnwrapMechanisms == null) {
             long[] mechs = new long[] {
                 PKCS11Constants.CKM_RSA_PKCS,
                 PKCS11Constants.CKM_RSA_PKCS_OAEP,
@@ -1641,14 +921,14 @@ public class Functions {
                 PKCS11Constants.CKM_GOST28147_KEY_WRAP,
                 PKCS11Constants.CKM_GOSTR3410_KEY_WRAP
             };
-            Set<Long> wrapUnwrapMechanisms = new HashSet<>();
+            Set<Long> wrapUnwrapMechs = new HashSet<>();
             for (long m : mechs) {
-                wrapUnwrapMechanisms.add(m);
+                wrapUnwrapMechs.add(m);
             }
-            wrapUnwrapMechanisms_ = wrapUnwrapMechanisms;
+            wrapUnwrapMechanisms = wrapUnwrapMechs;
         }
 
-        boolean contained = wrapUnwrapMechanisms_.contains(mechanismCode);
+        boolean contained = wrapUnwrapMechanisms.contains(mechanismCode);
         if (!contained) {
             contained = PKCS11VendorConstants.isWrapUnwrapMechanism(
                     mechanismCode);
@@ -1671,7 +951,7 @@ public class Functions {
      */
     public static boolean isKeyDerivationMechanism(long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (keyDerivationMechanisms_ == null) {
+        if (keyDerivationMechanisms == null) {
             long[] mechs = new long[]{
                 PKCS11Constants.CKM_ECDH1_DERIVE,
                 PKCS11Constants.CKM_ECDH1_COFACTOR_DERIVE,
@@ -1737,10 +1017,10 @@ public class Functions {
             for (Long mech : mechs) {
                 mechanisms.add(mech);
             }
-            keyDerivationMechanisms_ = mechanisms;
+            keyDerivationMechanisms = mechanisms;
         }
 
-        boolean contained = keyDerivationMechanisms_.contains(
+        boolean contained = keyDerivationMechanisms.contains(
                 new Long(mechanismCode));
         if (!contained) {
             contained = PKCS11VendorConstants.isKeyDerivationMechanism(

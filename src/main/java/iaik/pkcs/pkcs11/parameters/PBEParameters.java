@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
@@ -305,9 +307,9 @@ public class PBEParameters implements Parameters {
         }
 
         PBEParameters other = (PBEParameters) otherObject;
-        return Functions.equals(this.iv, other.iv)
-               && Functions.equals(this.password, other.password)
-               && Functions.equals(this.salt, other.salt)
+        return Arrays.equals(this.iv, other.iv)
+               && Arrays.equals(this.password, other.password)
+               && Arrays.equals(this.salt, other.salt)
                && (this.iterations == other.iterations);
     }
 

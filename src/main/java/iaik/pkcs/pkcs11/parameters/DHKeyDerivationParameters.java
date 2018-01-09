@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
@@ -278,7 +280,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
         DHKeyDerivationParameters other
                 = (DHKeyDerivationParameters) otherObject;
         return (this.kdf == other.kdf)
-                && Functions.equals(this.publicData, other.publicData);
+                && Arrays.equals(this.publicData, other.publicData);
     }
 
     /**

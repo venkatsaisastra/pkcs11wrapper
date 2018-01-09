@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_ECDH1_DERIVE_PARAMS;
 
@@ -179,7 +181,7 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
         EcDH1KeyDerivationParameters other
                 = (EcDH1KeyDerivationParameters) otherObject;
         return super.equals(other)
-                && Functions.equals(this.sharedData, other.sharedData);
+                && Arrays.equals(this.sharedData, other.sharedData);
     }
 
     /**

@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.TokenRuntimeException;
@@ -323,8 +325,8 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
                 && Util.objEquals(this.serverMacSecret, other.serverMacSecret)
                 && Util.objEquals(this.clientKey, other.clientKey)
                 && Util.objEquals(this.serverKey, other.serverKey)
-                && Functions.equals(this.clientIV, other.clientIV)
-                && Functions.equals(this.serverIV, other.serverIV);
+                && Arrays.equals(this.clientIV, other.clientIV)
+                && Arrays.equals(this.serverIV, other.serverIV);
     }
 
     /**

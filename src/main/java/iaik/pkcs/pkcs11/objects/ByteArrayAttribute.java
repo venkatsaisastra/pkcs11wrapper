@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.objects;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
@@ -163,7 +165,7 @@ public class ByteArrayAttribute extends Attribute {
             return false;
         }*/
 
-        return Functions.equals((byte[]) this.ckAttribute.pValue,
+        return Arrays.equals((byte[]) this.ckAttribute.pValue,
                 (byte[]) other.ckAttribute.pValue);
     }
 

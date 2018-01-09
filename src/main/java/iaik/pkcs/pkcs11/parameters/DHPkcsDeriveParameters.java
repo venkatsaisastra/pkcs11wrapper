@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
@@ -174,7 +176,7 @@ public class DHPkcsDeriveParameters implements Parameters {
         }
 
         DHPkcsDeriveParameters other = (DHPkcsDeriveParameters) otherObject;
-        return Functions.equals(this.publicValue, other.publicValue);
+        return Arrays.equals(this.publicValue, other.publicValue);
     }
 
     /**

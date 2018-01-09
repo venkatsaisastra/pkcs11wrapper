@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
@@ -173,7 +175,7 @@ public class InitializationVectorParameters implements Parameters {
 
         InitializationVectorParameters other
                 = (InitializationVectorParameters) otherObject;
-        return Functions.equals(this.iv, other.iv);
+        return Arrays.equals(this.iv, other.iv);
     }
 
     /**

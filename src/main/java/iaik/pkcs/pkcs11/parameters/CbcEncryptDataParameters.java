@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
@@ -229,8 +231,8 @@ public abstract class CbcEncryptDataParameters implements Parameters {
 
         CbcEncryptDataParameters other = (CbcEncryptDataParameters) otherObject;
         return (this.blockSize == other.blockSize)
-                && Functions.equals(this.iv, other.iv)
-                && Functions.equals(this.data, other.data);
+                && Arrays.equals(this.iv, other.iv)
+                && Arrays.equals(this.data, other.data);
     }
 
     /**

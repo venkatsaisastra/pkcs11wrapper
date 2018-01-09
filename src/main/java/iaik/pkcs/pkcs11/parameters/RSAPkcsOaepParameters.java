@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
@@ -275,7 +277,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
         RSAPkcsOaepParameters other = (RSAPkcsOaepParameters) otherObject;
         return super.equals(other)
                 && (this.source == other.source)
-                && Functions.equals(this.sourceData, other.sourceData);
+                && Arrays.equals(this.sourceData, other.sourceData);
     }
 
     /**

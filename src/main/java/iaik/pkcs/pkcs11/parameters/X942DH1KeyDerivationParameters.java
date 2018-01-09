@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_X9_42_DH1_DERIVE_PARAMS;
 
@@ -186,7 +188,7 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
         X942DH1KeyDerivationParameters other
                 = (X942DH1KeyDerivationParameters) otherObject;
         return super.equals(other)
-                && Functions.equals(this.otherInfo, other.otherInfo);
+                && Arrays.equals(this.otherInfo, other.otherInfo);
     }
 
     /**

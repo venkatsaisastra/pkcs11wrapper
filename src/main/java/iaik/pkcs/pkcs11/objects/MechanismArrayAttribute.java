@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.objects;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
@@ -180,7 +182,7 @@ public class MechanismArrayAttribute extends Attribute {
             return false;
         }
 
-        return Functions.equals((long[]) this.ckAttribute.pValue,
+        return Arrays.equals((long[]) this.ckAttribute.pValue,
                 (long[]) other.ckAttribute.pValue);
     }
 

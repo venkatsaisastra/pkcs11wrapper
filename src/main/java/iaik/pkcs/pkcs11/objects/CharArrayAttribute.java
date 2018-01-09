@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.objects;
 
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
@@ -162,7 +164,7 @@ public class CharArrayAttribute extends Attribute {
             return false;
         }
 
-        return Functions.equals((char[]) this.ckAttribute.pValue,
+        return Arrays.equals((char[]) this.ckAttribute.pValue,
                 (char[]) other.ckAttribute.pValue);
     }
 
