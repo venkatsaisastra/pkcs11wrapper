@@ -61,13 +61,13 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11VendorConstants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (keyType_ <> null)
- *             and (id_ <> null)
- *             and (startDate_ <> null)
- *             and (endDate_ <> null)
- *             and (derive_ <> null)
- *             and (local_ <> null)
- *             and (keyGenMechanism_ <> null)
+ * @invariants (keyType <> null)
+ *             and (id <> null)
+ *             and (startDate <> null)
+ *             and (endDate <> null)
+ *             and (derive <> null)
+ *             and (local <> null)
+ *             and (keyGenMechanism <> null)
  */
 public class Key extends Storage {
 

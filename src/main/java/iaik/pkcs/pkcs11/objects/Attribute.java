@@ -65,7 +65,7 @@ import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (ckAttribute_ <> null)
+ * @invariants (ckAttribute <> null)
  */
 @SuppressWarnings("restriction")
 public abstract class Attribute implements Cloneable {

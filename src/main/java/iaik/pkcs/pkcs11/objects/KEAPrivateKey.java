@@ -52,10 +52,10 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (prime_ <> null)
- *             and (subprime_ <> null)
- *             and (base_ <> null)
- *             and (value_ <> null)
+ * @invariants (prime <> null)
+ *             and (subprime <> null)
+ *             and (base <> null)
+ *             and (value <> null)
  */
 // CHECKSTYLE:SKIP
 public class KEAPrivateKey extends PrivateKey {

@@ -57,8 +57,8 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (certificateType_ <> null)
- *             and (trusted_ <> null)
+ * @invariants (certificateType <> null)
+ *             and (trusted <> null)
  */
 public class Certificate extends Storage {
 
@@ -138,7 +138,7 @@ public class Certificate extends Storage {
     /**
      * The currently set vendor defined certificate builder, or null.
      */
-    protected static VendorDefinedCertificateBuilder vendorCertificateBuilder_;
+    protected static VendorDefinedCertificateBuilder vendorCertificateBuilder;
 
     /**
      * The type of this certificate. One of CertificateType, or one that has a
@@ -323,9 +323,9 @@ public class Certificate extends Storage {
         Util.requireNonNull("session", session);
 
         PKCS11Object newObject;
-        if (vendorCertificateBuilder_ != null) {
+        if (vendorCertificateBuilder != null) {
             try {
-                newObject = vendorCertificateBuilder_.build(session,
+                newObject = vendorCertificateBuilder.build(session,
                         objectHandle);
             } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
                 // we can just treat it like some unknown type of certificate
@@ -352,7 +352,7 @@ public class Certificate extends Storage {
      */
     public static void setVendorDefinedCertificateBuilder(
             VendorDefinedCertificateBuilder builder) {
-        vendorCertificateBuilder_ = builder;
+        vendorCertificateBuilder = builder;
     }
 
     /**
@@ -365,7 +365,7 @@ public class Certificate extends Storage {
      */
     public static VendorDefinedCertificateBuilder
             getVendorDefinedCertificateBuilder() {
-        return vendorCertificateBuilder_;
+        return vendorCertificateBuilder;
     }
 
     /**

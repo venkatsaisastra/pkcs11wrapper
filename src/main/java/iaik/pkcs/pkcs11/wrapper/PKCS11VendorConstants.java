@@ -71,58 +71,58 @@ public class PKCS11VendorConstants {
      * True, if the mapping of mechanism codes to PKCS#11 mechanism names is
      * available.
      */
-    private static boolean mechanismCodeNamesAvailable_;
+    private static boolean mechanismCodeNamesAvailable;
 
     /**
      * Maps mechanism codes as Long to their names as Strings.
      */
-    private static Map<Long, String> mechanismNames_;
+    private static Map<Long, String> mechanismNames;
 
     /**
      * Maps mechanism name as String to their code as Long.
      */
-    private static Map<String, Long> mechanismNameToCodes_;
+    private static Map<String, Long> mechanismNameToCodes;
 
     /**
      * This set contains the mechanisms that are full encrypt/decrypt
      * mechanisms; i.e. mechanisms that support the update functions.
      */
-    private static Set<Long> fullEncryptDecryptMechanisms_;
+    private static Set<Long> fullEncryptDecryptMechanisms;
 
     /**
      * This set contains the mechanisms that are full sign/verify
      * mechanisms; i.e. mechanisms that support the update functions.
      */
-    private static Set<Long> fullSignVerifyMechanisms_;
+    private static Set<Long> fullSignVerifyMechanisms;
 
     /**
      * This set contains the mechanisms that are digest mechanisms.
      * The Long values of the mechanisms are the keys, and the mechanism
      * names are the values.
      */
-    private static Set<Long> digestMechanisms_;
+    private static Set<Long> digestMechanisms;
 
     /**
      * This table contains the mechanisms that key generation mechanisms; i.e.
      * mechanisms for generating symmetric keys.
      */
-    private static Set<Long> keyGenerationMechanisms_;
+    private static Set<Long> keyGenerationMechanisms;
 
     /**
      * This table contains the mechanisms that key-pair generation mechanisms;
      * i.e. mechanisms for generating key-pairs.
      */
-    private static Set<Long> keyPairGenerationMechanisms_;
+    private static Set<Long> keyPairGenerationMechanisms;
 
     /**
      * This table contains the mechanisms that are wrap/unwrap mechanisms.
      */
-    private static Set<Long> wrapUnwrapMechanisms_;
+    private static Set<Long> wrapUnwrapMechanisms;
 
     /**
      * This table contains the mechanisms that are key derivation mechanisms.
      */
-    private static Set<Long> keyDerivationMechanisms_;
+    private static Set<Long> keyDerivationMechanisms;
 
     public static final long CKK_VENDOR_SM2;
 
@@ -227,7 +227,7 @@ public class PKCS11VendorConstants {
      */
     public static boolean isDigestMechanism(long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (digestMechanisms_ == null) {
+        if (digestMechanisms == null) {
             long[] mechs = new long[]{
                 PKCS11VendorConstants.CKM_VENDOR_SM3
             };
@@ -236,15 +236,15 @@ public class PKCS11VendorConstants {
             for (Long mech : mechs) {
                 mechanisms.add(mech);
             }
-            digestMechanisms_ = mechanisms;
+            digestMechanisms = mechanisms;
         }
 
-        return digestMechanisms_.contains(new Long(mechanismCode));
+        return digestMechanisms.contains(new Long(mechanismCode));
     }
 
     public static boolean isFullEncryptDecryptMechanism(long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (fullEncryptDecryptMechanisms_ == null) {
+        if (fullEncryptDecryptMechanisms == null) {
             long[] mechs = new long[]{
                 PKCS11VendorConstants.CKM_VENDOR_SM4_CBC,
                 PKCS11VendorConstants.CKM_VENDOR_SM4_ECB,
@@ -254,15 +254,15 @@ public class PKCS11VendorConstants {
             for (Long mech : mechs) {
                 mechanisms.add(mech);
             }
-            fullEncryptDecryptMechanisms_ = mechanisms;
+            fullEncryptDecryptMechanisms = mechanisms;
         }
 
-        return fullEncryptDecryptMechanisms_.contains(new Long(mechanismCode));
+        return fullEncryptDecryptMechanisms.contains(new Long(mechanismCode));
     }
 
     public static boolean isFullSignVerifyMechanism(long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (fullSignVerifyMechanisms_ == null) {
+        if (fullSignVerifyMechanisms == null) {
             long[] mechs = new long[]{
                 PKCS11VendorConstants.CKM_VENDOR_SM2,
                 PKCS11VendorConstants.CKM_VENDOR_SM2_SM3,
@@ -277,15 +277,15 @@ public class PKCS11VendorConstants {
             for (Long mech : mechs) {
                 mechanisms.add(mech);
             }
-            fullSignVerifyMechanisms_ = mechanisms;
+            fullSignVerifyMechanisms = mechanisms;
         }
 
-        return fullSignVerifyMechanisms_.contains(new Long(mechanismCode));
+        return fullSignVerifyMechanisms.contains(new Long(mechanismCode));
     }
 
     public static boolean isKeyDerivationMechanism(long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (keyDerivationMechanisms_ == null) {
+        if (keyDerivationMechanisms == null) {
             long[] mechs = new long[]{
                 PKCS11VendorConstants.CKM_VENDOR_SM4_ECB_ENCRYPT_DATA
             };
@@ -294,15 +294,15 @@ public class PKCS11VendorConstants {
             for (Long mech : mechs) {
                 mechanisms.add(mech);
             }
-            keyDerivationMechanisms_ = mechanisms;
+            keyDerivationMechanisms = mechanisms;
         }
 
-        return keyDerivationMechanisms_.contains(new Long(mechanismCode));
+        return keyDerivationMechanisms.contains(new Long(mechanismCode));
     }
 
     public static boolean isKeyPairGenerationMechanism(long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (keyPairGenerationMechanisms_ == null) {
+        if (keyPairGenerationMechanisms == null) {
             long[] mechs = new long[]{
                 CKM_VENDOR_SM2_KEY_PAIR_GEN
             };
@@ -311,15 +311,15 @@ public class PKCS11VendorConstants {
             for (Long mech : mechs) {
                 mechanisms.add(mech);
             }
-            keyPairGenerationMechanisms_ = mechanisms;
+            keyPairGenerationMechanisms = mechanisms;
         }
 
-        return keyPairGenerationMechanisms_.contains(new Long(mechanismCode));
+        return keyPairGenerationMechanisms.contains(new Long(mechanismCode));
     }
     
     public static boolean isKeyGenerationMechanism(long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (keyGenerationMechanisms_ == null) {
+        if (keyGenerationMechanisms == null) {
             long[] mechs = new long[]{
                 PKCS11VendorConstants.CKM_VENDOR_SM4_KEY_GEN
             };
@@ -328,10 +328,10 @@ public class PKCS11VendorConstants {
             for (Long mech : mechs) {
                 mechanisms.add(mech);
             }
-            keyGenerationMechanisms_ = mechanisms;
+            keyGenerationMechanisms = mechanisms;
         }
 
-        return keyGenerationMechanisms_.contains(new Long(mechanismCode));
+        return keyGenerationMechanisms.contains(new Long(mechanismCode));
     } 
 
     public static boolean isSignVerifyRecoverMechanism(long mechanismCode) {
@@ -350,25 +350,25 @@ public class PKCS11VendorConstants {
     
     public static boolean isWrapUnwrapMechanism(long mechanismCode) {
         // build the hashtable on demand (=first use)
-        if (wrapUnwrapMechanisms_ == null) {
+        if (wrapUnwrapMechanisms == null) {
             long[] mechs = new long[] {
                 PKCS11VendorConstants.CKM_VENDOR_SM2_ENCRYPT,
                 PKCS11VendorConstants.CKM_VENDOR_SM4_ECB
             };
-            Set<Long> wrapUnwrapMechanisms = new HashSet<>();
+            Set<Long> mechanisms = new HashSet<>();
             for (long m : mechs) {
-                wrapUnwrapMechanisms.add(m);
+                mechanisms.add(m);
             }
-            wrapUnwrapMechanisms_ = wrapUnwrapMechanisms;
+            wrapUnwrapMechanisms = mechanisms;
         }
 
-        return wrapUnwrapMechanisms_.contains(mechanismCode);
+        return wrapUnwrapMechanisms.contains(mechanismCode);
     }
 
     public static String mechanismCodeToString(long mechanismCode) {
         initMechanismMap();
-        String name = mechanismCodeNamesAvailable_
-                ? mechanismNames_.get(new Long(mechanismCode)) : null;
+        String name = mechanismCodeNamesAvailable
+                ? mechanismNames.get(new Long(mechanismCode)) : null;
         if (name == null) {
             name = "Unknwon mechanism with code: 0x"
                     + Functions.toFullHexString(mechanismCode);
@@ -386,14 +386,14 @@ public class PKCS11VendorConstants {
      */
     public static long mechanismStringToCode(String mechanismName) {
         initMechanismMap();
-        Long code = mechanismCodeNamesAvailable_
-                ? mechanismNameToCodes_.get(mechanismName) : null;
+        Long code = mechanismCodeNamesAvailable
+                ? mechanismNameToCodes.get(mechanismName) : null;
         return (code != null) ? code : -1;
     }
 
     private static void initMechanismMap() {
         // ensure that another thread has not loaded the codes meanwhile
-        if (mechanismNames_ != null) {
+        if (mechanismNames != null) {
             return;
         }
 
@@ -437,9 +437,9 @@ public class PKCS11VendorConstants {
             nameCodeMap.put(names[i], codes[i]);
         }
 
-        mechanismNames_ = codeNameMap;
-        mechanismNameToCodes_ = nameCodeMap;
-        mechanismCodeNamesAvailable_ = true;
+        mechanismNames = codeNameMap;
+        mechanismNameToCodes = nameCodeMap;
+        mechanismCodeNamesAvailable = true;
     }
 
     private static long readLong(Properties props, String propKey) {

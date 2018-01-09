@@ -52,7 +52,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (ckAttribute_ <> null)
+ * @invariants (ckAttribute <> null)
  */
 public class MechanismAttribute extends LongAttribute {
 

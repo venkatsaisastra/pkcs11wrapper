@@ -77,12 +77,12 @@ public class PKCS11Exception extends TokenException {
      * The properties object that holds the mapping from error-code to the name
      * of the PKCS#11 error.
      */
-    protected static Map<Long, String> errorCodeNames_;
+    protected static Map<Long, String> errorCodeNames;
 
     /**
      * True, if the mapping of error codes to PKCS#11 error names is available.
      */
-    protected static boolean errorCodeNamesAvailable_;
+    protected static boolean errorCodeNamesAvailable;
 
     /**
      * The code of the error which was the reason for this exception.
@@ -117,7 +117,7 @@ public class PKCS11Exception extends TokenException {
      */
     public synchronized String getMessage() {
         // if the names of the defined error codes are not yet loaded, load them
-        if (errorCodeNames_ == null) {
+        if (errorCodeNames == null) {
             // ensure that another thread has not loaded the codes meanwhile
             Map<Long, String> codeNamMap = new HashMap<>();
             Properties props = new Properties();
@@ -139,8 +139,8 @@ public class PKCS11Exception extends TokenException {
                     }
                     codeNamMap.put(code, errorName);
                 }
-                errorCodeNames_ = codeNamMap;
-                errorCodeNamesAvailable_ = true;
+                errorCodeNames = codeNamMap;
+                errorCodeNamesAvailable = true;
             } catch (Exception exception) {
                 System.err.println(
                     "Could not read properties for error code names: "
@@ -148,8 +148,8 @@ public class PKCS11Exception extends TokenException {
             }
         }
 
-        String name = errorCodeNamesAvailable_
-                ? errorCodeNames_.get(new Long(errorCode)) : null;
+        String name = errorCodeNamesAvailable
+                ? errorCodeNames.get(new Long(errorCode)) : null;
 
         // if we can get the name of the error code, take the name, otherwise
         // return the code

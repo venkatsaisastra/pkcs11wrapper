@@ -56,7 +56,7 @@ import sun.security.pkcs11.wrapper.CK_INFO;
 import sun.security.pkcs11.wrapper.CK_LOCKMUTEX;
 import sun.security.pkcs11.wrapper.CK_UNLOCKMUTEX;
 import sun.security.pkcs11.wrapper.PKCS11;
-//FIXME: check if pkcs11module_ is not null.
+//FIXME: check if pkcs11module is not null.
 /**
  * Objects of this class represent a PKCS#11 module. The application should
  * create an instance by calling getInstance and passing the name of the
@@ -112,7 +112,7 @@ import sun.security.pkcs11.wrapper.PKCS11;
  * @see iaik.pkcs.pkcs11.Slot
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (pkcs11Module_ <> null)
+ * @invariants (pkcs11Module <> null)
  */
 
 @SuppressWarnings("restriction")

@@ -51,8 +51,8 @@ import iaik.pkcs.pkcs11.TokenException;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (ecdsaParams_ <> null)
- *             and (value_ <> null)
+ * @invariants (ecdsaParams <> null)
+ *             and (value <> null)
  */
 // CHECKSTYLE:SKIP
 public class SM2PrivateKey extends ECPrivateKey {

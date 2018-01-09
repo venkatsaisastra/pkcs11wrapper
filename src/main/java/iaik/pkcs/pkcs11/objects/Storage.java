@@ -52,10 +52,10 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (token_ <> null)
- *             and (private_ <> null)
- *             and (modifiable_ <> null)
- *             and (label_ <> null)
+ * @invariants (token <> null)
+ *             and (private <> null)
+ *             and (modifiable <> null)
+ *             and (label <> null)
  */
 public class Storage extends PKCS11Object {
 

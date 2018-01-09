@@ -53,7 +53,7 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  *
  * @author 
  * @version 1.0
- * @invariants (publicValue_ <> null)
+ * @invariants (publicValue <> null)
  */
 public class OpaqueParameters implements Parameters {
 

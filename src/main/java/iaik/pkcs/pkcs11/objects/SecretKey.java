@@ -52,16 +52,16 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (sensitive_ <> null)
- *             and (encrypt_ <> null)
- *             and (decrypt_ <> null)
- *             and (sign_ <> null)
- *             and (verify_ <> null)
- *             and (wrap_ <> null)
- *             and (unwrap_ <> null)
- *             and (extractable_ <> null)
- *             and (alwaysSensitive_ <> null)
- *             and (neverExtractable_ <> null)
+ * @invariants (sensitive <> null)
+ *             and (encrypt <> null)
+ *             and (decrypt <> null)
+ *             and (sign <> null)
+ *             and (verify <> null)
+ *             and (wrap <> null)
+ *             and (unwrap <> null)
+ *             and (extractable <> null)
+ *             and (alwaysSensitive <> null)
+ *             and (neverExtractable <> null)
  */
 public class SecretKey extends Key {
 

@@ -52,8 +52,8 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (ecdsaParams_ <> null)
- *             and (ecPoint_ <> null)
+ * @invariants (ecdsaParams <> null)
+ *             and (ecPoint <> null)
  */
 // CHECKSTYLE:SKIP
 public class ECPublicKey extends PublicKey {
