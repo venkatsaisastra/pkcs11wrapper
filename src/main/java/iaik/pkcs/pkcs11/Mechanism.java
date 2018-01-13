@@ -42,7 +42,7 @@
 
 package iaik.pkcs.pkcs11;
 
-import iaik.pkcs.pkcs11.parameters.Parameters;
+import iaik.pkcs.pkcs11.params.Params;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
@@ -65,7 +65,7 @@ public class Mechanism {
     /**
      * The parameters of the mechanism. Not all mechanisms use these parameters.
      */
-    protected Parameters parameters;
+    protected Params params;
 
     /**
      * Constructor taking just the mechanism code as defined in PKCS11Constants.
@@ -115,7 +115,7 @@ public class Mechanism {
             return false;
         }
 
-        return Util.objEquals(this.parameters, other.parameters);
+        return Util.objEquals(this.params, other.params);
     }
 
     /**
@@ -314,20 +314,20 @@ public class Mechanism {
      * @preconditions
      * @postconditions
      */
-    public Parameters getParameters() {
-        return parameters;
+    public Params getParams() {
+        return params;
     }
 
     /**
      * Set the parameters for this mechanism.
      *
-     * @param parameters
+     * @param params
      *          The mechanism parameters to set.
      * @preconditions
      * @postconditions
      */
-    public void setParameters(Parameters parameters) {
-        this.parameters = parameters;
+    public void setParams(Params params) {
+        this.params = params;
     }
 
     /**
@@ -363,7 +363,7 @@ public class Mechanism {
         StringBuilder sb = new StringBuilder(128);
         sb.append("    Mechanism: ")
             .append(Functions.mechanismCodeToString(pkcs11MechanismCode));
-        sb.append("\n    Parameters:\n").append(parameters);
+        sb.append("\n    Params:\n").append(params);
         return sb.toString();
     }
 

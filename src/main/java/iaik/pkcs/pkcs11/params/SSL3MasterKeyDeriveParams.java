@@ -40,77 +40,115 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
-
-import java.util.Arrays;
+package iaik.pkcs.pkcs11.params;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Functions;
+import sun.security.pkcs11.wrapper.CK_SSL3_MASTER_KEY_DERIVE_PARAMS;
+import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
+import sun.security.pkcs11.wrapper.CK_VERSION;
 
 /**
- * This class encapsulates parameters for the algorithms
- * Mechanism.DH_PKCS_DERIVE.
+ * This class encapsulates parameters for the Mechanism.SSL3_MASTER_KEY_DERIVE
+ * mechanism and the Mechanism.TLS_MASTER_KEY_DERIVE.
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (publicValue <> null)
+ * @invariants (randomInfo <> null)
+ *             and (version <> null)
  */
+@SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
-public class DHPkcsDeriveParameters implements Parameters {
+public class SSL3MasterKeyDeriveParams implements Params {
 
     /**
-     * The initialization vector.
+     * The client's and server's random data information.
      */
-    protected byte[] publicValue;
+    protected SSL3RandomDataParams randomInfo;
 
     /**
-     * Create a new DHPkcsDeriveParameters object with the given public value.
+     * The SSL protocol version information.
+     */
+    protected VersionParams version;
+
+    /**
+     * Create a new SSL3MasterKeyDeriveParameters object with the given
+     * random info and version.
      *
-     * @param publicValue
-     *          The public value of the other party in the key agreement
-     *          protocol.
-     * @preconditions (publicValue <> null)
+     * @param randomInfo
+     *          The client's and server's random data information.
+     * @param version
+     *          The SSL protocol version information.
+     * @preconditions (randomInfo <> null)
+     *                and (version <> null)
      * @postconditions
      */
-    public DHPkcsDeriveParameters(byte[] publicValue) {
-        this.publicValue = publicValue;
+    public SSL3MasterKeyDeriveParams(SSL3RandomDataParams randomInfo,
+            VersionParams version) {
+        this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
+        this.version = Util.requireNonNull("version", version);
     }
 
     /**
-     * Get this parameters object as a byte array.
+     * Get this parameters object as a CK_SSL3_RANDOM_DATA object.
      *
-     * @return This object as a byte array.
+     * @return This object as a CK_SSL3_RANDOM_DATA object.
      * @preconditions
      * @postconditions (result <> null)
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        return publicValue;
+        CK_SSL3_MASTER_KEY_DERIVE_PARAMS params
+            = new CK_SSL3_MASTER_KEY_DERIVE_PARAMS(
+                (CK_SSL3_RANDOM_DATA) randomInfo.getPKCS11ParamsObject(),
+                (CK_VERSION) version.getPKCS11ParamsObject());
+
+        return params;
     }
 
     /**
-     * Get the public value of the other party in the key agreement protocol.
+     * Get the client's and server's random data information.
      *
-     * @return The public value of the other party in the key agreement
-     *         protocol.
+     * @return The client's and server's random data information.
      * @preconditions
      * @postconditions (result <> null)
      */
-    public byte[] getPublicValue() {
-        return publicValue;
+    public SSL3RandomDataParams getRandomInfo() {
+        return randomInfo;
     }
 
     /**
-     * Set the public value of the other party in the key agreement protocol.
+     * Get the SSL protocol version information.
      *
-     * @param publicValue
-     *          The public value of the other party in the key agreement
-     *          protocol.
-     * @preconditions (publicValue <> null)
+     * @return The SSL protocol version information.
+     * @preconditions
+     * @postconditions (result <> null)
+     */
+    public VersionParams getVersion() {
+        return version;
+    }
+
+    /**
+     * Set the client's and server's random data information.
+     *
+     * @param randomInfo
+     *          The client's and server's random data information.
+     * @preconditions (randomInfo <> null)
      * @postconditions
      */
-    public void setPublicValue(byte[] publicValue) {
-        this.publicValue = Util.requireNonNull("publicValue", publicValue);
+    public void setRandomInfo(SSL3RandomDataParams randomInfo) {
+        this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
+    }
+
+    /**
+     * Set the SSL protocol version information.
+     *
+     * @param version
+     *          The SSL protocol version information.
+     * @preconditions (version <> null)
+     * @postconditions
+     */
+    public void setVersion(VersionParams version) {
+        this.version = Util.requireNonNull("version", version);
     }
 
     /**
@@ -122,7 +160,8 @@ public class DHPkcsDeriveParameters implements Parameters {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("  Public Value (hex): ").append(Util.toHex(publicValue));
+        sb.append("  Random Information:\n").append(randomInfo);
+        sb.append("\n  Version: ").append(version);
         return sb.toString();
     }
 
@@ -141,12 +180,14 @@ public class DHPkcsDeriveParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof DHPkcsDeriveParameters)) {
+        } else if (!(otherObject instanceof SSL3MasterKeyDeriveParams)) {
             return false;
         }
 
-        DHPkcsDeriveParameters other = (DHPkcsDeriveParameters) otherObject;
-        return Arrays.equals(this.publicValue, other.publicValue);
+        SSL3MasterKeyDeriveParams other
+                = (SSL3MasterKeyDeriveParams) otherObject;
+        return this.randomInfo.equals(other.randomInfo)
+                && this.version.equals(other.version);
     }
 
     /**
@@ -159,7 +200,7 @@ public class DHPkcsDeriveParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return Functions.hashCode(publicValue);
+        return randomInfo.hashCode() ^ version.hashCode();
     }
 
 }

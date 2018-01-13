@@ -40,7 +40,7 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
+package iaik.pkcs.pkcs11.params;
 
 import java.util.Arrays;
 
@@ -59,7 +59,7 @@ import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
  */
 @SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
-public class SSL3RandomDataParameters implements Parameters {
+public class SSL3RandomDataParams implements Params {
 
     /**
      * The client's random data.
@@ -83,7 +83,7 @@ public class SSL3RandomDataParameters implements Parameters {
      *                and (serverRandom <> null)
      * @postconditions
      */
-    public SSL3RandomDataParameters(byte[] clientRandom, byte[] serverRandom) {
+    public SSL3RandomDataParams(byte[] clientRandom, byte[] serverRandom) {
         this.clientRandom = Util.requireNonNull("clientRandom", clientRandom);
         this.serverRandom = Util.requireNonNull("serverRandom", serverRandom);
     }
@@ -175,11 +175,11 @@ public class SSL3RandomDataParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof SSL3RandomDataParameters)) {
+        } else if (!(otherObject instanceof SSL3RandomDataParams)) {
             return false;
         }
 
-        SSL3RandomDataParameters other = (SSL3RandomDataParameters) otherObject;
+        SSL3RandomDataParams other = (SSL3RandomDataParams) otherObject;
         return Arrays.equals(this.clientRandom, other.clientRandom)
                 && Arrays.equals(this.serverRandom, other.serverRandom);
     }

@@ -40,87 +40,50 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
+package iaik.pkcs.pkcs11.params;
 
-import iaik.pkcs.pkcs11.Mechanism;
-import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
+import java.util.Arrays;
+
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Functions;
+import sun.security.pkcs11.wrapper.CK_AES_CTR_PARAMS;
 
 /**
- * This class encapsulates parameters for the Mechanism.RSA_PKCS_PSS.
+ * This class represents the necessary parameters required by
+ * the CKM_AES_CTR mechanism as defined in CK_AES_CTR_PARAMS structure.<p>
+ * <B>PKCS#11 structure:</B>
+ * <PRE>
+ * typedef struct CK_AES_CTR_PARAMS {
+ *   CK_ULONG ulCounterBits;
+ *   CK_BYTE cb[16];
+ * } CK_AES_CTR_PARAMS;
+ * </PRE>
  *
- * @author Karl Scheibelhofer
- * @version 1.0
- * @invariants
+ * @author Lijun Liao
  */
 @SuppressWarnings("restriction")
-// CHECKSTYLE:SKIP
-public class RSAPkcsPssParameters extends RSAPkcsParameters {
+public class AesCtrParams implements Params {
 
-    /**
-     * The length of the salt value in octets.
-     */
-    protected long saltLength;
+    private byte[] cb;
 
-    /**
-     * Create a new RSAPkcsOaepParameters object with the given attributes.
-     *
-     * @param hashAlg
-     *          The message digest algorithm used to calculate the digest of the
-     *          encoding parameter.
-     * @param mgf
-     *          The mask to apply to the encoded block. One of the constants
-     *          defined in the MessageGenerationFunctionType interface.
-     * @param saltLength
-     *          The length of the salt value in octets.
-     * @preconditions (hashAlg <> null)
-     *                and (mgf == MessageGenerationFunctionType.Sha1)
-     * @postconditions
-     */
-    public RSAPkcsPssParameters(Mechanism hashAlg, long mgf, long saltLength) {
-        super(hashAlg, mgf);
-        this.saltLength = saltLength;
+    public AesCtrParams(byte[] cb) {
+        Util.requireNonNull("cb", cb);
+        if (cb.length != 16) {
+            throw new IllegalArgumentException("cb.length must be 16");
+        }
+        this.cb = cb;
     }
 
-    /**
-     * Get this parameters object as an object of the CK_RSA_PKCS_PSS_PARAMS
-     * class.
-     *
-     * @return This object as a CK_RSA_PKCS_PSS_PARAMS object.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public Object getPKCS11ParamsObject() {
-        CK_RSA_PKCS_PSS_PARAMS params = new CK_RSA_PKCS_PSS_PARAMS();
-
-        params.hashAlg = hashAlg.getMechanismCode();
-        params.mgf = mgf;
-        params.sLen = saltLength;
-
-        return params;
+    public byte[] getCb() {
+        return cb;
     }
 
-    /**
-     * Get the length of the salt value in octets.
-     *
-     * @return The length of the salt value in octets.
-     * @preconditions
-     * @postconditions
-     */
-    public long getSaltLength() {
-        return saltLength;
-    }
-
-    /**
-     * Set the length of the salt value in octets.
-     *
-     * @param saltLength
-     *          The length of the salt value in octets.
-     * @preconditions
-     * @postconditions
-     */
-    public void setSaltLength(long saltLength) {
-        this.saltLength = saltLength;
+    public void setCb(byte[] cb) {
+        Util.requireNonNull("cb", cb);
+        if (cb.length != 16) {
+            throw new IllegalArgumentException("cb.length must be 16");
+        }
+        this.cb = cb;
     }
 
     /**
@@ -131,8 +94,8 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Salt Length (octets, dec): ").append(saltLength);
+        StringBuilder sb = new StringBuilder();
+        sb.append("  cb: ").append(Util.toHex(cb));
         return sb.toString();
     }
 
@@ -151,12 +114,12 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof RSAPkcsPssParameters)) {
+        } else if (!(otherObject instanceof AesCtrParams)) {
             return false;
         }
 
-        RSAPkcsPssParameters other = (RSAPkcsPssParameters) otherObject;
-        return super.equals(other) && (this.saltLength == other.saltLength);
+        AesCtrParams other = (AesCtrParams) otherObject;
+        return Arrays.equals(this.cb, other.cb);
     }
 
     /**
@@ -169,7 +132,12 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
      */
     @Override
     public int hashCode() {
-        return super.hashCode() ^ ((int) saltLength);
+        return Functions.hashCode(cb);
+    }
+
+    @Override
+    public Object getPKCS11ParamsObject() {
+        return new CK_AES_CTR_PARAMS(cb);
     }
 
 }

@@ -40,84 +40,63 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
+package iaik.pkcs.pkcs11.params;
+
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.Version;
+import sun.security.pkcs11.wrapper.CK_VERSION;
 
 /**
- * This class encapsulates parameters for the MAC algorithms for the following
- * mechanisms: DES, DES3 (triple-DES), CAST, CAST3, CAST128 (CAST5), IDEA, and
- * CDMF ciphers.
+ * This class is used for the Mechnism.SSL3_PRE_MASTER_KEY_GEN.
  *
  * @author Karl Scheibelhofer
+ * @author Lijun Liao
  * @version 1.0
  * @invariants
  */
-public class MacGeneralParameters implements Parameters {
+@SuppressWarnings("restriction")
+public class VersionParams implements Params {
+    
+    private Version version;
 
     /**
-     * The length of the MAC produced, in bytes.
-     */
-    protected long macLength;
-
-    /**
-     * Create a new MacGeneralParameters object with the given MAC length.
+     * Create a new VersionParameters object with the given version
      *
-     * @param macLength
-     *          The length of the MAC produced, in bytes.
+     * @param version
+     *          The version.
      * @preconditions
      * @postconditions
      */
-    public MacGeneralParameters(long macLength) {
-        this.macLength = macLength;
+    public VersionParams(Version version) {
+        this.version = Util.requireNonNull("version", version);
     }
 
     /**
-     * Get this parameters object as an Long object.
+     * Get this parameters object as a CK_VERSION object.
      *
-     * @return This object as a Long object.
+     * @return This object as a CK_VERSION object.
      * @preconditions
      * @postconditions (result <> null)
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        return new Long(macLength);
+        return new CK_VERSION(version.getMajor(), version.getMinor());
     }
 
     /**
-     * Get the length of the MAC produced, in bytes.
+     * This method allows setting the major and minor version numbers using
+     * a version object of the lower level API.
      *
-     * @return The length of the MAC produced, in bytes.
-     * @preconditions
+     * @param input
+     *          The version object providing the major and minor version.
+     * @preconditions (input <> null)
      * @postconditions
      */
-    public long getMacLength() {
-        return macLength;
+    // CHECKSTYLE:SKIP
+    public void setPKCS11ParamsObject(CK_VERSION input) {
+        this.version = new Version(input);
     }
-
-    /**
-     * Set the length of the MAC produced, in bytes.
-     *
-     * @param macLength
-     *          The length of the MAC produced, in bytes.
-     * @preconditions
-     * @postconditions
-     */
-    public void setMacLength(long macLength) {
-        this.macLength = macLength;
-    }
-
-    /**
-     * Returns the string representation of this object. Do not parse data from
-     * this string, it is for debugging only.
-     *
-     * @return A string representation of this object.
-     */
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  Mac Length (dec): ").append(macLength);
-        return sb.toString();
-    }
-
+    
     /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
@@ -126,32 +105,17 @@ public class MacGeneralParameters implements Parameters {
      *          The other object to compare to.
      * @return True, if other is an instance of this class and all member
      *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
      */
     @Override
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof MacGeneralParameters)) {
+        } else if (!(otherObject instanceof VersionParams)) {
             return false;
         }
 
-        MacGeneralParameters other = (MacGeneralParameters) otherObject;
-        return (this.macLength == other.macLength);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return (int) macLength;
+        VersionParams other = (VersionParams) otherObject;
+        return this.version.equals(other.version);
     }
 
 }

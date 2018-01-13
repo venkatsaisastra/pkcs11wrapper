@@ -40,7 +40,7 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
+package iaik.pkcs.pkcs11.params;
 
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Util;
@@ -57,7 +57,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *                  == MessageGenerationFunctionType.Sha1)
  */
 // CHECKSTYLE:SKIP
-abstract public class RSAPkcsParameters implements Parameters {
+abstract public class RSAPkcsParams implements Params {
 
     /**
      * The message digest algorithm used to calculate the digest of the encoding
@@ -84,7 +84,7 @@ abstract public class RSAPkcsParameters implements Parameters {
      *                      == MessageGenerationFunctionType.Sha1)
      * @postconditions
      */
-    protected RSAPkcsParameters(Mechanism hashAlg, long mgf) {
+    protected RSAPkcsParams(Mechanism hashAlg, long mgf) {
         if ((mgf != PKCS11Constants.CKG_MGF1_SHA1)
             && (mgf != PKCS11Constants.CKG_MGF1_SHA224)
             && (mgf != PKCS11Constants.CKG_MGF1_SHA256)
@@ -214,11 +214,11 @@ abstract public class RSAPkcsParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof RSAPkcsParameters)) {
+        } else if (!(otherObject instanceof RSAPkcsParams)) {
             return false;
         }
 
-        RSAPkcsParameters other = (RSAPkcsParameters) otherObject;
+        RSAPkcsParams other = (RSAPkcsParams) otherObject;
         return this.hashAlg.equals(other.hashAlg) && (this.mgf == other.mgf);
     }
 

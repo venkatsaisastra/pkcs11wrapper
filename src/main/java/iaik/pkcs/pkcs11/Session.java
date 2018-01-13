@@ -50,10 +50,10 @@ import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
 import iaik.pkcs.pkcs11.objects.SecretKey;
-import iaik.pkcs.pkcs11.parameters.Parameters;
-import iaik.pkcs.pkcs11.parameters.SSL3KeyMaterialParameters;
-import iaik.pkcs.pkcs11.parameters.SSL3MasterKeyDeriveParameters;
-import iaik.pkcs.pkcs11.parameters.VersionParameters;
+import iaik.pkcs.pkcs11.params.Params;
+import iaik.pkcs.pkcs11.params.SSL3KeyMaterialParams;
+import iaik.pkcs.pkcs11.params.SSL3MasterKeyDeriveParams;
+import iaik.pkcs.pkcs11.params.VersionParams;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
@@ -778,14 +778,8 @@ public class Session {
      */
     public void encryptInit(Mechanism mechanism, Key key)
         throws TokenException {
-        CK_MECHANISM ckMechanism = new CK_MECHANISM();
-        ckMechanism.mechanism = mechanism.getMechanismCode();
-        Parameters parameters = mechanism.getParameters();
-        ckMechanism.pParameter = (parameters != null)
-                ? parameters.getPKCS11ParamsObject() : null;
-
         try {
-            pkcs11Module.C_EncryptInit(sessionHandle, ckMechanism,
+            pkcs11Module.C_EncryptInit(sessionHandle, toCkMechanism(mechanism),
                     key.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -897,10 +891,8 @@ public class Session {
      */
     public void decryptInit(Mechanism mechanism, Key key)
         throws TokenException {
-        CK_MECHANISM ckMechanism = toCkMechanism(mechanism);
-
         try {
-            pkcs11Module.C_DecryptInit(sessionHandle, ckMechanism,
+            pkcs11Module.C_DecryptInit(sessionHandle, toCkMechanism(mechanism),
                     key.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1008,9 +1000,8 @@ public class Session {
      */
     public void digestInit(Mechanism mechanism)
         throws TokenException {
-        CK_MECHANISM ckMechanism = toCkMechanism(mechanism);
         try {
-            pkcs11Module.C_DigestInit(sessionHandle, ckMechanism);
+            pkcs11Module.C_DigestInit(sessionHandle, toCkMechanism(mechanism));
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1147,9 +1138,8 @@ public class Session {
      */
     public void signInit(Mechanism mechanism, Key key)
         throws TokenException {
-        CK_MECHANISM ckMechanism = toCkMechanism(mechanism);
         try {
-            pkcs11Module.C_SignInit(sessionHandle, ckMechanism,
+            pkcs11Module.C_SignInit(sessionHandle, toCkMechanism(mechanism),
                     key.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1251,15 +1241,9 @@ public class Session {
      */
     public void signRecoverInit(Mechanism mechanism, Key key)
         throws TokenException {
-        CK_MECHANISM ckMechanism = new CK_MECHANISM();
-        ckMechanism.mechanism = mechanism.getMechanismCode();
-        Parameters parameters = mechanism.getParameters();
-        ckMechanism.pParameter = (parameters != null)
-                ? parameters.getPKCS11ParamsObject() : null;
-
         try {
-            pkcs11Module.C_SignRecoverInit(sessionHandle, ckMechanism,
-                    key.getObjectHandle());
+            pkcs11Module.C_SignRecoverInit(sessionHandle,
+                    toCkMechanism(mechanism), key.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1316,14 +1300,8 @@ public class Session {
      */
     public void verifyInit(Mechanism mechanism, Key key)
         throws TokenException {
-        CK_MECHANISM ckMechanism = new CK_MECHANISM();
-        ckMechanism.mechanism = mechanism.getMechanismCode();
-        Parameters parameters = mechanism.getParameters();
-        ckMechanism.pParameter = (parameters != null)
-                ? parameters.getPKCS11ParamsObject() : null;
-
         try {
-            pkcs11Module.C_VerifyInit(sessionHandle, ckMechanism,
+            pkcs11Module.C_VerifyInit(sessionHandle, toCkMechanism(mechanism),
                     key.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1433,10 +1411,9 @@ public class Session {
      */
     public void verifyRecoverInit(Mechanism mechanism, Key key)
         throws TokenException {
-        CK_MECHANISM ckMechanism = toCkMechanism(mechanism);
         try {
-            pkcs11Module.C_VerifyRecoverInit(sessionHandle, ckMechanism,
-                    key.getObjectHandle());
+            pkcs11Module.C_VerifyRecoverInit(sessionHandle,
+                    toCkMechanism(mechanism), key.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1577,17 +1554,12 @@ public class Session {
      */
     public PKCS11Object generateKey(Mechanism mechanism, PKCS11Object template)
         throws TokenException {
-        CK_MECHANISM ckMechanism = new CK_MECHANISM();
-        ckMechanism.mechanism = mechanism.getMechanismCode();
-        Parameters parameters = mechanism.getParameters();
-        ckMechanism.pParameter = (parameters != null)
-                ? parameters.getPKCS11ParamsObject() : null;
         CK_ATTRIBUTE[] ckAttributes = PKCS11Object.getSetAttributes(template);
 
         long objectHandle;
         try {
             objectHandle = pkcs11Module.C_GenerateKey(sessionHandle,
-                    ckMechanism, ckAttributes);
+                    toCkMechanism(mechanism), ckAttributes);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1621,11 +1593,6 @@ public class Session {
             PKCS11Object publicKeyTemplate,
             PKCS11Object privateKeyTemplate)
         throws TokenException {
-        CK_MECHANISM ckMechanism = new CK_MECHANISM();
-        ckMechanism.mechanism = mechanism.getMechanismCode();
-        Parameters parameters = mechanism.getParameters();
-        ckMechanism.pParameter = (parameters != null)
-                ? parameters.getPKCS11ParamsObject() : null;
         CK_ATTRIBUTE[] ckPublicKeyAttributes =
                 PKCS11Object.getSetAttributes(publicKeyTemplate);
         CK_ATTRIBUTE[] ckPrivateKeyAttributes =
@@ -1634,7 +1601,8 @@ public class Session {
         long[] objectHandles;
         try {
             objectHandles = pkcs11Module.C_GenerateKeyPair(sessionHandle,
-                    ckMechanism, ckPublicKeyAttributes, ckPrivateKeyAttributes);
+                    toCkMechanism(mechanism), ckPublicKeyAttributes,
+                    ckPrivateKeyAttributes);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1666,15 +1634,10 @@ public class Session {
      */
     public byte[] wrapKey(Mechanism mechanism, Key wrappingKey, Key key)
         throws TokenException {
-        CK_MECHANISM ckMechanism = new CK_MECHANISM();
-        ckMechanism.mechanism = mechanism.getMechanismCode();
-        Parameters parameters = mechanism.getParameters();
-        ckMechanism.pParameter = (parameters != null)
-                ? parameters.getPKCS11ParamsObject() : null;
-
         try {
-            return pkcs11Module.C_WrapKey(sessionHandle, ckMechanism,
-                wrappingKey.getObjectHandle(), key.getObjectHandle());
+            return pkcs11Module.C_WrapKey(sessionHandle,
+                    toCkMechanism(mechanism), wrappingKey.getObjectHandle(),
+                    key.getObjectHandle());
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1708,19 +1671,14 @@ public class Session {
         throws TokenException {
         Util.requireNonNull("wrappedKey", wrappedKey);
 
-        CK_MECHANISM ckMechanism = new CK_MECHANISM();
-        ckMechanism.mechanism = mechanism.getMechanismCode();
-        Parameters parameters = mechanism.getParameters();
-        ckMechanism.pParameter = (parameters != null)
-                ? parameters.getPKCS11ParamsObject() : null;
         CK_ATTRIBUTE[] ckAttributes = 
                 PKCS11Object.getSetAttributes(keyTemplate);
 
         long objectHandle;
         try {
             objectHandle = pkcs11Module.C_UnwrapKey(sessionHandle,
-                    ckMechanism, unwrappingKey.getObjectHandle(), wrappedKey,
-                    ckAttributes);
+                    toCkMechanism(mechanism), unwrappingKey.getObjectHandle(),
+                    wrappedKey, ckAttributes);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
@@ -1750,58 +1708,52 @@ public class Session {
      */
     public Key deriveKey(Mechanism mechanism, Key baseKey, Key template)
         throws TokenException {
-        Key derivedKey = null;
-
-        CK_MECHANISM ckMechanism = new CK_MECHANISM();
-        ckMechanism.mechanism = mechanism.getMechanismCode();
-        Parameters parameters = mechanism.getParameters();
-        ckMechanism.pParameter = (parameters != null)
-                ? parameters.getPKCS11ParamsObject() : null;
+        CK_MECHANISM ckMechanism = toCkMechanism(mechanism);
+        Params params = mechanism.getParams();
         CK_ATTRIBUTE[] ckAttributes = PKCS11Object.getSetAttributes(template);
 
         long objectHandle;
         try {
             objectHandle = pkcs11Module.C_DeriveKey(sessionHandle,
-                    ckMechanism, baseKey.getObjectHandle(), ckAttributes);
+                    toCkMechanism(mechanism), baseKey.getObjectHandle(),
+                    ckAttributes);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
 
         /*
-         * for certain mechanisms we must copy back the returned values the the
+         * for certain mechanisms we must copy back the returned values to the
          * parameters object of the given mechanism
          */
-        if (
-                (ckMechanism.mechanism
-                        == PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE
-                    || ckMechanism.mechanism
-                        == PKCS11Constants.CKM_TLS_MASTER_KEY_DERIVE)
-                && (parameters instanceof SSL3MasterKeyDeriveParameters)) {
+        if ((ckMechanism.mechanism
+                    == PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE
+              || ckMechanism.mechanism
+                    == PKCS11Constants.CKM_TLS_MASTER_KEY_DERIVE)
+              && (params instanceof SSL3MasterKeyDeriveParams)) {
             /*
              * The SSL3MasterKeyDeriveParameters object need special handling
              * due to their deeper nesting of their data structure, which needs
              * to be copied back to get all the results.
              */
             // set the returned client version
-            VersionParameters version =
-                    ((SSL3MasterKeyDeriveParameters) parameters).getVersion();
+            VersionParams version =
+                    ((SSL3MasterKeyDeriveParams) params).getVersion();
             version.setPKCS11ParamsObject(
                     ((CK_SSL3_MASTER_KEY_DERIVE_PARAMS)
                             (ckMechanism.pParameter)).pVersion);
-            derivedKey = (Key) PKCS11Object.getInstance(this, objectHandle);
-        } else if (
-                (ckMechanism.mechanism
+            return (Key) PKCS11Object.getInstance(this, objectHandle);
+        } else if ((ckMechanism.mechanism
                         == PKCS11Constants.CKM_SSL3_KEY_AND_MAC_DERIVE
                     || ckMechanism.mechanism
                         == PKCS11Constants.CKM_TLS_KEY_AND_MAC_DERIVE)
-                && (parameters instanceof SSL3KeyMaterialParameters)) {
+                && (params instanceof SSL3KeyMaterialParams)) {
             /*
              * The SSL3KeyMaterialParameters object need special handling due to
              * their deeper nesting of their data structure, which needs to be
              * copied back to get all the results.
              */
             // set the returned secret keys and IVs
-            ((SSL3KeyMaterialParameters) parameters).getReturnedKeyMaterial()
+            ((SSL3KeyMaterialParams) params).getReturnedKeyMaterial()
                 .setPKCS11ParamsObject(
                     ((CK_SSL3_KEY_MAT_PARAMS) ckMechanism.pParameter)
                         .pReturnedKeyMaterial,
@@ -1810,12 +1762,10 @@ public class Session {
              * this mechanism returns its keys and values through the parameters
              * object of the mechanism, but it does not return a key
              */
-            derivedKey = null;
+            return null;
         } else {
-            derivedKey = (Key) PKCS11Object.getInstance(this, objectHandle);
+            return (Key) PKCS11Object.getInstance(this, objectHandle);
         }
-
-        return derivedKey;
     }
 
     /**
@@ -1906,9 +1856,9 @@ public class Session {
     private static CK_MECHANISM toCkMechanism(Mechanism mechanism) {
         CK_MECHANISM ckMechanism = new CK_MECHANISM();
         ckMechanism.mechanism = mechanism.getMechanismCode();
-        Parameters parameters = mechanism.getParameters();
-        ckMechanism.pParameter = (parameters != null)
-                ? parameters.getPKCS11ParamsObject() : null;
+        Params params = mechanism.getParams();
+        ckMechanism.pParameter = (params != null)
+                ? params.getPKCS11ParamsObject() : null;
         return ckMechanism;
     }
 

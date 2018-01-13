@@ -40,7 +40,7 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
+package iaik.pkcs.pkcs11.params;
 
 import iaik.pkcs.pkcs11.Util;
 import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
@@ -58,7 +58,7 @@ import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
  */
 @SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
-public class SSL3KeyMaterialParameters implements Parameters {
+public class SSL3KeyMaterialParams implements Params {
 
     /**
      * The length (in bits) of the MACing keys agreed upon during the protocol
@@ -76,7 +76,7 @@ public class SSL3KeyMaterialParameters implements Parameters {
      * The length (in bits) of the IV agreed upon during the protocol handshake
      * phase. If no IV is required, the length should be set to 0.
      */
-    protected long initializationVectorSizeInBits;
+    protected long ivSizeInBits;
 
     /**
      * Indicates whether the keys have to be derived for an export version of
@@ -87,12 +87,12 @@ public class SSL3KeyMaterialParameters implements Parameters {
     /**
      * The client's and server's random data information.
      */
-    protected SSL3RandomDataParameters randomInfo;
+    protected SSL3RandomDataParams randomInfo;
 
     /**
      * Receives the handles for the keys generated and the IVs.
      */
-    protected SSL3KeyMaterialOutParameters returnedKeyMaterial;
+    protected SSL3KeyMaterialOutParams returnedKeyMaterial;
 
     /**
      * Create a new SSL3KeyMaterialParameters object with the given
@@ -119,13 +119,12 @@ public class SSL3KeyMaterialParameters implements Parameters {
      *                and (returnedKeyMaterial <> null)
      * @postconditions
      */
-    public SSL3KeyMaterialParameters(long macSizeInBits, long keySizeInBits,
-            long initializationVectorSizeInBits, boolean export,
-            SSL3RandomDataParameters randomInfo,
-            SSL3KeyMaterialOutParameters returnedKeyMaterial) {
+    public SSL3KeyMaterialParams(long macSizeInBits, long keySizeInBits,
+            long ivSizeInBits, boolean export, SSL3RandomDataParams randomInfo,
+            SSL3KeyMaterialOutParams returnedKeyMaterial) {
         this.macSizeInBits = macSizeInBits;
         this.keySizeInBits = keySizeInBits;
-        this.initializationVectorSizeInBits = initializationVectorSizeInBits;
+        this.ivSizeInBits = ivSizeInBits;
         this.export = export;
         this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
         this.returnedKeyMaterial = Util.requireNonNull("returnedKeyMaterial",
@@ -142,11 +141,8 @@ public class SSL3KeyMaterialParameters implements Parameters {
     @Override
     public Object getPKCS11ParamsObject() {
         CK_SSL3_KEY_MAT_PARAMS params = new CK_SSL3_KEY_MAT_PARAMS(
-                (int) macSizeInBits,
-                (int) keySizeInBits,
-                (int) initializationVectorSizeInBits,
-                export,
-                (CK_SSL3_RANDOM_DATA) randomInfo.getPKCS11ParamsObject());
+            (int) macSizeInBits,(int) keySizeInBits, (int) ivSizeInBits,
+            export, (CK_SSL3_RANDOM_DATA) randomInfo.getPKCS11ParamsObject());
         params.pReturnedKeyMaterial = (CK_SSL3_KEY_MAT_OUT)
                 returnedKeyMaterial.getPKCS11ParamsObject();
 
@@ -189,8 +185,9 @@ public class SSL3KeyMaterialParameters implements Parameters {
      * @preconditions
      * @postconditions
      */
-    public long getInitializationVectorSizeInBits() {
-        return initializationVectorSizeInBits;
+    // CHECKSTYLE:SKIP
+    public long getIVSizeInBits() {
+        return ivSizeInBits;
     }
 
     /**
@@ -213,7 +210,7 @@ public class SSL3KeyMaterialParameters implements Parameters {
      * @preconditions
      * @postconditions (result <> null)
      */
-    public SSL3RandomDataParameters getRandomInfo() {
+    public SSL3RandomDataParams getRandomInfo() {
         return randomInfo;
     }
 
@@ -226,7 +223,7 @@ public class SSL3KeyMaterialParameters implements Parameters {
      * @preconditions
      * @postconditions (result <> null)
      */
-    public SSL3KeyMaterialOutParameters getReturnedKeyMaterial() {
+    public SSL3KeyMaterialOutParams getReturnedKeyMaterial() {
         return returnedKeyMaterial;
     }
 
@@ -269,9 +266,9 @@ public class SSL3KeyMaterialParameters implements Parameters {
      * @preconditions
      * @postconditions
      */
-    public void setInitializationVectorSizeInBits(
-            long initializationVectorSizeInBits) {
-        this.initializationVectorSizeInBits = initializationVectorSizeInBits;
+    // CHECKSTYLE:SKIP
+    public void setIVSizeInBits(long ivSizeInBits) {
+        this.ivSizeInBits = ivSizeInBits;
     }
 
     /**
@@ -296,7 +293,7 @@ public class SSL3KeyMaterialParameters implements Parameters {
      * @preconditions (randomInfo <> null)
      * @postconditions
      */
-    public void setRandomInfo(SSL3RandomDataParameters randomInfo) {
+    public void setRandomInfo(SSL3RandomDataParams randomInfo) {
         this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
     }
 
@@ -311,7 +308,7 @@ public class SSL3KeyMaterialParameters implements Parameters {
      * @postconditions
      */
     public void setReturnedKeyMaterial(
-            SSL3KeyMaterialOutParameters returnedKeyMaterial) {
+            SSL3KeyMaterialOutParams returnedKeyMaterial) {
         this.returnedKeyMaterial = Util.requireNonNull("returnedKeyMaterial",
                 returnedKeyMaterial);
     }
@@ -327,8 +324,7 @@ public class SSL3KeyMaterialParameters implements Parameters {
         StringBuilder sb = new StringBuilder();
         sb.append("  MAC Size in Bits (dec): ").append(macSizeInBits);
         sb.append("\n  Key Size in Bits (dec): ").append(keySizeInBits);
-        sb.append("\n  Initialization Vector Size in Bits (dec): ")
-            .append(initializationVectorSizeInBits);
+        sb.append("\n  IV Size in Bits (dec): ").append(ivSizeInBits);
         sb.append("\n  For Export Version: ").append(export);
         sb.append("\n  Client's and Server'S Random Information (hex):\n")
             .append(randomInfo);
@@ -352,16 +348,14 @@ public class SSL3KeyMaterialParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof SSL3KeyMaterialParameters)) {
+        } else if (!(otherObject instanceof SSL3KeyMaterialParams)) {
             return false;
         }
 
-        SSL3KeyMaterialParameters other
-                = (SSL3KeyMaterialParameters) otherObject;
+        SSL3KeyMaterialParams other = (SSL3KeyMaterialParams) otherObject;
         return (this.macSizeInBits == other.macSizeInBits)
                 && (this.keySizeInBits == other.keySizeInBits)
-                && (this.initializationVectorSizeInBits
-                        == other.initializationVectorSizeInBits)
+                && (this.ivSizeInBits == other.ivSizeInBits)
                 && (this.export == other.export)
                 && this.randomInfo.equals(other.randomInfo)
                 && this.returnedKeyMaterial.equals(other.returnedKeyMaterial);
@@ -378,7 +372,7 @@ public class SSL3KeyMaterialParameters implements Parameters {
     @Override
     public int hashCode() {
         return ((int) macSizeInBits) ^ ((int) keySizeInBits)
-            ^ ((int) initializationVectorSizeInBits) ^ randomInfo.hashCode()
+            ^ ((int) ivSizeInBits) ^ randomInfo.hashCode()
             ^ returnedKeyMaterial.hashCode();
     }
 

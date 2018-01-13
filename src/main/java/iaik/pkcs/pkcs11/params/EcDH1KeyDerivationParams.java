@@ -40,41 +40,29 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
+package iaik.pkcs.pkcs11.params;
 
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.wrapper.Functions;
-import sun.security.pkcs11.wrapper.CK_ECDH2_DERIVE_PARAMS;
+import sun.security.pkcs11.wrapper.CK_ECDH1_DERIVE_PARAMS;
 
 /**
- * This abstract class encapsulates parameters for the DH mechanism
- * Mechanism.ECMQV_DERIVE.
+ * This abstract class encapsulates parameters for the DH mechanisms
+ * Mechanism.ECDH1_DERIVE and Mechanism.ECDH1_COFACTOR_DERIVE.
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (privateData <> null)
- *             and (publicData2 <> null)
+ * @invariants
  */
 @SuppressWarnings("restriction")
-public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
+public class EcDH1KeyDerivationParams extends DHKeyDerivationParams {
 
     /**
-     * The length in bytes of the second EC private key.
+     * The data shared between the two parties.
      */
-    protected long privateDataLength;
-
-    /**
-     * The key for the second EC private key value.
-     */
-    protected PKCS11Object privateData;
-
-    /**
-     * The other party's second EC public key value.
-     */
-    protected byte[] publicData2;
+    protected byte[] sharedData;
 
     /**
      * Create a new EcDH1KeyDerivationParameters object with the given
@@ -87,119 +75,53 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
      *          The data shared between the two parties.
      * @param publicData
      *          The other partie's public key value.
-     * @param privateDataLength
-     *          The length in bytes of the second EC private key.
-     * @param privateData
-     *          The key for the second EC private key value.
-     * @param publicData2
-     *          The other party's second EC public key value.
      * @preconditions ((kdf == KeyDerivationFunctionType.NULL)
      *              or (kdf == KeyDerivationFunctionType.SHA1_KDF)
      *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1)
      *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
      *              and (publicData <> null)
-     *              and (privateData <> null)
-     *              and (publicData2 <> null)
      * @postconditions
      */
-    public EcDH2KeyDerivationParameters(long kdf, byte[] sharedData,
-            byte[] publicData, long privateDataLength, PKCS11Object privateData,
-            byte[] publicData2) {
-        super(kdf, sharedData, publicData);
-        this.privateDataLength = privateDataLength;
-        this.privateData = Util.requireNonNull("privateData", privateData);
-        this.publicData2 = Util.requireNonNull("publicData2", publicData2);
+    public EcDH1KeyDerivationParams(long kdf, byte[] sharedData,
+            byte[] publicData) {
+        super(kdf, publicData);
+        this.sharedData = sharedData;
     }
 
     /**
-     * Get this parameters object as an object of the CK_ECDH2_DERIVE_PARAMS
+     * Get this parameters object as an object of the CK_ECDH1_DERIVE_PARAMS
      * class.
      *
-     * @return This object as a CK_ECDH2_DERIVE_PARAMS object.
+     * @return This object as a CK_ECDH1_DERIVE_PARAMS object.
      * @preconditions
      * @postconditions (result <> null)
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        CK_ECDH2_DERIVE_PARAMS params = new CK_ECDH2_DERIVE_PARAMS();
-
-        params.kdf = kdf;
-        params.pSharedData = sharedData;
-        params.pPublicData = publicData;
-        params.ulPrivateDataLen = privateDataLength;
-        params.hPrivateData = privateData.getObjectHandle();
-        params.pPublicData2 = publicData2;
-
-        return params;
+        return new CK_ECDH1_DERIVE_PARAMS(kdf, sharedData, publicData);
     }
 
     /**
-     * Get the key for the second EC private key value.
+     * Get the data shared between the two parties.
      *
-     * @return The key for the second EC private key value.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public PKCS11Object getPrivateData() {
-        return privateData;
-    }
-
-    /**
-     * Get the length in bytes of the second EC private key.
-     *
-     * @return The length in bytes of the second EC private key.
+     * @return The data shared between the two parties.
      * @preconditions
      * @postconditions
      */
-    public long getPrivateDataLength() {
-        return privateDataLength;
+    public byte[] getSharedData() {
+        return sharedData;
     }
 
     /**
-     * Get the other party's second EC public key value.
+     * Set the data shared between the two parties.
      *
-     * @return The other party's second EC public key value.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public byte[] getPublicData2() {
-        return publicData2;
-    }
-
-    /**
-     * Set the key for the second EC private key value.
-     *
-     * @param privateData
-     *          The key for the second EC private key value.
-     * @preconditions (privateData <> null)
+     * @param sharedData
+     *          The data shared between the two parties.
+     * @preconditions (sharedData <> null)
      * @postconditions
      */
-    public void setPrivateData(PKCS11Object privateData) {
-        this.privateData = Util.requireNonNull("privateData", privateData);
-    }
-
-    /**
-     * Set the length in bytes of the second EC private key.
-     *
-     * @param privateDataLength
-     *          The length in bytes of the second EC private key.
-     * @preconditions
-     * @postconditions
-     */
-    public void setPrivateDataLength(long privateDataLength) {
-        this.privateDataLength = privateDataLength;
-    }
-
-    /**
-     * Set the other party's second EC public key value.
-     *
-     * @param publicData2
-     *          The other party's second EC public key value.
-     * @preconditions (publicData2 <> null)
-     * @postconditions
-     */
-    public void setPublicData2(byte[] publicData2) {
-        this.publicData2 = Util.requireNonNull("publicData2", publicData2);
+    public void setSharedData(byte[] sharedData) {
+        this.sharedData = sharedData;
     }
 
     /**
@@ -211,9 +133,7 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Private Data Length (dec): ").append(privateDataLength);
-        sb.append("\n  Private Data: ").append(privateData);
-        sb.append("\n  Public Data 2: ").append(Util.toHex(publicData2));
+        sb.append("\n  Shared Data: ").append(Util.toHex(sharedData));
         return sb.toString();
     }
 
@@ -232,16 +152,13 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof EcDH2KeyDerivationParameters)) {
+        } else if (!(otherObject instanceof EcDH1KeyDerivationParams)) {
             return false;
         }
 
-        EcDH2KeyDerivationParameters other
-                = (EcDH2KeyDerivationParameters) otherObject;
+        EcDH1KeyDerivationParams other = (EcDH1KeyDerivationParams) otherObject;
         return super.equals(other)
-                && (this.privateDataLength == other.privateDataLength)
-                && this.privateData.equals(other.privateData)
-                && Arrays.equals(this.publicData2, other.publicData2);
+                && Arrays.equals(this.sharedData, other.sharedData);
     }
 
     /**
@@ -254,8 +171,7 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
      */
     @Override
     public int hashCode() {
-        return super.hashCode() ^ ((int) privateDataLength)
-                ^ privateData.hashCode() ^ Functions.hashCode(publicData2);
+        return super.hashCode() ^ Functions.hashCode(sharedData);
     }
 
 }

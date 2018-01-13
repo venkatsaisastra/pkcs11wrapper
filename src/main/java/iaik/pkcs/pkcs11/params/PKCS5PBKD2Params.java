@@ -40,7 +40,7 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
+package iaik.pkcs.pkcs11.params;
 
 import java.util.Arrays;
 
@@ -61,7 +61,7 @@ import sun.security.pkcs11.wrapper.CK_PKCS5_PBKD2_PARAMS;
  */
 @SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
-public class PKCS5PBKD2Parameters implements Parameters {
+public class PKCS5PBKD2Params implements Params {
 
     /**
      * This interface defines the available pseudo-random function types as
@@ -150,7 +150,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
      *                and (pseudoRandomFunctionData <> null)
      * @postconditions
      */
-    public PKCS5PBKD2Parameters(long saltSource, byte[] saltSourceData,
+    public PKCS5PBKD2Params(long saltSource, byte[] saltSourceData,
             long iterations, long pseudoRandomFunction,
             byte[] pseudoRandomFunctionData) {
         if (saltSource != SaltSourceType.SALT_SPECIFIED) {
@@ -378,11 +378,11 @@ public class PKCS5PBKD2Parameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof PKCS5PBKD2Parameters)) {
+        } else if (!(otherObject instanceof PKCS5PBKD2Params)) {
             return false;
         }
 
-        PKCS5PBKD2Parameters other = (PKCS5PBKD2Parameters) otherObject;
+        PKCS5PBKD2Params other = (PKCS5PBKD2Params) otherObject;
         return (this.saltSource == other.saltSource)
                 && Arrays.equals(this.saltSourceData, other.saltSourceData)
                 && (this.iterations == other.iterations)

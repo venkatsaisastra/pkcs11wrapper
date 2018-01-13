@@ -40,26 +40,76 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
+package iaik.pkcs.pkcs11.params;
+
+import java.util.Arrays;
+
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
- * Every parameters class implements this interface through which the module.
+ * This class encapsulates parameters byte arrays.
  *
- * @author Karl Scheibelhofer
- * @version 1.0
- * @invariants
+ * @author Lijun Liao
  */
-public interface Parameters {
+public class OpaqueParams implements Params {
+
+    protected byte[] bytes;
+
+    public OpaqueParams(byte[] bytes) {
+        this.bytes = bytes;
+    }
 
     /**
-     * Get this parameters object as an object of the corresponding *_PARAMS
-     * class of the sun.security.pkcs11.wrapper package.
+     * Get this parameters object as a byte array.
      *
-     * @return The object of the corresponding *_PARAMS class.
+     * @return This object as a byte array.
      * @preconditions
      * @postconditions (result <> null)
      */
-    // CHECKSTYLE:SKIP
-    public Object getPKCS11ParamsObject();
+    @Override
+    public Object getPKCS11ParamsObject() {
+        return bytes;
+    }
+
+    /**
+     * Get the public value of the other party in the key agreement protocol.
+     *
+     * @return The public value of the other party in the key agreement
+     *         protocol.
+     * @preconditions
+     * @postconditions (result <> null)
+     */
+    public byte[] getBytes() {
+        return bytes;
+    }
+
+    public void setBytes(byte[] bytes) {
+        this.bytes = Util.requireNonNull("bytes", bytes);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("  Bytes (hex): ").append(Util.toHex(bytes));
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object otherObject) {
+        if (this == otherObject) {
+            return true;
+        } else if (!(otherObject instanceof OpaqueParams)) {
+            return false;
+        }
+
+        OpaqueParams other = (OpaqueParams) otherObject;
+        return Arrays.equals(this.bytes, other.bytes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Functions.hashCode(bytes);
+    }
 
 }

@@ -40,7 +40,7 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
+package iaik.pkcs.pkcs11.params;
 
 import java.util.Arrays;
 
@@ -62,7 +62,7 @@ import sun.security.pkcs11.wrapper.CK_PBE_PARAMS;
  */
 @SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
-public class PBEParameters implements Parameters {
+public class PBEParams implements Params {
 
     /**
      * The 8-byte initialization vector (IV), if an IV is required.
@@ -102,8 +102,7 @@ public class PBEParameters implements Parameters {
      *                and (salt <> null)
      * @postconditions
      */
-    public PBEParameters(char[] iv, char[] password, char[] salt,
-            long iterations) {
+    public PBEParams(char[] iv, char[] password, char[] salt, long iterations) {
         if ((iv != null) && (iv.length != 8)) {
             throw new IllegalArgumentException(
                 "Argument \"iv\" must be null or must have"
@@ -267,11 +266,11 @@ public class PBEParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof PBEParameters)) {
+        } else if (!(otherObject instanceof PBEParams)) {
             return false;
         }
 
-        PBEParameters other = (PBEParameters) otherObject;
+        PBEParams other = (PBEParams) otherObject;
         return Arrays.equals(this.iv, other.iv)
                && Arrays.equals(this.password, other.password)
                && Arrays.equals(this.salt, other.salt)

@@ -40,7 +40,7 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
+package iaik.pkcs.pkcs11.params;
 
 import java.util.Arrays;
 
@@ -48,33 +48,32 @@ import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
- * This class encapsulates parameters for general block ciphers in CBC mode.
- * Those are all Mechanism.*_CBC and Mechanism.*_CBC_PAD mechanisms. This class
- * also applies to other mechanisms which require just an initialization vector
- * as parameter.
+ * This class encapsulates parameters for the algorithms
+ * Mechanism.DH_PKCS_DERIVE.
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (initializationVector <> null)
+ * @invariants (publicValue <> null)
  */
-public class InitializationVectorParameters implements Parameters {
+// CHECKSTYLE:SKIP
+public class DHPkcsDeriveParams implements Params {
 
     /**
      * The initialization vector.
      */
-    protected byte[] iv;
+    protected byte[] publicValue;
 
     /**
-     * Create a new InitializationVectorParameters object with the given
-     * initialization vector.
+     * Create a new DHPkcsDeriveParameters object with the given public value.
      *
-     * @param iv
-     *          The initialization vector.
-     * @preconditions (initializationVector <> null)
+     * @param publicValue
+     *          The public value of the other party in the key agreement
+     *          protocol.
+     * @preconditions (publicValue <> null)
      * @postconditions
      */
-    public InitializationVectorParameters(byte[] iv) {
-        this.iv = Util.requireNonNull("iv", iv);
+    public DHPkcsDeriveParams(byte[] publicValue) {
+        this.publicValue = publicValue;
     }
 
     /**
@@ -86,30 +85,32 @@ public class InitializationVectorParameters implements Parameters {
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        return iv;
+        return publicValue;
     }
 
     /**
-     * Get the initialization vector.
+     * Get the public value of the other party in the key agreement protocol.
      *
-     * @return The initialization vector.
+     * @return The public value of the other party in the key agreement
+     *         protocol.
      * @preconditions
      * @postconditions (result <> null)
      */
-    public byte[] getInitializationVector() {
-        return iv;
+    public byte[] getPublicValue() {
+        return publicValue;
     }
 
     /**
-     * Set the initialization vector.
+     * Set the public value of the other party in the key agreement protocol.
      *
-     * @param iv
-     *          The initialization vector.
-     * @preconditions (initializationVector <> null)
+     * @param publicValue
+     *          The public value of the other party in the key agreement
+     *          protocol.
+     * @preconditions (publicValue <> null)
      * @postconditions
      */
-    public void setInitializationVector(byte[] iv) {
-        this.iv = Util.requireNonNull("iv", iv);
+    public void setPublicValue(byte[] publicValue) {
+        this.publicValue = Util.requireNonNull("publicValue", publicValue);
     }
 
     /**
@@ -121,7 +122,7 @@ public class InitializationVectorParameters implements Parameters {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("  Initialization Vector (hex): ").append(Util.toHex(iv));
+        sb.append("  Public Value (hex): ").append(Util.toHex(publicValue));
         return sb.toString();
     }
 
@@ -140,13 +141,12 @@ public class InitializationVectorParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof InitializationVectorParameters)) {
+        } else if (!(otherObject instanceof DHPkcsDeriveParams)) {
             return false;
         }
 
-        InitializationVectorParameters other
-                = (InitializationVectorParameters) otherObject;
-        return Arrays.equals(this.iv, other.iv);
+        DHPkcsDeriveParams other = (DHPkcsDeriveParams) otherObject;
+        return Arrays.equals(this.publicValue, other.publicValue);
     }
 
     /**
@@ -159,7 +159,7 @@ public class InitializationVectorParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return Functions.hashCode(iv);
+        return Functions.hashCode(publicValue);
     }
 
 }

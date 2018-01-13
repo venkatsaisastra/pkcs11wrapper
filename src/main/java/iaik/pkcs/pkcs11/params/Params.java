@@ -40,61 +40,26 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
-
-import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.Version;
-import sun.security.pkcs11.wrapper.CK_VERSION;
+package iaik.pkcs.pkcs11.params;
 
 /**
- * This class is used for the Mechnism.SSL3_PRE_MASTER_KEY_GEN.
+ * Every parameters class implements this interface through which the module.
  *
  * @author Karl Scheibelhofer
- * @author Lijun Liao
  * @version 1.0
  * @invariants
  */
-@SuppressWarnings("restriction")
-public class VersionParameters implements Parameters {
-    
-    private Version version;
+public interface Params {
 
     /**
-     * Create a new VersionParameters object with the given version
+     * Get this parameters object as an object of the corresponding *_PARAMS
+     * class of the sun.security.pkcs11.wrapper package.
      *
-     * @param version
-     *          The version.
-     * @preconditions
-     * @postconditions
-     */
-    public VersionParameters(Version version) {
-        this.version = Util.requireNonNull("version", version);
-    }
-
-    /**
-     * Get this parameters object as a CK_VERSION object.
-     *
-     * @return This object as a CK_VERSION object.
+     * @return The object of the corresponding *_PARAMS class.
      * @preconditions
      * @postconditions (result <> null)
      */
-    @Override
-    public Object getPKCS11ParamsObject() {
-        return new CK_VERSION(version.getMajor(), version.getMinor());
-    }
-
-    /**
-     * This method allows setting the major and minor version numbers using
-     * a version object of the lower level API.
-     *
-     * @param input
-     *          The version object providing the major and minor version.
-     * @preconditions (input <> null)
-     * @postconditions
-     */
     // CHECKSTYLE:SKIP
-    public void setPKCS11ParamsObject(CK_VERSION input) {
-        this.version = new Version(input);
-    }
+    public Object getPKCS11ParamsObject();
 
 }

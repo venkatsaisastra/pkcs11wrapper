@@ -40,76 +40,118 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
-
-import java.util.Arrays;
-
-import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.Functions;
+package iaik.pkcs.pkcs11.params;
 
 /**
- * This class encapsulates parameters byte arrays.
+ * This class encapsulates parameters for the MAC algorithms for the following
+ * mechanisms: DES, DES3 (triple-DES), CAST, CAST3, CAST128 (CAST5), IDEA, and
+ * CDMF ciphers.
  *
- * @author Lijun Liao
+ * @author Karl Scheibelhofer
+ * @version 1.0
+ * @invariants
  */
-public class OpaqueParameters implements Parameters {
+public class MacGeneralParams implements Params {
 
-    protected byte[] bytes;
+    /**
+     * The length of the MAC produced, in bytes.
+     */
+    protected long macLength;
 
-    public OpaqueParameters(byte[] bytes) {
-        this.bytes = bytes;
+    /**
+     * Create a new MacGeneralParameters object with the given MAC length.
+     *
+     * @param macLength
+     *          The length of the MAC produced, in bytes.
+     * @preconditions
+     * @postconditions
+     */
+    public MacGeneralParams(long macLength) {
+        this.macLength = macLength;
     }
 
     /**
-     * Get this parameters object as a byte array.
+     * Get this parameters object as an Long object.
      *
-     * @return This object as a byte array.
+     * @return This object as a Long object.
      * @preconditions
      * @postconditions (result <> null)
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        return bytes;
+        return new Long(macLength);
     }
 
     /**
-     * Get the public value of the other party in the key agreement protocol.
+     * Get the length of the MAC produced, in bytes.
      *
-     * @return The public value of the other party in the key agreement
-     *         protocol.
+     * @return The length of the MAC produced, in bytes.
      * @preconditions
-     * @postconditions (result <> null)
+     * @postconditions
      */
-    public byte[] getBytes() {
-        return bytes;
+    public long getMacLength() {
+        return macLength;
     }
 
-    public void setBytes(byte[] bytes) {
-        this.bytes = Util.requireNonNull("bytes", bytes);
+    /**
+     * Set the length of the MAC produced, in bytes.
+     *
+     * @param macLength
+     *          The length of the MAC produced, in bytes.
+     * @preconditions
+     * @postconditions
+     */
+    public void setMacLength(long macLength) {
+        this.macLength = macLength;
     }
 
+    /**
+     * Returns the string representation of this object. Do not parse data from
+     * this string, it is for debugging only.
+     *
+     * @return A string representation of this object.
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("  Bytes (hex): ").append(Util.toHex(bytes));
+        sb.append("  Mac Length (dec): ").append(macLength);
         return sb.toString();
     }
 
+    /**
+     * Compares all member variables of this object with the other object.
+     * Returns only true, if all are equal in both objects.
+     *
+     * @param otherObject
+     *          The other object to compare to.
+     * @return True, if other is an instance of this class and all member
+     *         variables of both objects are equal. False, otherwise.
+     * @preconditions
+     * @postconditions
+     */
     @Override
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof OpaqueParameters)) {
+        } else if (!(otherObject instanceof MacGeneralParams)) {
             return false;
         }
 
-        OpaqueParameters other = (OpaqueParameters) otherObject;
-        return Arrays.equals(this.bytes, other.bytes);
+        MacGeneralParams other = (MacGeneralParams) otherObject;
+        return (this.macLength == other.macLength);
     }
 
+    /**
+     * The overriding of this method should ensure that the objects of this
+     * class work correctly in a hashtable.
+     *
+     * @return The hash code of this object.
+     * @preconditions
+     * @postconditions
+     */
     @Override
     public int hashCode() {
-        return Functions.hashCode(bytes);
+        return (int) macLength;
     }
 
 }

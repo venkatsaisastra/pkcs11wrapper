@@ -40,70 +40,77 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
+package iaik.pkcs.pkcs11.params;
 
-import iaik.pkcs.pkcs11.objects.PKCS11Object;
+import java.util.Arrays;
+
+import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
- * This class encapsulates parameters for Mechanisms.CONCATENATE_BASE_AND_KEY.
+ * This class encapsulates parameters for general block ciphers in CBC mode.
+ * Those are all Mechanism.*_CBC and Mechanism.*_CBC_PAD mechanisms. This class
+ * also applies to other mechanisms which require just an initialization vector
+ * as parameter.
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
+ * @invariants (initializationVector <> null)
  */
-public class ObjectHandleParameters implements Parameters {
+// CHECKSTYLE:SKIP
+public class IVParams implements Params {
 
     /**
-     * The PKCS#11 object.
+     * The initialization vector.
      */
-    protected PKCS11Object object;
+    protected byte[] iv;
 
     /**
-     * Create a new ObjectHandleParameters object using the given object.
+     * Create a new InitializationVectorParameters object with the given
+     * initialization vector.
      *
-     * @param object
-     *          The PKCS#11 object which's handle to use.
-     * @preconditions
+     * @param iv
+     *          The initialization vector.
+     * @preconditions (initializationVector <> null)
      * @postconditions
      */
-    public ObjectHandleParameters(PKCS11Object object) {
-        this.object = object;
+    public IVParams(byte[] iv) {
+        this.iv = Util.requireNonNull("iv", iv);
     }
 
     /**
-     * Get this parameters object as a Long object, which is the handle of the
-     * underlying object.
+     * Get this parameters object as a byte array.
      *
-     * @return This object as a Long object.
+     * @return This object as a byte array.
      * @preconditions
      * @postconditions (result <> null)
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        return new Long(object.getObjectHandle());
+        return iv;
     }
 
     /**
-     * Get the PKCS#11 object.
+     * Get the initialization vector.
      *
-     * @return The PKCS#11 object.
+     * @return The initialization vector.
      * @preconditions
-     * @postconditions
+     * @postconditions (result <> null)
      */
-    public PKCS11Object getObject() {
-        return object;
+    public byte[] getInitializationVector() {
+        return iv;
     }
 
     /**
-     * Set the PKCS#11 object.
+     * Set the initialization vector.
      *
-     * @param object
-     *          The PKCS#11 object.
-     * @preconditions
+     * @param iv
+     *          The initialization vector.
+     * @preconditions (initializationVector <> null)
      * @postconditions
      */
-    public void setObjectHandle(PKCS11Object object) {
-        this.object = object;
+    public void setInitializationVector(byte[] iv) {
+        this.iv = Util.requireNonNull("iv", iv);
     }
 
     /**
@@ -115,7 +122,7 @@ public class ObjectHandleParameters implements Parameters {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("  The PKCS11Object:\n").append(object);
+        sb.append("  Initialization Vector (hex): ").append(Util.toHex(iv));
         return sb.toString();
     }
 
@@ -134,13 +141,12 @@ public class ObjectHandleParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof ObjectHandleParameters)) {
+        } else if (!(otherObject instanceof IVParams)) {
             return false;
         }
 
-        ObjectHandleParameters other = (ObjectHandleParameters) otherObject;
-        return (this != null)
-                && this.object.equals(other.object);
+        IVParams other = (IVParams) otherObject;
+        return Arrays.equals(this.iv, other.iv);
     }
 
     /**
@@ -153,7 +159,7 @@ public class ObjectHandleParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return (object != null) ? object.hashCode() : 0;
+        return Functions.hashCode(iv);
     }
 
 }

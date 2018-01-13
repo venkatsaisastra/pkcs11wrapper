@@ -40,115 +40,87 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
+package iaik.pkcs.pkcs11.params;
 
-import iaik.pkcs.pkcs11.Util;
-import sun.security.pkcs11.wrapper.CK_SSL3_MASTER_KEY_DERIVE_PARAMS;
-import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
-import sun.security.pkcs11.wrapper.CK_VERSION;
+import iaik.pkcs.pkcs11.Mechanism;
+import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
 
 /**
- * This class encapsulates parameters for the Mechanism.SSL3_MASTER_KEY_DERIVE
- * mechanism and the Mechanism.TLS_MASTER_KEY_DERIVE.
+ * This class encapsulates parameters for the Mechanism.RSA_PKCS_PSS.
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (randomInfo <> null)
- *             and (version <> null)
+ * @invariants
  */
 @SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
-public class SSL3MasterKeyDeriveParameters implements Parameters {
+public class RSAPkcsPssParams extends RSAPkcsParams {
 
     /**
-     * The client's and server's random data information.
+     * The length of the salt value in octets.
      */
-    protected SSL3RandomDataParameters randomInfo;
+    protected long saltLength;
 
     /**
-     * The SSL protocol version information.
-     */
-    protected VersionParameters version;
-
-    /**
-     * Create a new SSL3MasterKeyDeriveParameters object with the given
-     * random info and version.
+     * Create a new RSAPkcsOaepParameters object with the given attributes.
      *
-     * @param randomInfo
-     *          The client's and server's random data information.
-     * @param version
-     *          The SSL protocol version information.
-     * @preconditions (randomInfo <> null)
-     *                and (version <> null)
+     * @param hashAlg
+     *          The message digest algorithm used to calculate the digest of the
+     *          encoding parameter.
+     * @param mgf
+     *          The mask to apply to the encoded block. One of the constants
+     *          defined in the MessageGenerationFunctionType interface.
+     * @param saltLength
+     *          The length of the salt value in octets.
+     * @preconditions (hashAlg <> null)
+     *                and (mgf == MessageGenerationFunctionType.Sha1)
      * @postconditions
      */
-    public SSL3MasterKeyDeriveParameters(SSL3RandomDataParameters randomInfo,
-            VersionParameters version) {
-        this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
-        this.version = Util.requireNonNull("version", version);
+    public RSAPkcsPssParams(Mechanism hashAlg, long mgf, long saltLength) {
+        super(hashAlg, mgf);
+        this.saltLength = saltLength;
     }
 
     /**
-     * Get this parameters object as a CK_SSL3_RANDOM_DATA object.
+     * Get this parameters object as an object of the CK_RSA_PKCS_PSS_PARAMS
+     * class.
      *
-     * @return This object as a CK_SSL3_RANDOM_DATA object.
+     * @return This object as a CK_RSA_PKCS_PSS_PARAMS object.
      * @preconditions
      * @postconditions (result <> null)
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        CK_SSL3_MASTER_KEY_DERIVE_PARAMS params
-            = new CK_SSL3_MASTER_KEY_DERIVE_PARAMS(
-                (CK_SSL3_RANDOM_DATA) randomInfo.getPKCS11ParamsObject(),
-                (CK_VERSION) version.getPKCS11ParamsObject());
+        CK_RSA_PKCS_PSS_PARAMS params = new CK_RSA_PKCS_PSS_PARAMS();
+
+        params.hashAlg = hashAlg.getMechanismCode();
+        params.mgf = mgf;
+        params.sLen = saltLength;
 
         return params;
     }
 
     /**
-     * Get the client's and server's random data information.
+     * Get the length of the salt value in octets.
      *
-     * @return The client's and server's random data information.
+     * @return The length of the salt value in octets.
      * @preconditions
-     * @postconditions (result <> null)
-     */
-    public SSL3RandomDataParameters getRandomInfo() {
-        return randomInfo;
-    }
-
-    /**
-     * Get the SSL protocol version information.
-     *
-     * @return The SSL protocol version information.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public VersionParameters getVersion() {
-        return version;
-    }
-
-    /**
-     * Set the client's and server's random data information.
-     *
-     * @param randomInfo
-     *          The client's and server's random data information.
-     * @preconditions (randomInfo <> null)
      * @postconditions
      */
-    public void setRandomInfo(SSL3RandomDataParameters randomInfo) {
-        this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
+    public long getSaltLength() {
+        return saltLength;
     }
 
     /**
-     * Set the SSL protocol version information.
+     * Set the length of the salt value in octets.
      *
-     * @param version
-     *          The SSL protocol version information.
-     * @preconditions (version <> null)
+     * @param saltLength
+     *          The length of the salt value in octets.
+     * @preconditions
      * @postconditions
      */
-    public void setVersion(VersionParameters version) {
-        this.version = Util.requireNonNull("version", version);
+    public void setSaltLength(long saltLength) {
+        this.saltLength = saltLength;
     }
 
     /**
@@ -159,9 +131,8 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  Random Information:\n").append(randomInfo);
-        sb.append("\n  Version: ").append(version);
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n  Salt Length (octets, dec): ").append(saltLength);
         return sb.toString();
     }
 
@@ -180,14 +151,12 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof SSL3MasterKeyDeriveParameters)) {
+        } else if (!(otherObject instanceof RSAPkcsPssParams)) {
             return false;
         }
 
-        SSL3MasterKeyDeriveParameters other
-                = (SSL3MasterKeyDeriveParameters) otherObject;
-        return this.randomInfo.equals(other.randomInfo)
-                && this.version.equals(other.version);
+        RSAPkcsPssParams other = (RSAPkcsPssParams) otherObject;
+        return super.equals(other) && (this.saltLength == other.saltLength);
     }
 
     /**
@@ -200,7 +169,7 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return randomInfo.hashCode() ^ version.hashCode();
+        return super.hashCode() ^ ((int) saltLength);
     }
 
 }

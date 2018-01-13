@@ -40,7 +40,7 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
+package iaik.pkcs.pkcs11.params;
 
 import java.util.Arrays;
 
@@ -67,7 +67,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *             and (publicData <> null)
  */
 // CHECKSTYLE:SKIP
-abstract public class DHKeyDerivationParameters implements Parameters {
+abstract public class DHKeyDerivationParams implements Params {
 
     public interface KeyDerivationFunctionType {
 
@@ -120,7 +120,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
      *              and (publicData <> null)
      * @postconditions
      */
-    protected DHKeyDerivationParameters(long kdf, byte[] publicData) {
+    protected DHKeyDerivationParams(long kdf, byte[] publicData) {
         if ((kdf != KeyDerivationFunctionType.NULL)
             && (kdf != KeyDerivationFunctionType.SHA1_KDF)
             && (kdf != KeyDerivationFunctionType.SHA1_KDF_ASN1)
@@ -233,12 +233,11 @@ abstract public class DHKeyDerivationParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof DHKeyDerivationParameters)) {
+        } else if (!(otherObject instanceof DHKeyDerivationParams)) {
             return false;
         }
 
-        DHKeyDerivationParameters other
-                = (DHKeyDerivationParameters) otherObject;
+        DHKeyDerivationParams other = (DHKeyDerivationParams) otherObject;
         return (this.kdf == other.kdf)
                 && Arrays.equals(this.publicData, other.publicData);
     }

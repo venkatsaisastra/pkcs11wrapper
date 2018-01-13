@@ -40,38 +40,39 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.parameters;
+package iaik.pkcs.pkcs11.params;
+
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
 
 /**
- * This class encapsulates parameters for Mechanisms.EXTRACT_KEY_FROM_KEY.
+ * This class encapsulates parameters for Mechanisms.CONCATENATE_BASE_AND_KEY.
  *
  * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */
-public class ExtractParameters implements Parameters {
+public class ObjectHandleParams implements Params {
 
     /**
-     * The bit of the base key that should be used as the first bit of the
-     * derived key.
+     * The PKCS#11 object.
      */
-    protected long bitIndex;
+    protected PKCS11Object object;
 
     /**
-     * Create a new ExtractParameters object with the given bit index.
+     * Create a new ObjectHandleParameters object using the given object.
      *
-     * @param bitIndex
-     *          The bit of the base key that should be used as the first bit of
-     *          the derived key.
+     * @param object
+     *          The PKCS#11 object which's handle to use.
      * @preconditions
      * @postconditions
      */
-    public ExtractParameters(long bitIndex) {
-        this.bitIndex = bitIndex;
+    public ObjectHandleParams(PKCS11Object object) {
+        this.object = object;
     }
 
     /**
-     * Get this parameters object as an Long object.
+     * Get this parameters object as a Long object, which is the handle of the
+     * underlying object.
      *
      * @return This object as a Long object.
      * @preconditions
@@ -79,34 +80,30 @@ public class ExtractParameters implements Parameters {
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        return new Long(bitIndex);
+        return new Long(object.getObjectHandle());
     }
 
     /**
-     * Get the bit of the base key that should be used as the first bit of the
-     * derived key.
+     * Get the PKCS#11 object.
      *
-     * @return The bit of the base key that should be used as the first bit of
-     *         the derived key.
+     * @return The PKCS#11 object.
      * @preconditions
      * @postconditions
      */
-    public long getBitIndex() {
-        return bitIndex;
+    public PKCS11Object getObject() {
+        return object;
     }
 
     /**
-     * Set the bit of the base key that should be used as the first bit of the
-     * derived key.
+     * Set the PKCS#11 object.
      *
-     * @param bitIndex
-     *          The bit of the base key that should be used as the first bit of
-     *          the derived key.
+     * @param object
+     *          The PKCS#11 object.
      * @preconditions
      * @postconditions
      */
-    public void setBitIndex(long bitIndex) {
-        this.bitIndex = bitIndex;
+    public void setObjectHandle(PKCS11Object object) {
+        this.object = object;
     }
 
     /**
@@ -118,7 +115,7 @@ public class ExtractParameters implements Parameters {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("  Bit Index (dec): ").append(bitIndex);
+        sb.append("  The PKCS11Object:\n").append(object);
         return sb.toString();
     }
 
@@ -137,12 +134,13 @@ public class ExtractParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof ExtractParameters)) {
+        } else if (!(otherObject instanceof ObjectHandleParams)) {
             return false;
         }
 
-        ExtractParameters other = (ExtractParameters) otherObject;
-        return this.bitIndex == other.bitIndex;
+        ObjectHandleParams other = (ObjectHandleParams) otherObject;
+        return (this != null)
+                && this.object.equals(other.object);
     }
 
     /**
@@ -155,7 +153,7 @@ public class ExtractParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return (int) bitIndex;
+        return (object != null) ? object.hashCode() : 0;
     }
 
 }
