@@ -67,7 +67,6 @@ public class TokenException extends Exception {
      * @postconditions
      */
     public TokenException() {
-        super();
     }
 
     /**
@@ -92,7 +91,6 @@ public class TokenException extends Exception {
      * @postconditions
      */
     public TokenException(Exception encapsulatedException) {
-        super();
         this.encapsulatedException = encapsulatedException;
     }
 

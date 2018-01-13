@@ -87,7 +87,6 @@ public class DSAParams extends DomainParameters {
      * @postconditions
      */
     public DSAParams() {
-        super();
         keyType.setLongValue(Key.KeyType.DSA);
     }
 
@@ -137,8 +136,7 @@ public class DSAParams extends DomainParameters {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -173,30 +171,6 @@ public class DSAParams extends DomainParameters {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof DSAParams)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        DSAParams clone = (DSAParams) super.clone();
-
-        clone.prime = (ByteArrayAttribute) this.prime.clone();
-        clone.subprime = (ByteArrayAttribute) this.subprime.clone();
-        clone.base = (ByteArrayAttribute) this.base.clone();
-        clone.primeBits = (LongAttribute) this.primeBits.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -211,9 +185,7 @@ public class DSAParams extends DomainParameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof DSAParams)) {
+        } else if (!(otherObject instanceof DSAParams)) {
             return false;
         }
 

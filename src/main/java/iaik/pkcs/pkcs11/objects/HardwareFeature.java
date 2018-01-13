@@ -158,7 +158,6 @@ public class HardwareFeature extends PKCS11Object {
      * @postconditions
      */
     public HardwareFeature() {
-        super();
         objectClass.setLongValue(ObjectClass.HW_FEATURE);
     }
 
@@ -343,8 +342,7 @@ public class HardwareFeature extends PKCS11Object {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -375,28 +373,6 @@ public class HardwareFeature extends PKCS11Object {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof HardwareFeature)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        HardwareFeature clone = (HardwareFeature) super.clone();
-
-        clone.hardwareFeatureType = (HardwareFeatureTypeAttribute)
-                this.hardwareFeatureType.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -411,9 +387,7 @@ public class HardwareFeature extends PKCS11Object {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof HardwareFeature)) {
+        } else if (!(otherObject instanceof HardwareFeature)) {
             return false;
         }
 

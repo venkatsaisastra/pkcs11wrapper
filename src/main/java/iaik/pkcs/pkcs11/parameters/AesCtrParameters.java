@@ -46,104 +46,44 @@ import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
-import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
+import sun.security.pkcs11.wrapper.CK_AES_CTR_PARAMS;
 
 /**
- * This class encapsulates parameters for the Mechanism.SSL3_MASTER_KEY_DERIVE
- * and Mechanism.SSL3_KEY_AND_MAC_DERIVE mechanisms.
+ * This class represents the necessary parameters required by
+ * the CKM_AES_CTR mechanism as defined in CK_AES_CTR_PARAMS structure.<p>
+ * <B>PKCS#11 structure:</B>
+ * <PRE>
+ * typedef struct CK_AES_CTR_PARAMS {
+ *   CK_ULONG ulCounterBits;
+ *   CK_BYTE cb[16];
+ * } CK_AES_CTR_PARAMS;
+ * </PRE>
  *
- * @author Karl Scheibelhofer
- * @version 1.0
- * @invariants (clientRandom <> null)
- *             and (serverRandom <> null)
+ * @author Lijun Liao
  */
 @SuppressWarnings("restriction")
-// CHECKSTYLE:SKIP
-public class SSL3RandomDataParameters implements Parameters {
+public class AesCtrParameters implements Parameters {
 
-    /**
-     * The client's random data.
-     */
-    protected byte[] clientRandom;
+    private byte[] cb;
 
-    /**
-     * The server's random data.
-     */
-    protected byte[] serverRandom;
-
-    /**
-     * Create a new SSL3RandomDataParameters object with the given client and
-     * server random.
-     *
-     * @param clientRandom
-     *          The client's random data.
-     * @param serverRandom
-     *          The server's random data.
-     * @preconditions (clientRandom <> null)
-     *                and (serverRandom <> null)
-     * @postconditions
-     */
-    public SSL3RandomDataParameters(byte[] clientRandom, byte[] serverRandom) {
-        this.clientRandom = Util.requireNonNull("clientRandom", clientRandom);
-        this.serverRandom = Util.requireNonNull("serverRandom", serverRandom);
+    public AesCtrParameters(byte[] cb) {
+        Util.requireNonNull("cb", cb);
+        if (cb.length != 16) {
+            throw new IllegalArgumentException("cb.length must be 16");
+        }
+        this.cb = cb;
     }
 
-    /**
-     * Get this parameters object as a CK_SSL3_RANDOM_DATA object.
-     *
-     * @return This object as a CK_SSL3_RANDOM_DATA object.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public Object getPKCS11ParamsObject() {
-        return new CK_SSL3_RANDOM_DATA(clientRandom, serverRandom);
+    public byte[] getCb() {
+        return cb;
     }
 
-    /**
-     * Get the client's random data.
-     *
-     * @return The client's random data.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public byte[] getClientRandom() {
-        return clientRandom;
-    }
-
-    /**
-     * Get the server's random data.
-     *
-     * @return The server's random data.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public byte[] getServerRandom() {
-        return serverRandom;
-    }
-
-    /**
-     * Set the client's random data.
-     *
-     * @param clientRandom
-     *          The client's random data.
-     * @preconditions (clientRandom <> null)
-     * @postconditions
-     */
-    public void setClientRandom(byte[] clientRandom) {
-        this.clientRandom = Util.requireNonNull("clientRandom", clientRandom);
-    }
-
-    /**
-     * Set the server's random data.
-     *
-     * @param serverRandom
-     *          The server's random data.
-     * @preconditions (serverRandom <> null)
-     * @postconditions
-     */
-    public void setServerRandom(byte[] serverRandom) {
-        this.serverRandom = Util.requireNonNull("serverRandom", serverRandom);
+    public void setCb(byte[] cb) {
+        Util.requireNonNull("cb", cb);
+        if (cb.length != 16) {
+            throw new IllegalArgumentException("cb.length must be 16");
+        }
+        this.cb = cb;
     }
 
     /**
@@ -155,8 +95,7 @@ public class SSL3RandomDataParameters implements Parameters {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("  Client Random (hex): ").append(Util.toHex(clientRandom));
-        sb.append("\n  Server Random (hex): ").append(Util.toHex(serverRandom));
+        sb.append("  cb: ").append(Util.toHex(cb));
         return sb.toString();
     }
 
@@ -175,13 +114,12 @@ public class SSL3RandomDataParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        } else if (!(otherObject instanceof SSL3RandomDataParameters)) {
+        } else if (!(otherObject instanceof AesCtrParameters)) {
             return false;
         }
 
-        SSL3RandomDataParameters other = (SSL3RandomDataParameters) otherObject;
-        return Arrays.equals(this.clientRandom, other.clientRandom)
-                && Arrays.equals(this.serverRandom, other.serverRandom);
+        AesCtrParameters other = (AesCtrParameters) otherObject;
+        return Arrays.equals(this.cb, other.cb);
     }
 
     /**
@@ -194,8 +132,12 @@ public class SSL3RandomDataParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return Functions.hashCode(clientRandom)
-                ^ Functions.hashCode(serverRandom);
+        return Functions.hashCode(cb);
+    }
+
+    @Override
+    public Object getPKCS11ParamsObject() {
+        return new CK_AES_CTR_PARAMS(cb);
     }
 
 }

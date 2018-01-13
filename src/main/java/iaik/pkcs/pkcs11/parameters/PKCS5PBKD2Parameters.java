@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
-import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
@@ -151,10 +150,8 @@ public class PKCS5PBKD2Parameters implements Parameters {
      *                and (pseudoRandomFunctionData <> null)
      * @postconditions
      */
-    public PKCS5PBKD2Parameters(long saltSource,
-            byte[] saltSourceData,
-            long iterations,
-            long pseudoRandomFunction,
+    public PKCS5PBKD2Parameters(long saltSource, byte[] saltSourceData,
+            long iterations, long pseudoRandomFunction,
             byte[] pseudoRandomFunctionData) {
         if (saltSource != SaltSourceType.SALT_SPECIFIED) {
             throw new IllegalArgumentException(
@@ -173,34 +170,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
         this.pseudoRandomFunction = pseudoRandomFunction;
         this.pseudoRandomFunctionData = Util.requireNonNull(
                 "pseudoRandomFunctionData", pseudoRandomFunctionData);
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof PKCS5PBKD2Parameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        PKCS5PBKD2Parameters clone;
-
-        try {
-            clone = (PKCS5PBKD2Parameters) super.clone();
-
-            clone.saltSourceData = (byte[]) this.saltSourceData.clone();
-            clone.pseudoRandomFunctionData
-                    = (byte[]) this.pseudoRandomFunctionData.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
     }
 
     /**
@@ -378,7 +347,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
         }
 
         sb.append("\n  Salt Source Data (hex): ")
-            .append(Functions.toHexString(saltSourceData));
+            .append(Util.toHex(saltSourceData));
         sb.append("\n  Iterations (dec): ").append(iterations);
 
         sb.append("\n  Pseudo-Random Function: ");
@@ -389,7 +358,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
         }
 
         sb.append("\n  Pseudo-Random Function Data (hex): ")
-            .append(Functions.toHexString(pseudoRandomFunctionData));
+            .append(Util.toHex(pseudoRandomFunctionData));
 
         return sb.toString();
     }
@@ -409,9 +378,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof PKCS5PBKD2Parameters)) {
+        } else if (!(otherObject instanceof PKCS5PBKD2Parameters)) {
             return false;
         }
 

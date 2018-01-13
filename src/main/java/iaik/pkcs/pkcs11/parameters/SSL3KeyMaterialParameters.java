@@ -42,7 +42,6 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
 import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_PARAMS;
@@ -120,10 +119,8 @@ public class SSL3KeyMaterialParameters implements Parameters {
      *                and (returnedKeyMaterial <> null)
      * @postconditions
      */
-    public SSL3KeyMaterialParameters(long macSizeInBits,
-            long keySizeInBits,
-            long initializationVectorSizeInBits,
-            boolean export,
+    public SSL3KeyMaterialParameters(long macSizeInBits, long keySizeInBits,
+            long initializationVectorSizeInBits, boolean export,
             SSL3RandomDataParameters randomInfo,
             SSL3KeyMaterialOutParameters returnedKeyMaterial) {
         this.macSizeInBits = macSizeInBits;
@@ -133,35 +130,6 @@ public class SSL3KeyMaterialParameters implements Parameters {
         this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
         this.returnedKeyMaterial = Util.requireNonNull("returnedKeyMaterial",
                 returnedKeyMaterial);
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof SSL3KeyMaterialParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        SSL3KeyMaterialParameters clone;
-
-        try {
-            clone = (SSL3KeyMaterialParameters) super.clone();
-
-            clone.randomInfo = (SSL3RandomDataParameters)
-                    this.randomInfo.clone();
-            clone.returnedKeyMaterial = (SSL3KeyMaterialOutParameters)
-                    this.returnedKeyMaterial.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
     }
 
     /**
@@ -384,9 +352,7 @@ public class SSL3KeyMaterialParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof SSL3KeyMaterialParameters)) {
+        } else if (!(otherObject instanceof SSL3KeyMaterialParameters)) {
             return false;
         }
 

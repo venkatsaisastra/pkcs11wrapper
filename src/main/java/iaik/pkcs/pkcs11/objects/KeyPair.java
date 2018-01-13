@@ -42,7 +42,6 @@
 
 package iaik.pkcs.pkcs11.objects;
 
-import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 
 /**
@@ -59,12 +58,12 @@ public class KeyPair implements Cloneable {
     /**
      * The public key of this key-pair.
      */
-    protected PublicKey publicKey;
+    private PublicKey publicKey;
 
     /**
      * The private key of this key-pair.
      */
-    protected PrivateKey privateKey;
+    private PrivateKey privateKey;
 
     /**
      * Constructor that takes a public and a private key. None can be null.
@@ -80,32 +79,6 @@ public class KeyPair implements Cloneable {
     public KeyPair(PublicKey publicKey, PrivateKey privateKey) {
         this.publicKey = Util.requireNonNull("publicKey", publicKey);
         this.privateKey = Util.requireNonNull("privateKey", privateKey);
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof KeyPair)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        KeyPair clone;
-        try {
-            clone = (KeyPair) super.clone();
-
-            clone.privateKey = (PrivateKey) this.privateKey.clone();
-            clone.publicKey = (PublicKey) this.publicKey.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
     }
 
     /**

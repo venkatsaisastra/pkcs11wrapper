@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import iaik.pkcs.pkcs11.TokenException;
+import iaik.pkcs.pkcs11.Util;
 
 /**
  * This is the superclass of all checked exceptions used by this package. An
@@ -70,24 +71,24 @@ public class PKCS11Exception extends TokenException {
      * The name of the properties file that holds the names of the PKCS#11
      * error-codes.
      */
-    protected static final String ERROR_CODE_PROPERTIES
+    private static final String ERROR_CODE_PROPERTIES
             = "iaik/pkcs/pkcs11/wrapper/ckr.properties";
 
     /**
      * The properties object that holds the mapping from error-code to the name
      * of the PKCS#11 error.
      */
-    protected static Map<Long, String> errorCodeNames;
+    private static Map<Long, String> errorCodeNames;
 
     /**
      * True, if the mapping of error codes to PKCS#11 error names is available.
      */
-    protected static boolean errorCodeNamesAvailable;
+    private static boolean errorCodeNamesAvailable;
 
     /**
      * The code of the error which was the reason for this exception.
      */
-    protected long errorCode;
+    private long errorCode;
 
     /**
      * Constructor taking the error code as defined for the CKR_* constants
@@ -128,7 +129,7 @@ public class PKCS11Exception extends TokenException {
                     String errorName = props.getProperty(propName);
                     if (errorName == null) {
                         System.out.println("No name defined for error code "
-                                + Functions.toFullHexString((int) errorCode));
+                                + Util.toFullHex((int) errorCode));
                     }
                     long code;
                     if (propName.startsWith("0x")
@@ -141,10 +142,10 @@ public class PKCS11Exception extends TokenException {
                 }
                 errorCodeNames = codeNamMap;
                 errorCodeNamesAvailable = true;
-            } catch (Exception exception) {
+            } catch (Exception ex) {
                 System.err.println(
                     "Could not read properties for error code names: "
-                    + exception.getMessage());
+                    + ex.getMessage());
             }
         }
 
@@ -153,8 +154,7 @@ public class PKCS11Exception extends TokenException {
 
         // if we can get the name of the error code, take the name, otherwise
         // return the code
-        return (name != null)
-                ? name : "0x" + Functions.toFullHexString((int) errorCode);
+        return (name != null) ? name : "0x" + Util.toFullHex((int) errorCode);
     }
 
     /**

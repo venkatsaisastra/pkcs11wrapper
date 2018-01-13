@@ -42,8 +42,6 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import iaik.pkcs.pkcs11.TokenRuntimeException;
-
 /**
  * This class encapsulates parameters for Mechanisms.EXTRACT_KEY_FROM_KEY.
  *
@@ -70,30 +68,6 @@ public class ExtractParameters implements Parameters {
      */
     public ExtractParameters(long bitIndex) {
         this.bitIndex = bitIndex;
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof ExtractParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        ExtractParameters clone;
-
-        try {
-            clone = (ExtractParameters) super.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
     }
 
     /**
@@ -163,9 +137,7 @@ public class ExtractParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof ExtractParameters)) {
+        } else if (!(otherObject instanceof ExtractParameters)) {
             return false;
         }
 

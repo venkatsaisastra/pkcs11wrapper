@@ -58,7 +58,6 @@ import iaik.pkcs.pkcs11.TokenException;
 public class SM2PublicKey extends ECPublicKey {
 
     public SM2PublicKey() {
-        super();
     }
 
     protected SM2PublicKey(Session session, long objectHandle)
@@ -70,4 +69,27 @@ public class SM2PublicKey extends ECPublicKey {
     protected Long thisKeyType() {
         return KeyType.VENDOR_SM2;
     }
+
+    /**
+     * Compares all member variables of this object with the other object.
+     * Returns only true, if all are equal in both objects.
+     *
+     * @param otherObject
+     *          The other object to compare to.
+     * @return True, if other is an instance of this class and all member
+     *         variables of both objects are equal. False, otherwise.
+     * @preconditions
+     * @postconditions
+     */
+    @Override
+    public boolean equals(Object otherObject) {
+        if (this == otherObject) {
+            return true;
+        } else if (!(otherObject instanceof SM2PublicKey)) {
+            return false;
+        }
+
+        return super.equals(otherObject);
+    }
+
 }

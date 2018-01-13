@@ -55,7 +55,7 @@ import sun.security.pkcs11.wrapper.CK_SESSION_INFO;
  * @invariants (state <> null)
  */
 @SuppressWarnings("restriction")
-public class SessionInfo implements Cloneable {
+public class SessionInfo {
 
     /**
      * The identifier of the slot in which the token resides this session is
@@ -74,16 +74,11 @@ public class SessionInfo implements Cloneable {
      * PKCS#11.
      */
     protected long deviceError;
-
+    
     /**
-     * True, if this is a read-write session.
+     * The flags.
      */
-    protected boolean rwSession;
-
-    /**
-     * True, if this a serial session. Always true, for this version of PKCS#11.
-     */
-    protected boolean serialSession;
+    protected long flags;
 
     /**
      * Constructor taking a CK_SESSION_INFO object that provides the
@@ -100,35 +95,7 @@ public class SessionInfo implements Cloneable {
         this.slotID = ckSessionInfo.slotID;
         this.state = new State(ckSessionInfo.state);
         this.deviceError = ckSessionInfo.ulDeviceError;
-        long flags = ckSessionInfo.flags;
-        this.rwSession = (flags & PKCS11Constants.CKF_RW_SESSION) != 0L;
-        this.serialSession = (flags & PKCS11Constants.CKF_SERIAL_SESSION) != 0L;
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof SessionInfo)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        SessionInfo clone;
-
-        try {
-            clone = (SessionInfo) super.clone();
-
-            clone.state = (State) this.state.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is clone-able
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
+        this.flags = ckSessionInfo.flags;
     }
 
     /**
@@ -163,7 +130,7 @@ public class SessionInfo implements Cloneable {
      * @postconditions
      */
     public boolean isRwSession() {
-        return rwSession;
+        return (flags & PKCS11Constants.CKF_RW_SESSION) != 0L;
     }
 
     /**
@@ -177,7 +144,7 @@ public class SessionInfo implements Cloneable {
      * @postconditions
      */
     public boolean isSerialSession() {
-        return serialSession;
+        return (flags & PKCS11Constants.CKF_SERIAL_SESSION) != 0L;
     }
 
     /**
@@ -190,8 +157,9 @@ public class SessionInfo implements Cloneable {
         StringBuilder sb = new StringBuilder(100);
         sb.append("State: ").append(state);
         sb.append("\nDevice Error: 0x").append(Long.toHexString(deviceError));
-        sb.append("\nRead/Write Session: ").append(rwSession);
-        sb.append("\nSerial Session: ").append(serialSession);
+        sb.append("\nFlags: 0x").append(Util.toFullHex(flags));
+        sb.append("\nRead/Write Session: ").append(isRwSession());
+        sb.append("\nSerial Session: ").append(isSerialSession());
         return sb.toString();
     }
 
@@ -210,9 +178,7 @@ public class SessionInfo implements Cloneable {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof SessionInfo)) {
+        } else if (!(otherObject instanceof SessionInfo)) {
             return false;
         }
 
@@ -220,8 +186,7 @@ public class SessionInfo implements Cloneable {
         return (this.slotID == other.slotID)
                 && this.state.equals(other.state)
                 && (this.deviceError == other.deviceError)
-                && (this.rwSession == other.rwSession)
-                && (this.serialSession == other.serialSession);
+                && (this.flags == other.flags);
     }
 
     /**

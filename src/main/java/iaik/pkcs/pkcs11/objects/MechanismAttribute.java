@@ -61,7 +61,6 @@ public class MechanismAttribute extends LongAttribute {
      * AttributeArrayAttribute.getValueString().
      */
     MechanismAttribute() {
-        super();
     }
 
     /**

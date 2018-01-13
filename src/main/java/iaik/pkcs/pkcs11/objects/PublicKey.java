@@ -45,6 +45,7 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 
 /**
  * This is the base class for public (asymmetric) keys. Objects of this class
@@ -203,7 +204,6 @@ public class PublicKey extends Key {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    @SuppressWarnings("restriction")
     protected static PKCS11Object getUnknownPublicKey(Session session,
             long objectHandle)
         throws TokenException {
@@ -213,7 +213,7 @@ public class PublicKey extends Key {
         if (Key.vendorKeyBuilder != null) {
             try {
                 newObject = Key.vendorKeyBuilder.build(session, objectHandle);
-            } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+            } catch (PKCS11Exception ex) {
                 // we can just treat it like some unknown type of public key
                 newObject = new PublicKey(session, objectHandle);
             }
@@ -228,8 +228,7 @@ public class PublicKey extends Key {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -272,33 +271,6 @@ public class PublicKey extends Key {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof PublicKey)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        PublicKey clone = (PublicKey) super.clone();
-
-        clone.subject = (ByteArrayAttribute) this.subject.clone();
-        clone.encrypt = (BooleanAttribute) this.encrypt.clone();
-        clone.verify = (BooleanAttribute) this.verify.clone();
-        clone.verifyRecover = (BooleanAttribute) this.verifyRecover.clone();
-        clone.wrap = (BooleanAttribute) this.wrap.clone();
-        clone.trusted = (BooleanAttribute) this.trusted.clone();
-        clone.wrapTemplate = (AttributeArray) this.wrapTemplate.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -313,9 +285,7 @@ public class PublicKey extends Key {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof PublicKey)) {
+        } else if (!(otherObject instanceof PublicKey)) {
             return false;
         }
 

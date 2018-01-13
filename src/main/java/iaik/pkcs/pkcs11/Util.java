@@ -65,6 +65,12 @@ import sun.security.pkcs11.wrapper.CK_DATE;
 @SuppressWarnings("restriction")
 public class Util {
 
+    /**
+     * For converting numbers to their hex presentation.
+     */
+    private static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5',
+        '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+
     public static <T> T requireNonNull(String paramName, T param) {
         if (param == null) {
             throw new NullPointerException(
@@ -216,8 +222,7 @@ public class Util {
      *                 or (result <> null)
      *                    and (result.length == exactArrayLength)
      */
-    public static char[] toPaddedCharArray(String string,
-            int exactArrayLength,
+    public static char[] toPaddedCharArray(String string, int exactArrayLength,
             char paddingChar) {
         char[] charArray = null;
 
@@ -299,6 +304,56 @@ public class Util {
         } else {
             return obj1.equals(obj2);
         }
+    }
+
+    /**
+     * Converts a long value to a hexadecimal String of length 16. Includes
+     * leading zeros if necessary.
+     *
+     * @param value
+     *          The long value to be converted.
+     * @return The hexadecimal string representation of the long value.
+     */
+    public static String toFullHex(long value) {
+        long currentValue = value;
+        StringBuilder stringBuffer = new StringBuilder(16);
+        for (int j = 0; j < 16; j++) {
+            int currentDigit = (int) currentValue & 0xf;
+            stringBuffer.append(HEX_DIGITS[currentDigit]);
+            currentValue >>>= 4;
+        }
+
+        return stringBuffer.reverse().toString();
+    }
+    
+    /**
+     * Converts a byte array to a hexadecimal String. Each byte is presented by
+     * its two digit hex-code; 0x0A -> "0a", 0x00 -> "00". No leading "0x" is
+     * included in the result.
+     *
+     * @param value
+     *          The byte array to be converted
+     * @return the hexadecimal string representation of the byte array
+     */
+    public static String toHex(byte[] value) {
+        if (value == null) {
+            return null;
+        }
+
+        StringBuilder buffer = new StringBuilder(2 * value.length);
+        int single;
+
+        for (int i = 0; i < value.length; i++) {
+            single = value[i] & 0xFF;
+
+            if (single < 0x10) {
+                buffer.append('0');
+            }
+
+            buffer.append(Integer.toString(single, 16));
+        }
+
+        return buffer.toString();
     }
 
 }

@@ -54,7 +54,7 @@ import sun.security.pkcs11.wrapper.CK_MECHANISM_INFO;
  * @invariants
  */
 @SuppressWarnings("restriction")
-public class MechanismInfo implements Cloneable {
+public class MechanismInfo {
 
     /**
      * The minimum key length supported by this algorithm.
@@ -97,30 +97,6 @@ public class MechanismInfo implements Cloneable {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof MechanismInfo)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        MechanismInfo clone;
-
-        try {
-            clone = (MechanismInfo) super.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is clone-able
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
-    }
-
-    /**
      * Override equals to check for the equality of mechanism information.
      *
      * @param otherObject
@@ -134,9 +110,7 @@ public class MechanismInfo implements Cloneable {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof MechanismInfo)) {
+        } else if (!(otherObject instanceof MechanismInfo)) {
             return false;
         }
 
@@ -412,81 +386,6 @@ public class MechanismInfo implements Cloneable {
      */
     public boolean isExtension() {
         return (flags & PKCS11Constants.CKF_EXTENSION) != 0L;
-    }
-
-    /**
-     * Create a new MechanismInfo objects whose flags are a logical OR of this
-     * object's flags and the other object's flags. The minimum key size is set
-     * to the lower of both key sizes and the maximum key size is set to the
-     * higher of both key sizes.
-     * If the other is null, the new object has the same contents as this
-     * object.
-     *
-     * @param other
-     *          The other MechanismInfo object.
-     * @return A new MechanismInfo that is a logical OR of this and other.
-     * @preconditions
-     * @postconditions
-     */
-    public MechanismInfo or(MechanismInfo other) {
-        MechanismInfo result;
-
-        if (other != null) {
-            result = new MechanismInfo();
-            result.flags = this.flags | other.flags;
-            result.minKeySize = (this.minKeySize < other.minKeySize)
-                    ? this.minKeySize : other.minKeySize;
-            result.maxKeySize = (this.maxKeySize > other.maxKeySize)
-                    ? this.maxKeySize : other.maxKeySize;
-        } else {
-            result = (MechanismInfo) this.clone();
-        }
-
-        return result;
-    }
-
-    /**
-     * Create a new MechanismInfo objects whose flags are a logical AND of this
-     * object's flags and the other object's flags. The minimum key size is set
-     * to the higher of both key sizes and the maximum key size is set to the
-     * lower of both key sizes.
-     * If the other is null, the new object has no flags set and its key sizes
-     * set to zero.
-     *
-     * @param other
-     *          The other MechanismInfo object.
-     * @return A new MechanismInfo that is a logical AND of this and other.
-     * @preconditions
-     * @postconditions
-     */
-    public MechanismInfo and(MechanismInfo other) {
-        MechanismInfo result = new MechanismInfo();
-
-        if (other != null) {
-            result.flags = this.flags & other.flags;
-            result.minKeySize = (this.minKeySize > other.minKeySize)
-                    ? this.minKeySize : other.minKeySize;
-            result.maxKeySize = (this.maxKeySize < other.maxKeySize)
-                    ? this.maxKeySize : other.maxKeySize;
-        }
-
-        return result;
-    }
-
-    /**
-     * Create a new MechanismInfo objects whose flags are a logical NOT of this
-     * object's flags. The key sizes remain the same.
-     *
-     * @return A new MechanismInfo that is a logical NOT of this object.
-     * @preconditions
-     * @postconditions
-     */
-    public MechanismInfo not() {
-        MechanismInfo result = (MechanismInfo) this.clone();
-
-        result.flags = ~this.flags;
-
-        return result;
     }
 
     /**
@@ -842,7 +741,7 @@ public class MechanismInfo implements Cloneable {
      * @preconditions
      * @postconditions
      */
-    protected void setFlagBit(long flagMask, boolean value) {
+    private void setFlagBit(long flagMask, boolean value) {
         if (value) {
             flags |= flagMask;
         } else {

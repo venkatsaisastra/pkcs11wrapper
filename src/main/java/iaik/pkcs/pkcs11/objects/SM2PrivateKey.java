@@ -58,7 +58,6 @@ import iaik.pkcs.pkcs11.TokenException;
 public class SM2PrivateKey extends ECPrivateKey {
 
     public SM2PrivateKey() {
-        super();
     }
 
     protected SM2PrivateKey(Session session, long objectHandle)
@@ -69,6 +68,28 @@ public class SM2PrivateKey extends ECPrivateKey {
     @Override
     protected Long thisKeyType() {
         return KeyType.VENDOR_SM2;
+    }
+
+    /**
+     * Compares all member variables of this object with the other object.
+     * Returns only true, if all are equal in both objects.
+     *
+     * @param otherObject
+     *          The other object to compare to.
+     * @return True, if other is an instance of this class and all member
+     *         variables of both objects are equal. False, otherwise.
+     * @preconditions
+     * @postconditions
+     */
+    @Override
+    public boolean equals(Object otherObject) {
+        if (this == otherObject) {
+            return true;
+        } else if (!(otherObject instanceof SM2PrivateKey)) {
+            return false;
+        }
+
+        return super.equals(otherObject);
     }
 
 }

@@ -53,25 +53,32 @@ import sun.security.pkcs11.wrapper.CK_VERSION;
  * @invariants
  */
 @SuppressWarnings("restriction")
-public class Version implements Cloneable {
+public class Version {
 
     /**
      * The major version number.
      */
-    protected byte major;
+    private byte major;
 
     /**
      * The minor version number.
      */
-    protected byte minor;
+    private byte minor;
 
     /**
-     * Constructor for internal use only.
+     * Create a new Version object with the given major and minor
+     * version.
      *
+     * @param major
+     *          The major version number.
+     * @param minor
+     *          The minor version number.
      * @preconditions
      * @postconditions
      */
-    protected Version() { /* left empty intentionally */
+    public Version(byte major, byte minor) {
+        this.major = major;
+        this.minor = minor;
     }
 
     /**
@@ -82,34 +89,34 @@ public class Version implements Cloneable {
      * @preconditions (ckVersion <> null)
      * @postconditions
      */
-    protected Version(CK_VERSION ckVersion) {
+    public Version(CK_VERSION ckVersion) {
         Util.requireNonNull("ckVersion", ckVersion);
         this.major = ckVersion.major;
         this.minor = ckVersion.minor;
     }
 
     /**
-     * Create a (deep) clone of this object.
+     * Set the major version number.
      *
-     * @return A clone of this object.
+     * @param major
+     *          The major version number.
      * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof Version)
-     *                 and (result.equals(this))
+     * @postconditions
      */
-    @Override
-    public Object clone() {
-        Version clone;
+    public void setMajor(byte major) {
+        this.major = major;
+    }
 
-        try {
-            clone = (Version) super.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is clone-able
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
+    /**
+     * Set the minor version number.
+     *
+     * @param minor
+     *          The minor version number.
+     * @preconditions
+     * @postconditions
+     */
+    public void setMinor(byte minor) {
+        this.minor = minor;
     }
 
     /**
@@ -167,15 +174,12 @@ public class Version implements Cloneable {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof Version)) {
+        } else if (!(otherObject instanceof Version)) {
             return false;
         }
 
         Version other = (Version) otherObject;
-        return (this.major == other.major)
-                && (this.minor == other.minor);
+        return (this.major == other.major) && (this.minor == other.minor);
     }
 
     /**

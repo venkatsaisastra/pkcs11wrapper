@@ -67,7 +67,6 @@ public class TokenRuntimeException extends RuntimeException {
      * @postconditions
      */
     public TokenRuntimeException() {
-        super();
     }
 
     /**
@@ -92,7 +91,6 @@ public class TokenRuntimeException extends RuntimeException {
      * @postconditions
      */
     public TokenRuntimeException(Exception encapsulatedException) {
-        super();
         this.encapsulatedException = encapsulatedException;
     }
 

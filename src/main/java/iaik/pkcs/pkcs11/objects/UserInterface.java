@@ -72,7 +72,6 @@ public class UserInterface extends HardwareFeature {
      * Default Constructor.
      */
     public UserInterface() {
-        super();
         hardwareFeatureType.setLongValue(FeatureType.USER_INTERFACE);
     }
 
@@ -118,8 +117,7 @@ public class UserInterface extends HardwareFeature {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -162,43 +160,13 @@ public class UserInterface extends HardwareFeature {
         putAttributesInTable(this);
     }
 
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     */
-    @Override
-    public Object clone() {
-        UserInterface clone = (UserInterface) super.clone();
-
-        clone.pixelX = (LongAttribute) this.pixelX.clone();
-        clone.pixelY = (LongAttribute) this.pixelY.clone();
-        clone.resolution = (LongAttribute) this.resolution.clone();
-        clone.charRows = (LongAttribute) this.charRows.clone();
-        clone.charColumns = (LongAttribute) this.charColumns.clone();
-        clone.color = (BooleanAttribute) this.color.clone();
-        clone.bitsPerPixel = (LongAttribute) this.bitsPerPixel.clone();
-        clone.charSets = (ByteArrayAttribute) this.charSets.clone();
-        clone.encodingMethods
-            = (ByteArrayAttribute) this.encodingMethods.clone();
-        clone.mimeTypes = (ByteArrayAttribute) this.mimeTypes.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
     @Override
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-        if (!super.equals(otherObject)) {
+        } else if (!super.equals(otherObject)) {
             return false;
-        }
-
-        if (getClass() != otherObject.getClass()) {
+        } else if (getClass() != otherObject.getClass()) {
             return false;
         }
 

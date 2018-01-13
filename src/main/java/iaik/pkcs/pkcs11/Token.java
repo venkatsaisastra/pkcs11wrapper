@@ -149,13 +149,13 @@ public class Token {
     /**
      * The reference to the slot.
      */
-    protected Slot slot;
+    private Slot slot;
 
     /**
      * True, if UTF8 encoding is used as character encoding for character array
      * attributes and PINs.
      */
-    protected boolean useUtf8Encoding;
+    private boolean useUtf8Encoding;
 
     /**
      * The constructor that takes a reference to the module and the slot ID.
@@ -167,7 +167,7 @@ public class Token {
      */
     protected Token(Slot slot) {
         this.slot = Util.requireNonNull("slot", slot);
-        this.useUtf8Encoding = slot.useUtf8Encoding;
+        this.useUtf8Encoding = slot.isUseUtf8Encoding();
     }
 
     /**
@@ -184,8 +184,7 @@ public class Token {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-        if (!(otherObject instanceof Token)) {
+        } else if (!(otherObject instanceof Token)) {
             return false;
         }
 
@@ -202,6 +201,10 @@ public class Token {
      */
     public Slot getSlot() {
         return slot;
+    }
+    
+    public boolean isUseUtf8Encoding() {
+        return useUtf8Encoding;
     }
 
     /**
@@ -364,14 +367,12 @@ public class Token {
      * @preconditions (serialSession == SessionType.SERIAL_SESSION)
      * @postconditions (result <> null)
      */
-    public Session openSession(boolean serialSession,
-            boolean rwSession,
-            Object application,
-            final Notify notify)
+    public Session openSession(boolean serialSession, boolean rwSession,
+            Object application, Notify notify)
         throws TokenException {
         long flags = 0L;
-        flags |= (serialSession) ? PKCS11Constants.CKF_SERIAL_SESSION : 0L;
-        flags |= (rwSession) ? PKCS11Constants.CKF_RW_SESSION : 0L;
+        flags |= serialSession ? PKCS11Constants.CKF_SERIAL_SESSION : 0L;
+        flags |= rwSession ? PKCS11Constants.CKF_RW_SESSION : 0L;
         // we need it for the notify already here
         final Session newSession = new Session(this, -1);
         CK_NOTIFY ckNotify = null;
@@ -396,7 +397,7 @@ public class Token {
             throw new PKCS11Exception(ex);
         }
         //now we have the session handle available
-        newSession.sessionHandle = sessionHandle;
+        newSession.setSessionHandle(sessionHandle);
 
         return newSession;
     }

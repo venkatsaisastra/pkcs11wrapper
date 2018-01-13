@@ -66,7 +66,7 @@ public interface MutexHandler {
      * @preconditions
      * @postconditions (result <> null)
      */
-    public Object createMutex()
+    Object createMutex()
         throws PKCS11Exception;
 
     /**
@@ -81,7 +81,7 @@ public interface MutexHandler {
      * @preconditions (mutex <> null)
      * @postconditions
      */
-    public void destroyMutex(Object mutex)
+    void destroyMutex(Object mutex)
         throws PKCS11Exception;
 
     /**
@@ -102,7 +102,7 @@ public interface MutexHandler {
      * @preconditions (mutex <> null)
      * @postconditions
      */
-    public void lockMutex(Object mutex)
+    void lockMutex(Object mutex)
         throws PKCS11Exception;
 
     /**
@@ -132,7 +132,7 @@ public interface MutexHandler {
      * @preconditions (mutex <> null)
      * @postconditions
      */
-    public void unlockMutex(Object mutex)
+    void unlockMutex(Object mutex)
         throws PKCS11Exception;
 
 }

@@ -44,6 +44,7 @@ package iaik.pkcs.pkcs11.objects;
 
 import java.util.Arrays;
 
+import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
@@ -55,14 +56,6 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  * @invariants
  */
 public class ByteArrayAttribute extends Attribute {
-
-    /**
-     * Default constructor - only for internal use in
-     * AttributeArrayAttribute.getValueString().
-     */
-    ByteArrayAttribute() {
-        super();
-    }
 
     /**
      * Constructor taking the PKCS#11 type of the attribute.
@@ -114,15 +107,8 @@ public class ByteArrayAttribute extends Attribute {
     @SuppressWarnings("restriction")
     @Override
     protected String getValueString() {
-        String valueString;
-
-        if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
-            valueString = Functions.toHexString((byte[]) ckAttribute.pValue);
-        } else {
-            valueString = "<NULL_PTR>";
-        }
-
-        return valueString;
+        return ((ckAttribute != null) && (ckAttribute.pValue != null)) 
+            ? Util.toHex((byte[]) ckAttribute.pValue) : "<NULL_PTR>";
     }
 
     /**

@@ -45,6 +45,7 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 
 /**
  * This is the base class for secret (symmetric) keys. Objects of this class
@@ -148,7 +149,6 @@ public class SecretKey extends Key {
      * @postconditions
      */
     public SecretKey() {
-        super();
         objectClass.setLongValue(ObjectClass.SECRET_KEY);
     }
 
@@ -234,7 +234,6 @@ public class SecretKey extends Key {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    @SuppressWarnings("restriction")
     protected static PKCS11Object getUnknownSecretKey(Session session,
             long objectHandle)
         throws TokenException {
@@ -244,7 +243,7 @@ public class SecretKey extends Key {
         if (Key.vendorKeyBuilder != null) {
             try {
                 newObject = Key.vendorKeyBuilder.build(session, objectHandle);
-            } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+            } catch (PKCS11Exception ex) {
                 // we can just treat it like some unknown type of secret key
                 newObject = new SecretKey(session, objectHandle);
             }
@@ -259,8 +258,7 @@ public class SecretKey extends Key {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -322,44 +320,6 @@ public class SecretKey extends Key {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof SecretKey)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        SecretKey clone = (SecretKey) super.clone();
-
-        clone.sensitive = (BooleanAttribute) this.sensitive.clone();
-        clone.encrypt = (BooleanAttribute) this.encrypt.clone();
-        clone.decrypt = (BooleanAttribute) this.decrypt.clone();
-        clone.sign = (BooleanAttribute) this.sign.clone();
-        clone.verify = (BooleanAttribute) this.verify.clone();
-        clone.wrap = (BooleanAttribute) this.wrap.clone();
-        clone.unwrap = (BooleanAttribute) this.unwrap.clone();
-        clone.extractable = (BooleanAttribute) this.extractable.clone();
-        clone.alwaysSensitive
-            = (BooleanAttribute) this.alwaysSensitive.clone();
-        clone.neverExtractable
-            = (BooleanAttribute) this.neverExtractable.clone();
-        clone.checkValue = (ByteArrayAttribute) this.checkValue.clone();
-        clone.wrapWithTrusted
-            = (BooleanAttribute) this.wrapWithTrusted.clone();
-        clone.trusted = (BooleanAttribute) this.trusted.clone();
-        clone.wrapTemplate = (AttributeArray) this.wrapTemplate.clone();
-        clone.unwrapTemplate = (AttributeArray) this.unwrapTemplate.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -374,9 +334,7 @@ public class SecretKey extends Key {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof SecretKey)) {
+        } else if (!(otherObject instanceof SecretKey)) {
             return false;
         }
 

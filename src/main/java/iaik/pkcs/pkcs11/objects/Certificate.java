@@ -70,7 +70,7 @@ public class Certificate extends Storage {
      * @version 1.0
      * @invariants
      */
-    public interface CertificateType {
+    public static interface CertificateType {
 
         /**
          * The identifier for a X.509 public key certificate.
@@ -184,7 +184,6 @@ public class Certificate extends Storage {
      * @postconditions
      */
     public Certificate() {
-        super();
         objectClass.setLongValue(ObjectClass.CERTIFICATE);
     }
 
@@ -231,7 +230,7 @@ public class Certificate extends Storage {
             certificateTypeName = "X.509 Attribute";
         } else if (
             (certificateType.longValue()
-                    & CertificateType.VENDOR_DEFINED.longValue()) != 0L) {
+                    & PKCS11Constants.CKC_VENDOR_DEFINED) != 0L) {
             certificateTypeName = "Vendor Defined";
         } else {
             certificateTypeName = "<unknown>";
@@ -285,7 +284,7 @@ public class Certificate extends Storage {
             } else if (certificateType.equals(CertificateType.WTLS)) {
                 newObject = WTLSCertificate.getInstance(session, objectHandle);
             } else if ((certificateType.longValue()
-                        & CertificateType.VENDOR_DEFINED.longValue()) != 0L) {
+                        & PKCS11Constants.CKC_VENDOR_DEFINED) != 0L) {
                 newObject = getUnknownCertificate(session, objectHandle);
             } else {
                 newObject = getUnknownCertificate(session, objectHandle);
@@ -371,8 +370,7 @@ public class Certificate extends Storage {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -415,34 +413,6 @@ public class Certificate extends Storage {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof Certificate)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        Certificate clone = (Certificate) super.clone();
-
-        clone.certificateType = (CertificateTypeAttribute)
-            this.certificateType.clone();
-        clone.trusted = (BooleanAttribute) this.trusted.clone();
-        clone.certificateCategory = (LongAttribute)
-            this.certificateCategory.clone();
-        clone.checkValue = (ByteArrayAttribute) this.checkValue.clone();
-        clone.startDate = (DateAttribute) this.startDate.clone();
-        clone.endDate = (DateAttribute) this.endDate.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -457,8 +427,7 @@ public class Certificate extends Storage {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-        if (!(otherObject instanceof Certificate)) {
+        } else if (!(otherObject instanceof Certificate)) {
             return false;
         }
 

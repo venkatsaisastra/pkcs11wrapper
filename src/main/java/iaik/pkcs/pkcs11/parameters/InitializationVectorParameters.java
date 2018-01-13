@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
-import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
@@ -76,31 +75,6 @@ public class InitializationVectorParameters implements Parameters {
      */
     public InitializationVectorParameters(byte[] iv) {
         this.iv = Util.requireNonNull("iv", iv);
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof InitializationVectorParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        InitializationVectorParameters clone;
-
-        try {
-            clone = (InitializationVectorParameters) super.clone();
-            clone.iv = (byte[]) this.iv.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
     }
 
     /**
@@ -147,8 +121,7 @@ public class InitializationVectorParameters implements Parameters {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("  Initialization Vector (hex): ")
-            .append(Functions.toHexString(iv));
+        sb.append("  Initialization Vector (hex): ").append(Util.toHex(iv));
         return sb.toString();
     }
 
@@ -167,9 +140,7 @@ public class InitializationVectorParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof InitializationVectorParameters)) {
+        } else if (!(otherObject instanceof InitializationVectorParameters)) {
             return false;
         }
 

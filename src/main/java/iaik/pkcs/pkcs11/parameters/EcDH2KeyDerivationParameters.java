@@ -102,36 +102,13 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
      *              and (publicData2 <> null)
      * @postconditions
      */
-    public EcDH2KeyDerivationParameters(long kdf,
-            byte[] sharedData,
-            byte[] publicData,
-            long privateDataLength,
-            PKCS11Object privateData,
+    public EcDH2KeyDerivationParameters(long kdf, byte[] sharedData,
+            byte[] publicData, long privateDataLength, PKCS11Object privateData,
             byte[] publicData2) {
         super(kdf, sharedData, publicData);
         this.privateDataLength = privateDataLength;
         this.privateData = Util.requireNonNull("privateData", privateData);
         this.publicData2 = Util.requireNonNull("publicData2", publicData2);
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof EcDH2KeyDerivationParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        EcDH2KeyDerivationParameters clone
-            = (EcDH2KeyDerivationParameters) super.clone();
-
-        clone.privateData = (PKCS11Object) this.privateData.clone();
-        clone.publicData2 = (byte[]) this.publicData2.clone();
-
-        return clone;
     }
 
     /**
@@ -236,8 +213,7 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
         StringBuilder sb = new StringBuilder(super.toString());
         sb.append("\n  Private Data Length (dec): ").append(privateDataLength);
         sb.append("\n  Private Data: ").append(privateData);
-        sb.append("\n  Public Data 2: ")
-            .append(Functions.toHexString(publicData2));
+        sb.append("\n  Public Data 2: ").append(Util.toHex(publicData2));
         return sb.toString();
     }
 
@@ -256,9 +232,7 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof EcDH2KeyDerivationParameters)) {
+        } else if (!(otherObject instanceof EcDH2KeyDerivationParameters)) {
             return false;
         }
 

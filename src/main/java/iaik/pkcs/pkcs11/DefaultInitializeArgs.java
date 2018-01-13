@@ -54,24 +54,24 @@ public class DefaultInitializeArgs implements InitializeArgs {
     /**
      * The mutex-handler of this object.
      */
-    protected MutexHandler mutexHandler;
+    private MutexHandler mutexHandler;
 
     /**
      * Indicates that application threads which are executing calls to the
      * library may not use native operating system calls to spawn new threads.
      */
-    protected boolean libraryCantCreateOsThreads;
+    private boolean libraryCantCreateOsThreads;
 
     /**
      * Indicates that the library may use mechanisms of the operating-system
      * to do thread-locking.
      */
-    protected boolean osLockingOk;
+    private boolean osLockingOk;
 
     /**
      * The reserved parameter in the initialization arguments.
      */
-    protected Object reserved;
+    private Object reserved;
 
     /**
      * Default constructor.
@@ -108,8 +108,7 @@ public class DefaultInitializeArgs implements InitializeArgs {
      *                 and (osLockingOk == osLockingOk)
      */
     public DefaultInitializeArgs(MutexHandler mutexHandler,
-            boolean libraryCantCreateOsThreads,
-            boolean osLockingOk) {
+            boolean libraryCantCreateOsThreads, boolean osLockingOk) {
         this.mutexHandler = mutexHandler;
         this.libraryCantCreateOsThreads = libraryCantCreateOsThreads;
         this.osLockingOk = osLockingOk;

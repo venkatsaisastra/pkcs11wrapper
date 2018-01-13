@@ -72,7 +72,6 @@ public class X942DHPublicKey extends DHPublicKey {
      * @postconditions
      */
     public X942DHPublicKey() {
-        super();
         keyType.setLongValue(KeyType.X9_42_DH);
     }
 
@@ -123,8 +122,7 @@ public class X942DHPublicKey extends DHPublicKey {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -159,30 +157,6 @@ public class X942DHPublicKey extends DHPublicKey {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof X942DHPublicKey)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        X942DHPublicKey clone = (X942DHPublicKey) super.clone();
-
-        clone.prime = (ByteArrayAttribute) this.prime.clone();
-        clone.base = (ByteArrayAttribute) this.base.clone();
-        clone.subprime = (ByteArrayAttribute) this.subprime.clone();
-        clone.value = (ByteArrayAttribute) this.value.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -197,9 +171,7 @@ public class X942DHPublicKey extends DHPublicKey {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof X942DHPublicKey)) {
+        } else if (!(otherObject instanceof X942DHPublicKey)) {
             return false;
         }
 

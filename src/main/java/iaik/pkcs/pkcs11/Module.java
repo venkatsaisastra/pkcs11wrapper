@@ -47,6 +47,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import sun.security.pkcs11.wrapper.CK_CREATEMUTEX;
@@ -126,20 +127,20 @@ public class Module {
      * @version 1.0
      * @invariants
      */
-    public interface SlotRequirement {
+    public static interface SlotRequirement {
 
         /**
          * Causes getSlotList to return all slots of the system that the
          * respective module supports.
          */
-        public static boolean ALL_SLOTS = false;
+        static boolean ALL_SLOTS = false;
 
         /**
          * Causes getSlotList to return only those slots in which there is
          * currently a token present; e.g. there is a smart card in the reader's
          * slot.
          */
-        public static boolean TOKEN_PRESENT = true;
+        static boolean TOKEN_PRESENT = true;
 
     }
 
@@ -150,26 +151,26 @@ public class Module {
      * @version 1.0
      * @invariants
      */
-    public interface WaitingBehavior {
+    public static interface WaitingBehavior {
 
         /**
          * Tells waitForSlotEvent to block until an event occurs.
          */
-        public static boolean BLOCK = false;
+        static final boolean BLOCK = false;
 
         /**
          * Tells waitForSlotEvent to return immediately.
          */
-        public static boolean DONT_BLOCK = true;
+        static final boolean DONT_BLOCK = true;
 
     }
 
     /**
      * Interface to the underlying PKCS#11 module.
      */
-    protected PKCS11 pkcs11Module;
+    private PKCS11 pkcs11Module;
 
-    protected String pkcs11ModuleName;
+    private String pkcs11ModuleName;
 
     /**
      * Create a new module that uses the given PKCS11 interface to interact with
@@ -180,7 +181,7 @@ public class Module {
      * @preconditions
      * @postconditions
      */
-    protected Module(String pkcs11ModuleName) {
+    public Module(String pkcs11ModuleName) {
         this.pkcs11ModuleName = pkcs11ModuleName;
     }
 
@@ -207,7 +208,7 @@ public class Module {
                     "File " + pkcs11ModuleName + " does not exist");
         }
         if (!file.isFile()) {
-            throw new IOException(pkcs11ModuleName + " is not not a file");
+            throw new IOException(pkcs11ModuleName + " is not a file");
         }
         if (!file.canRead()) {
             throw new IOException("Can not read file " + pkcs11ModuleName + "");
@@ -489,9 +490,7 @@ public class Module {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof Module)) {
+        } else if (!(otherObject instanceof Module)) {
             return false;
         }
 

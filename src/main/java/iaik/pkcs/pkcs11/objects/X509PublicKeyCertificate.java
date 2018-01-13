@@ -119,7 +119,6 @@ public class X509PublicKeyCertificate extends Certificate {
      * @postconditions
      */
     public X509PublicKeyCertificate() {
-        super();
         certificateType.setLongValue(CertificateType.X_509_PUBLIC_KEY);
     }
 
@@ -169,8 +168,7 @@ public class X509PublicKeyCertificate extends Certificate {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -223,39 +221,6 @@ public class X509PublicKeyCertificate extends Certificate {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof X509PublicKeyCertificate)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        X509PublicKeyCertificate clone
-            = (X509PublicKeyCertificate) super.clone();
-
-        clone.subject = (ByteArrayAttribute) this.subject.clone();
-        clone.id = (ByteArrayAttribute) this.id.clone();
-        clone.issuer = (ByteArrayAttribute) this.issuer.clone();
-        clone.serialNumber = (ByteArrayAttribute) this.serialNumber.clone();
-        clone.value = (ByteArrayAttribute) this.value.clone();
-        clone.url = (CharArrayAttribute) this.url.clone();
-        clone.hashOfSubjectPublicKey = (ByteArrayAttribute)
-            this.hashOfSubjectPublicKey.clone();
-        clone.hashOfIssuerPublicKey = (ByteArrayAttribute)
-            this.hashOfIssuerPublicKey.clone();
-        clone.javaMidpSecurityDomain = (LongAttribute)
-            this.javaMidpSecurityDomain.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -270,9 +235,7 @@ public class X509PublicKeyCertificate extends Certificate {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof X509PublicKeyCertificate)) {
+        } else if (!(otherObject instanceof X509PublicKeyCertificate)) {
             return false;
         }
 

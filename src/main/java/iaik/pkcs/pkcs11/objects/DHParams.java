@@ -81,7 +81,6 @@ public class DHParams extends DomainParameters {
      * @postconditions
      */
     public DHParams() {
-        super();
         keyType.setLongValue(Key.KeyType.DH);
     }
 
@@ -131,8 +130,7 @@ public class DHParams extends DomainParameters {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -165,26 +163,6 @@ public class DHParams extends DomainParameters {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof DHParams)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        DHParams clone = (DHParams) super.clone();
-        clone.prime = (ByteArrayAttribute) this.prime.clone();
-        clone.base = (ByteArrayAttribute) this.base.clone();
-        clone.primeBits = (LongAttribute) this.primeBits.clone();
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -199,9 +177,7 @@ public class DHParams extends DomainParameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof DHParams)) {
+        } else if (!(otherObject instanceof DHParams)) {
             return false;
         }
 

@@ -81,7 +81,6 @@ public class MonotonicCounter extends HardwareFeature {
      * @postconditions
      */
     public MonotonicCounter() {
-        super();
         hardwareFeatureType.setLongValue(FeatureType.MONOTONIC_COUNTER);
     }
 
@@ -132,8 +131,7 @@ public class MonotonicCounter extends HardwareFeature {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -167,29 +165,6 @@ public class MonotonicCounter extends HardwareFeature {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof MonotonicCounter)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        MonotonicCounter clone = (MonotonicCounter) super.clone();
-
-        clone.resetOnInit = (BooleanAttribute) this.resetOnInit.clone();
-        clone.hasReset = (BooleanAttribute) this.hasReset.clone();
-        clone.value = (ByteArrayAttribute) this.value.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -204,9 +179,7 @@ public class MonotonicCounter extends HardwareFeature {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof MonotonicCounter)) {
+        } else if (!(otherObject instanceof MonotonicCounter)) {
             return false;
         }
 
@@ -260,8 +233,7 @@ public class MonotonicCounter extends HardwareFeature {
      */
     @Override
     public int hashCode() {
-        return resetOnInit.hashCode() ^ hasReset.hashCode()
-                ^ value.hashCode();
+        return resetOnInit.hashCode() ^ hasReset.hashCode() ^ value.hashCode();
     }
 
     /**

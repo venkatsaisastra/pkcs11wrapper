@@ -42,6 +42,7 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.Version;
 import sun.security.pkcs11.wrapper.CK_VERSION;
 
@@ -49,38 +50,25 @@ import sun.security.pkcs11.wrapper.CK_VERSION;
  * This class is used for the Mechnism.SSL3_PRE_MASTER_KEY_GEN.
  *
  * @author Karl Scheibelhofer
+ * @author Lijun Liao
  * @version 1.0
  * @invariants
  */
 @SuppressWarnings("restriction")
-public class VersionParameters extends Version implements Parameters {
+public class VersionParameters implements Parameters {
+    
+    private Version version;
 
     /**
-     * Create a new VersionParameters object with the major and minor version
-     * set to zero.
+     * Create a new VersionParameters object with the given version
      *
+     * @param version
+     *          The version.
      * @preconditions
      * @postconditions
      */
-    public VersionParameters() {
-        super();
-    }
-
-    /**
-     * Create a new VersionParameters object with the given major and minor
-     * version.
-     *
-     * @param major
-     *          The major version number.
-     * @param minor
-     *          The minor version number.
-     * @preconditions
-     * @postconditions
-     */
-    public VersionParameters(byte major, byte minor) {
-        super();
-        this.major = major;
-        this.minor = minor;
+    public VersionParameters(Version version) {
+        this.version = Util.requireNonNull("version", version);
     }
 
     /**
@@ -92,8 +80,7 @@ public class VersionParameters extends Version implements Parameters {
      */
     @Override
     public Object getPKCS11ParamsObject() {
-        CK_VERSION params = new CK_VERSION(major, minor);
-        return params;
+        return new CK_VERSION(version.getMajor(), version.getMinor());
     }
 
     /**
@@ -107,32 +94,7 @@ public class VersionParameters extends Version implements Parameters {
      */
     // CHECKSTYLE:SKIP
     public void setPKCS11ParamsObject(CK_VERSION input) {
-        major = input.major;
-        minor = input.minor;
-    }
-
-    /**
-     * Set the major version number.
-     *
-     * @param major
-     *          The major version number.
-     * @preconditions
-     * @postconditions
-     */
-    public void setMajor(byte major) {
-        this.major = major;
-    }
-
-    /**
-     * Set the minor version number.
-     *
-     * @param minor
-     *          The minor version number.
-     * @preconditions
-     * @postconditions
-     */
-    public void setMinor(byte minor) {
-        this.minor = minor;
+        this.version = new Version(input);
     }
 
 }

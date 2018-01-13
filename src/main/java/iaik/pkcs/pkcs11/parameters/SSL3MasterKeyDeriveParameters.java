@@ -42,7 +42,6 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import sun.security.pkcs11.wrapper.CK_SSL3_MASTER_KEY_DERIVE_PARAMS;
 import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
@@ -87,34 +86,6 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
             VersionParameters version) {
         this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
         this.version = Util.requireNonNull("version", version);
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof SSL3MasterKeyDeriveParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        SSL3MasterKeyDeriveParameters clone;
-
-        try {
-            clone = (SSL3MasterKeyDeriveParameters) super.clone();
-
-            clone.randomInfo
-                = (SSL3RandomDataParameters)this.randomInfo.clone();
-            clone.version = (VersionParameters) this.version.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
     }
 
     /**
@@ -209,9 +180,7 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof SSL3MasterKeyDeriveParameters)) {
+        } else if (!(otherObject instanceof SSL3MasterKeyDeriveParameters)) {
             return false;
         }
 

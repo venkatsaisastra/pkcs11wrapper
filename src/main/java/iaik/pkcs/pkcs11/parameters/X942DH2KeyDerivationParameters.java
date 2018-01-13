@@ -107,35 +107,12 @@ public class X942DH2KeyDerivationParameters
      * @postconditions
      */
     public X942DH2KeyDerivationParameters(long keyDerivationFunction,
-            byte[] sharedData,
-            byte[] publicData,
-            long privateDataLength,
-            PKCS11Object privateData,
-            byte[] publicData2) {
+            byte[] sharedData, byte[] publicData, long privateDataLength,
+            PKCS11Object privateData, byte[] publicData2) {
         super(keyDerivationFunction, sharedData, publicData);
         this.privateDataLength = privateDataLength;
         this.privateData = Util.requireNonNull("privateData", privateData);
         this.publicData2 = Util.requireNonNull("publicData2", publicData2);
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof X942DH2KeyDerivationParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        X942DH2KeyDerivationParameters clone
-                = (X942DH2KeyDerivationParameters) super.clone();
-
-        clone.privateData = (PKCS11Object) this.privateData.clone();
-        clone.publicData2 = (byte[]) this.publicData2.clone();
-
-        return clone;
     }
 
     /**
@@ -240,8 +217,7 @@ public class X942DH2KeyDerivationParameters
         StringBuilder sb = new StringBuilder(super.toString());
         sb.append("\n  Private Data Length (dec): ").append(privateDataLength);
         sb.append("\n  Private Data: ").append(privateData);
-        sb.append("\n  Public Data 2: ")
-            .append(Functions.toHexString(publicData2));
+        sb.append("\n  Public Data 2: ").append(Util.toHex(publicData2));
         return sb.toString();
     }
 
@@ -260,9 +236,7 @@ public class X942DH2KeyDerivationParameters
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof X942DH2KeyDerivationParameters)) {
+        } else if (!(otherObject instanceof X942DH2KeyDerivationParameters)) {
             return false;
         }
 
@@ -285,8 +259,7 @@ public class X942DH2KeyDerivationParameters
     @Override
     public int hashCode() {
         return super.hashCode() ^ ((int) privateDataLength)
-                ^ privateData.hashCode()
-                ^ Functions.hashCode(publicData2);
+                ^ privateData.hashCode() ^ Functions.hashCode(publicData2);
     }
 
 }

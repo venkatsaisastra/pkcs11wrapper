@@ -63,7 +63,7 @@ import sun.security.pkcs11.wrapper.CK_TOKEN_INFO;
  *             and (time <> null)
  */
 @SuppressWarnings("restriction")
-public class TokenInfo implements Cloneable {
+public class TokenInfo {
 
     /**
      * This is the value which can be used for ulMaxSessionCount and
@@ -84,190 +84,95 @@ public class TokenInfo implements Cloneable {
     /**
      * The label of this token.
      */
-    protected String label;
+    private String label;
 
     /**
      * The identifier of the manufacturer of this token.
      */
     // CHECKSTYLE:SKIP
-    protected String manufacturerID;
+    private String manufacturerID;
 
     /**
      * The model of this token.
      */
-    protected String model;
+    private String model;
 
     /**
      * The serial number of this token.
      */
-    protected String serialNumber;
+    private String serialNumber;
 
     /**
      * The maximum number of concurrent (open) sessions.
      */
-    protected long maxSessionCount;
+    private long maxSessionCount;
 
     /**
      * The current number of open sessions.
      */
-    protected long sessionCount;
+    private long sessionCount;
 
     /**
      * Maximum number of concurrent (open) read-write sessions.
      */
-    protected long maxRwSessionCount;
+    private long maxRwSessionCount;
 
     /**
      * The current number of open read-write sessions.
      */
-    protected long rwSessionCount;
+    private long rwSessionCount;
 
     /**
      * The maximum PIN length that this token allows.
      */
-    protected long maxPinLen;
+    private long maxPinLen;
 
     /**
      * The minimum PIN length that this token allows.
      */
-    protected long minPinLen;
+    private long minPinLen;
 
     /**
      * The total amount of memory for public objects on this token.
      */
-    protected long totalPublicMemory;
+    private long totalPublicMemory;
 
     /**
      * The amount of free memory for public objects on this token.
      */
-    protected long freePublicMemory;
+    private long freePublicMemory;
 
     /**
      * The total amount of memory for private objects on this token.
      */
-    protected long totalPrivateMemory;
+    private long totalPrivateMemory;
 
     /**
      * The amount of free memory for private objects on this token.
      */
-    protected long freePrivateMemory;
+    private long freePrivateMemory;
 
     /**
      * The version of the hardware of this token.
      */
-    protected Version hardwareVersion;
+    private Version hardwareVersion;
 
     /**
      * The version of the firmware of this token.
      */
-    protected Version firmwareVersion;
+    private Version firmwareVersion;
 
     /**
      * The current time on the token. This value only makes sense, if the token
      * contains a clock.
      */
-    protected Date time;
+    private Date time;
 
     /**
-     * True, if the token has a random number generator.
+     * The token flags.
      */
-    protected boolean rng;
-
-    /**
-     * True, if the token is write protected.
-     */
-    protected boolean writeProtected;
-
-    /**
-     * True, if the token requires the user to login to perform certain
-     * operations.
-     */
-    protected boolean loginRequired;
-
-    /**
-     * True, if the user-PIN is already initialized.
-     */
-    protected boolean userPinInitialized;
-
-    /**
-     * True, if a successful save of a session's cryptographic operations state
-     * always contains all keys needed to restore the state of the session.
-     */
-    protected boolean restoreKeyNotNeeded;
-
-    /**
-     * True, if the token has a clock.
-     */
-    protected boolean clockOnToken;
-
-    /**
-     * True, if there are different means to authenticate the user than passing
-     * the user-PIN to a login operation.
-     */
-    protected boolean protectedAuthenticationPath;
-
-    /**
-     * True, if the token supports dual cryptographic operations.
-     */
-    protected boolean dualCryptoOperations;
-
-    /**
-     * True, if the token is already initialized.
-     */
-    protected boolean tokenInitialized;
-
-    /**
-     * True, if the token supports secondary authentication for private key
-     * objects.
-     */
-    protected boolean secondaryAuthentication;
-
-    /**
-     * True, if the user-PIN has been entered incorrectly at least once since
-     * the last successful authentication.
-     */
-    protected boolean userPinCountLow;
-
-    /**
-     * True, if the user has just one try left to supply the correct PIN before
-     * the user-PIN gets locked.
-     */
-    protected boolean userPinFinalTry;
-
-    /**
-     * True, if the user-PIN is locked.
-     */
-    protected boolean userPinLocked;
-
-    /**
-     * True, if the user PIN value is the default value set by token
-     * initialization or manufacturing.
-     */
-    protected boolean userPinToBeChanged;
-
-    /**
-     * True, if the security officer-PIN has been entered incorrectly at least
-     * once since the last successful authentication.
-     */
-    protected boolean soPinCountLow;
-
-    /**
-     * True, if the security officer has just one try left to supply the correct
-     * PIN before the security officer-PIN gets locked.
-     */
-    protected boolean soPinFinalTry;
-
-    /**
-     * True, if the security officer-PIN is locked.
-     */
-    protected boolean soPinLocked;
-
-    /**
-     * True, if the security officer-PIN value is the default value set by token
-     * initialization or manufacturing.
-     */
-    protected boolean soPinToBeChanged;
-
+    private long flags;
+    
     /**
      * Constructor taking CK_TOKEN_INFO as given returned by
      * PKCS11.C_GetTokenInfo.
@@ -297,69 +202,7 @@ public class TokenInfo implements Cloneable {
         hardwareVersion = new Version(ckTokenInfo.hardwareVersion);
         firmwareVersion = new Version(ckTokenInfo.firmwareVersion);
         time = Util.parseTime(ckTokenInfo.utcTime);
-        rng = (ckTokenInfo.flags & PKCS11Constants.CKF_RNG) != 0L;
-        final long flags = ckTokenInfo.flags;
-        writeProtected = (flags & PKCS11Constants.CKF_WRITE_PROTECTED) != 0L;
-        loginRequired = (flags & PKCS11Constants.CKF_LOGIN_REQUIRED) != 0L;
-        userPinInitialized =
-                (flags & PKCS11Constants.CKF_USER_PIN_INITIALIZED) != 0L;
-        restoreKeyNotNeeded =
-                (flags & PKCS11Constants.CKF_RESTORE_KEY_NOT_NEEDED) != 0L;
-        clockOnToken =
-                (flags & PKCS11Constants.CKF_CLOCK_ON_TOKEN) != 0L;
-        protectedAuthenticationPath =
-                (flags & PKCS11Constants.CKF_PROTECTED_AUTHENTICATION_PATH)
-                    != 0L;
-        dualCryptoOperations =
-                (flags & PKCS11Constants.CKF_DUAL_CRYPTO_OPERATIONS) != 0L;
-        tokenInitialized =
-                (flags & PKCS11Constants.CKF_TOKEN_INITIALIZED) != 0L;
-        secondaryAuthentication =
-                (flags & PKCS11Constants.CKF_SECONDARY_AUTHENTICATION) != 0L;
-        userPinCountLow =
-                (flags & PKCS11Constants.CKF_USER_PIN_COUNT_LOW) != 0L;
-        userPinFinalTry =
-                (flags & PKCS11Constants.CKF_USER_PIN_FINAL_TRY) != 0L;
-        userPinLocked =
-                (flags & PKCS11Constants.CKF_USER_PIN_LOCKED) != 0L;
-        userPinToBeChanged =
-                (flags & PKCS11Constants.CKF_USER_PIN_TO_BE_CHANGED) != 0L;
-        soPinCountLow =
-                (flags & PKCS11Constants.CKF_SO_PIN_COUNT_LOW) != 0L;
-        soPinFinalTry =
-                (flags & PKCS11Constants.CKF_SO_PIN_FINAL_TRY) != 0L;
-        soPinLocked =
-                (flags & PKCS11Constants.CKF_SO_PIN_LOCKED) != 0L;
-        soPinToBeChanged =
-                (flags & PKCS11Constants.CKF_SO_PIN_TO_BE_CHANGED) != 0L;
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof TokenInfo)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        TokenInfo clone;
-
-        try {
-            clone = (TokenInfo) super.clone();
-
-            clone.hardwareVersion = (Version) this.hardwareVersion.clone();
-            clone.firmwareVersion = (Version) this.firmwareVersion.clone();
-            clone.time = new Date(this.time.getTime());
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is clone-able
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
+        flags = ckTokenInfo.flags;
     }
 
     /**
@@ -553,6 +396,14 @@ public class TokenInfo implements Cloneable {
     public Date getTime() {
         return time;
     }
+    
+    /**
+     * Return the token flags.
+     * @return the token flags.
+     */
+    public long getFlags() {
+        return flags;
+    }
 
     /**
      * Check, if the token has a random number generator.
@@ -564,7 +415,7 @@ public class TokenInfo implements Cloneable {
      */
     // CHECKSTYLE:SKIP
     public boolean isRNG() {
-        return rng;
+        return (flags & PKCS11Constants.CKF_RNG) != 0L;
     }
 
     /**
@@ -575,7 +426,8 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isWriteProtected() {
-        return writeProtected;
+        return (flags & PKCS11Constants.CKF_WRITE_PROTECTED) != 0L;
+
     }
 
     /**
@@ -588,7 +440,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isLoginRequired() {
-        return loginRequired;
+        return (flags & PKCS11Constants.CKF_LOGIN_REQUIRED) != 0L;
     }
 
     /**
@@ -599,7 +451,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isUserPinInitialized() {
-        return userPinInitialized;
+        return (flags & PKCS11Constants.CKF_USER_PIN_INITIALIZED) != 0L;
     }
 
     /**
@@ -614,7 +466,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isRestoreKeyNotNeeded() {
-        return restoreKeyNotNeeded;
+        return (flags & PKCS11Constants.CKF_RESTORE_KEY_NOT_NEEDED) != 0L;
     }
 
     /**
@@ -625,7 +477,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isClockOnToken() {
-        return clockOnToken;
+        return (flags & PKCS11Constants.CKF_CLOCK_ON_TOKEN) != 0L;
     }
 
     /**
@@ -640,7 +492,8 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isProtectedAuthenticationPath() {
-        return protectedAuthenticationPath;
+        return (flags & PKCS11Constants.CKF_PROTECTED_AUTHENTICATION_PATH)
+                != 0L;
     }
 
     /**
@@ -652,7 +505,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isDualCryptoOperations() {
-        return dualCryptoOperations;
+        return (flags & PKCS11Constants.CKF_DUAL_CRYPTO_OPERATIONS) != 0L;
     }
 
     /**
@@ -663,7 +516,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isTokenInitialized() {
-        return tokenInitialized;
+        return (flags & PKCS11Constants.CKF_TOKEN_INITIALIZED) != 0L;
     }
 
     /**
@@ -676,7 +529,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isSecondaryAuthentication() {
-        return secondaryAuthentication;
+        return (flags & PKCS11Constants.CKF_SECONDARY_AUTHENTICATION) != 0L;
     }
 
     /**
@@ -689,7 +542,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isUserPinCountLow() {
-        return userPinCountLow;
+        return (flags & PKCS11Constants.CKF_USER_PIN_COUNT_LOW) != 0L;
     }
 
     /**
@@ -702,7 +555,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isUserPinFinalTry() {
-        return userPinFinalTry;
+        return (flags & PKCS11Constants.CKF_USER_PIN_FINAL_TRY) != 0L;
     }
 
     /**
@@ -713,7 +566,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isUserPinLocked() {
-        return userPinLocked;
+        return (flags & PKCS11Constants.CKF_USER_PIN_LOCKED) != 0L;
     }
 
     /**
@@ -726,7 +579,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isUserPinToBeChanged() {
-        return userPinToBeChanged;
+        return (flags & PKCS11Constants.CKF_USER_PIN_TO_BE_CHANGED) != 0L;
     }
 
     /**
@@ -740,7 +593,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isSoPinCountLow() {
-        return soPinCountLow;
+        return (flags & PKCS11Constants.CKF_SO_PIN_COUNT_LOW) != 0L;
     }
 
     /**
@@ -754,7 +607,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isSoPinFinalTry() {
-        return soPinFinalTry;
+        return (flags & PKCS11Constants.CKF_SO_PIN_FINAL_TRY) != 0L;
     }
 
     /**
@@ -765,7 +618,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isSoPinLocked() {
-        return soPinLocked;
+        return (flags & PKCS11Constants.CKF_SO_PIN_LOCKED) != 0L;
     }
 
     /**
@@ -778,7 +631,7 @@ public class TokenInfo implements Cloneable {
      * @postconditions
      */
     public boolean isSoPinToBeChanged() {
-        return soPinToBeChanged;
+        return (flags & PKCS11Constants.CKF_SO_PIN_TO_BE_CHANGED) != 0L;
     }
 
     /**
@@ -793,28 +646,31 @@ public class TokenInfo implements Cloneable {
         sb.append("\nManufacturer ID: ").append(manufacturerID);
         sb.append("\nModel: ").append(model);
         sb.append("\nSerial Number: ").append(serialNumber);
-        sb.append("\nRandom Number Generator: ").append(rng);
-        sb.append("\nWrite protected: ").append(writeProtected);
-        sb.append("\nLogin required: ").append(loginRequired);
-        sb.append("\nUser PIN initialized: ").append(userPinInitialized);
-        sb.append("\nRestore Key not needed: ").append(restoreKeyNotNeeded);
-        sb.append("\nClock on Token: ").append(clockOnToken);
+        sb.append("\nFlags: 0x").append(Util.toFullHex(flags));        
+        sb.append("\nRandom Number Generator: ").append(isRNG());
+        sb.append("\nWrite protected: ").append(isWriteProtected());
+        sb.append("\nLogin required: ").append(isLoginRequired());
+        sb.append("\nUser PIN initialized: ").append(isUserPinInitialized());
+        sb.append("\nRestore Key not needed: ").append(isRestoreKeyNotNeeded());
+        sb.append("\nClock on Token: ").append(isClockOnToken());
         sb.append("\nProtected Authentication Path: ")
-            .append(protectedAuthenticationPath);
+            .append(isProtectedAuthenticationPath());
         sb.append("\nDual Crypto Operations: ")
-            .append(dualCryptoOperations);
-        sb.append("\nToken initialized: ").append(tokenInitialized);
+            .append(isDualCryptoOperations());
+        sb.append("\nToken initialized: ").append(isTokenInitialized());
         sb.append("\nSecondary Authentication: ")
-            .append(secondaryAuthentication);
-        sb.append("\nUser PIN-Count low: ").append(userPinCountLow);
-        sb.append("\nUser PIN final Try: ").append(userPinFinalTry);
-        sb.append("\nUser PIN locked: ").append(userPinLocked);
-        sb.append("\nUser PIN to be changed: ").append(userPinToBeChanged);
-        sb.append("\nSecurity Officer PIN-Count low: ").append(soPinCountLow);
-        sb.append("\nSecurity Officer PIN final Try: ").append(soPinFinalTry);
-        sb.append("\nSecurity Officer PIN locked: ").append(soPinLocked);
+            .append(isSecondaryAuthentication());
+        sb.append("\nUser PIN-Count low: ").append(isUserPinCountLow());
+        sb.append("\nUser PIN final Try: ").append(isUserPinFinalTry());
+        sb.append("\nUser PIN locked: ").append(isUserPinLocked());
+        sb.append("\nUser PIN to be changed: ").append(isUserPinToBeChanged());
+        sb.append("\nSecurity Officer PIN-Count low: ")
+            .append(isSoPinCountLow());
+        sb.append("\nSecurity Officer PIN final Try: ")
+            .append(isSoPinFinalTry());
+        sb.append("\nSecurity Officer PIN locked: ").append(isSoPinLocked());
         sb.append("\nSecurity Officer PIN to be changed: ")
-            .append(soPinToBeChanged);
+            .append(isSoPinToBeChanged());
 
         sb.append("\nMaximum Session Count: ");
         if (maxSessionCount == UNAVAILABLE_INFORMATION) {
@@ -881,9 +737,7 @@ public class TokenInfo implements Cloneable {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof TokenInfo)) {
+        } else if (!(otherObject instanceof TokenInfo)) {
             return false;
         }
 
@@ -905,26 +759,7 @@ public class TokenInfo implements Cloneable {
                 && this.hardwareVersion.equals(other.hardwareVersion)
                 && this.firmwareVersion.equals(other.firmwareVersion)
                 && this.time.equals(other.time)
-                && (this.rng == other.rng)
-                && (this.writeProtected == other.writeProtected)
-                && (this.loginRequired == other.loginRequired)
-                && (this.userPinInitialized == other.userPinInitialized)
-                && (this.restoreKeyNotNeeded == other.restoreKeyNotNeeded)
-                && (this.clockOnToken == other.clockOnToken)
-                && (this.protectedAuthenticationPath
-                        == other.protectedAuthenticationPath)
-                && (this.dualCryptoOperations == other.dualCryptoOperations)
-                && (this.tokenInitialized == other.tokenInitialized)
-                && (this.secondaryAuthentication
-                        == other.secondaryAuthentication)
-                && (this.userPinCountLow == other.userPinCountLow)
-                && (this.userPinFinalTry == other.userPinFinalTry)
-                && (this.userPinLocked == other.userPinLocked)
-                && (this.userPinToBeChanged == other.userPinToBeChanged)
-                && (this.soPinCountLow == other.soPinCountLow)
-                && (this.soPinFinalTry == other.soPinFinalTry)
-                && (this.soPinLocked == other.soPinLocked)
-                && (this.soPinToBeChanged == other.soPinToBeChanged);
+                && (this.flags == other.flags);
     }
 
     /**

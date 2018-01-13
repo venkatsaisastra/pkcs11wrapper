@@ -92,7 +92,6 @@ public class X509AttributeCertificate extends Certificate {
      * @postconditions
      */
     public X509AttributeCertificate() {
-        super();
         certificateType.setLongValue(CertificateType.X_509_ATTRIBUTE);
     }
 
@@ -143,8 +142,7 @@ public class X509AttributeCertificate extends Certificate {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -183,32 +181,6 @@ public class X509AttributeCertificate extends Certificate {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof X509AttributeCertificate)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        X509AttributeCertificate clone
-            = (X509AttributeCertificate) super.clone();
-
-        clone.owner = (ByteArrayAttribute) this.owner.clone();
-        clone.acIssuer = (ByteArrayAttribute) this.acIssuer.clone();
-        clone.serialNumber = (ByteArrayAttribute) this.serialNumber.clone();
-        clone.attrTypes = (ByteArrayAttribute) this.attrTypes.clone();
-        clone.value = (ByteArrayAttribute) this.value.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -223,9 +195,7 @@ public class X509AttributeCertificate extends Certificate {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof X509AttributeCertificate)) {
+        } else if (!(otherObject instanceof X509AttributeCertificate)) {
             return false;
         }
 

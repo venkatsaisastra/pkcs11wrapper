@@ -53,14 +53,6 @@ package iaik.pkcs.pkcs11.objects;
 public class BooleanAttribute extends Attribute {
 
     /**
-     * Default constructor - only for internal use in
-     * AttributeArrayAttribute.getValueString().
-     */
-    BooleanAttribute() {
-        super();
-    }
-
-    /**
      * Constructor taking the PKCS#11 type of the attribute.
      *
      * @param type

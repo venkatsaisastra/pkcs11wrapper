@@ -76,9 +76,7 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
      *                and (mgf == MessageGenerationFunctionType.Sha1)
      * @postconditions
      */
-    public RSAPkcsPssParameters(Mechanism hashAlg,
-                                long mgf,
-                                long saltLength) {
+    public RSAPkcsPssParameters(Mechanism hashAlg, long mgf, long saltLength) {
         super(hashAlg, mgf);
         this.saltLength = saltLength;
     }
@@ -153,9 +151,7 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof RSAPkcsPssParameters)) {
+        } else if (!(otherObject instanceof RSAPkcsPssParameters)) {
             return false;
         }
 

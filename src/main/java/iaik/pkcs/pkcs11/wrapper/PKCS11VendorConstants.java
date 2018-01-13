@@ -52,6 +52,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import iaik.pkcs.pkcs11.Util;
+
 /**
  * 
  * @author Lijun Liao
@@ -61,10 +63,9 @@ import java.util.Set;
 // CHECKSTYLE:SKIP
 public class PKCS11VendorConstants {
 
-    public static final String CKM_VENDOR_VENDOR_CODE_PROPERTIES_FILE = 
-                "pkcs11.ckm-vendor.file";
+    private static final String VENDOR_FILE = "pkcs11.ckm-vendor.file";
 
-    private static final String CKM_VENDOR_VENDOR_CODE_PROPERTIES =
+    private static final String VENDOR_PROPERTIES =
                 "/iaik/pkcs/pkcs11/wrapper/ckm-vendor.properties";
 
     /**
@@ -155,8 +156,7 @@ public class PKCS11VendorConstants {
     public static final long CKM_VENDOR_SM4_ECB_ENCRYPT_DATA;
 
     static {
-        String file = 
-                System.getProperty(CKM_VENDOR_VENDOR_CODE_PROPERTIES_FILE);
+        String file =  System.getProperty(VENDOR_FILE);
         
         InputStream is = null;
         if (file != null) {
@@ -167,7 +167,7 @@ public class PKCS11VendorConstants {
             } 
         } else {
             is = PKCS11VendorConstants.class.getResourceAsStream(
-                    CKM_VENDOR_VENDOR_CODE_PROPERTIES);
+                    VENDOR_PROPERTIES);
         }
        
         Properties props = null;
@@ -208,29 +208,23 @@ public class PKCS11VendorConstants {
                 readLong(props, "CKM_VENDOR_SM4_ECB_ENCRYPT_DATA");
     }
 
-    public static void main(String[] args) {
-        new PKCS11VendorConstants();
-    }
-
     /**
      * This method checks, if the mechanism with the given code is a digest
      * mechanism.
      * If Returns true, the mechanism can be used with the digest
      * functions.
      *
-     * @param mechanismCode
+     * @param mechCode
      *          The code of the mechanism to check.
      * @return True, if the provided mechanism is a digest mechanism. False,
      *         otherwise.
      * @preconditions
      * @postconditions
      */
-    public static boolean isDigestMechanism(long mechanismCode) {
+    public static boolean isDigestMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
         if (digestMechanisms == null) {
-            long[] mechs = new long[]{
-                PKCS11VendorConstants.CKM_VENDOR_SM3
-            };
+            long[] mechs = new long[]{PKCS11VendorConstants.CKM_VENDOR_SM3};
 
             Set<Long> mechanisms = new HashSet<>();
             for (Long mech : mechs) {
@@ -239,16 +233,13 @@ public class PKCS11VendorConstants {
             digestMechanisms = mechanisms;
         }
 
-        return digestMechanisms.contains(new Long(mechanismCode));
+        return digestMechanisms.contains(new Long(mechCode));
     }
 
-    public static boolean isFullEncryptDecryptMechanism(long mechanismCode) {
+    public static boolean isFullEncryptDecryptMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
         if (fullEncryptDecryptMechanisms == null) {
-            long[] mechs = new long[]{
-                PKCS11VendorConstants.CKM_VENDOR_SM4_CBC,
-                PKCS11VendorConstants.CKM_VENDOR_SM4_ECB,
-            };
+            long[] mechs = new long[]{CKM_VENDOR_SM4_CBC, CKM_VENDOR_SM4_ECB};
 
             Set<Long> mechanisms = new HashSet<>();
             for (Long mech : mechs) {
@@ -257,21 +248,16 @@ public class PKCS11VendorConstants {
             fullEncryptDecryptMechanisms = mechanisms;
         }
 
-        return fullEncryptDecryptMechanisms.contains(new Long(mechanismCode));
+        return fullEncryptDecryptMechanisms.contains(new Long(mechCode));
     }
 
-    public static boolean isFullSignVerifyMechanism(long mechanismCode) {
+    public static boolean isFullSignVerifyMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
         if (fullSignVerifyMechanisms == null) {
-            long[] mechs = new long[]{
-                PKCS11VendorConstants.CKM_VENDOR_SM2,
-                PKCS11VendorConstants.CKM_VENDOR_SM2_SM3,
-                PKCS11VendorConstants.CKM_VENDOR_ISO2_SM4_MAC,
-                PKCS11VendorConstants.CKM_VENDOR_SM4_MAC,
-                PKCS11VendorConstants.CKM_VENDOR_SM4_MAC_GENERAL,
-                PKCS11VendorConstants.CKM_VENDOR_ISO2_SM4_MAC,
-                PKCS11VendorConstants.CKM_VENDOR_ISO2_SM4_MAC_GENERAL,
-            };
+            long[] mechs = new long[]{CKM_VENDOR_SM2, CKM_VENDOR_SM2_SM3,
+                CKM_VENDOR_ISO2_SM4_MAC, CKM_VENDOR_SM4_MAC,
+                CKM_VENDOR_SM4_MAC_GENERAL, CKM_VENDOR_ISO2_SM4_MAC,
+                CKM_VENDOR_ISO2_SM4_MAC_GENERAL};
 
             Set<Long> mechanisms = new HashSet<>();
             for (Long mech : mechs) {
@@ -280,15 +266,14 @@ public class PKCS11VendorConstants {
             fullSignVerifyMechanisms = mechanisms;
         }
 
-        return fullSignVerifyMechanisms.contains(new Long(mechanismCode));
+        return fullSignVerifyMechanisms.contains(new Long(mechCode));
     }
 
-    public static boolean isKeyDerivationMechanism(long mechanismCode) {
+    public static boolean isKeyDerivationMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
         if (keyDerivationMechanisms == null) {
             long[] mechs = new long[]{
-                PKCS11VendorConstants.CKM_VENDOR_SM4_ECB_ENCRYPT_DATA
-            };
+                CKM_VENDOR_SM4_ECB_ENCRYPT_DATA};
 
             Set<Long> mechanisms = new HashSet<>();
             for (Long mech : mechs) {
@@ -297,15 +282,13 @@ public class PKCS11VendorConstants {
             keyDerivationMechanisms = mechanisms;
         }
 
-        return keyDerivationMechanisms.contains(new Long(mechanismCode));
+        return keyDerivationMechanisms.contains(new Long(mechCode));
     }
 
-    public static boolean isKeyPairGenerationMechanism(long mechanismCode) {
+    public static boolean isKeyPairGenerationMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
         if (keyPairGenerationMechanisms == null) {
-            long[] mechs = new long[]{
-                CKM_VENDOR_SM2_KEY_PAIR_GEN
-            };
+            long[] mechs = new long[]{CKM_VENDOR_SM2_KEY_PAIR_GEN};
 
             Set<Long> mechanisms = new HashSet<>();
             for (Long mech : mechs) {
@@ -314,15 +297,13 @@ public class PKCS11VendorConstants {
             keyPairGenerationMechanisms = mechanisms;
         }
 
-        return keyPairGenerationMechanisms.contains(new Long(mechanismCode));
+        return keyPairGenerationMechanisms.contains(new Long(mechCode));
     }
     
-    public static boolean isKeyGenerationMechanism(long mechanismCode) {
+    public static boolean isKeyGenerationMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
         if (keyGenerationMechanisms == null) {
-            long[] mechs = new long[]{
-                PKCS11VendorConstants.CKM_VENDOR_SM4_KEY_GEN
-            };
+            long[] mechs = new long[]{CKM_VENDOR_SM4_KEY_GEN};
 
             Set<Long> mechanisms = new HashSet<>();
             for (Long mech : mechs) {
@@ -331,30 +312,27 @@ public class PKCS11VendorConstants {
             keyGenerationMechanisms = mechanisms;
         }
 
-        return keyGenerationMechanisms.contains(new Long(mechanismCode));
+        return keyGenerationMechanisms.contains(new Long(mechCode));
     } 
 
-    public static boolean isSignVerifyRecoverMechanism(long mechanismCode) {
+    public static boolean isSignVerifyRecoverMechanism(long mechCode) {
         return false;
     }
 
     public static boolean isSingleOperationEncryptDecryptMechanism(
-            long mechanismCode) {
+            long mechCode) {
         return false;
     }
     
-    public static boolean isSingleOperationSignVerifyMechanism(
-            long mechanismCode) {
+    public static boolean isSingleOperationSignVerifyMechanism(long mechCode) {
         return false;
     }
     
-    public static boolean isWrapUnwrapMechanism(long mechanismCode) {
+    public static boolean isWrapUnwrapMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
         if (wrapUnwrapMechanisms == null) {
-            long[] mechs = new long[] {
-                PKCS11VendorConstants.CKM_VENDOR_SM2_ENCRYPT,
-                PKCS11VendorConstants.CKM_VENDOR_SM4_ECB
-            };
+            long[] mechs = new long[] {CKM_VENDOR_SM2_ENCRYPT,
+                CKM_VENDOR_SM4_ECB};
             Set<Long> mechanisms = new HashSet<>();
             for (long m : mechs) {
                 mechanisms.add(m);
@@ -362,16 +340,15 @@ public class PKCS11VendorConstants {
             wrapUnwrapMechanisms = mechanisms;
         }
 
-        return wrapUnwrapMechanisms.contains(mechanismCode);
+        return wrapUnwrapMechanisms.contains(mechCode);
     }
 
-    public static String mechanismCodeToString(long mechanismCode) {
+    public static String mechanismCodeToString(long mechCode) {
         initMechanismMap();
         String name = mechanismCodeNamesAvailable
-                ? mechanismNames.get(new Long(mechanismCode)) : null;
+                ? mechanismNames.get(new Long(mechCode)) : null;
         if (name == null) {
-            name = "Unknwon mechanism with code: 0x"
-                    + Functions.toFullHexString(mechanismCode);
+            name = "Unknwon mechanism with code: 0x" + Util.toFullHex(mechCode);
         }
 
         return name;
@@ -401,40 +378,27 @@ public class PKCS11VendorConstants {
         Map<Long, String> codeNameMap = new HashMap<>();
         Map<String, Long> nameCodeMap = new HashMap<>();
         
-        long[] codes = new long[]{
-            CKM_VENDOR_ISO2_SM4_MAC,
-            CKM_VENDOR_ISO2_SM4_MAC_GENERAL,
-            CKM_VENDOR_SM2,
-            CKM_VENDOR_SM2_ENCRYPT,
-            CKM_VENDOR_SM2_KEY_PAIR_GEN,
-            CKM_VENDOR_SM2_SM3,
-            CKM_VENDOR_SM3,
-            CKM_VENDOR_SM4_CBC,
-            CKM_VENDOR_SM4_ECB,
-            CKM_VENDOR_SM4_ECB_ENCRYPT_DATA,
-            CKM_VENDOR_SM4_KEY_GEN,
-            CKM_VENDOR_SM4_MAC,
-            CKM_VENDOR_SM4_MAC_GENERAL};
+        codeNameMap.put(CKM_VENDOR_ISO2_SM4_MAC, "CKM_VENDOR_ISO2_SM4_MAC");
+        codeNameMap.put(CKM_VENDOR_ISO2_SM4_MAC_GENERAL,
+                "CKM_VENDOR_ISO2_SM4_MAC_GENERAL");
+        codeNameMap.put(CKM_VENDOR_SM2, "CKM_VENDOR_SM2");
+        codeNameMap.put(CKM_VENDOR_SM2_ENCRYPT, "CKM_VENDOR_SM2_ENCRYPT");
+        codeNameMap.put(CKM_VENDOR_SM2_KEY_PAIR_GEN,
+                "CKM_VENDOR_SM2_KEY_PAIR_GEN");
+        codeNameMap.put(CKM_VENDOR_SM2_SM3, "CKM_VENDOR_SM2_SM3");
+        codeNameMap.put(CKM_VENDOR_SM3, "CKM_VENDOR_SM3");
+        codeNameMap.put(CKM_VENDOR_SM4_CBC, "CKM_VENDOR_SM4_CBC");
+        codeNameMap.put(CKM_VENDOR_SM4_ECB, "CKM_VENDOR_SM4_ECB");
+        codeNameMap.put(CKM_VENDOR_SM4_ECB_ENCRYPT_DATA,
+                "CKM_VENDOR_SM4_ECB_ENCRYPT_DATA");
+        codeNameMap.put(CKM_VENDOR_SM4_KEY_GEN, "CKM_VENDOR_SM4_KEY_GEN");
+        codeNameMap.put(CKM_VENDOR_SM4_MAC, "CKM_VENDOR_SM4_MAC");
+        codeNameMap.put(CKM_VENDOR_SM4_MAC_GENERAL,
+                "CKM_VENDOR_SM4_MAC_GENERAL");
 
-        String[] names = new String[]{
-            "CKM_VENDOR_ISO2_SM4_MAC",
-            "CKM_VENDOR_ISO2_SM4_MAC_GENERAL",
-            "CKM_VENDOR_SM2",
-            "CKM_VENDOR_SM2_ENCRYPT",
-            "CKM_VENDOR_SM2_KEY_PAIR_GEN",
-            "CKM_VENDOR_SM2_SM3",
-            "CKM_VENDOR_SM3",
-            "CKM_VENDOR_SM4",
-            "CKM_VENDOR_SM4_CBC",
-            "CKM_VENDOR_SM4_ECB",
-            "CKM_VENDOR_SM4_ECB_ENCRYPT_DATA",
-            "CKM_VENDOR_SM4_KEY_GEN",
-            "CKM_VENDOR_SM4_MAC",
-            "CKM_VENDOR_SM4_MAC_GENERAL"};
-
-        for (int i = 0; i < codes.length; i++) {
-            codeNameMap.put(codes[i], names[i]);
-            nameCodeMap.put(names[i], codes[i]);
+        Set<Long> codes = codeNameMap.keySet();
+        for (Long code : codes) {
+            nameCodeMap.put(codeNameMap.get(code), code);
         }
 
         mechanismNames = codeNameMap;
@@ -468,7 +432,6 @@ public class PKCS11VendorConstants {
 
         return Long.parseLong(str, hex ? 16 : 10);
     }
-    
     
     private PKCS11VendorConstants() {
     }

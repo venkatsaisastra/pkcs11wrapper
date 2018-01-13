@@ -57,14 +57,6 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
 public class CharArrayAttribute extends Attribute {
 
     /**
-     * Default constructor - only for internal use in
-     * AttributeArrayAttribute.getValueString().
-     */
-    CharArrayAttribute() {
-        super();
-    }
-
-    /**
      * Constructor taking the PKCS#11 type of the attribute.
      *
      * @param type

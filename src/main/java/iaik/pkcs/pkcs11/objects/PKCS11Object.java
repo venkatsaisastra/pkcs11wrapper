@@ -49,7 +49,6 @@ import java.util.Vector;
 //import java.util.Collections;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.UnsupportedAttributeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
@@ -71,7 +70,7 @@ import sun.security.pkcs11.wrapper.PKCS11;
  */
 @SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
-public class PKCS11Object implements Cloneable {
+public class PKCS11Object {
 
     /**
      * This interface defines the available object classes as defined by
@@ -216,7 +215,6 @@ public class PKCS11Object implements Cloneable {
      */
     public PKCS11Object() {
         attributeTable = new Hashtable<>(32);
-
         allocateAttributes();
     }
 
@@ -418,8 +416,7 @@ public class PKCS11Object implements Cloneable {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -445,38 +442,6 @@ public class PKCS11Object implements Cloneable {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof Attribute)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        PKCS11Object clone;
-
-        try {
-            clone = (PKCS11Object) super.clone();
-
-            clone.objectClass = (ObjectClassAttribute)
-                    this.objectClass.clone();
-            // a new table for the clone
-            clone.attributeTable = new Hashtable<>(32);
-
-            // put all cloned attributes into the new table
-            putAttributesInTable(clone);
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -491,9 +456,7 @@ public class PKCS11Object implements Cloneable {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof PKCS11Object)) {
+        } else if (!(otherObject instanceof PKCS11Object)) {
             return false;
         }
 
@@ -779,8 +742,7 @@ public class PKCS11Object implements Cloneable {
      *                and (attribute <> null)
      * @postconditions
      */
-    protected static void getAttributeValue(Session session,
-            long objectHandle,
+    protected static void getAttributeValue(Session session, long objectHandle,
             Attribute attribute)
         throws PKCS11Exception {
         Util.requireNonNull("session", session);
@@ -840,8 +802,7 @@ public class PKCS11Object implements Cloneable {
      * @postconditions
      */
     protected static void getAttributeValues(Session session,
-            long objectHandle,
-            Attribute[] attributes)
+            long objectHandle, Attribute[] attributes)
         throws PKCS11Exception {
         Util.requireNonNull("session", session);
         Util.requireNonNull("attributes", attributes);

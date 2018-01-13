@@ -60,7 +60,7 @@ public class DefaultMutexHandler implements MutexHandler {
      * in PKCS#11 v2.11.
      *
      */
-    class Mutex {
+    private static class Mutex {
 
         /**
          * Indicates that this mutex is currently locked.

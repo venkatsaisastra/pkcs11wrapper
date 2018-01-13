@@ -42,7 +42,6 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
 
 /**
@@ -69,32 +68,6 @@ public class ObjectHandleParameters implements Parameters {
      */
     public ObjectHandleParameters(PKCS11Object object) {
         this.object = object;
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof ObjectHandleParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        ObjectHandleParameters clone;
-
-        try {
-            clone = (ObjectHandleParameters) super.clone();
-
-            clone.object = (PKCS11Object) this.object.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
     }
 
     /**
@@ -161,9 +134,7 @@ public class ObjectHandleParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof ObjectHandleParameters)) {
+        } else if (!(otherObject instanceof ObjectHandleParameters)) {
             return false;
         }
 

@@ -56,28 +56,28 @@ import sun.security.pkcs11.wrapper.CK_INFO;
  *             and (libraryVersion <> null)
  */
 @SuppressWarnings("restriction")
-public class Info implements Cloneable {
+public class Info {
 
     /**
      * The module claims to be compliant to this version of PKCS#11.
      */
-    protected Version cryptokiVersion;
+    private Version cryptokiVersion;
 
     /**
      * The identifer for the manufacturer of this module.
      */
     // CHECKSTYLE:SKIP
-    protected String manufacturerID;
+    private String manufacturerID;
 
     /**
      * A description of this module.
      */
-    protected String libraryDescription;
+    private String libraryDescription;
 
     /**
      * The version number of this module.
      */
-    protected Version libraryVersion;
+    private Version libraryVersion;
 
     /**
      * Constructor taking the CK_INFO object of the token.
@@ -87,39 +87,12 @@ public class Info implements Cloneable {
      * @preconditions (ckInfo <> null)
      * @postconditions
      */
-    protected Info(CK_INFO ckInfo) {
+    public Info(CK_INFO ckInfo) {
         Util.requireNonNull("ckInfo", ckInfo);
         cryptokiVersion = new Version(ckInfo.cryptokiVersion);
         manufacturerID = new String(ckInfo.manufacturerID);
         libraryDescription = new String(ckInfo.libraryDescription);
         libraryVersion = new Version(ckInfo.libraryVersion);
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof Info)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        Info clone;
-
-        try {
-            clone = (Info) super.clone();
-
-            clone.cryptokiVersion = (Version) this.cryptokiVersion.clone();
-            clone.libraryVersion = (Version) this.libraryVersion.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is clone-able
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
     }
 
     /**
@@ -197,9 +170,7 @@ public class Info implements Cloneable {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof Info)) {
+        } else if (!(otherObject instanceof Info)) {
             return false;
         }
 

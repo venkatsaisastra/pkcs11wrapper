@@ -60,14 +60,6 @@ import sun.security.pkcs11.wrapper.CK_DATE;
 public class DateAttribute extends Attribute {
 
     /**
-     * Default constructor - only for internal use in
-     * AttributeArrayAttribute.getValueString().
-     */
-    DateAttribute() {
-        super();
-    }
-
-    /**
      * Constructor taking the PKCS#11 type of the attribute.
      *
      * @param type
@@ -120,26 +112,18 @@ public class DateAttribute extends Attribute {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof DateAttribute)) {
+        } else if (!(otherObject instanceof DateAttribute)) {
             return false;
         }
 
         DateAttribute other = (DateAttribute) otherObject;
         if (!this.present && !other.present) {
             return true;
-        }
-
-        if (!(this.present && other.present)) {
+        } else if (!(this.present && other.present)) {
             return false;
-        }
-
-        if (this.sensitive != other.sensitive) {
+        } else if (this.sensitive != other.sensitive) {
             return false;
-        }
-
-        if (this.ckAttribute.type != other.ckAttribute.type) {
+        } else if (this.ckAttribute.type != other.ckAttribute.type) {
             return false;
         }
 

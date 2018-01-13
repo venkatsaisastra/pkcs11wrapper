@@ -42,8 +42,6 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import iaik.pkcs.pkcs11.TokenRuntimeException;
-
 /**
  * This class encapsulates parameters for the MAC algorithms for the following
  * mechanisms: DES, DES3 (triple-DES), CAST, CAST3, CAST128 (CAST5), IDEA, and
@@ -70,30 +68,6 @@ public class MacGeneralParameters implements Parameters {
      */
     public MacGeneralParameters(long macLength) {
         this.macLength = macLength;
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof MacGeneralParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        MacGeneralParameters clone;
-
-        try {
-            clone = (MacGeneralParameters) super.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
     }
 
     /**
@@ -159,9 +133,7 @@ public class MacGeneralParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof MacGeneralParameters)) {
+        } else if (!(otherObject instanceof MacGeneralParameters)) {
             return false;
         }
 

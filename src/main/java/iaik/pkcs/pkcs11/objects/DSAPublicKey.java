@@ -87,7 +87,6 @@ public class DSAPublicKey extends PublicKey {
      * @postconditions
      */
     public DSAPublicKey() {
-        super();
         keyType.setLongValue(KeyType.DSA);
     }
 
@@ -137,8 +136,7 @@ public class DSAPublicKey extends PublicKey {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -173,30 +171,6 @@ public class DSAPublicKey extends PublicKey {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof DSAPublicKey)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        DSAPublicKey clone = (DSAPublicKey) super.clone();
-
-        clone.prime = (ByteArrayAttribute) this.prime.clone();
-        clone.subprime = (ByteArrayAttribute) this.subprime.clone();
-        clone.base = (ByteArrayAttribute) this.base.clone();
-        clone.value = (ByteArrayAttribute) this.value.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -211,9 +185,7 @@ public class DSAPublicKey extends PublicKey {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof DSAPublicKey)) {
+        } else if (!(otherObject instanceof DSAPublicKey)) {
             return false;
         }
 

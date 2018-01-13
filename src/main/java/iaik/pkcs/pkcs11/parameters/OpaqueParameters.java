@@ -44,16 +44,13 @@ package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
-import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
  * This class encapsulates parameters byte arrays.
  *
- * @author 
- * @version 1.0
- * @invariants (publicValue <> null)
+ * @author Lijun Liao
  */
 public class OpaqueParameters implements Parameters {
 
@@ -61,23 +58,6 @@ public class OpaqueParameters implements Parameters {
 
     public OpaqueParameters(byte[] bytes) {
         this.bytes = bytes;
-    }
-
-    @Override
-    public Object clone() {
-        OpaqueParameters clone;
-
-        try {
-            clone = (OpaqueParameters) super.clone();
-
-            clone.bytes = (byte[]) this.bytes.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
     }
 
     /**
@@ -111,7 +91,7 @@ public class OpaqueParameters implements Parameters {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("  Bytes (hex): ").append(Functions.toHexString(bytes));
+        sb.append("  Bytes (hex): ").append(Util.toHex(bytes));
         return sb.toString();
     }
 
@@ -119,9 +99,7 @@ public class OpaqueParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof OpaqueParameters)) {
+        } else if (!(otherObject instanceof OpaqueParameters)) {
             return false;
         }
 

@@ -63,7 +63,6 @@ public class PKCS11RuntimeException extends TokenRuntimeException {
      *
      */
     public PKCS11RuntimeException() {
-      super();
     }
 
     /**

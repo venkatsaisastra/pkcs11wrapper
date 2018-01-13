@@ -72,7 +72,6 @@ public class GenericTemplate extends PKCS11Object {
      * @postconditions
      */
     public GenericTemplate() {
-        super();
         // we do not want any attributes in this object by default
         attributeTable.clear();
     }
@@ -136,35 +135,6 @@ public class GenericTemplate extends PKCS11Object {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof GenericTemplate)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        GenericTemplate clone = (GenericTemplate) super.clone();
-        // we do not want any attributes in this object by default
-        clone.attributeTable.clear();
-
-        // make a deep clone of all attributes
-        Enumeration<Attribute> attributesEnumeration
-            = attributeTable.elements();
-        while (attributesEnumeration.hasMoreElements()) {
-            Attribute attribute = attributesEnumeration.nextElement();
-            Attribute clonedAttribute = (Attribute) attribute.clone();
-            // put all cloned attributes into the new table
-            clone.attributeTable.put(clonedAttribute.getType(),
-                clonedAttribute);
-        }
-
-        return clone;
-    }
-
-    /**
      * Checks, if the given attribute is in this template. More precisely, it
      * returns true, if there is any attribute in this template for which
      * attribute.equals(otherAttribute) returns true.
@@ -195,9 +165,7 @@ public class GenericTemplate extends PKCS11Object {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof GenericTemplate)) {
+        } else if (!(otherObject instanceof GenericTemplate)) {
             return false;
         }
 

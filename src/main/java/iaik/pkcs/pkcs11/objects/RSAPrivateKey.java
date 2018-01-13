@@ -161,8 +161,7 @@ public class RSAPrivateKey extends PrivateKey {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -207,36 +206,6 @@ public class RSAPrivateKey extends PrivateKey {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof RSAPrivateKey)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        RSAPrivateKey clone = (RSAPrivateKey) super.clone();
-
-        clone.modulus = (ByteArrayAttribute) this.modulus.clone();
-        clone.publicExponent
-            = (ByteArrayAttribute) this.publicExponent.clone();
-        clone.privateExponent
-            = (ByteArrayAttribute) this.privateExponent.clone();
-        clone.prime1 = (ByteArrayAttribute) this.prime1.clone();
-        clone.prime2 = (ByteArrayAttribute) this.prime2.clone();
-        clone.exponent1 = (ByteArrayAttribute) this.exponent1.clone();
-        clone.exponent2 = (ByteArrayAttribute) this.exponent2.clone();
-        clone.coefficient = (ByteArrayAttribute) this.coefficient.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -251,9 +220,7 @@ public class RSAPrivateKey extends PrivateKey {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof RSAPrivateKey)) {
+        } else if (!(otherObject instanceof RSAPrivateKey)) {
             return false;
         }
 

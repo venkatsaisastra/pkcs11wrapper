@@ -60,7 +60,7 @@ public interface Notify {
      * This is the code to return in a PKCS11Exception to signal surrender
      * to the library.
      */
-    public static final long CANCEL = PKCS11Constants.CKR_CANCEL;
+    static final long CANCEL = PKCS11Constants.CKR_CANCEL;
 
     /**
      * The module calls this method in certain events. 'Surrender' is the only
@@ -88,7 +88,7 @@ public interface Notify {
      * @preconditions (session <> null)
      * @postconditions
      */
-    public void notify(Session session, boolean surrender, Object application)
+    void notify(Session session, boolean surrender, Object application)
         throws PKCS11Exception;
 
 }

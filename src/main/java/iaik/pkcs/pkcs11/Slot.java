@@ -70,19 +70,19 @@ public class Slot {
     /**
      * The module that created this slot object.
      */
-    protected Module module;
+    private Module module;
 
     /**
      * The identifier of the slot.
      */
     // CHECKSTYLE:SKIP
-    protected long slotID;
+    private long slotID;
 
     /**
      * True, if UTF8 encoding is used as character encoding for character array
      * attributes and PINs.
      */
-    protected boolean useUtf8Encoding = true;
+    private boolean useUtf8Encoding = true;
 
     /**
      * The constructor that takes a reference to the module and the slot ID.
@@ -94,8 +94,7 @@ public class Slot {
      * @preconditions (pkcs11Module <> null)
      * @postconditions
      */
-    protected Slot(Module module,
-            long slotID) { // CHECKSTYLE:SKIP
+    protected Slot(Module module, long slotID) { // CHECKSTYLE:SKIP
         this.module = Util.requireNonNull("module", module);
         this.slotID = slotID;
     }
@@ -115,9 +114,7 @@ public class Slot {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof Slot)) {
+        } else if (!(otherObject instanceof Slot)) {
             return false;
         }
 
@@ -132,7 +129,7 @@ public class Slot {
      * @param useUtf8Encoding
      *          true, if UTF8 shall be used
      */
-    public void setUtf8Encoding(boolean useUtf8Encoding) {
+    public void setUseUtf8Encoding(boolean useUtf8Encoding) {
         this.useUtf8Encoding = useUtf8Encoding;
     }
 
@@ -141,7 +138,7 @@ public class Slot {
      * @return true, if UTF8 is used as character encoding for character array
      *         attributes and PINs.
      */
-    public boolean isSetUtf8Encoding() {
+    public boolean isUseUtf8Encoding() {
         return useUtf8Encoding;
     }
 

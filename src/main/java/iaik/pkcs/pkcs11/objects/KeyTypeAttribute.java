@@ -73,15 +73,11 @@ public class KeyTypeAttribute extends LongAttribute {
     @SuppressWarnings("restriction")
     @Override
     protected String getValueString() {
-        String valueString;
-
         if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
-            valueString = Key.getKeyTypeName((Long) ckAttribute.pValue);
+            return Key.getKeyTypeName((Long) ckAttribute.pValue);
         } else {
-            valueString = "<NULL_PTR>";
+            return "<NULL_PTR>";
         }
-
-        return valueString;
     }
 
 }

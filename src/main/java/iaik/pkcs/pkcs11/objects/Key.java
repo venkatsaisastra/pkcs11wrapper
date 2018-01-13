@@ -263,9 +263,8 @@ public class Key extends Storage {
          * @preconditions (session <> null)
          * @postconditions (result <> null)
          */
-        @SuppressWarnings("restriction")
         public PKCS11Object build(Session session, long objectHandle)
-            throws sun.security.pkcs11.wrapper.PKCS11Exception;
+            throws PKCS11Exception;
 
     }
 
@@ -331,7 +330,6 @@ public class Key extends Storage {
      * @postconditions
      */
     public Key() {
-        super();
     }
 
     /**
@@ -440,8 +438,7 @@ public class Key extends Storage {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -488,36 +485,6 @@ public class Key extends Storage {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof Key)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        Key clone = (Key) super.clone();
-
-        clone.keyType = (KeyTypeAttribute) this.keyType.clone();
-        clone.id = (ByteArrayAttribute) this.id.clone();
-        clone.startDate = (DateAttribute) this.startDate.clone();
-        clone.endDate = (DateAttribute) this.endDate.clone();
-        clone.derive = (BooleanAttribute) this.derive.clone();
-        clone.local = (BooleanAttribute) this.local.clone();
-        clone.keyGenMechanism = (MechanismAttribute)
-                this.keyGenMechanism.clone();
-        clone.allowedMechanisms = (MechanismArrayAttribute)
-                this.allowedMechanisms.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -532,9 +499,7 @@ public class Key extends Storage {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof Key)) {
+        } else if (!(otherObject instanceof Key)) {
             return false;
         }
 

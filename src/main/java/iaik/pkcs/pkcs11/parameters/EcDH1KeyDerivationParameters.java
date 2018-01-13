@@ -44,6 +44,7 @@ package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
+import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_ECDH1_DERIVE_PARAMS;
 
@@ -81,30 +82,10 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
      *              and (publicData <> null)
      * @postconditions
      */
-    public EcDH1KeyDerivationParameters(long kdf,
-            byte[] sharedData,
+    public EcDH1KeyDerivationParameters(long kdf, byte[] sharedData,
             byte[] publicData) {
         super(kdf, publicData);
         this.sharedData = sharedData;
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof EcDH1KeyDerivationParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        EcDH1KeyDerivationParameters clone
-                = (EcDH1KeyDerivationParameters) super.clone();
-
-        clone.sharedData = (byte[]) this.sharedData.clone();
-
-        return clone;
     }
 
     /**
@@ -152,8 +133,7 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Shared Data: ")
-            .append(Functions.toHexString(sharedData));
+        sb.append("\n  Shared Data: ").append(Util.toHex(sharedData));
         return sb.toString();
     }
 
@@ -172,9 +152,7 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof EcDH1KeyDerivationParameters)) {
+        } else if (!(otherObject instanceof EcDH1KeyDerivationParameters)) {
             return false;
         }
 

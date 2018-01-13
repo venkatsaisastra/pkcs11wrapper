@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
-import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_PBE_PARAMS;
@@ -103,47 +102,17 @@ public class PBEParameters implements Parameters {
      *                and (salt <> null)
      * @postconditions
      */
-    public PBEParameters(char[] iv,
-            char[] password,
-            char[] salt,
+    public PBEParameters(char[] iv, char[] password, char[] salt,
             long iterations) {
         if ((iv != null) && (iv.length != 8)) {
             throw new IllegalArgumentException(
-                "Argument \"initializationVector\" must be null or must have"
+                "Argument \"iv\" must be null or must have"
                 + " length 8, if it is not null.");
         }
         this.iv = iv;
         this.password = Util.requireNonNull("password", password);
         this.salt = Util.requireNonNull("salt", salt);
         this.iterations = iterations;
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof PBEParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        PBEParameters clone;
-
-        try {
-            clone = (PBEParameters) super.clone();
-
-            clone.iv = (char[]) this.iv.clone();
-            clone.password = (char[]) this.password.clone();
-            clone.salt = (char[]) this.salt.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
     }
 
     /**
@@ -223,9 +192,8 @@ public class PBEParameters implements Parameters {
      */
     public void setInitializationVector(char[] iv) {
         if ((iv != null) && (iv.length != 8)) {
-            throw new IllegalArgumentException(
-                "Argument \"iv\" must be null or must have "
-                + "length 8, if it is not null.");
+            throw new IllegalArgumentException("Argument \"iv\" must be null"
+                    + " or must have length 8, if it is not null.");
         }
         this.iv = iv;
     }
@@ -275,8 +243,7 @@ public class PBEParameters implements Parameters {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("  Initialization Vector: ")
-            .append((iv != null) ? new String(iv) : null);
+        sb.append("  IV: ").append((iv != null) ? new String(iv) : null);
         sb.append("\n  Password: ")
             .append((password != null) ? new String(password) : null);
         sb.append("\n  Salt: ")
@@ -300,9 +267,7 @@ public class PBEParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof PBEParameters)) {
+        } else if (!(otherObject instanceof PBEParameters)) {
             return false;
         }
 
@@ -323,10 +288,8 @@ public class PBEParameters implements Parameters {
      */
     @Override
     public int hashCode() {
-        return Functions.hashCode(iv)
-                ^ Functions.hashCode(password)
-                ^ Functions.hashCode(salt)
-                ^ ((int) iterations);
+        return Functions.hashCode(iv) ^ Functions.hashCode(password)
+                ^ Functions.hashCode(salt) ^ ((int) iterations);
     }
 
 }

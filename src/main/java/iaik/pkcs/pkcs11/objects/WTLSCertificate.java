@@ -94,7 +94,6 @@ public class WTLSCertificate extends Certificate {
      * @postconditions
      */
     public WTLSCertificate() {
-        super();
         certificateType.setLongValue(CertificateType.WTLS);
     }
 
@@ -145,8 +144,7 @@ public class WTLSCertificate extends Certificate {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -189,34 +187,6 @@ public class WTLSCertificate extends Certificate {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof X509PublicKeyCertificate)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        WTLSCertificate clone = (WTLSCertificate) super.clone();
-
-        clone.subject = (ByteArrayAttribute) this.subject.clone();
-        clone.issuer = (ByteArrayAttribute) this.issuer.clone();
-        clone.value = (ByteArrayAttribute) this.value.clone();
-        clone.url = (CharArrayAttribute) this.url.clone();
-        clone.hashOfSubjectPublicKey
-            = (ByteArrayAttribute) this.hashOfSubjectPublicKey.clone();
-        clone.hashOfIssuerPublicKey
-            = (ByteArrayAttribute) this.hashOfIssuerPublicKey.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -231,9 +201,7 @@ public class WTLSCertificate extends Certificate {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof WTLSCertificate)) {
+        } else if (!(otherObject instanceof WTLSCertificate)) {
             return false;
         }
 
@@ -371,9 +339,9 @@ public class WTLSCertificate extends Certificate {
         sb.append("\n  Issuer (DER, hex): ").append(issuer);
         sb.append("\n  Value (BER, hex): ").append(value);
         sb.append("\n  URL: ").append(url);
-        sb.append("\n  Hash Of Subject Public Key: ")
+        sb.append("\n  Hash(Subject Public Key): ")
             .append(hashOfSubjectPublicKey);
-        sb.append("\n  Hash Of Issuer Public Key: ")
+        sb.append("\n  Hash(Issuer Public Key): ")
             .append(hashOfIssuerPublicKey);
         return sb.toString();
     }

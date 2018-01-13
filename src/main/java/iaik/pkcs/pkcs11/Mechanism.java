@@ -54,7 +54,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  * @version 1.0
  * @invariants
  */
-public class Mechanism implements Cloneable {
+public class Mechanism {
 
     /**
      * The code of the mechanism as defined in PKCS11Constants (or pkcs11t.h
@@ -92,26 +92,6 @@ public class Mechanism implements Cloneable {
     }
 
     /**
-     * Makes a clone of this object.
-     *
-     * @return A shallow clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public Object clone() {
-        Mechanism clone = null;
-
-        try {
-            clone = (Mechanism) super.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen according to Java specifications
-        }
-
-        return clone;
-    }
-
-    /**
      * Override equals to check for the equality of mechanism code and
      * parameter.
      *
@@ -126,9 +106,7 @@ public class Mechanism implements Cloneable {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof Mechanism)) {
+        } else  if (!(otherObject instanceof Mechanism)) {
             return false;
         }
 

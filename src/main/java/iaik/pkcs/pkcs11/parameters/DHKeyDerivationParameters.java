@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
-import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
@@ -70,15 +69,6 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 // CHECKSTYLE:SKIP
 abstract public class DHKeyDerivationParameters implements Parameters {
 
-    /**
-     * This interface defines the available key derivation function types as
-     * defined by PKCS#11: CKD_NULL, CKD_SHA1_KDF, CKD_SHA1_KDF_ASN1,
-     * CKD_SHA1_KDF_CONCATENATE.
-     *
-     * @author Karl Scheibelhofer
-     * @version 1.0
-     * @invariants
-     */
     public interface KeyDerivationFunctionType {
 
         /**
@@ -130,8 +120,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
      *              and (publicData <> null)
      * @postconditions
      */
-    protected DHKeyDerivationParameters(long kdf,
-            byte[] publicData) {
+    protected DHKeyDerivationParameters(long kdf, byte[] publicData) {
         if ((kdf != KeyDerivationFunctionType.NULL)
             && (kdf != KeyDerivationFunctionType.SHA1_KDF)
             && (kdf != KeyDerivationFunctionType.SHA1_KDF_ASN1)
@@ -142,32 +131,6 @@ abstract public class DHKeyDerivationParameters implements Parameters {
 
         this.publicData = Util.requireNonNull("publicData", publicData);
         this.kdf = kdf;
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof DHKeyDerivationParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        DHKeyDerivationParameters clone;
-
-        try {
-            clone = (DHKeyDerivationParameters) super.clone();
-
-            clone.publicData = (byte[]) this.publicData.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
     }
 
     /**
@@ -250,8 +213,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
             sb.append("<unknown>");
         }
 
-        sb.append("\n  Public Data: ")
-            .append(Functions.toHexString(publicData));
+        sb.append("\n  Public Data: ").append(Util.toHex(publicData));
 
         return sb.toString();
     }
@@ -271,9 +233,7 @@ abstract public class DHKeyDerivationParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof DHKeyDerivationParameters)) {
+        } else if (!(otherObject instanceof DHKeyDerivationParameters)) {
             return false;
         }
 

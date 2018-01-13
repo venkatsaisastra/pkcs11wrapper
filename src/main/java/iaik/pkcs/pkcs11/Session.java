@@ -180,22 +180,22 @@ public class Session {
     /**
      * A reference to the underlying PKCS#11 module to perform the operations.
      */
-    protected Module module;
+    private Module module;
 
     /**
      * A reference to the underlying PKCS#11 module to perform the operations.
      */
-    protected PKCS11 pkcs11Module;
+    private PKCS11 pkcs11Module;
 
     /**
      * The session handle to perform the operations with.
      */
-    protected long sessionHandle;
+    private long sessionHandle;
 
     /**
      * The token to perform the operations on.
      */
-    protected Token token;
+    private Token token;
 
     /**
      * Constructor taking the token and the session handle.
@@ -287,9 +287,7 @@ public class Session {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof Session)) {
+        } else if (!(otherObject instanceof Session)) {
             return false;
         }
 
@@ -421,6 +419,10 @@ public class Session {
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
         }
+    }
+    
+    public void setSessionHandle(long sessionHandle) {
+        this.sessionHandle = sessionHandle;
     }
 
     /**
@@ -895,7 +897,7 @@ public class Session {
      */
     public void decryptInit(Mechanism mechanism, Key key)
         throws TokenException {
-        CK_MECHANISM ckMechanism = getCkMechanism(mechanism);
+        CK_MECHANISM ckMechanism = toCkMechanism(mechanism);
 
         try {
             pkcs11Module.C_DecryptInit(sessionHandle, ckMechanism,
@@ -1006,7 +1008,7 @@ public class Session {
      */
     public void digestInit(Mechanism mechanism)
         throws TokenException {
-        CK_MECHANISM ckMechanism = getCkMechanism(mechanism);
+        CK_MECHANISM ckMechanism = toCkMechanism(mechanism);
         try {
             pkcs11Module.C_DigestInit(sessionHandle, ckMechanism);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
@@ -1042,8 +1044,8 @@ public class Session {
         Util.requireNonNull("digest", digest);
 
         try {
-            return pkcs11Module.C_DigestSingle(sessionHandle,
-                    getCkMechanism(mechanism),
+            return pkcs11Module.C_DigestSingle(sessionHandle, 
+                    toCkMechanism(mechanism),
                     in, inOfs, inLen, digest, digestOfs, digestLen);
         } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
             throw new PKCS11Exception(ex);
@@ -1145,7 +1147,7 @@ public class Session {
      */
     public void signInit(Mechanism mechanism, Key key)
         throws TokenException {
-        CK_MECHANISM ckMechanism = getCkMechanism(mechanism);
+        CK_MECHANISM ckMechanism = toCkMechanism(mechanism);
         try {
             pkcs11Module.C_SignInit(sessionHandle, ckMechanism,
                     key.getObjectHandle());
@@ -1431,7 +1433,7 @@ public class Session {
      */
     public void verifyRecoverInit(Mechanism mechanism, Key key)
         throws TokenException {
-        CK_MECHANISM ckMechanism = getCkMechanism(mechanism);
+        CK_MECHANISM ckMechanism = toCkMechanism(mechanism);
         try {
             pkcs11Module.C_VerifyRecoverInit(sessionHandle, ckMechanism,
                     key.getObjectHandle());
@@ -1901,7 +1903,7 @@ public class Session {
         return sb.toString();
     }
 
-    private static CK_MECHANISM getCkMechanism(Mechanism mechanism) {
+    private static CK_MECHANISM toCkMechanism(Mechanism mechanism) {
         CK_MECHANISM ckMechanism = new CK_MECHANISM();
         ckMechanism.mechanism = mechanism.getMechanismCode();
         Parameters parameters = mechanism.getParameters();

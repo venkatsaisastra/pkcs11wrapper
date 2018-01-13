@@ -46,11 +46,9 @@ import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.objects.SecretKey;
-import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
 
 /**
@@ -116,37 +114,6 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
     public SSL3KeyMaterialOutParameters(byte[] clientIV, byte[] serverIV) {
         this.clientIV = Util.requireNonNull("clientIV", clientIV);
         this.serverIV = Util.requireNonNull("serverIV", serverIV);
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof SSL3KeyMaterialOutParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        SSL3KeyMaterialOutParameters clone;
-
-        try {
-            clone = (SSL3KeyMaterialOutParameters) super.clone();
-
-            clone.clientMacSecret = (SecretKey) this.clientMacSecret.clone();
-            clone.serverMacSecret = (SecretKey) this.serverMacSecret.clone();
-            clone.clientKey = (SecretKey) this.clientKey.clone();
-            clone.serverKey = (SecretKey) this.serverKey.clone();
-            clone.clientIV = (byte[]) this.clientIV.clone();
-            clone.serverIV = (byte[]) this.serverIV.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
     }
 
     /**
@@ -291,9 +258,9 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
         sb.append("\n\n  Client Secret key:\n").append(clientKey);
         sb.append("\n\n  Server Secret key:\n").append(serverKey);
         sb.append("\n\n  Client Initializatin Vector (hex):\n")
-            .append(Functions.toHexString(clientIV));
+            .append(Util.toHex(clientIV));
         sb.append("\n  Server Initializatin Vector (hex): ")
-            .append(Functions.toHexString(serverIV));
+            .append(Util.toHex(serverIV));
 
         return sb.toString();
     }
@@ -313,9 +280,7 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof SSL3KeyMaterialOutParameters)) {
+        } else if (!(otherObject instanceof SSL3KeyMaterialOutParameters)) {
             return false;
         }
 

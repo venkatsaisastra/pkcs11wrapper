@@ -44,6 +44,7 @@ package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
+import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_X9_42_DH1_DERIVE_PARAMS;
 
@@ -85,28 +86,9 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
      * @postconditions
      */
     public X942DH1KeyDerivationParameters(long keyDerivationFunction,
-            byte[] otherInfo,
-            byte[] publicData) {
+            byte[] otherInfo, byte[] publicData) {
         super(keyDerivationFunction, publicData);
         this.otherInfo = otherInfo;
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof X942DH1KeyDerivationParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        X942DH1KeyDerivationParameters clone
-                = (X942DH1KeyDerivationParameters) super.clone();
-
-        clone.otherInfo = (byte[]) this.otherInfo.clone();
-        return clone;
     }
 
     /**
@@ -160,7 +142,7 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Other Info: ").append(Functions.toHexString(otherInfo));
+        sb.append("\n  Other Info: ").append(Util.toHex(otherInfo));
         return sb.toString();
     }
 
@@ -179,9 +161,7 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof X942DH1KeyDerivationParameters)) {
+        } else if (!(otherObject instanceof X942DH1KeyDerivationParameters)) {
             return false;
         }
 

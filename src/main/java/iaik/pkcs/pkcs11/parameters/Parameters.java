@@ -49,7 +49,7 @@ package iaik.pkcs.pkcs11.parameters;
  * @version 1.0
  * @invariants
  */
-public interface Parameters extends Cloneable {
+public interface Parameters {
 
     /**
      * Get this parameters object as an object of the corresponding *_PARAMS

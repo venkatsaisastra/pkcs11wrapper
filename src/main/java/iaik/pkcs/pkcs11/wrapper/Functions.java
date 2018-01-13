@@ -50,6 +50,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import iaik.pkcs.pkcs11.Util;
 import sun.security.pkcs11.wrapper.CK_DATE;
 
 /**
@@ -60,7 +61,7 @@ import sun.security.pkcs11.wrapper.CK_DATE;
  * @author Martin Schlaeffer
  */
 @SuppressWarnings("restriction")
-public class Functions {
+public class Functions implements PKCS11Constants {
 
     /**
      * The name of the properties file that holds the names of the PKCS#11
@@ -73,162 +74,126 @@ public class Functions {
      * True, if the mapping of mechanism codes to PKCS#11 mechanism names is
      * available.
      */
-    private static boolean mechanismCodeNamesAvailable;
+    private static boolean mechCodeNamesAvailable;
 
     /**
      * Maps mechanism codes as Long to their names as Strings.
      */
-    private static Map<Long, String> mechanismNames;
+    private static Map<Long, String> mechNames;
+
+    /**
+     * Maps mechanism name as String to their code as Long.
+     */
+    private static Map<String, Long> mechNameToCodes;
 
     /**
      * This set contains the mechanisms that are full encrypt/decrypt
      * mechanisms; i.e. mechanisms that support the update functions.
      */
-    private static Set<Long> fullEncryptDecryptMechanisms;
+    private static Set<Long> fullEncryptDecryptMechs;
 
     /**
      * This set contains the mechanisms that are single-operation
      * encrypt/decrypt mechanisms; i.e. mechanisms that do not support the
      * update functions.
      */
-    private static Set<Long> singleOperationEncryptDecryptMechanisms;
+    private static Set<Long> sglOpEncryptDecryptMechs;
 
     /**
      * This set contains the mechanisms that are full sign/verify
      * mechanisms; i.e. mechanisms that support the update functions.
      */
-    private static Set<Long> fullSignVerifyMechanisms;
+    private static Set<Long> fullSignVerifyMechs;
 
     /**
      * This set contains the mechanisms that are single-operation
      * sign/verify mechanisms; i.e. mechanisms that do not support the update
      * functions.
      */
-    private static Set<Long> singleOperationSignVerifyMechanisms;
+    private static Set<Long> sglOpSignVerifyMechs;
 
     /**
      * This table contains the mechanisms that are sign/verify mechanisms with
      * message recovery.
      */
-    private static Set<Long> signVerifyRecoverMechanisms;
+    private static Set<Long> signVerifyRecoverMechs;
 
     /**
      * This set contains the mechanisms that are digest mechanisms.
      * The Long values of the mechanisms are the keys, and the mechanism
      * names are the values.
      */
-    private static Set<Long> digestMechanisms;
+    private static Set<Long> digestMechs;
 
     /**
      * This table contains the mechanisms that key generation mechanisms; i.e.
      * mechanisms for generating symmetric keys.
      */
-    private static Set<Long> keyGenerationMechanisms;
+    private static Set<Long> keyGenMechs;
 
     /**
      * This table contains the mechanisms that key-pair generation mechanisms;
      * i.e. mechanisms for generating key-pairs.
      */
-    private static Set<Long> keyPairGenerationMechanisms;
+    private static Set<Long> keyPairGenMechs;
 
     /**
      * This table contains the mechanisms that are wrap/unwrap mechanisms.
      */
-    private static Set<Long> wrapUnwrapMechanisms;
+    private static Set<Long> wrapUnwrapMechs;
 
     /**
      * This table contains the mechanisms that are key derivation mechanisms.
      */
-    private static Set<Long> keyDerivationMechanisms;
-
-    /**
-     * For converting numbers to their hex presentation.
-     */
-    private static final char[] HEX_DIGITS = {
-        '0', '1', '2', '3', '4', '5', '6', '7',
-        '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-
-    /**
-     * Converts a long value to a hexadecimal String of length 16. Includes
-     * leading zeros if necessary.
-     *
-     * @param value
-     *          The long value to be converted.
-     * @return The hexadecimal string representation of the long value.
-     */
-    public static String toFullHexString(long value) {
-        long currentValue = value;
-        StringBuilder stringBuffer = new StringBuilder(16);
-        for (int j = 0; j < 16; j++) {
-            int currentDigit = (int) currentValue & 0xf;
-            stringBuffer.append(HEX_DIGITS[currentDigit]);
-            currentValue >>>= 4;
-        }
-
-        return stringBuffer.reverse().toString();
-    }
-
-    /**
-     * Converts a byte array to a hexadecimal String. Each byte is presented by
-     * its two digit hex-code; 0x0A -> "0a", 0x00 -> "00". No leading "0x" is
-     * included in the result.
-     *
-     * @param value
-     *          The byte array to be converted
-     * @return the hexadecimal string representation of the byte array
-     */
-    public static String toHexString(byte[] value) {
-        if (value == null) {
-            return null;
-        }
-
-        StringBuilder buffer = new StringBuilder(2 * value.length);
-        int single;
-
-        for (int i = 0; i < value.length; i++) {
-            single = value[i] & 0xFF;
-
-            if (single < 0x10) {
-                buffer.append('0');
-            }
-
-            buffer.append(Integer.toString(single, 16));
-        }
-
-        return buffer.toString();
-    }
+    private static Set<Long> keyDerivationMechs;
 
     /**
      * Converts the long value code of a mechanism to a name.
      *
-     * @param mechanismCode
+     * @param mechCode
      *          The code of the mechanism to be converted to a string.
      * @return The string representation of the mechanism.
      */
-    public static String mechanismCodeToString(long mechanismCode) {
+    public static String mechanismCodeToString(long mechCode) {
         initMechanismMap();
-        String name = mechanismCodeNamesAvailable
-                ? mechanismNames.get(new Long(mechanismCode)) : null;
+        String name = mechCodeNamesAvailable ? mechNames.get(mechCode) : null;
         if (name == null) {
-            name = PKCS11VendorConstants.mechanismCodeToString(mechanismCode);
+            name = PKCS11VendorConstants.mechanismCodeToString(mechCode);
         }
 
         if (name == null) {
-            name = "Unknwon mechanism with code: 0x"
-                    + toFullHexString(mechanismCode);
+            name = "Unknwon mechanism with code: 0x" + Util.toFullHex(mechCode);
         }
 
         return name;
     }
 
+    /**
+     * Converts the mechanism name to code value.
+     *
+     * @param mechName
+     *          The name of the mechanism to be converted to a code.
+     * @return The code representation of the mechanism.
+     */
+    public static long mechanismStringToCode(String mechName) {
+        initMechanismMap();
+        Long code = mechCodeNamesAvailable
+                ? mechNameToCodes.get(mechName) : null;
+        if (code == null) {
+            code = PKCS11VendorConstants.mechanismStringToCode(mechName);
+        }
+        return (code != null) ? code : -1;
+    }
+
     private static void initMechanismMap() {
         // ensure that another thread has not loaded the codes meanwhile
-        if (mechanismNames != null) {
+        if (mechNames != null) {
             return;
         }
 
-        // if the names of the defined error codes are not yet loaded, load them
+        // if the names of the defined codes are not yet loaded, load them
         Map<Long, String> codeNameMap = new HashMap<>();
+        Map<String, Long> nameCodeMap = new HashMap<>();
 
         Properties props = new Properties();
         try {
@@ -252,13 +217,18 @@ public class Functions {
 
                 String mainMechName = tokens.nextToken();
                 codeNameMap.put(code, mainMechName);
+                nameCodeMap.put(mainMechName, code);
+                
+                while (tokens.hasMoreTokens()) {
+                    nameCodeMap.put(tokens.nextToken(), code);
+                }
             }
-            mechanismNames = codeNameMap;
-            mechanismCodeNamesAvailable = true;
-        } catch (Exception exception) {
+            mechNames = codeNameMap;
+            mechNameToCodes = nameCodeMap;
+            mechCodeNamesAvailable = true;
+        } catch (Exception ex) {
             System.err.println(
-                "Could not read properties for error code names: "
-                + exception.getMessage());
+                "Could not read properties for code names: " + ex.getMessage());
         }
     }
 
@@ -387,7 +357,15 @@ public class Functions {
 
         return hash;
     }
-
+    
+    private static Set<Long> asSet(long[] elements) {
+        HashSet<Long> set = new HashSet<>();
+        for (long el : elements) {
+            set.add(el);
+        }
+        return set;
+    }
+    
     /**
      * This method checks, if the mechanism with the given code is a full
      * encrypt/decrypt mechanism; i.e. it supports the encryptUpdate() and
@@ -395,64 +373,31 @@ public class Functions {
      * If Returns true, the mechanism can be used with the encrypt
      * and decrypt functions including encryptUpdate and decryptUpdate.
      *
-     * @param mechanismCode
+     * @param mechCode
      *          The code of the mechanism to check.
      * @return True, if the provided mechanism is a full encrypt/decrypt
      *         mechanism. False, otherwise.
      * @preconditions
      * @postconditions
      */
-    public static boolean isFullEncryptDecryptMechanism(long mechanismCode) {
+    public static boolean isFullEncryptDecryptMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
-        if (fullEncryptDecryptMechanisms == null) {
-            long[] mechs = new long[]{
-                PKCS11Constants.CKM_AES_ECB,
-                PKCS11Constants.CKM_AES_CBC,
-                PKCS11Constants.CKM_AES_CBC_PAD,
-                PKCS11Constants.CKM_AES_OFB,
-                PKCS11Constants.CKM_AES_CFB64,
-                PKCS11Constants.CKM_AES_CFB8,
-                PKCS11Constants.CKM_AES_CFB128,
-                PKCS11Constants.CKM_AES_CFB1,
-                PKCS11Constants.CKM_AES_CTR,
-                PKCS11Constants.CKM_AES_CTS,
-                PKCS11Constants.CKM_AES_GCM,
-                PKCS11Constants.CKM_AES_CCM,
-                PKCS11Constants.CKM_AES_KEY_WRAP_PAD,
-                PKCS11Constants.CKM_DES3_ECB,
-                PKCS11Constants.CKM_DES3_CBC,
-                PKCS11Constants.CKM_DES3_CBC_PAD,
-                PKCS11Constants.CKM_DES_OFB64,
-                PKCS11Constants.CKM_DES_OFB8,
-                PKCS11Constants.CKM_DES_CFB64,
-                PKCS11Constants.CKM_DES_CFB8,
-                PKCS11Constants.CKM_BLOWFISH_CBC,
-                PKCS11Constants.CKM_BLOWFISH_CBC_PAD,
-                PKCS11Constants.CKM_CAMELLIA_ECB,
-                PKCS11Constants.CKM_CAMELLIA_CBC,
-                PKCS11Constants.CKM_CAMELLIA_CBC_PAD,
-                PKCS11Constants.CKM_ARIA_ECB,
-                PKCS11Constants.CKM_ARIA_CBC,
-                PKCS11Constants.CKM_ARIA_CBC_PAD,
-                PKCS11Constants.CKM_SEED_CBC_PAD,
-                PKCS11Constants.CKM_GOST28147_ECB,
-                PKCS11Constants.CKM_GOST28147,
-            };
-
-            Set<Long> mechanisms = new HashSet<>();
-            for (Long mech : mechs) {
-                mechanisms.add(mech);
-            }
-            fullEncryptDecryptMechanisms = mechanisms;
+        if (fullEncryptDecryptMechs == null) {
+            long[] mechs = new long[]{CKM_AES_ECB, CKM_AES_CBC, CKM_AES_CBC_PAD,
+                CKM_AES_OFB, CKM_AES_CFB64, CKM_AES_CFB8, CKM_AES_CFB128,
+                CKM_AES_CFB1, CKM_AES_CTR, CKM_AES_CTS, CKM_AES_GCM,
+                CKM_AES_CCM, CKM_AES_KEY_WRAP_PAD,
+                CKM_DES3_ECB, CKM_DES3_CBC, CKM_DES3_CBC_PAD, CKM_DES_OFB64,
+                CKM_DES_OFB8, CKM_DES_CFB64, CKM_DES_CFB8,
+                CKM_BLOWFISH_CBC, CKM_BLOWFISH_CBC_PAD,
+                CKM_CAMELLIA_ECB, CKM_CAMELLIA_CBC, CKM_CAMELLIA_CBC_PAD,
+                CKM_ARIA_ECB, CKM_ARIA_CBC, CKM_ARIA_CBC_PAD,
+                CKM_SEED_CBC_PAD, CKM_GOST28147_ECB, CKM_GOST28147};
+            fullEncryptDecryptMechs = asSet(mechs);
         }
 
-        boolean contained = fullEncryptDecryptMechanisms.contains(
-                new Long(mechanismCode));
-        if (!contained) {
-            contained = PKCS11VendorConstants.isFullEncryptDecryptMechanism(
-                    mechanismCode);
-        }
-        return contained;
+        return fullEncryptDecryptMechs.contains(mechCode)
+            || PKCS11VendorConstants.isFullEncryptDecryptMechanism(mechCode);
     }
 
     /**
@@ -462,7 +407,7 @@ public class Functions {
      * If Returns true, the mechanism can be used with the encrypt
      * and decrypt functions excluding encryptUpdate and decryptUpdate.
      *
-     * @param mechanismCode
+     * @param mechCode
      *          The code of the mechanism to check.
      * @return True, if the provided mechanism is a single-operation
      *         encrypt/decrypt mechanism. False, otherwise.
@@ -470,31 +415,17 @@ public class Functions {
      * @postconditions
      */
     public static boolean isSingleOperationEncryptDecryptMechanism(
-            long mechanismCode) {
+            long mechCode) {
         // build the hashtable on demand (=first use)
-        if (singleOperationEncryptDecryptMechanisms == null) {
-            long[] mechs = new long[]{
-                PKCS11Constants.CKM_RSA_PKCS,
-                PKCS11Constants.CKM_RSA_PKCS_OAEP,
-                PKCS11Constants.CKM_RSA_X_509,
-                PKCS11Constants.CKM_RSA_PKCS_TPM_1_1,
-                PKCS11Constants.CKM_RSA_PKCS_OAEP_TPM_1_1
-            };
-
-            Set<Long> mechanisms = new HashSet<>();
-            for (Long mech : mechs) {
-                mechanisms.add(mech);
-            }
-            singleOperationEncryptDecryptMechanisms = mechanisms;
+        if (sglOpEncryptDecryptMechs == null) {
+            long[] mechs = new long[]{CKM_RSA_PKCS, CKM_RSA_PKCS_OAEP,
+                CKM_RSA_X_509, CKM_RSA_PKCS_TPM_1_1, CKM_RSA_PKCS_OAEP_TPM_1_1};
+            sglOpEncryptDecryptMechs = asSet(mechs);
         }
 
-        boolean contained = singleOperationEncryptDecryptMechanisms.contains(
-                new Long(mechanismCode));
-        if (!contained) {
-            contained = PKCS11VendorConstants
-                    .isSingleOperationEncryptDecryptMechanism(mechanismCode);
-        }
-        return contained;
+        return sglOpEncryptDecryptMechs.contains(mechCode)
+            || PKCS11VendorConstants.isSingleOperationEncryptDecryptMechanism(
+                    mechCode);
     }
 
     /**
@@ -504,128 +435,58 @@ public class Functions {
      * If Returns true, the mechanism can be used with the sign and
      * verify functions including signUpdate and verifyUpdate.
      *
-     * @param mechanismCode
+     * @param mechCode
      *          The code of the mechanism to check.
      * @return True, if the provided mechanism is a full sign/verify
      *         mechanism. False, otherwise.
      * @preconditions
      * @postconditions
      */
-    public static boolean isFullSignVerifyMechanism(long mechanismCode) {
+    public static boolean isFullSignVerifyMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
-        if (fullSignVerifyMechanisms == null) {
-            long[] mechs = new long[]{
-                PKCS11Constants.CKM_SHA1_RSA_PKCS,
-                PKCS11Constants.CKM_SHA256_RSA_PKCS,
-                PKCS11Constants.CKM_SHA384_RSA_PKCS,
-                PKCS11Constants.CKM_SHA512_RSA_PKCS,
-                PKCS11Constants.CKM_SHA1_RSA_PKCS_PSS,
-                PKCS11Constants.CKM_SHA256_RSA_PKCS_PSS,
-                PKCS11Constants.CKM_SHA384_RSA_PKCS_PSS,
-                PKCS11Constants.CKM_SHA512_RSA_PKCS_PSS,
-                PKCS11Constants.CKM_SHA1_RSA_X9_31,
-                PKCS11Constants.CKM_DSA_SHA1,
-                PKCS11Constants.CKM_DSA_SHA224,
-                PKCS11Constants.CKM_DSA_SHA256,
-                PKCS11Constants.CKM_DSA_SHA384,
-                PKCS11Constants.CKM_DSA_SHA512,
-                PKCS11Constants.CKM_ECDSA_SHA1,
-                PKCS11Constants.CKM_AES_MAC_GENERAL,
-                PKCS11Constants.CKM_AES_MAC,
-                PKCS11Constants.CKM_AES_XCBC_MAC,
-                PKCS11Constants.CKM_AES_XCBC_MAC_96,
-                PKCS11Constants.CKM_AES_GMAC,
-                PKCS11Constants.CKM_AES_CMAC_GENERAL,
-                PKCS11Constants.CKM_AES_CMAC,
-                PKCS11Constants.CKM_DES3_MAC_GENERAL,
-                PKCS11Constants.CKM_DES3_MAC,
-                PKCS11Constants.CKM_DES3_CMAC_GENERAL,
-                PKCS11Constants.CKM_DES3_CMAC,
-                PKCS11Constants.CKM_SHA_1_HMAC_GENERAL,
-                PKCS11Constants.CKM_SHA_1_HMAC,
-                PKCS11Constants.CKM_SHA224_HMAC,
-                PKCS11Constants.CKM_SHA224_HMAC_GENERAL,
-                PKCS11Constants.CKM_SHA224_RSA_PKCS,
-                PKCS11Constants.CKM_SHA224_RSA_PKCS_PSS,
-                PKCS11Constants.CKM_SHA256_HMAC_GENERAL,
-                PKCS11Constants.CKM_SHA256_HMAC,
-                PKCS11Constants.CKM_SHA384_HMAC_GENERAL,
-                PKCS11Constants.CKM_SHA384_HMAC,
-                PKCS11Constants.CKM_SHA512_HMAC_GENERAL,
-                PKCS11Constants.CKM_SHA512_HMAC,
-                PKCS11Constants.CKM_SHA512_224_HMAC_GENERAL,
-                PKCS11Constants.CKM_SHA512_224_HMAC,
-                PKCS11Constants.CKM_SHA512_256_HMAC_GENERAL,
-                PKCS11Constants.CKM_SHA512_256_HMAC,
-                PKCS11Constants.CKM_SHA512_T_HMAC_GENERAL,
-                PKCS11Constants.CKM_SHA512_T_HMAC,
-                PKCS11Constants.CKM_SSL3_MD5_MAC,
-                PKCS11Constants.CKM_SSL3_SHA1_MAC,
-                PKCS11Constants.CKM_TLS10_MAC_SERVER,
-                PKCS11Constants.CKM_TLS10_MAC_CLIENT,
-                PKCS11Constants.CKM_TLS12_MAC,
-                PKCS11Constants.CKM_CMS_SIG,
-                PKCS11Constants.CKM_CAMELLIA_MAC_GENERAL,
-                PKCS11Constants.CKM_CAMELLIA_MAC,
-                PKCS11Constants.CKM_ARIA_MAC_GENERAL,
-                PKCS11Constants.CKM_ARIA_MAC,
-                PKCS11Constants.CKM_SECURID,
-                PKCS11Constants.CKM_HOTP,
-                PKCS11Constants.CKM_ACTI,
-                PKCS11Constants.CKM_KIP_MAC,
-                PKCS11Constants.CKM_GOST28147_MAC,
-                PKCS11Constants.CKM_GOSTR3411_HMAC,
-                PKCS11Constants.CKM_GOSTR3410_WITH_GOSTR3411,
-                PKCS11Constants.CKM_DSA_SHA3_224,
-                PKCS11Constants.CKM_DSA_SHA3_256,
-                PKCS11Constants.CKM_DSA_SHA3_384,
-                PKCS11Constants.CKM_DSA_SHA3_512,
-                PKCS11Constants.CKM_SHA3_224_RSA_PKCS,
-                PKCS11Constants.CKM_SHA3_256_RSA_PKCS,
-                PKCS11Constants.CKM_SHA3_384_RSA_PKCS,
-                PKCS11Constants.CKM_SHA3_512_RSA_PKCS,
-                PKCS11Constants.CKM_SHA3_224_RSA_PKCS_PSS,
-                PKCS11Constants.CKM_SHA3_256_RSA_PKCS_PSS,
-                PKCS11Constants.CKM_SHA3_384_RSA_PKCS_PSS,
-                PKCS11Constants.CKM_SHA3_512_RSA_PKCS_PSS,
-                PKCS11Constants.CKM_SHA3_224_HMAC,
-                PKCS11Constants.CKM_SHA3_224_HMAC_GENERAL,
-                PKCS11Constants.CKM_SHA3_256_HMAC,
-                PKCS11Constants.CKM_SHA3_256_HMAC_GENERAL,
-                PKCS11Constants.CKM_SHA3_384_HMAC,
-                PKCS11Constants.CKM_SHA3_384_HMAC_GENERAL,
-                PKCS11Constants.CKM_SHA3_512_HMAC,
-                PKCS11Constants.CKM_SHA3_512_HMAC_GENERAL,
-                PKCS11Constants.CKM_ECDSA_SHA3_224,
-                PKCS11Constants.CKM_ECDSA_SHA3_256,
-                PKCS11Constants.CKM_ECDSA_SHA3_384,
-                PKCS11Constants.CKM_ECDSA_SHA3_512,
-                PKCS11Constants.CKM_MD2_HMAC_GENERAL,
-                PKCS11Constants.CKM_MD2_HMAC,
-                PKCS11Constants.CKM_MD5_HMAC_GENERAL,
-                PKCS11Constants.CKM_MD5_HMAC,
-                PKCS11Constants.CKM_RIPEMD128_HMAC_GENERAL,
-                PKCS11Constants.CKM_RIPEMD128_HMAC,
-                PKCS11Constants.CKM_RIPEMD160_HMAC_GENERAL,
-                PKCS11Constants.CKM_RIPEMD160_HMAC,
-                PKCS11Constants.CKM_RIPEMD128_RSA_PKCS,
-                PKCS11Constants.CKM_RIPEMD160_RSA_PKCS
-            };
-
-            Set<Long> mechanisms = new HashSet<>();
-            for (Long mech : mechs) {
-                mechanisms.add(mech);
-            }
-            fullSignVerifyMechanisms = mechanisms;
+        if (fullSignVerifyMechs == null) {
+            long[] mechs = new long[]{CKM_SHA1_RSA_PKCS, CKM_SHA256_RSA_PKCS,
+                CKM_SHA384_RSA_PKCS, CKM_SHA512_RSA_PKCS, CKM_SHA1_RSA_PKCS_PSS,
+                CKM_SHA256_RSA_PKCS_PSS, CKM_SHA384_RSA_PKCS_PSS,
+                CKM_SHA512_RSA_PKCS_PSS, CKM_SHA1_RSA_X9_31,
+                CKM_DSA_SHA1, CKM_DSA_SHA224, CKM_DSA_SHA256, CKM_DSA_SHA384,
+                CKM_DSA_SHA512, CKM_ECDSA_SHA1, CKM_AES_MAC_GENERAL,
+                CKM_AES_MAC, CKM_AES_XCBC_MAC, CKM_AES_XCBC_MAC_96,
+                CKM_AES_GMAC, CKM_AES_CMAC_GENERAL, CKM_AES_CMAC,
+                CKM_DES3_MAC_GENERAL, CKM_DES3_MAC, CKM_DES3_CMAC_GENERAL,
+                CKM_DES3_CMAC, CKM_SHA_1_HMAC_GENERAL, CKM_SHA_1_HMAC,
+                CKM_SHA224_HMAC, CKM_SHA224_HMAC_GENERAL, CKM_SHA224_RSA_PKCS,
+                CKM_SHA224_RSA_PKCS_PSS, CKM_SHA256_HMAC_GENERAL,
+                CKM_SHA256_HMAC, CKM_SHA384_HMAC_GENERAL, CKM_SHA384_HMAC,
+                CKM_SHA512_HMAC_GENERAL, CKM_SHA512_HMAC,
+                CKM_SHA512_224_HMAC_GENERAL, CKM_SHA512_224_HMAC,
+                CKM_SHA512_256_HMAC_GENERAL, CKM_SHA512_256_HMAC,
+                CKM_SHA512_T_HMAC_GENERAL, CKM_SHA512_T_HMAC,
+                CKM_SSL3_MD5_MAC, CKM_SSL3_SHA1_MAC, CKM_TLS10_MAC_SERVER,
+                CKM_TLS10_MAC_CLIENT, CKM_TLS12_MAC, CKM_CMS_SIG,
+                CKM_CAMELLIA_MAC_GENERAL, CKM_CAMELLIA_MAC,
+                CKM_ARIA_MAC_GENERAL, CKM_ARIA_MAC, CKM_SECURID, CKM_HOTP,
+                CKM_ACTI, CKM_KIP_MAC, CKM_GOST28147_MAC, CKM_GOSTR3411_HMAC,
+                CKM_GOSTR3410_WITH_GOSTR3411, CKM_DSA_SHA3_224,
+                CKM_DSA_SHA3_256, CKM_DSA_SHA3_384, CKM_DSA_SHA3_512,
+                CKM_SHA3_224_RSA_PKCS, CKM_SHA3_256_RSA_PKCS,
+                CKM_SHA3_384_RSA_PKCS, CKM_SHA3_512_RSA_PKCS,
+                CKM_SHA3_224_RSA_PKCS_PSS, CKM_SHA3_256_RSA_PKCS_PSS,
+                CKM_SHA3_384_RSA_PKCS_PSS, CKM_SHA3_512_RSA_PKCS_PSS,
+                CKM_SHA3_224_HMAC, CKM_SHA3_224_HMAC_GENERAL, CKM_SHA3_256_HMAC,
+                CKM_SHA3_256_HMAC_GENERAL, CKM_SHA3_384_HMAC,
+                CKM_SHA3_384_HMAC_GENERAL, CKM_SHA3_512_HMAC,
+                CKM_SHA3_512_HMAC_GENERAL, CKM_ECDSA_SHA3_224,
+                CKM_ECDSA_SHA3_256, CKM_ECDSA_SHA3_384, CKM_ECDSA_SHA3_512,
+                CKM_MD2_HMAC_GENERAL, CKM_MD2_HMAC, CKM_MD5_HMAC_GENERAL,
+                CKM_MD5_HMAC, CKM_RIPEMD128_HMAC_GENERAL, CKM_RIPEMD128_HMAC,
+                CKM_RIPEMD160_HMAC_GENERAL, CKM_RIPEMD160_HMAC,
+                CKM_RIPEMD128_RSA_PKCS, CKM_RIPEMD160_RSA_PKCS};
+            fullSignVerifyMechs = asSet(mechs);
         }
 
-        boolean contained = fullSignVerifyMechanisms.contains(
-                new Long(mechanismCode));
-        if (!contained) {
-            contained = PKCS11VendorConstants.isFullEncryptDecryptMechanism(
-                    mechanismCode);
-        }
-        return contained;
+        return fullSignVerifyMechs.contains(mechCode)
+            || PKCS11VendorConstants.isFullEncryptDecryptMechanism(mechCode);
     }
 
     /**
@@ -635,42 +496,25 @@ public class Functions {
      * If Returns true, the mechanism can be used with the sign and
      * verify functions excluding signUpdate and encryptUpdate.
      *
-     * @param mechanismCode
+     * @param mechCode
      *          The code of the mechanism to check.
      * @return True, if the provided mechanism is a single-operation
      *         sign/verify mechanism. False, otherwise.
      * @preconditions
      * @postconditions
      */
-    public static boolean isSingleOperationSignVerifyMechanism(
-            long mechanismCode) {
+    public static boolean isSingleOperationSignVerifyMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
-        if (singleOperationSignVerifyMechanisms == null) {
-            long[] mechs = new long[]{
-                PKCS11Constants.CKM_RSA_PKCS,
-                PKCS11Constants.CKM_RSA_PKCS_PSS,
-                PKCS11Constants.CKM_RSA_9796,
-                PKCS11Constants.CKM_RSA_X_509,
-                PKCS11Constants.CKM_RSA_X9_31,
-                PKCS11Constants.CKM_DSA,
-                PKCS11Constants.CKM_ECDSA,
-                PKCS11Constants.CKM_GOSTR3410
-            };
-
-            Set<Long> mechanisms = new HashSet<>();
-            for (Long mech : mechs) {
-                mechanisms.add(mech);
-            }
-            singleOperationSignVerifyMechanisms = mechanisms;
+        if (sglOpSignVerifyMechs == null) {
+            long[] mechs = new long[]{CKM_RSA_PKCS, CKM_RSA_PKCS_PSS,
+                CKM_RSA_9796, CKM_RSA_X_509, CKM_RSA_X9_31, CKM_DSA, CKM_ECDSA,
+                CKM_GOSTR3410};
+            sglOpSignVerifyMechs = asSet(mechs);
         }
 
-        boolean contained = singleOperationSignVerifyMechanisms.contains(
-                new Long(mechanismCode));
-        if (!contained) {
-            contained = PKCS11VendorConstants
-                    .isSingleOperationSignVerifyMechanism(mechanismCode);
-        }
-        return contained;
+        return sglOpSignVerifyMechs.contains(mechCode)
+            || PKCS11VendorConstants.isSingleOperationSignVerifyMechanism(
+                    mechCode);
     }
 
     /**
@@ -679,40 +523,23 @@ public class Functions {
      * If Returns true, the mechanism can be used with the
      * signRecover and verifyRecover functions.
      *
-     * @param mechanismCode
+     * @param mechCode
      *          The code of the mechanism to check.
      * @return True, if the provided mechanism is a sign/verify mechanism with
      *         message recovery. False, otherwise.
      * @preconditions
      * @postconditions
      */
-    public static boolean isSignVerifyRecoverMechanism(long mechanismCode) {
+    public static boolean isSignVerifyRecoverMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
-        if (signVerifyRecoverMechanisms == null) {
-            long[] mechs = new long[]{
-                PKCS11Constants.CKM_RSA_PKCS,
-                PKCS11Constants.CKM_RSA_9796,
-                PKCS11Constants.CKM_RSA_X_509,
-                PKCS11Constants.CKM_CMS_SIG,
-                PKCS11Constants.CKM_SEED_ECB,
-                PKCS11Constants.CKM_SEED_CBC,
-                PKCS11Constants.CKM_SEED_MAC_GENERAL
-            };
-
-            Set<Long> mechanisms = new HashSet<>();
-            for (Long mech : mechs) {
-                mechanisms.add(mech);
-            }
-            signVerifyRecoverMechanisms = mechanisms;
+        if (signVerifyRecoverMechs == null) {
+            long[] mechs = new long[]{CKM_RSA_PKCS, CKM_RSA_9796, CKM_RSA_X_509,
+                CKM_CMS_SIG, CKM_SEED_ECB, CKM_SEED_CBC, CKM_SEED_MAC_GENERAL};
+            signVerifyRecoverMechs = asSet(mechs);
         }
 
-        boolean contained = signVerifyRecoverMechanisms.contains(
-                new Long(mechanismCode));
-        if (!contained) {
-            contained = PKCS11VendorConstants.isSignVerifyRecoverMechanism(
-                    mechanismCode);
-        }
-        return contained;
+        return signVerifyRecoverMechs.contains(mechCode)
+            || PKCS11VendorConstants.isSignVerifyRecoverMechanism(mechCode);
     }
 
     /**
@@ -721,49 +548,26 @@ public class Functions {
      * If Returns true, the mechanism can be used with the digest
      * functions.
      *
-     * @param mechanismCode
+     * @param mechCode
      *          The code of the mechanism to check.
      * @return True, if the provided mechanism is a digest mechanism. False,
      *         otherwise.
      * @preconditions
      * @postconditions
      */
-    public static boolean isDigestMechanism(long mechanismCode) {
+    public static boolean isDigestMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
-        if (digestMechanisms == null) {
-            long[] mechs = new long[]{
-                PKCS11Constants.CKM_SHA_1,
-                PKCS11Constants.CKM_SHA224,
-                PKCS11Constants.CKM_SHA256,
-                PKCS11Constants.CKM_SHA384,
-                PKCS11Constants.CKM_SHA512,
-                PKCS11Constants.CKM_SHA512_224,
-                PKCS11Constants.CKM_SHA512_256,
-                PKCS11Constants.CKM_SHA512_T,
-                PKCS11Constants.CKM_SEED_MAC,
-                PKCS11Constants.CKM_GOSTR3411,
-                PKCS11Constants.CKM_SHA3_224,
-                PKCS11Constants.CKM_SHA3_256,
-                PKCS11Constants.CKM_SHA3_384,
-                PKCS11Constants.CKM_SHA3_512,
-                PKCS11Constants.CKM_MD2,
-                PKCS11Constants.CKM_MD5,
-                PKCS11Constants.CKM_RIPEMD128,
-                PKCS11Constants.CKM_RIPEMD160,
-            };
-
-            Set<Long> mechanisms = new HashSet<>();
-            for (Long mech : mechs) {
-                mechanisms.add(mech);
-            }
-            digestMechanisms = mechanisms;
+        if (digestMechs == null) {
+            long[] mechs = new long[]{CKM_SHA_1, CKM_SHA224, CKM_SHA256,
+                CKM_SHA384, CKM_SHA512, CKM_SHA512_224, CKM_SHA512_256,
+                CKM_SHA512_T, CKM_SEED_MAC, CKM_GOSTR3411, CKM_SHA3_224,
+                CKM_SHA3_256, CKM_SHA3_384, CKM_SHA3_512, CKM_MD2, CKM_MD5,
+                CKM_RIPEMD128, CKM_RIPEMD160};
+            digestMechs = asSet(mechs);
         }
 
-        boolean contained = digestMechanisms.contains(new Long(mechanismCode));
-        if (!contained) {
-            contained = PKCS11VendorConstants.isDigestMechanism(mechanismCode);
-        }
-        return contained;
+        return digestMechs.contains(mechCode)
+            || PKCS11VendorConstants.isDigestMechanism(mechCode);
     }
 
     /**
@@ -772,56 +576,33 @@ public class Functions {
      * If Returns true, the mechanism can be used with the
      * generateKey function.
      *
-     * @param mechanismCode
+     * @param mechCode
      *          The code of the mechanism to check.
      * @return True, if the provided mechanism is a key generation mechanism.
      *         False, otherwise.
      * @preconditions
      * @postconditions
      */
-    public static boolean isKeyGenerationMechanism(long mechanismCode) {
+    public static boolean isKeyGenerationMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
-        if (keyGenerationMechanisms == null) {
-            long[] mechs = new long[]{
-                PKCS11Constants.CKM_DSA_PARAMETER_GEN,
-                PKCS11Constants.CKM_DSA_PROBABLISTIC_PARAMETER_GEN,
-                PKCS11Constants.CKM_DSA_SHAWE_TAYLOR_PARAMETER_GEN,
-                //PKCS11Constants.CKM_DSA_FIPS_G_GEN,
-                PKCS11Constants.CKM_DH_PKCS_PARAMETER_GEN,
-                PKCS11Constants.CKM_X9_42_DH_PARAMETER_GEN,
-                PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN,
-                PKCS11Constants.CKM_AES_KEY_GEN,
-                PKCS11Constants.CKM_DES2_KEY_GEN,
-                PKCS11Constants.CKM_DES3_KEY_GEN,
-                PKCS11Constants.CKM_PBE_SHA1_DES3_EDE_CBC,
-                PKCS11Constants.CKM_PBE_SHA1_DES2_EDE_CBC,
-                PKCS11Constants.CKM_PBA_SHA1_WITH_SHA1_HMAC,
-                PKCS11Constants.CKM_PKCS5_PBKD2,
-                PKCS11Constants.CKM_SSL3_PRE_MASTER_KEY_GEN,
-                PKCS11Constants.CKM_WTLS_PRE_MASTER_KEY_GEN,
-                PKCS11Constants.CKM_CAMELLIA_KEY_GEN,
-                PKCS11Constants.CKM_ARIA_KEY_GEN,
-                PKCS11Constants.CKM_SEED_KEY_GEN,
-                PKCS11Constants.CKM_SECURID_KEY_GEN,
-                PKCS11Constants.CKM_HOTP_KEY_GEN,
-                PKCS11Constants.CKM_ACTI_KEY_GEN,
-                PKCS11Constants.CKM_GOST28147_KEY_GEN
-            };
-
-            Set<Long> mechanisms = new HashSet<>();
-            for (Long mech : mechs) {
-                mechanisms.add(mech);
-            }
-            keyGenerationMechanisms = mechanisms;
+        if (keyGenMechs == null) {
+            long[] mechs = new long[]{CKM_DSA_PARAMETER_GEN,
+                CKM_DSA_PROBABLISTIC_PARAMETER_GEN,
+                CKM_DSA_SHAWE_TAYLOR_PARAMETER_GEN,
+                //CKM_DSA_FIPS_G_GEN,
+                CKM_DH_PKCS_PARAMETER_GEN, CKM_X9_42_DH_PARAMETER_GEN,
+                CKM_GENERIC_SECRET_KEY_GEN, CKM_AES_KEY_GEN, CKM_DES2_KEY_GEN,
+                CKM_DES3_KEY_GEN, CKM_PBE_SHA1_DES3_EDE_CBC,
+                CKM_PBE_SHA1_DES2_EDE_CBC, CKM_PBA_SHA1_WITH_SHA1_HMAC,
+                CKM_PKCS5_PBKD2, CKM_SSL3_PRE_MASTER_KEY_GEN,
+                CKM_WTLS_PRE_MASTER_KEY_GEN, CKM_CAMELLIA_KEY_GEN,
+                CKM_ARIA_KEY_GEN, CKM_SEED_KEY_GEN, CKM_SECURID_KEY_GEN,
+                CKM_HOTP_KEY_GEN, CKM_ACTI_KEY_GEN, CKM_GOST28147_KEY_GEN};
+            keyGenMechs = asSet(mechs);
         }
 
-        boolean contained = keyGenerationMechanisms.contains(
-                new Long(mechanismCode));
-        if (!contained) {
-            contained = PKCS11VendorConstants.isKeyGenerationMechanism(
-                    mechanismCode);
-        }
-        return contained;
+        return keyGenMechs.contains(mechCode)
+            || PKCS11VendorConstants.isKeyGenerationMechanism(mechCode);
     }
 
     /**
@@ -830,40 +611,25 @@ public class Functions {
      * If Returns true, the mechanism can be used with the
      * generateKeyPair function.
      *
-     * @param mechanismCode
+     * @param mechCode
      *          The code of the mechanism to check.
      * @return True, if the provided mechanism is a key-pair generation
      *         mechanism. False, otherwise.
      * @preconditions
      * @postconditions
      */
-    public static boolean isKeyPairGenerationMechanism(long mechanismCode) {
+    public static boolean isKeyPairGenerationMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
-        if (keyPairGenerationMechanisms == null) {
-            long[] mechs = new long[]{
-                PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN,
-                PKCS11Constants.CKM_RSA_X9_31_KEY_PAIR_GEN,
-                PKCS11Constants.CKM_DSA_KEY_PAIR_GEN,
-                PKCS11Constants.CKM_EC_KEY_PAIR_GEN,
-                PKCS11Constants.CKM_DH_PKCS_KEY_PAIR_GEN,
-                PKCS11Constants.CKM_X9_42_DH_KEY_PAIR_GEN,
-                PKCS11Constants.CKM_GOSTR3410_KEY_PAIR_GEN
-            };
-
-            Set<Long> mechanisms = new HashSet<>();
-            for (Long mech : mechs) {
-                mechanisms.add(mech);
-            }
-            keyPairGenerationMechanisms = mechanisms;
+        if (keyPairGenMechs == null) {
+            long[] mechs = new long[]{CKM_RSA_PKCS_KEY_PAIR_GEN,
+                CKM_RSA_X9_31_KEY_PAIR_GEN, CKM_DSA_KEY_PAIR_GEN,
+                CKM_EC_KEY_PAIR_GEN, CKM_DH_PKCS_KEY_PAIR_GEN,
+                CKM_X9_42_DH_KEY_PAIR_GEN, CKM_GOSTR3410_KEY_PAIR_GEN};
+            keyPairGenMechs = asSet(mechs);
         }
 
-        boolean contained = keyPairGenerationMechanisms.contains(
-                new Long(mechanismCode));
-        if (!contained) {
-            contained = PKCS11VendorConstants.isKeyPairGenerationMechanism(
-                    mechanismCode);
-        }
-        return contained;
+        return keyPairGenMechs.contains(mechCode)
+            || PKCS11VendorConstants.isKeyPairGenerationMechanism(mechCode);
     }
 
     /**
@@ -873,67 +639,33 @@ public class Functions {
      * If Returns true, the mechanism can be used with the wrapKey
      * and unwrapKey functions.
      *
-     * @param mechanismCode
+     * @param mechCode
      *          The code of the mechanism to check.
      * @return True, if the provided mechanism is a wrap/unwrap mechanism.
      *         False, otherwise.
      * @preconditions
      * @postconditions
      */
-    public static boolean isWrapUnwrapMechanism(long mechanismCode) {
+    public static boolean isWrapUnwrapMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
-        if (wrapUnwrapMechanisms == null) {
-            long[] mechs = new long[] {
-                PKCS11Constants.CKM_RSA_PKCS,
-                PKCS11Constants.CKM_RSA_PKCS_OAEP,
-                PKCS11Constants.CKM_RSA_X_509,
-                PKCS11Constants.CKM_RSA_PKCS_TPM_1_1,
-                PKCS11Constants.CKM_RSA_PKCS_OAEP_TPM_1_1,
-                PKCS11Constants.CKM_ECDH_AES_KEY_WRAP,
-                PKCS11Constants.CKM_AES_ECB,
-                PKCS11Constants.CKM_AES_CBC,
-                PKCS11Constants.CKM_AES_CBC_PAD,
-                PKCS11Constants.CKM_AES_OFB,
-                PKCS11Constants.CKM_AES_CFB64,
-                PKCS11Constants.CKM_AES_CFB8,
-                PKCS11Constants.CKM_AES_CFB128,
-                PKCS11Constants.CKM_AES_CFB1,
-                PKCS11Constants.CKM_AES_CTR,
-                PKCS11Constants.CKM_AES_CTS,
-                PKCS11Constants.CKM_AES_GCM,
-                PKCS11Constants.CKM_AES_CCM,
-                PKCS11Constants.CKM_AES_KEY_WRAP,
-                PKCS11Constants.CKM_DES3_ECB,
-                PKCS11Constants.CKM_DES3_CBC,
-                PKCS11Constants.CKM_DES3_CBC_PAD,
-                PKCS11Constants.CKM_BLOWFISH_CBC,
-                PKCS11Constants.CKM_BLOWFISH_CBC_PAD,
-                PKCS11Constants.CKM_CAMELLIA_ECB,
-                PKCS11Constants.CKM_CAMELLIA_CBC,
-                PKCS11Constants.CKM_CAMELLIA_CBC_PAD,
-                PKCS11Constants.CKM_ARIA_ECB,
-                PKCS11Constants.CKM_ARIA_CBC,
-                PKCS11Constants.CKM_ARIA_CBC_PAD,
-                PKCS11Constants.CKM_SEED_CBC_PAD,
-                PKCS11Constants.CKM_KIP_WRAP,
-                PKCS11Constants.CKM_GOST28147_ECB,
-                PKCS11Constants.CKM_GOST28147,
-                PKCS11Constants.CKM_GOST28147_KEY_WRAP,
-                PKCS11Constants.CKM_GOSTR3410_KEY_WRAP
-            };
-            Set<Long> wrapUnwrapMechs = new HashSet<>();
-            for (long m : mechs) {
-                wrapUnwrapMechs.add(m);
-            }
-            wrapUnwrapMechanisms = wrapUnwrapMechs;
+        if (wrapUnwrapMechs == null) {
+            long[] mechs = new long[] {CKM_RSA_PKCS, CKM_RSA_PKCS_OAEP,
+                CKM_RSA_X_509, CKM_RSA_PKCS_TPM_1_1, CKM_RSA_PKCS_OAEP_TPM_1_1,
+                CKM_ECDH_AES_KEY_WRAP, CKM_AES_ECB, CKM_AES_CBC,
+                CKM_AES_CBC_PAD, CKM_AES_OFB, CKM_AES_CFB64, CKM_AES_CFB8,
+                CKM_AES_CFB128, CKM_AES_CFB1, CKM_AES_CTR, CKM_AES_CTS,
+                CKM_AES_GCM, CKM_AES_CCM, CKM_AES_KEY_WRAP, CKM_DES3_ECB,
+                CKM_DES3_CBC, CKM_DES3_CBC_PAD, CKM_BLOWFISH_CBC,
+                CKM_BLOWFISH_CBC_PAD, CKM_CAMELLIA_ECB, CKM_CAMELLIA_CBC,
+                CKM_CAMELLIA_CBC_PAD, CKM_ARIA_ECB, CKM_ARIA_CBC,
+                CKM_ARIA_CBC_PAD, CKM_SEED_CBC_PAD, CKM_KIP_WRAP,
+                CKM_GOST28147_ECB, CKM_GOST28147, CKM_GOST28147_KEY_WRAP,
+                CKM_GOSTR3410_KEY_WRAP};
+            wrapUnwrapMechs = asSet(mechs);
         }
 
-        boolean contained = wrapUnwrapMechanisms.contains(mechanismCode);
-        if (!contained) {
-            contained = PKCS11VendorConstants.isWrapUnwrapMechanism(
-                    mechanismCode);
-        }
-        return contained;
+        return wrapUnwrapMechs.contains(mechCode)
+                || PKCS11VendorConstants.isWrapUnwrapMechanism(mechCode);
     }
 
     /**
@@ -942,92 +674,50 @@ public class Functions {
      * If Returns true, the mechanism can be used with the deriveKey
      * function.
      *
-     * @param mechanismCode
+     * @param mechCode
      *          The code of the mechanism to check.
      * @return True, if the provided mechanism is a key derivation mechanism.
      *         False, otherwise.
      * @preconditions
      * @postconditions
      */
-    public static boolean isKeyDerivationMechanism(long mechanismCode) {
+    public static boolean isKeyDerivationMechanism(long mechCode) {
         // build the hashtable on demand (=first use)
-        if (keyDerivationMechanisms == null) {
+        if (keyDerivationMechs == null) {
             long[] mechs = new long[]{
-                PKCS11Constants.CKM_ECDH1_DERIVE,
-                PKCS11Constants.CKM_ECDH1_COFACTOR_DERIVE,
-                PKCS11Constants.CKM_ECMQV_DERIVE,
-                PKCS11Constants.CKM_DH_PKCS_DERIVE,
-                PKCS11Constants.CKM_X9_42_DH_DERIVE,
-                PKCS11Constants.CKM_X9_42_DH_HYBRID_DERIVE,
-                PKCS11Constants.CKM_X9_42_MQV_DERIVE,
-                PKCS11Constants.CKM_AES_GMAC,
-                PKCS11Constants.CKM_DES_ECB_ENCRYPT_DATA,
-                PKCS11Constants.CKM_DES_CBC_ENCRYPT_DATA,
-                PKCS11Constants.CKM_DES3_ECB_ENCRYPT_DATA,
-                PKCS11Constants.CKM_DES3_CBC_ENCRYPT_DATA,
-                PKCS11Constants.CKM_AES_ECB_ENCRYPT_DATA,
-                PKCS11Constants.CKM_AES_CBC_ENCRYPT_DATA,
-                PKCS11Constants.CKM_SHA1_KEY_DERIVATION,
-                PKCS11Constants.CKM_SHA224_KEY_DERIVATION,
-                PKCS11Constants.CKM_SHA256_KEY_DERIVATION,
-                PKCS11Constants.CKM_SHA384_KEY_DERIVATION,
-                PKCS11Constants.CKM_SHA512_KEY_DERIVATION,
-                PKCS11Constants.CKM_SHA512_224_KEY_DERIVATION,
-                PKCS11Constants.CKM_SHA512_256_KEY_DERIVATION,
-                PKCS11Constants.CKM_SHA512_T_KEY_DERIVATION,
-                PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE,
-                PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE_DH,
-                PKCS11Constants.CKM_SSL3_KEY_AND_MAC_DERIVE,
-                PKCS11Constants.CKM_TLS12_MASTER_KEY_DERIVE,
-                PKCS11Constants.CKM_TLS12_MASTER_KEY_DERIVE_DH,
-                PKCS11Constants.CKM_TLS12_KEY_AND_MAC_DERIVE,
-                PKCS11Constants.CKM_TLS12_KEY_SAFE_DERIVE,
-                PKCS11Constants.CKM_TLS_KDF,
-                PKCS11Constants.CKM_WTLS_MASTER_KEY_DERIVE,
-                PKCS11Constants.CKM_WTLS_MASTER_KEY_DERIVE_DH_ECC,
-                PKCS11Constants.CKM_WTLS_SERVER_KEY_AND_MAC_DERIVE,
-                PKCS11Constants.CKM_WTLS_CLIENT_KEY_AND_MAC_DERIVE,
-                PKCS11Constants.CKM_WTLS_PRF,
-                PKCS11Constants.CKM_CONCATENATE_BASE_AND_KEY,
-                PKCS11Constants.CKM_CONCATENATE_BASE_AND_DATA,
-                PKCS11Constants.CKM_CONCATENATE_DATA_AND_BASE,
-                PKCS11Constants.CKM_XOR_BASE_AND_DATA,
-                PKCS11Constants.CKM_EXTRACT_KEY_FROM_KEY,
-                PKCS11Constants.CKM_CAMELLIA_ECB_ENCRYPT_DATA,
-                PKCS11Constants.CKM_CAMELLIA_CBC_ENCRYPT_DATA,
-                PKCS11Constants.CKM_ARIA_ECB_ENCRYPT_DATA,
-                PKCS11Constants.CKM_ARIA_CBC_ENCRYPT_DATA,
-                PKCS11Constants.CKM_SEED_ECB_ENCRYPT_DATA,
-                PKCS11Constants.CKM_SEED_CBC_ENCRYPT_DATA,
-                PKCS11Constants.CKM_KIP_DERIVE,
-                PKCS11Constants.CKM_GOSTR3410_DERIVE,
-                PKCS11Constants.CKM_SHA3_224_KEY_DERIVE,
-                PKCS11Constants.CKM_SHA3_256_KEY_DERIVE,
-                PKCS11Constants.CKM_SHA3_384_KEY_DERIVE,
-                PKCS11Constants.CKM_SHA3_512_KEY_DERIVE,
-                PKCS11Constants.CKM_SHAKE_128_KEY_DERIVE,
-                PKCS11Constants.CKM_SHAKE_256_KEY_DERIVE,
-                PKCS11Constants.CKM_SHA256_KEY_DERIVATION,
-                PKCS11Constants.CKM_SHA256_KEY_DERIVATION,
-                PKCS11Constants.CKM_SHA256_KEY_DERIVATION,
-                PKCS11Constants.CKM_SHA256_KEY_DERIVATION
-            };
-
-            Set<Long> mechanisms = new HashSet<>();
-            for (Long mech : mechs) {
-                mechanisms.add(mech);
-            }
-            keyDerivationMechanisms = mechanisms;
+                CKM_ECDH1_DERIVE, CKM_ECDH1_COFACTOR_DERIVE, CKM_ECMQV_DERIVE,
+                CKM_DH_PKCS_DERIVE, CKM_X9_42_DH_DERIVE,
+                CKM_X9_42_DH_HYBRID_DERIVE, CKM_X9_42_MQV_DERIVE, CKM_AES_GMAC,
+                CKM_DES_ECB_ENCRYPT_DATA, CKM_DES_CBC_ENCRYPT_DATA,
+                CKM_DES3_ECB_ENCRYPT_DATA, CKM_DES3_CBC_ENCRYPT_DATA,
+                CKM_AES_ECB_ENCRYPT_DATA, CKM_AES_CBC_ENCRYPT_DATA,
+                CKM_SHA1_KEY_DERIVATION, CKM_SHA224_KEY_DERIVATION,
+                CKM_SHA256_KEY_DERIVATION, CKM_SHA384_KEY_DERIVATION,
+                CKM_SHA512_KEY_DERIVATION, CKM_SHA512_224_KEY_DERIVATION,
+                CKM_SHA512_256_KEY_DERIVATION, CKM_SHA512_T_KEY_DERIVATION,
+                CKM_SSL3_MASTER_KEY_DERIVE, CKM_SSL3_MASTER_KEY_DERIVE_DH,
+                CKM_SSL3_KEY_AND_MAC_DERIVE, CKM_TLS12_MASTER_KEY_DERIVE,
+                CKM_TLS12_MASTER_KEY_DERIVE_DH, CKM_TLS12_KEY_AND_MAC_DERIVE,
+                CKM_TLS12_KEY_SAFE_DERIVE, CKM_TLS_KDF,
+                CKM_WTLS_MASTER_KEY_DERIVE, CKM_WTLS_MASTER_KEY_DERIVE_DH_ECC,
+                CKM_WTLS_SERVER_KEY_AND_MAC_DERIVE,
+                CKM_WTLS_CLIENT_KEY_AND_MAC_DERIVE, CKM_WTLS_PRF,
+                CKM_CONCATENATE_BASE_AND_KEY, CKM_CONCATENATE_BASE_AND_DATA,
+                CKM_CONCATENATE_DATA_AND_BASE, CKM_XOR_BASE_AND_DATA,
+                CKM_EXTRACT_KEY_FROM_KEY, CKM_CAMELLIA_ECB_ENCRYPT_DATA,
+                CKM_CAMELLIA_CBC_ENCRYPT_DATA, CKM_ARIA_ECB_ENCRYPT_DATA,
+                CKM_ARIA_CBC_ENCRYPT_DATA, CKM_SEED_ECB_ENCRYPT_DATA,
+                CKM_SEED_CBC_ENCRYPT_DATA, CKM_KIP_DERIVE, CKM_GOSTR3410_DERIVE,
+                CKM_SHA3_224_KEY_DERIVE, CKM_SHA3_256_KEY_DERIVE,
+                CKM_SHA3_384_KEY_DERIVE, CKM_SHA3_512_KEY_DERIVE,
+                CKM_SHAKE_128_KEY_DERIVE, CKM_SHAKE_256_KEY_DERIVE,
+                CKM_SHA256_KEY_DERIVATION, CKM_SHA256_KEY_DERIVATION,
+                CKM_SHA256_KEY_DERIVATION, CKM_SHA256_KEY_DERIVATION};
+            keyDerivationMechs = asSet(mechs);
         }
 
-        boolean contained = keyDerivationMechanisms.contains(
-                new Long(mechanismCode));
-        if (!contained) {
-            contained = PKCS11VendorConstants.isKeyDerivationMechanism(
-                    mechanismCode);
-        }
-        return contained;
-
+        return keyDerivationMechs.contains(mechCode)
+                || PKCS11VendorConstants.isKeyDerivationMechanism(mechCode);
     }
 
 }

@@ -46,6 +46,7 @@ import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 
 /**
  * This is the base class for private (asymmetric) keys. Objects of this class
@@ -147,7 +148,6 @@ public class PrivateKey extends Key {
      * @postconditions
      */
     public PrivateKey() {
-        super();
         objectClass.setLongValue(ObjectClass.PRIVATE_KEY);
     }
 
@@ -251,7 +251,6 @@ public class PrivateKey extends Key {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    @SuppressWarnings("restriction")
     protected static PKCS11Object getUnknownPrivateKey(Session session,
             long objectHandle)
         throws TokenException {
@@ -261,7 +260,7 @@ public class PrivateKey extends Key {
         if (Key.vendorKeyBuilder != null) {
             try {
                 newObject = Key.vendorKeyBuilder.build(session, objectHandle);
-            } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+            } catch (PKCS11Exception ex) {
                 // we can just treat it like some unknown type of private key
                 newObject = new PrivateKey(session, objectHandle);
             }
@@ -276,8 +275,7 @@ public class PrivateKey extends Key {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -340,44 +338,6 @@ public class PrivateKey extends Key {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof PrivateKey)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        PrivateKey clone = (PrivateKey) super.clone();
-
-        clone.subject = (ByteArrayAttribute) this.subject.clone();
-        clone.sensitive = (BooleanAttribute) this.sensitive.clone();
-        clone.secondaryAuth = (BooleanAttribute) this.secondaryAuth.clone();
-        clone.authPinFlags = (LongAttribute) this.authPinFlags.clone();
-        clone.decrypt = (BooleanAttribute) this.decrypt.clone();
-        clone.sign = (BooleanAttribute) this.sign.clone();
-        clone.signRecover = (BooleanAttribute) this.signRecover.clone();
-        clone.unwrap = (BooleanAttribute) this.unwrap.clone();
-        clone.extractable = (BooleanAttribute) this.extractable.clone();
-        clone.alwaysSensitive
-            = (BooleanAttribute) this.alwaysSensitive.clone();
-        clone.neverExtractable
-            = (BooleanAttribute) this.neverExtractable.clone();
-        clone.wrapWithTrusted
-            = (BooleanAttribute) this.wrapWithTrusted.clone();
-        clone.unwrapTemplate = (AttributeArray) this.unwrapTemplate.clone();
-        clone.alwaysAuthenticate
-            = (BooleanAttribute) this.alwaysAuthenticate.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -392,9 +352,7 @@ public class PrivateKey extends Key {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof PrivateKey)) {
+        } else if (!(otherObject instanceof PrivateKey)) {
             return false;
         }
 

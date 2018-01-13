@@ -44,7 +44,6 @@ package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
-import iaik.pkcs.pkcs11.TokenRuntimeException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
@@ -75,32 +74,6 @@ public class DHPkcsDeriveParameters implements Parameters {
      */
     public DHPkcsDeriveParameters(byte[] publicValue) {
         this.publicValue = publicValue;
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof DHPkcsDeriveParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        DHPkcsDeriveParameters clone;
-
-        try {
-            clone = (DHPkcsDeriveParameters) super.clone();
-
-            clone.publicValue = (byte[]) this.publicValue.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is cloneable
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
     }
 
     /**
@@ -149,8 +122,7 @@ public class DHPkcsDeriveParameters implements Parameters {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("  Public Value (hex): ")
-            .append(Functions.toHexString(publicValue));
+        sb.append("  Public Value (hex): ").append(Util.toHex(publicValue));
         return sb.toString();
     }
 
@@ -169,9 +141,7 @@ public class DHPkcsDeriveParameters implements Parameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof DHPkcsDeriveParameters)) {
+        } else if (!(otherObject instanceof DHPkcsDeriveParameters)) {
             return false;
         }
 

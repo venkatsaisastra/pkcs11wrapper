@@ -68,13 +68,6 @@ public class AttributeArray extends Attribute {
     protected PKCS11Object template;
 
     /**
-     * Default constructor - only for internal use.
-     */
-    AttributeArray() {
-        super();
-    }
-
-    /**
      * Constructor taking the PKCS#11 type of the attribute.
      *
      * @param type
@@ -149,10 +142,9 @@ public class AttributeArray extends Attribute {
                     attribute.setPresent(true);
                     template.addAttribute(attribute);
                 } catch (Exception ex) {
-                    System.err.println(
-                        "Error when trying to create a " + implementation
-                        + " instance for " + type + ": " + ex.getMessage());
-                    System.err.flush();
+                    System.err.println("Error when trying to create a "
+                            + implementation + " instance for " + type
+                            + ": " + ex.getMessage());
                     continue;
                 }
             }
@@ -168,17 +160,13 @@ public class AttributeArray extends Attribute {
      * @postconditions (result <> null)
      */
     protected String getValueString() {
-        String valueString = "";
         if (template == null) {
             template = getAttributeArrayValue();
         }
 
-        if (template == null) {
-            valueString = "<NULL_PTR>";
-        } else {
-            valueString += template.toString(true, true, "      ");
-        }
-        return valueString;
+        return (template == null) 
+            ? "<NULL_PTR>"
+            : template.toString(true, true, "      ");
     }
 
     /**
@@ -196,9 +184,7 @@ public class AttributeArray extends Attribute {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof AttributeArray)) {
+        } else if (!(otherObject instanceof AttributeArray)) {
             return false;
         }
 
@@ -214,13 +200,9 @@ public class AttributeArray extends Attribute {
 
         if (!this.present && !other.present) {
             return true;
-        }
-
-        if (!(this.present && other.present)) {
+        } else if (!(this.present && other.present)) {
             return false;
-        }
-
-        if (this.sensitive != other.sensitive) {
+        } else if (this.sensitive != other.sensitive) {
             return false;
         }
 
@@ -241,31 +223,6 @@ public class AttributeArray extends Attribute {
             template = getAttributeArrayValue();
         }
         return template.hashCode();
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     * The attributes in the CK_ATTRIBUTE[] need not be cloned, as they can't be
-     * set separately.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof AttributeArray)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        AttributeArray clone;
-
-        clone = (AttributeArray) super.clone();
-        if (template == null) {
-            template = getAttributeArrayValue();
-        }
-        if (template != null) {
-            clone.template = (GenericTemplate) this.template.clone();
-        }
-        return clone;
     }
 
     @Override

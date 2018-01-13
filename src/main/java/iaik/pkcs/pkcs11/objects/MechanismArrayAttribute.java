@@ -59,13 +59,6 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
 public class MechanismArrayAttribute extends Attribute {
 
     /**
-     * Default constructor - only for internal use.
-     */
-    MechanismArrayAttribute() {
-        super();
-    }
-
-    /**
      * Constructor taking the PKCS#11 type of the attribute.
      *
      * @param type
@@ -163,22 +156,16 @@ public class MechanismArrayAttribute extends Attribute {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof MechanismArrayAttribute)) {
+        } else if (!(otherObject instanceof MechanismArrayAttribute)) {
             return false;
         }
 
         MechanismArrayAttribute other = (MechanismArrayAttribute) otherObject;
         if (!this.present && !other.present) {
             return true;
-        }
-
-        if (!(this.present && other.present)) {
+        } else if (!(this.present && other.present)) {
             return false;
-        }
-
-        if (this.sensitive != other.sensitive) {
+        } else if (this.sensitive != other.sensitive) {
             return false;
         }
 
@@ -199,32 +186,6 @@ public class MechanismArrayAttribute extends Attribute {
     public int hashCode() {
         return (ckAttribute.pValue != null) ? Functions
             .hashCode((long[]) ckAttribute.pValue) : 0;
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     * The attributes in the CK_ATTRIBUTE[] need not be cloned, as they can't be
-     * set separately.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof MechanismAttributeArray)
-     *                 and (result.equals(this))
-     */
-    @SuppressWarnings("restriction")
-    @Override
-    public Object clone() {
-        MechanismArrayAttribute clone;
-
-        clone = (MechanismArrayAttribute) super.clone();
-        if (this.ckAttribute.pValue != null) {
-            clone.ckAttribute.pValue
-                = ((long[]) this.ckAttribute.pValue).clone();
-        } else {
-            clone.ckAttribute.pValue = null;
-        }
-        return clone;
     }
 
     @Override

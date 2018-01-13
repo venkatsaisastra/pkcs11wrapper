@@ -125,7 +125,6 @@ public class DomainParameters extends Storage {
      * @postconditions
      */
     public DomainParameters() {
-        super();
         objectClass.setLongValue(ObjectClass.DOMAIN_PARAMETERS);
     }
 
@@ -277,8 +276,7 @@ public class DomainParameters extends Storage {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -309,27 +307,6 @@ public class DomainParameters extends Storage {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof DomainParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        DomainParameters clone = (DomainParameters) super.clone();
-
-        clone.keyType = (KeyTypeAttribute) this.keyType.clone();
-        clone.local = (BooleanAttribute) this.local.clone();
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -344,9 +321,7 @@ public class DomainParameters extends Storage {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof DomainParameters)) {
+        } else if (!(otherObject instanceof DomainParameters)) {
             return false;
         }
 

@@ -63,7 +63,7 @@ public interface InitializeArgs {
      * @preconditions
      * @postconditions
      */
-    public MutexHandler getMutexHandler();
+    MutexHandler getMutexHandler();
 
     /**
      * Check, if application threads which are executing calls to the library
@@ -75,7 +75,7 @@ public interface InitializeArgs {
      * @preconditions
      * @postconditions
      */
-    public boolean isLibraryCantCreateOsThreads();
+    boolean isLibraryCantCreateOsThreads();
 
     /**
      * Check, if the library can use the native operation system threading model
@@ -86,7 +86,7 @@ public interface InitializeArgs {
      * @preconditions
      * @postconditions
      */
-    public boolean isOsLockingOk();
+    boolean isOsLockingOk();
 
     /**
      * Reserved parameter.
@@ -95,6 +95,6 @@ public interface InitializeArgs {
      * @preconditions
      * @postconditions (result == null)
      */
-    public Object getReserved();
+    Object getReserved();
 
 }

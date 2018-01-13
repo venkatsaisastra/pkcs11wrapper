@@ -89,7 +89,6 @@ public class Storage extends PKCS11Object {
      * @postconditions
      */
     public Storage() {
-        super();
     }
 
     /**
@@ -117,8 +116,7 @@ public class Storage extends PKCS11Object {
     /**
      * Put all attributes of the given object into the attributes table of this
      * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately (see use in
-     * clone()).
+     * implementation of this method for each class separately.
      *
      * @param object
      *          The object to handle.
@@ -153,30 +151,6 @@ public class Storage extends PKCS11Object {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof Storage)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        Storage clone = (Storage) super.clone();
-
-        clone.token = (BooleanAttribute) this.token.clone();
-        clone.private_ = (BooleanAttribute) this.private_.clone();
-        clone.modifiable = (BooleanAttribute) this.modifiable.clone();
-        clone.label = (CharArrayAttribute) this.label.clone();
-
-        // put all cloned attributes into the new table
-        putAttributesInTable(clone);
-
-        return clone;
-    }
-
-    /**
      * Compares all member variables of this object with the other object.
      * Returns only true, if all are equal in both objects.
      *
@@ -191,9 +165,7 @@ public class Storage extends PKCS11Object {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof Storage)) {
+        } else if (!(otherObject instanceof Storage)) {
             return false;
         }
 

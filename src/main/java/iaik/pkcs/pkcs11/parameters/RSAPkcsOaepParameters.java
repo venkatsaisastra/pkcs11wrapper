@@ -45,6 +45,7 @@ package iaik.pkcs.pkcs11.parameters;
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Mechanism;
+import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import sun.security.pkcs11.wrapper.CK_RSA_PKCS_OAEP_PARAMS;
@@ -122,9 +123,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
      * @postconditions
      */
     public RSAPkcsOaepParameters(Mechanism hashAlgorithm,
-            long maskGenerationFunction,
-            long source,
-            byte[] sourceData) {
+            long maskGenerationFunction, long source, byte[] sourceData) {
         super(hashAlgorithm, maskGenerationFunction);
         if ((source != SourceType.EMPTY)
                 && (source != SourceType.DATA_SPECIFIED)) {
@@ -134,24 +133,6 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
         }
         this.source = source;
         this.sourceData = sourceData;
-    }
-
-    /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof RSAPkcsOaepParameters)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        RSAPkcsOaepParameters clone = (RSAPkcsOaepParameters) super.clone();
-
-        clone.sourceData = (byte[]) this.sourceData.clone();
-
-        return clone;
     }
 
     /**
@@ -247,8 +228,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
             sb.append("<unknown>");
         }
 
-        sb.append("\n  Source Data (hex): ")
-            .append(Functions.toHexString(sourceData));
+        sb.append("\n  Source Data (hex): ").append(Util.toHex(sourceData));
 
         return sb.toString();
     }
@@ -268,9 +248,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof RSAPkcsOaepParameters)) {
+        } else if (!(otherObject instanceof RSAPkcsOaepParameters)) {
             return false;
         }
 

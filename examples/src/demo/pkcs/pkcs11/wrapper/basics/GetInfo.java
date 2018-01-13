@@ -271,8 +271,6 @@ public class GetInfo {
                     + ex.toString());
           }
         }
-        // test the (deep) cloning feature
-        // Object clonedObject = (Object) object.clone();
         output_
             .println("--------------------------------------------------------------------------------");
         objects = session.findObjects(1);

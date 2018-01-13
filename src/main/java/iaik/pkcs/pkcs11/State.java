@@ -52,7 +52,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  * @version 1.0
  * @invariants
  */
-public class State implements Cloneable {
+public class State {
 
     /**
      * Constant for a read-only public session.
@@ -107,30 +107,6 @@ public class State implements Cloneable {
     }
 
     /**
-     * Create a (deep) clone of this object.
-     *
-     * @return A clone of this object.
-     * @preconditions
-     * @postconditions (result <> null)
-     *                 and (result instanceof State)
-     *                 and (result.equals(this))
-     */
-    @Override
-    public Object clone() {
-        State clone;
-
-        try {
-            clone = (State) super.clone();
-        } catch (CloneNotSupportedException ex) {
-            // this must not happen, because this class is clone-able
-            throw new TokenRuntimeException(
-                    "An unexpected clone exception occurred.", ex);
-        }
-
-        return clone;
-    }
-
-    /**
      * Compares the state code of this object with the other
      * object. Returns only true, if those are equal in both objects.
      *
@@ -145,9 +121,7 @@ public class State implements Cloneable {
     public boolean equals(Object otherObject) {
         if (this == otherObject) {
             return true;
-        }
-
-        if (!(otherObject instanceof State)) {
+        } else if (!(otherObject instanceof State)) {
             return false;
         }
 
