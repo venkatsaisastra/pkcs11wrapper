@@ -199,23 +199,21 @@ abstract public class DHKeyDerivationParams implements Params {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  Key Derivation Function: ");
+        String kdfStr;
         if (kdf == KeyDerivationFunctionType.NULL) {
-            sb.append("NULL");
+            kdfStr = "NULL";
         } else if (kdf == KeyDerivationFunctionType.SHA1_KDF) {
-            sb.append("SHA1_KDF");
+            kdfStr = "SHA1_KDF";
         } else if (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1) {
-            sb.append("SHA1_KDF_ASN1");
+            kdfStr = "SHA1_KDF_ASN1";
         } else if (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE) {
-            sb.append("SHA1_KDF_CONCATENATE");
+            kdfStr = "SHA1_KDF_CONCATENATE";
         } else {
-            sb.append("<unknown>");
+            kdfStr = "<unknown>";
         }
 
-        sb.append("\n  Public Data: ").append(Util.toHex(publicData));
-
-        return sb.toString();
+        return Util.concat("  Key Derivation Function: ", kdfStr,
+                "\n  Public Data: ", Util.toHex(publicData));
     }
 
     /**

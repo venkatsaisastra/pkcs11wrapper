@@ -42,6 +42,7 @@
 
 package iaik.pkcs.pkcs11.params;
 
+import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
 
 /**
@@ -114,9 +115,7 @@ public class ObjectHandleParams implements Params {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  The PKCS11Object:\n").append(object);
-        return sb.toString();
+        return Util.concatObjects("  The PKCS11Object:\n", object);
     }
 
     /**

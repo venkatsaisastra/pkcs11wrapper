@@ -92,4 +92,6 @@ public class SM2PublicKey extends ECPublicKey {
         return super.equals(otherObject);
     }
 
+    // TODO: add toString()
+
 }

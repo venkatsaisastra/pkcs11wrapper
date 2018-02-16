@@ -311,14 +311,13 @@ public class X509AttributeCertificate extends Certificate {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Owner (DER, hex): ").append(owner);
-        sb.append("\n  Attribute Certificate Issuer (DER, hex): ")
-            .append(acIssuer);
-        sb.append("\n  Serial Number (DER, hex): ").append(serialNumber);
-        sb.append("\n  Attribute Types (BER, hex): ").append(attrTypes);
-        sb.append("\n  Value (BER, hex): ").append(value);
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+            "\n  Owner (DER, hex): ", owner,
+            "\n  Attribute Certificate Issuer (DER, hex): ", acIssuer,
+            "\n  Serial Number (DER, hex): ", serialNumber,
+            "\n  Attribute Types (BER, hex): ", attrTypes,
+            "\n  Value (BER, hex): ", value);
     }
 
 }

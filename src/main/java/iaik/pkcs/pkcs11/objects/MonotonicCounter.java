@@ -268,11 +268,11 @@ public class MonotonicCounter extends HardwareFeature {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Reset on Initialization: ").append(resetOnInit);
-        sb.append("\n  Has been reset: ").append(hasReset);
-        sb.append("\n  Value (hex): ").append(value);
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+                "\n  Reset on Initialization: ", resetOnInit,
+                "\n  Has been reset: ", hasReset,
+                "\n  Value (hex): ", value);
     }
 
 }

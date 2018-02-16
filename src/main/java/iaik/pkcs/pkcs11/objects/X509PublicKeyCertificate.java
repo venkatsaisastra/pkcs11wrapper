@@ -406,20 +406,17 @@ public class X509PublicKeyCertificate extends Certificate {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Subject (DER, hex): ").append(subject);
-        sb.append("\n  ID (hex): ").append(id);
-        sb.append("\n  Issuer (DER, hex): ").append(issuer);
-        sb.append("\n  Serial Number (DER, hex): ").append(serialNumber);
-        sb.append("\n  Value (BER, hex): ").append(value);
-        sb.append("\n  URL: ").append(url);
-        sb.append("\n  Hash Of Subject Public Key: ")
-            .append(hashOfSubjectPublicKey);
-        sb.append("\n  Hash Of Issuer Public Key: ")
-            .append(hashOfIssuerPublicKey);
-        sb.append("\n  Java MIDP Security Domain: ")
-            .append(javaMidpSecurityDomain);
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 200, superToString,
+        "\n  Subject (DER, hex): ", subject,
+        "\n  ID (hex): ", id,
+        "\n  Issuer (DER, hex): ", issuer,
+        "\n  Serial Number (DER, hex): ", serialNumber,
+        "\n  Value (BER, hex): ", value,
+        "\n  URL: ", url,
+        "\n  Hash Of Subject Public Key: ", hashOfSubjectPublicKey,
+        "\n  Hash Of Issuer Public Key: ", hashOfIssuerPublicKey,
+        "\n  Java MIDP Security Domain: ", javaMidpSecurityDomain);
     }
 
 }

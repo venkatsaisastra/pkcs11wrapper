@@ -90,9 +90,7 @@ public class OpaqueParams implements Params {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  Bytes (hex): ").append(Util.toHex(bytes));
-        return sb.toString();
+        return Util.concat("  Bytes (hex): ", Util.toHex(bytes));
     }
 
     @Override

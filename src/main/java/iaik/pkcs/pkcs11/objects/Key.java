@@ -656,24 +656,16 @@ public class Key extends Storage {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-
-        sb.append("\n  Key Type: ");
-        if (keyType != null) {
-            sb.append(keyType.toString());
-        } else {
-            sb.append("<unavailable>");
-        }
-
-        sb.append("\n  ID: ").append(id);
-        sb.append("\n  Start Date: ").append(startDate);
-        sb.append("\n  End Date: ").append(endDate);
-        sb.append("\n  Derive: ").append(derive);
-        sb.append("\n  Local: ").append(local);
-        sb.append("\n  Key Generation Mechanism: ").append(keyGenMechanism);
-        sb.append("\n  Allowed Mechanisms: ").append(allowedMechanisms);
-
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+                "\n  Key Type: ", ((keyType != null) ? keyType.toString() : "<unavailable>"),
+                "\n  ID: ", id,
+                "\n  Start Date: ", startDate,
+                "\n  End Date: ", endDate,
+                "\n  Derive: ", derive,
+                "\n  Local: ", local,
+                "\n  Key Generation Mechanism: ", keyGenMechanism,
+                "\n  Allowed Mechanisms: ", allowedMechanisms);
     }
 
 }

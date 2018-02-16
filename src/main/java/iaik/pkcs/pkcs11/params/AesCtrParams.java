@@ -94,9 +94,7 @@ public class AesCtrParams implements Params {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  cb: ").append(Util.toHex(cb));
-        return sb.toString();
+        return Util.concat("  cb: ", Util.toHex(cb));
     }
 
     /**

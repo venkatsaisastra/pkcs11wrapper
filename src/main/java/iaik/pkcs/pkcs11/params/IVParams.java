@@ -121,9 +121,7 @@ public class IVParams implements Params {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  Initialization Vector (hex): ").append(Util.toHex(iv));
-        return sb.toString();
+        return Util.concat("  Initialization Vector (hex): ", Util.toHex(iv));
     }
 
     /**

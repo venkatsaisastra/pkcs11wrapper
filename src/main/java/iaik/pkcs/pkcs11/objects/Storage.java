@@ -253,12 +253,12 @@ public class Storage extends PKCS11Object {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Token: ").append(token);
-        sb.append("\n  Private: ").append(private_);
-        sb.append("\n  Modifiable: ").append(modifiable);
-        sb.append("\n  Label: ").append(label);
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+                "\n  Token: ", token,
+                "\n  Private: ", private_,
+                "\n  Modifiable: ", modifiable,
+                "\n  Label: ", label);
     }
 
     /**

@@ -59,6 +59,7 @@ import sun.security.pkcs11.wrapper.CK_DATE;
  * pieces of code that are used frequently in this project.
  *
  * @author Karl Scheibelhofer
+ * @author Lijun Liao
  * @version 1.0
  * @invariants
  */
@@ -354,6 +355,37 @@ public class Util {
         }
 
         return buffer.toString();
+    }
+
+    public static String concat(String s1, String... strs) {
+        int len = (s1 == null) ? 4 : s1.length();
+        for (String str : strs) {
+            len += (str == null) ? 4 : str.length();
+        }
+        StringBuilder sb = new StringBuilder(len);
+        sb.append(s1);
+        for (String str : strs) {
+            sb.append(str);
+        }
+        return sb.toString();
+    }
+
+    public static String concatObjects(Object o1, Object... objs) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(o1);
+        for (Object obj : objs) {
+            sb.append(obj);
+        }
+        return sb.toString();
+    }
+
+    public static String concatObjectsCap(int cap, Object o1, Object... objs) {
+        StringBuilder sb = new StringBuilder(cap);
+        sb.append(o1);
+        for (Object obj : objs) {
+            sb.append(obj);
+        }
+        return sb.toString();
     }
 
 }

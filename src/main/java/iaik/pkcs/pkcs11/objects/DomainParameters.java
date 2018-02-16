@@ -400,17 +400,10 @@ public class DomainParameters extends Storage {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-
-        sb.append("\n  Key Type: ");
-        if (keyType != null) {
-            sb.append(keyType);
-        } else {
-            sb.append("<unavailable>");
-        }
-
-        sb.append("\n  Local: ").append(local);
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+                "\n  Key Type: ", ((keyType != null) ?  keyType : "<unavailable>"),
+                "\n  Local: ", local);
     }
 
 }

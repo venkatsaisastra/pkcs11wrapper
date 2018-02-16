@@ -235,16 +235,11 @@ public class DefaultInitializeArgs implements InitializeArgs {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Mutex Handler: ")
-            .append((mutexHandler != null) ? "present" : "not present");
-        sb.append("\nLibrary can't create OS-Threads: ")
-            .append(libraryCantCreateOsThreads);
-        sb.append("\nOS-Locking OK: ")
-            .append(osLockingOk);
-        sb.append("\nThe reserved parameter is: ")
-            .append((reserved != null) ? reserved : "null");
-        return sb.toString();
+        return Util.concatObjects(
+            "Mutex Handler: ", ((mutexHandler != null) ? "present" : "not present"),
+            "\nLibrary can't create OS-Threads: ", libraryCantCreateOsThreads,
+            "\nOS-Locking OK: ", osLockingOk,
+            "\nThe reserved parameter is: ", ((reserved != null) ? reserved : "null"));
     }
 
 }

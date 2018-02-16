@@ -427,9 +427,7 @@ public class Token {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Token in Slot: ").append(slot);
-        return sb.toString();
+        return Util.concatObjects("Token in Slot: ", slot);
     }
 
 }

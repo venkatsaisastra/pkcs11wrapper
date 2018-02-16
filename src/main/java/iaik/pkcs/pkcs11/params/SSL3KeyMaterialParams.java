@@ -321,16 +321,12 @@ public class SSL3KeyMaterialParams implements Params {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  MAC Size in Bits (dec): ").append(macSizeInBits);
-        sb.append("\n  Key Size in Bits (dec): ").append(keySizeInBits);
-        sb.append("\n  IV Size in Bits (dec): ").append(ivSizeInBits);
-        sb.append("\n  For Export Version: ").append(export);
-        sb.append("\n  Client's and Server'S Random Information (hex):\n")
-            .append(randomInfo);
-        sb.append("\n  Handles of the generated Keys and IVs: ")
-            .append(returnedKeyMaterial);
-        return sb.toString();
+        return Util.concatObjects("  MAC Size in Bits (dec): ", macSizeInBits,
+                "\n  Key Size in Bits (dec): ", keySizeInBits,
+                "\n  IV Size in Bits (dec): ", ivSizeInBits,
+                "\n  For Export Version: ", export,
+                "\n  Client's and Server'S Random Information (hex):\n", randomInfo,
+                "\n  Handles of the generated Keys and IVs: ", returnedKeyMaterial);
     }
 
     /**

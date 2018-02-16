@@ -154,13 +154,12 @@ public class SessionInfo {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(100);
-        sb.append("State: ").append(state);
-        sb.append("\nDevice Error: 0x").append(Long.toHexString(deviceError));
-        sb.append("\nFlags: 0x").append(Util.toFullHex(flags));
-        sb.append("\nRead/Write Session: ").append(isRwSession());
-        sb.append("\nSerial Session: ").append(isSerialSession());
-        return sb.toString();
+        return Util.concatObjectsCap(100,
+                "State: ", state,
+                "\nDevice Error: 0x", Long.toHexString(deviceError),
+                "\nFlags: 0x", Util.toFullHex(flags),
+                "\nRead/Write Session: ", isRwSession(),
+                "\nSerial Session: ", isSerialSession());
     }
 
     /**

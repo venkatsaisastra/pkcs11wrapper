@@ -412,15 +412,15 @@ public class PublicKey extends Key {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Subject (DER, hex): ").append(subject);
-        sb.append("\n  Encrypt: ").append(encrypt);
-        sb.append("\n  Verify: ").append(verify);
-        sb.append("\n  Verify Recover: ").append(verifyRecover);
-        sb.append("\n  Wrap: ").append(wrap);
-        sb.append("\n  Trusted: ").append(trusted);
-        sb.append("\n  Wrap Template: ").append(wrapTemplate);
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+                "\n  Subject (DER, hex): ", subject,
+                "\n  Encrypt: ", encrypt,
+                "\n  Verify: ", verify,
+                "\n  Verify Recover: ", verifyRecover,
+                "\n  Wrap: ", wrap,
+                "\n  Trusted: ", trusted,
+                "\n  Wrap Template: ", wrapTemplate);
     }
 
 }

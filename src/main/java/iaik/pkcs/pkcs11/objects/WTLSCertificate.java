@@ -334,16 +334,14 @@ public class WTLSCertificate extends Certificate {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Subject (DER, hex): ").append(subject);
-        sb.append("\n  Issuer (DER, hex): ").append(issuer);
-        sb.append("\n  Value (BER, hex): ").append(value);
-        sb.append("\n  URL: ").append(url);
-        sb.append("\n  Hash(Subject Public Key): ")
-            .append(hashOfSubjectPublicKey);
-        sb.append("\n  Hash(Issuer Public Key): ")
-            .append(hashOfIssuerPublicKey);
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+        "\n  Subject (DER, hex): ", subject,
+        "\n  Issuer (DER, hex): ", issuer,
+        "\n  Value (BER, hex): ", value,
+        "\n  URL: ", url,
+        "\n  Hash(Subject Public Key): ", hashOfSubjectPublicKey,
+        "\n  Hash(Issuer Public Key): ", hashOfIssuerPublicKey);
     }
 
 }

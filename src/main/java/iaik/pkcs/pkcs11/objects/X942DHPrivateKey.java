@@ -263,12 +263,12 @@ public class X942DHPrivateKey extends DHPrivateKey {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Prime (hex): ").append(prime);
-        sb.append("\n  Base (hex): ").append(base);
-        sb.append("\n  Subprime (hex): ").append(subprime);
-        sb.append("\n  Value (hex): ").append(value);
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+            "\n  Prime (hex): ", prime,
+            "\n  Base (hex): ", base,
+            "\n  Subprime (hex): ", subprime,
+            "\n  Value (hex): ", value);
     }
 
 }

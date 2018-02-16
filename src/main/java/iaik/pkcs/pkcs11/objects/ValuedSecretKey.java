@@ -238,12 +238,10 @@ public class ValuedSecretKey extends SecretKey {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Value (hex): ").append(value);
-        if (valueLen.isPresent()) {
-            sb.append("\n  Value Length (dec): ").append(valueLen.toString(10));
-        }
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+                "\n  Value (hex): ", value,
+                (valueLen.isPresent() ? "\n  Value Length (dec): " : valueLen.toString(10)));
     }
 
 }

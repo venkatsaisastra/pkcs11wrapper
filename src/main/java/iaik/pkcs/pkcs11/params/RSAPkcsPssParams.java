@@ -43,6 +43,7 @@
 package iaik.pkcs.pkcs11.params;
 
 import iaik.pkcs.pkcs11.Mechanism;
+import iaik.pkcs.pkcs11.Util;
 import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
 
 /**
@@ -131,9 +132,8 @@ public class RSAPkcsPssParams extends RSAPkcsParams {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Salt Length (octets, dec): ").append(saltLength);
-        return sb.toString();
+        return Util.concat(super.toString(),
+                "\n  Salt Length (octets, dec): ", Long.toString(saltLength));
     }
 
     /**

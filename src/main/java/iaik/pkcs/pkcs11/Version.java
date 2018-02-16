@@ -148,15 +148,7 @@ public class Version {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(major & 0xff).append('.');
-        if (minor < 10) {
-            sb.append('0');
-        }
-        sb.append(minor & 0xff);
-
-        return sb.toString();
+        return Util.concatObjects(major & 0xff, ".", ((minor < 10) ? "0" : ""), minor & 0xff);
     }
 
     /**

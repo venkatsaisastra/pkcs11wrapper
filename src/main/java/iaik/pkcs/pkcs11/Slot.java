@@ -228,10 +228,7 @@ public class Slot {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Slot ID: 0x").append(Long.toHexString(slotID));
-        sb.append("\nModule: ").append(module);
-        return sb.toString();
+        return Util.concatObjects("Slot ID: 0x", Long.toHexString(slotID), "\nModule: ", module);
     }
 
 }

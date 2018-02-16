@@ -337,30 +337,14 @@ public class PKCS5PBKD2Params implements Params {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("  Salt Source: ");
-        if (saltSource == SaltSourceType.SALT_SPECIFIED) {
-            sb.append("Salt Specified");
-        } else {
-            sb.append("<unknown>");
-        }
-
-        sb.append("\n  Salt Source Data (hex): ")
-            .append(Util.toHex(saltSourceData));
-        sb.append("\n  Iterations (dec): ").append(iterations);
-
-        sb.append("\n  Pseudo-Random Function: ");
-        if (pseudoRandomFunction == PseudoRandomFunctionType.HMAC_SHA1) {
-            sb.append("HMAC SHA-1");
-        } else {
-            sb.append("<unknown>");
-        }
-
-        sb.append("\n  Pseudo-Random Function Data (hex): ")
-            .append(Util.toHex(pseudoRandomFunctionData));
-
-        return sb.toString();
+        return Util.concat("  Salt Source: ",
+                ((saltSource == SaltSourceType.SALT_SPECIFIED) ? "Salt Specified" : "<unknown>"),
+            "\n  Salt Source Data (hex): ", Util.toHex(saltSourceData),
+            "\n  Iterations (dec): ", Long.toString(iterations),
+            "\n  Pseudo-Random Function: ",
+                ((pseudoRandomFunction == PseudoRandomFunctionType.HMAC_SHA1)
+                        ? "HMAC SHA-1" : "<unknown>"),
+            "\n  Pseudo-Random Function Data (hex): ", Util.toHex(pseudoRandomFunctionData));
     }
 
     /**

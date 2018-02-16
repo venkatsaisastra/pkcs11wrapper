@@ -1847,10 +1847,9 @@ public class Session {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(100);
-        sb.append("Session Handle: 0x").append(Long.toHexString(sessionHandle));
-        sb.append("\nToken: ").append(token.toString());
-        return sb.toString();
+        return Util.concatObjectsCap(100,
+                "Session Handle: 0x", Long.toHexString(sessionHandle),
+                "\nToken: ", token);
     }
 
     private static CK_MECHANISM toCkMechanism(Mechanism mechanism) {

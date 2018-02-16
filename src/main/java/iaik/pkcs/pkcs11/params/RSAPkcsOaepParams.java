@@ -217,20 +217,19 @@ public class RSAPkcsOaepParams extends RSAPkcsParams {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-
-        sb.append("\n  Source: ");
+        String sourceStr;
         if (source == SourceType.EMPTY) {
-            sb.append("Empty");
+            sourceStr = "Empty";
         } else if (source == SourceType.DATA_SPECIFIED) {
-            sb.append("Data Specified");
+            sourceStr = "Data Specified";
         } else {
-            sb.append("<unknown>");
+            sourceStr = "<unknown>";
         }
 
-        sb.append("\n  Source Data (hex): ").append(Util.toHex(sourceData));
-
-        return sb.toString();
+        String upperStr = super.toString();
+        return Util.concatObjectsCap(upperStr.length() + 100, upperStr,
+                "\n  Source: ", sourceStr,
+                "\n  Source Data (hex): ", Util.toHex(sourceData));
     }
 
     /**

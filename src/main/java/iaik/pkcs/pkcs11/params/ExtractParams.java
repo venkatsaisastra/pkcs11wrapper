@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.params;
 
+import iaik.pkcs.pkcs11.Util;
+
 /**
  * This class encapsulates parameters for Mechanisms.EXTRACT_KEY_FROM_KEY.
  *
@@ -117,9 +119,7 @@ public class ExtractParams implements Params {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  Bit Index (dec): ").append(bitIndex);
-        return sb.toString();
+        return Util.concat("  Bit Index (dec): ", Long.toString(bitIndex));
     }
 
     /**

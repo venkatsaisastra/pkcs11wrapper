@@ -196,16 +196,15 @@ public class SlotInfo {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(200);
-        sb.append("Slot Description: ").append(slotDescription);
-        sb.append("\nManufacturer ID: ").append(manufacturerID);
-        sb.append("\nHardware Version: ").append(hardwareVersion);
-        sb.append("\nFirmware Version: ").append(firmwareVersion);
-        sb.append("\nFlags: 0x").append(Util.toFullHex(flags));
-        sb.append("\nToken present: ").append(isTokenPresent());
-        sb.append("\nRemovable Device: ").append(isRemovableDevice());
-        sb.append("\nHardware Slot: ").append(isHwSlot());
-        return sb.toString();
+        return Util.concatObjectsCap(200,
+                "Slot Description: ", slotDescription,
+                "\nManufacturer ID: ", manufacturerID,
+                "\nHardware Version: ", hardwareVersion,
+                "\nFirmware Version: ", firmwareVersion,
+                "\nFlags: 0X", Util.toFullHex(flags),
+                "\nToken present: ", isTokenPresent(),
+                "\nRemovable Device: ", isRemovableDevice(),
+                "\nHardware Slot: ", isHwSlot());
     }
 
     /**

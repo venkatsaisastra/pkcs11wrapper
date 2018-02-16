@@ -118,4 +118,8 @@ public class VersionParams implements Params {
         return this.version.equals(other.version);
     }
 
+    @Override
+    public String toString() {
+        return Util.concatObjects("Version: ", version);
+    }
 }

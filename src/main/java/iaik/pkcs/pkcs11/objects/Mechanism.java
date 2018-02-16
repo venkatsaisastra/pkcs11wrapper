@@ -175,9 +175,9 @@ public class Mechanism extends PKCS11Object {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Mechanism Type: ").append(mechanismType);
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 40, superToString,
+                "\n  Mechanism Type: ", mechanismType);
     }
 
     /**

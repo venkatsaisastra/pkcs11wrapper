@@ -641,85 +641,61 @@ public class TokenInfo {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Label: ").append(label);
-        sb.append("\nManufacturer ID: ").append(manufacturerID);
-        sb.append("\nModel: ").append(model);
-        sb.append("\nSerial Number: ").append(serialNumber);
-        sb.append("\nFlags: 0x").append(Util.toFullHex(flags));        
-        sb.append("\nRandom Number Generator: ").append(isRNG());
-        sb.append("\nWrite protected: ").append(isWriteProtected());
-        sb.append("\nLogin required: ").append(isLoginRequired());
-        sb.append("\nUser PIN initialized: ").append(isUserPinInitialized());
-        sb.append("\nRestore Key not needed: ").append(isRestoreKeyNotNeeded());
-        sb.append("\nClock on Token: ").append(isClockOnToken());
-        sb.append("\nProtected Authentication Path: ")
-            .append(isProtectedAuthenticationPath());
-        sb.append("\nDual Crypto Operations: ")
-            .append(isDualCryptoOperations());
-        sb.append("\nToken initialized: ").append(isTokenInitialized());
-        sb.append("\nSecondary Authentication: ")
-            .append(isSecondaryAuthentication());
-        sb.append("\nUser PIN-Count low: ").append(isUserPinCountLow());
-        sb.append("\nUser PIN final Try: ").append(isUserPinFinalTry());
-        sb.append("\nUser PIN locked: ").append(isUserPinLocked());
-        sb.append("\nUser PIN to be changed: ").append(isUserPinToBeChanged());
-        sb.append("\nSecurity Officer PIN-Count low: ")
-            .append(isSoPinCountLow());
-        sb.append("\nSecurity Officer PIN final Try: ")
-            .append(isSoPinFinalTry());
-        sb.append("\nSecurity Officer PIN locked: ").append(isSoPinLocked());
-        sb.append("\nSecurity Officer PIN to be changed: ")
-            .append(isSoPinToBeChanged());
+        return Util.concatObjectsCap(1000,
+            "\nManufacturer ID: ", manufacturerID,
+            "\nModel: ", model,
+            "\nSerial Number: ", serialNumber,
+            "\nFlags: 0x", Util.toFullHex(flags),
+            "\nRandom Number Generator: ", isRNG(),
+            "\nWrite protected: ", isWriteProtected(),
+            "\nLogin required: ", isLoginRequired(),
+            "\nUser PIN initialized: ", isUserPinInitialized(),
+            "\nRestore Key not needed: ", isRestoreKeyNotNeeded(),
+            "\nClock on Token: ", isClockOnToken(),
+            "\nProtected Authentication Path: ", isProtectedAuthenticationPath(),
+            "\nDual Crypto Operations: ", isDualCryptoOperations(),
+            "\nToken initialized: ", isTokenInitialized(),
+            "\nSecondary Authentication: ", isSecondaryAuthentication(),
+            "\nUser PIN-Count low: ", isUserPinCountLow(),
+            "\nUser PIN final Try: ", isUserPinFinalTry(),
+            "\nUser PIN locked: ", isUserPinLocked(),
+            "\nUser PIN to be changed: ", isUserPinToBeChanged(),
+            "\nSecurity Officer PIN-Count low: ", isSoPinCountLow(),
+            "\nSecurity Officer PIN final Try: ", isSoPinFinalTry(),
+            "\nSecurity Officer PIN locked: ", isSoPinLocked(),
+            "\nSecurity Officer PIN to be changed: ", isSoPinToBeChanged(),
+            "\nMaximum Session Count: ",
+                ((maxSessionCount == UNAVAILABLE_INFORMATION)  ? "<Information unavailable>"
+                    : ((maxSessionCount == EFFECTIVELY_INFINITE) ? "<effectively infinite>"
+                        : Long.toString(maxSessionCount))),
+            "\nSession Count: ",
+            ((sessionCount == UNAVAILABLE_INFORMATION)
+                ? "<Information unavailable>" : Long.toString(sessionCount)),
+            "\nMaximum Read/Write Session Count: ",
+                ((maxRwSessionCount == UNAVAILABLE_INFORMATION) ? "<Information unavailable>"
+                    : ((maxRwSessionCount == EFFECTIVELY_INFINITE) ? "<effectively infinite>"
+                        : Long.toString(maxRwSessionCount))),
+            "\nRead/Write Session Count: ",
+                ((rwSessionCount == UNAVAILABLE_INFORMATION) ? "<Information unavailable>"
+                     : Long.toString(rwSessionCount)),
+            "\nMaximum PIN Length: ", maxPinLen,
+            "\nMinimum PIN Length: ", minPinLen,
 
-        sb.append("\nMaximum Session Count: ");
-        if (maxSessionCount == UNAVAILABLE_INFORMATION) {
-            sb.append("<Information unavailable>");
-        } else {
-            sb.append((maxSessionCount == EFFECTIVELY_INFINITE)
-                ? "<effectively infinite>" : Long.toString(maxSessionCount));
-        }
-
-        sb.append("\nSession Count: ");
-        sb.append((sessionCount == UNAVAILABLE_INFORMATION)
-            ? "<Information unavailable>" : Long.toString(sessionCount));
-
-        sb.append("\nMaximum Read/Write Session Count: ");
-        if (maxRwSessionCount == UNAVAILABLE_INFORMATION) {
-            sb.append("<Information unavailable>");
-        } else {
-            sb.append((maxRwSessionCount == EFFECTIVELY_INFINITE)
-                ? "<effectively infinite>" : Long.toString(maxRwSessionCount));
-        }
-
-        sb.append("\nRead/Write Session Count: ");
-        sb.append((rwSessionCount == UNAVAILABLE_INFORMATION)
-            ? "<Information unavailable>" : Long.toString(rwSessionCount));
-
-        sb.append("\nMaximum PIN Length: ").append(maxPinLen);
-        sb.append("\nMinimum PIN Length: ").append(minPinLen);
-
-        sb.append("\nTotal Public Memory: ");
-        sb.append((totalPublicMemory == UNAVAILABLE_INFORMATION)
-            ? "<Information unavailable>" : Long.toString(totalPublicMemory));
-
-        sb.append("\nFree Public Memory: ");
-        sb .append((freePublicMemory == UNAVAILABLE_INFORMATION)
-            ? "<Information unavailable>" : Long.toString(freePublicMemory));
-
-        sb.append("\nTotal Private Memory: ");
-        sb.append((totalPrivateMemory == UNAVAILABLE_INFORMATION)
-            ? "<Information unavailable>" : Long.toString(totalPrivateMemory));
-
-        sb.append("\nFree Private Memory: ");
-        sb.append((freePrivateMemory == UNAVAILABLE_INFORMATION)
-            ? "<Information unavailable>" : Long.toString(freePrivateMemory));
-
-        sb.append("\nHardware Version: ").append(hardwareVersion);
-        sb.append("\nFirmware Version: ").append(firmwareVersion);
-        sb.append("\nTime: ").append(time);
-
-        return sb.toString();
+            "\nTotal Public Memory: ",
+                ((totalPublicMemory == UNAVAILABLE_INFORMATION) ? "<Information unavailable>"
+                    : Long.toString(totalPublicMemory)),
+            "\nFree Public Memory: ",
+                ((freePublicMemory == UNAVAILABLE_INFORMATION) ? "<Information unavailable>"
+                    : Long.toString(freePublicMemory)),
+            "\nTotal Private Memory: ",
+                ((totalPrivateMemory == UNAVAILABLE_INFORMATION) ? "<Information unavailable>"
+                    : Long.toString(totalPrivateMemory)),
+            "\nFree Private Memory: ",
+                ((freePrivateMemory == UNAVAILABLE_INFORMATION) ? "<Information unavailable>"
+                    : Long.toString(freePrivateMemory)),
+            "\nHardware Version: ", hardwareVersion,
+            "\nFirmware Version: ", firmwareVersion,
+            "\nTime: ", time);
     }
 
     /**

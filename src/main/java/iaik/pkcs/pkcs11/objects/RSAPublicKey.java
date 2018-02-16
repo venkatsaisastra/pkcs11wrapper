@@ -256,11 +256,11 @@ public class RSAPublicKey extends PublicKey {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Modulus (hex): ").append(modulus);
-        sb.append("\n  Public Exponent (hex): ").append(publicExponent);
-        sb.append("\n  Modulus Bits (dec): ").append(modulusBits.toString(10));
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+                "\n  Modulus (hex): ", modulus,
+                "\n  Public Exponent (hex): ", publicExponent,
+                "\n  Modulus Bits (dec): ", modulusBits.toString(10));
     }
 
 }

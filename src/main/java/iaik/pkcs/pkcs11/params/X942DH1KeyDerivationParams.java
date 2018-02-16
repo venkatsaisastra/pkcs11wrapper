@@ -141,9 +141,7 @@ public class X942DH1KeyDerivationParams extends DHKeyDerivationParams {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Other Info: ").append(Util.toHex(otherInfo));
-        return sb.toString();
+        return Util.concat(super.toString(), "\n  Other Info: ", Util.toHex(otherInfo));
     }
 
     /**

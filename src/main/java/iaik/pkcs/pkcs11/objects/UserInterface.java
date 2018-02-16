@@ -317,36 +317,25 @@ public class UserInterface extends HardwareFeature {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Pixel X: ").append(pixelX.getValueString());
-        sb.append("\n  Pixel Y: ").append(pixelY.getValueString());
-        sb.append("\n  Resolution: ").append(resolution.getValueString());
-        sb.append("\n  Char Rows: ").append(charRows.getValueString());
-        sb.append("\n  Char Columns: ").append(charColumns.getValueString());
-        sb.append("\n  Color: ").append(color.getValueString());
-        sb.append("\n  Bits per Pixel: ").append(bitsPerPixel.getValueString());
-        sb.append("\n  Char sets:");
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+                "\n  Pixel X: ", pixelX.getValueString(),
+                "\n  Pixel Y: ", pixelY.getValueString(),
+                "\n  Resolution: ", resolution.getValueString(),
+                "\n  Char Rows: ", charRows.getValueString(),
+                "\n  Char Columns: ", charColumns.getValueString(),
+                "\n  Color: ", color.getValueString(),
+                "\n  Bits per Pixel: ", bitsPerPixel.getValueString(),
+                "\n  Char sets:", toString(charSets),
+                "\n  Encoding methods: ", toString(encodingMethods),
+                "\n  Mime Types: ", toString(mimeTypes));
+    }
+    
+    private static String toString(ByteArrayAttribute attr) {
         try {
-            sb.append(new String(charSets.getByteArrayValue(), "ASCII"));
+            return new String(attr.getByteArrayValue(), "ASCII");
         } catch (UnsupportedEncodingException ex) {
-            sb.append(new String(charSets.getByteArrayValue()));
+            return new String(attr.getByteArrayValue());
         }
-
-        sb.append("\n  Encoding methods: ");
-        try {
-            sb.append(
-                    new String(encodingMethods.getByteArrayValue(), "ASCII"));
-        } catch (UnsupportedEncodingException ex) {
-            sb.append(new String(encodingMethods.getByteArrayValue()));
-        }
-
-        sb.append("\n  Mime Types: ");
-        try {
-            sb.append(new String(mimeTypes.getByteArrayValue(), "ASCII"));
-        } catch (UnsupportedEncodingException ex) {
-            sb.append(new String(mimeTypes.getByteArrayValue()));
-        }
-
-        return sb.toString();
     }
 }

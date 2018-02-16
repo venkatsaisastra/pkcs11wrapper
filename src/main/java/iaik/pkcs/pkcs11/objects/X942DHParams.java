@@ -282,14 +282,13 @@ public class X942DHParams extends DHParams {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Prime (hex): ").append(prime);
-        sb.append("\n  Base (hex): ").append(base);
-        sb.append("\n  Subprime (hex): ").append(subprime);
-        sb.append("\n  Prime Bits (dec): ").append(primeBits.toString(10));
-        sb.append("\n  Subprime Bits (dec): ")
-            .append(subprimeBits.toString(10));
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+            "\n  Prime (hex): ", prime,
+            "\n  Base (hex): ", base,
+            "\n  Subprime (hex): ", subprime,
+            "\n  Prime Bits (dec): ", primeBits.toString(10),
+            "\n  Subprime Bits (dec): ", subprimeBits.toString(10));
     }
 
 }

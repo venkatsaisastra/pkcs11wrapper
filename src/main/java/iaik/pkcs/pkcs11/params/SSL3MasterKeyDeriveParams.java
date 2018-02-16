@@ -159,10 +159,8 @@ public class SSL3MasterKeyDeriveParams implements Params {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  Random Information:\n").append(randomInfo);
-        sb.append("\n  Version: ").append(version);
-        return sb.toString();
+        return Util.concatObjects("  Random Information:\n", randomInfo,
+                "\n  Version: ", version);
     }
 
     /**

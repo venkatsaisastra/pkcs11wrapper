@@ -274,12 +274,12 @@ public class KEAPrivateKey extends PrivateKey {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Prime (hex): ").append(prime);
-        sb.append("\n  Subprime (hex): ").append(subprime);
-        sb.append("\n  Base (hex): ").append(base);
-        sb.append("\n  Value (hex): ").append(value);
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+                "\n  Prime (hex): ", prime,
+                "\n  Subprime (hex): ", subprime,
+                "\n  Base (hex): ", base,
+                "\n  Value (hex): ", value);
     }
 
 }

@@ -433,14 +433,10 @@ public class HardwareFeature extends PKCS11Object {
      */
     @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder(super.toString());
-        buffer.append("\n  Hardware Feature Type: ");
-        if (hardwareFeatureType != null) {
-            buffer.append(hardwareFeatureType.toString());
-        } else {
-            buffer.append("<unavailable>");
-        }
-        return buffer.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+            "\n  Hardware Feature Type: ",
+                ((hardwareFeatureType != null) ? hardwareFeatureType.toString() : "<unavailable>"));
     }
 
 }

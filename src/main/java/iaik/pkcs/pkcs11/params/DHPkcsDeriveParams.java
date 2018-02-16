@@ -121,9 +121,7 @@ public class DHPkcsDeriveParams implements Params {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  Public Value (hex): ").append(Util.toHex(publicValue));
-        return sb.toString();
+        return Util.concat("  Public Value (hex): ", Util.toHex(publicValue));
     }
 
     /**

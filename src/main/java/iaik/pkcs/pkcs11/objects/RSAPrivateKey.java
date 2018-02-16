@@ -359,16 +359,16 @@ public class RSAPrivateKey extends PrivateKey {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Modulus (hex): ").append(modulus);
-        sb.append("\n  Public Exponent (hex): ").append(publicExponent);
-        sb.append("\n  Private Exponent (hex): ").append(privateExponent);
-        sb.append("\n  Prime 1 (hex): ").append(prime1);
-        sb.append("\n  Prime 2 (hex): ").append(prime2);
-        sb.append("\n  Exponent 1 (hex): ").append(exponent1);
-        sb.append("\n  Exponent 2 (hex): ").append(exponent2);
-        sb.append("\n  Coefficient (hex): ").append(coefficient);
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+                "\n  Modulus (hex): ", modulus,
+                "\n  Public Exponent (hex): ", publicExponent,
+                "\n  Private Exponent (hex): ", privateExponent,
+                "\n  Prime 1 (hex): ", prime1,
+                "\n  Prime 2 (hex): ", prime2,
+                "\n  Exponent 1 (hex): ", exponent1,
+                "\n  Exponent 2 (hex): ", exponent2,
+                "\n  Coefficient (hex): ", coefficient);
     }
 
 }

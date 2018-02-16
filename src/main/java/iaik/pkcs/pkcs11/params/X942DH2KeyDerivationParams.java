@@ -213,11 +213,10 @@ public class X942DH2KeyDerivationParams extends X942DH1KeyDerivationParams {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Private Data Length (dec): ").append(privateDataLength);
-        sb.append("\n  Private Data: ").append(privateData);
-        sb.append("\n  Public Data 2: ").append(Util.toHex(publicData2));
-        return sb.toString();
+        return Util.concatObjects(super.toString(),
+                "\n  Private Data Length (dec): ", privateDataLength,
+                "\n  Private Data: ", privateData,
+                "\n  Public Data 2: ", Util.toHex(publicData2));
     }
 
     /**

@@ -562,23 +562,23 @@ public class SecretKey extends Key {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Sensitive: ").append(sensitive);
-        sb.append("\n  Encrypt: ").append(encrypt);
-        sb.append("\n  Decrypt: ").append(decrypt);
-        sb.append("\n  Sign: ").append(sign);
-        sb.append("\n  Verify: ").append(verify);
-        sb.append("\n  Wrap: ").append(wrap);
-        sb.append("\n  Unwrap: ").append(unwrap);
-        sb.append("\n  Extractable: ").append(extractable);
-        sb.append("\n  Always Sensitive: ").append(alwaysSensitive);
-        sb.append("\n  Never Extractable: ").append(neverExtractable);
-        sb.append("\n  Check Value: ").append(checkValue);
-        sb.append("\n  Wrap With Trusted: ").append(wrapWithTrusted);
-        sb.append("\n  Trusted: ").append(trusted);
-        sb.append("\n  Wrap Template: ").append(wrapTemplate);
-        sb.append("\n  Unwrap Template: ").append(unwrapTemplate);
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 200, superToString,
+                "\n  Sensitive: ", sensitive,
+                "\n  Encrypt: ", encrypt,
+                "\n  Decrypt: ", decrypt,
+                "\n  Sign: ", sign,
+                "\n  Verify: ", verify,
+                "\n  Wrap: ", wrap,
+                "\n  Unwrap: ", unwrap,
+                "\n  Extractable: ", extractable,
+                "\n  Always Sensitive: ", alwaysSensitive,
+                "\n  Never Extractable: ", neverExtractable,
+                "\n  Check Value: ", checkValue,
+                "\n  Wrap With Trusted: ", wrapWithTrusted,
+                "\n  Trusted: ", trusted,
+                "\n  Wrap Template: ", wrapTemplate,
+                "\n  Unwrap Template: ", unwrapTemplate);
     }
 
 }

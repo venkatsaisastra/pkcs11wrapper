@@ -147,12 +147,10 @@ public class Info {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Cryptoki Version: ").append(cryptokiVersion);
-        sb.append("\nManufacturerID: ").append(manufacturerID);
-        sb.append("\nLibrary Description: ").append(libraryDescription);
-        sb.append("\nLibrary Version: ").append(libraryVersion);
-        return sb.toString();
+        return Util.concatObjects("Cryptoki Version: ", cryptokiVersion,
+                "\nManufacturerID: ", manufacturerID,
+                "\nLibrary Description: ", libraryDescription,
+                "\nLibrary Version: ", libraryVersion);
     }
 
     /**

@@ -170,33 +170,31 @@ abstract public class RSAPkcsParams implements Params {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  Hash Algorithm: ").append(hashAlg.toString());
-
-        sb.append("\n  Mask Generation Function: ");
+        String mgfStr;
         if (mgf == PKCS11Constants.CKG_MGF1_SHA1) {
-            sb.append("SHA-1");
+            mgfStr = "SHA-1";
         } else if (mgf == PKCS11Constants.CKG_MGF1_SHA224) {
-            sb.append("SHA-224");
+            mgfStr = "SHA-224";
         } else if (mgf == PKCS11Constants.CKG_MGF1_SHA256) {
-            sb.append("SHA-256");
+            mgfStr = "SHA-256";
         } else if (mgf == PKCS11Constants.CKG_MGF1_SHA384) {
-            sb.append("SHA-384");
+            mgfStr = "SHA-384";
         } else if (mgf == PKCS11Constants.CKG_MGF1_SHA512) {
-            sb.append("SHA-512");
+            mgfStr = "SHA-512";
         } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_224) {
-            sb.append("SHA3-224");
+            mgfStr = "SHA3-224";
         } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_256) {
-            sb.append("SHA3-256");
+            mgfStr = "SHA3-256";
         } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_384) {
-            sb.append("SHA3-384");
+            mgfStr = "SHA3-384";
         } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_512) {
-            sb.append("SHA3-512");
+            mgfStr = "SHA3-512";
         } else {
-            sb.append("<unknown>");
+            mgfStr = "<unknown>";
         }
 
-        return sb.toString();
+        return Util.concat("  Hash Algorithm: ", hashAlg.toString(),
+                "\n  Mask Generation Function: ", mgfStr);
     }
 
     /**

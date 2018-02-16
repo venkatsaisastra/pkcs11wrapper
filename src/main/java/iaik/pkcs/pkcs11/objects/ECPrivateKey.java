@@ -239,10 +239,10 @@ public class ECPrivateKey extends PrivateKey {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  ECDSA Params (DER, hex): ").append(ecdsaParams);
-        sb.append("\n  Private Value d (hex): ").append(value);
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+                "\n  ECDSA Params (DER, hex): ", ecdsaParams,
+                "\n  Private Value d (hex): ", value);
     }
 
 }

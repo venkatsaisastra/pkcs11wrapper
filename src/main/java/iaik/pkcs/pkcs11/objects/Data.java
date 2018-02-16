@@ -270,11 +270,11 @@ public class Data extends Storage {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Application: ").append(application);
-        sb.append("\n  PKCS11Object ID (DER, hex): ").append(objectID);
-        sb.append("\n  Value (hex): ").append(value);
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+                "\n  Application: ", application,
+                "\n  PKCS11Object ID (DER, hex): ", objectID,
+                "\n  Value (hex): ", value);
     }
 
 }

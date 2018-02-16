@@ -360,11 +360,9 @@ public class Mechanism {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(128);
-        sb.append("    Mechanism: ")
-            .append(Functions.mechanismCodeToString(pkcs11MechanismCode));
-        sb.append("\n    Params:\n").append(params);
-        return sb.toString();
+        return Util.concatObjectsCap(128,
+            "    Mechanism: ", Functions.mechanismCodeToString(pkcs11MechanismCode),
+            "\n    Params:\n", params);
     }
 
 }

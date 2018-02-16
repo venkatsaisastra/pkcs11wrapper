@@ -210,11 +210,11 @@ public class EcDH2KeyDerivationParams extends EcDH1KeyDerivationParams {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Private Data Length (dec): ").append(privateDataLength);
-        sb.append("\n  Private Data: ").append(privateData);
-        sb.append("\n  Public Data 2: ").append(Util.toHex(publicData2));
-        return sb.toString();
+        String upperStr = super.toString();
+        return Util.concatObjectsCap(upperStr.length() + 100, upperStr,
+                "\n  Private Data Length (dec): ", privateDataLength,
+                "\n  Private Data: ", privateData,
+                "\n  Public Data 2: ", Util.toHex(publicData2));
     }
 
     /**

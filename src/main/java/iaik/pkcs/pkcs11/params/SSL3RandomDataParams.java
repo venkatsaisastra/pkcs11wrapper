@@ -154,10 +154,8 @@ public class SSL3RandomDataParams implements Params {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  Client Random (hex): ").append(Util.toHex(clientRandom));
-        sb.append("\n  Server Random (hex): ").append(Util.toHex(serverRandom));
-        return sb.toString();
+        return Util.concat("  Client Random (hex): ", Util.toHex(clientRandom),
+                "\n  Server Random (hex): ", Util.toHex(serverRandom));
     }
 
     /**

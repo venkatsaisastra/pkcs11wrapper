@@ -554,22 +554,15 @@ public class Certificate extends Storage {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-
-        sb.append("\nCertificate Type: ");
-        if (certificateType != null) {
-            sb.append(certificateType);
-        } else {
-            sb.append("<unavailable>");
-        }
-
-        sb.append("\nTrusted: ").append(trusted);
-        sb.append("\nCertificate Category: ").append(certificateCategory);
-        sb.append("\nCheck Value: ").append(checkValue);
-        sb.append("\nStart Date: ").append(startDate);
-        sb.append("\nEnd Date: ").append(endDate);
-
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+                "\nCertificate Type: ",
+                    ((certificateType != null) ? certificateType : "<unavailable>"),
+                "\nTrusted: ", trusted,
+                "\nCertificate Category: ", certificateCategory,
+                "\nCheck Value: ", checkValue,
+                "\nStart Date: ", startDate,
+                "\nEnd Date: ", endDate);
     }
 
 }

@@ -241,14 +241,10 @@ public class PBEParams implements Params {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  IV: ").append((iv != null) ? new String(iv) : null);
-        sb.append("\n  Password: ")
-            .append((password != null) ? new String(password) : null);
-        sb.append("\n  Salt: ")
-            .append((salt != null) ? new String(salt) : null);
-        sb.append("\n  Iterations (dec): ").append(iterations);
-        return sb.toString();
+        return Util.concatObjects("  IV: ", ((iv != null) ? new String(iv) : null),
+                "\n  Password: ", ((password != null) ? new String(password) : null),
+                "\n  Salt: ", ((salt != null) ? new String(salt) : null),
+                "\n  Iterations (dec): ", iterations);
     }
 
     /**

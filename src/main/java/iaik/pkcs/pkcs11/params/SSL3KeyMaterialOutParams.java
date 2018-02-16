@@ -251,18 +251,13 @@ public class SSL3KeyMaterialOutParams implements Params {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  Client MAC Secret key:\n").append(clientMacSecret);
-        sb.append("\n\n  Server MAC Secret key:\n")
-            .append(serverMacSecret);
-        sb.append("\n\n  Client Secret key:\n").append(clientKey);
-        sb.append("\n\n  Server Secret key:\n").append(serverKey);
-        sb.append("\n\n  Client Initializatin Vector (hex):\n")
-            .append(Util.toHex(clientIV));
-        sb.append("\n  Server Initializatin Vector (hex): ")
-            .append(Util.toHex(serverIV));
-
-        return sb.toString();
+        return Util.concatObjects(
+                "  Client MAC Secret key:\n", clientMacSecret,
+                "\n\n  Server MAC Secret key:\n", serverMacSecret,
+                "\n\n  Client Secret key:\n", clientKey,
+                "\n\n  Server Secret key:\n", serverKey,
+                "\n\n  Client Initializatin Vector (hex):\n", Util.toHex(clientIV),
+                "\n  Server Initializatin Vector (hex): ", Util.toHex(serverIV));
     }
 
     /**

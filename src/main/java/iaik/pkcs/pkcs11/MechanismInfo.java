@@ -705,30 +705,29 @@ public class MechanismInfo {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(1024);
-        sb.append("  Minimum Key-Size: ").append(minKeySize);
-        sb.append("\n  Maximum Key-Size: ").append(maxKeySize);
-        sb.append("\n  Hardware: ").append(isHw());
-        sb.append("\n  Encrypt: ").append(isEncrypt());
-        sb.append("\n  Decrypt: ").append(isDecrypt());
-        sb.append("\n  Digest: ").append(isDigest());
-        sb.append("\n  Sign: ").append(isSign());
-        sb.append("\n  Sign Recover: ").append(isSignRecover());
-        sb.append("\n  Verify: ").append(isVerify());
-        sb.append("\n  Verify Recover: ").append(isVerifyRecover());
-        sb.append("\n  Generate: ").append(isGenerate());
-        sb.append("\n  Generate Key-Pair: ").append(isGenerateKeyPair());
-        sb.append("\n  Wrap: ").append(isWrap());
-        sb.append("\n  Unwrap: ").append(isUnwrap());
-        sb.append("\n  Derive: ").append(isDerive());
-        sb.append("\n  EC F(p): ").append(isEcFp());
-        sb.append("\n  EC F(2^m): ").append(isEcF2m());
-        sb.append("\n  EC Parameters: ").append(isEcEcParameters());
-        sb.append("\n  EC Named Curve: ").append(isEcNamedCurve());
-        sb.append("\n  EC Uncompress: ").append(isEcUncompress());
-        sb.append("\n  EC Compress: ").append(isEcCompress());
-        sb.append("\n  Extension: ").append(isExtension());
-        return sb.toString();
+        return Util.concatObjectsCap(1024,
+            "  Minimum Key-Size: ", minKeySize,
+            "\n  Maximum Key-Size: ", maxKeySize,
+            "\n  Hardware: ", isHw(),
+            "\n  Encrypt: ", isEncrypt(),
+            "\n  Decrypt: ", isDecrypt(),
+            "\n  Digest: ", isDigest(),
+            "\n  Sign: ", isSign(),
+            "\n  Sign Recover: ", isSignRecover(),
+            "\n  Verify: ", isVerify(),
+            "\n  Verify Recover: ", isVerifyRecover(),
+            "\n  Generate: ", isGenerate(),
+            "\n  Generate Key-Pair: ", isGenerateKeyPair(),
+            "\n  Wrap: ", isWrap(),
+            "\n  Unwrap: ", isUnwrap(),
+            "\n  Derive: ", isDerive(),
+            "\n  EC F(p): ", isEcFp(),
+            "\n  EC F(2^m): ", isEcF2m(),
+            "\n  EC Parameters: ", isEcEcParameters(),
+            "\n  EC Named Curve: ", isEcNamedCurve(),
+            "\n  EC Uncompress: ", isEcUncompress(),
+            "\n  EC Compress: ", isEcCompress(),
+            "\n  Extension: ", isExtension());
     }
 
     /**

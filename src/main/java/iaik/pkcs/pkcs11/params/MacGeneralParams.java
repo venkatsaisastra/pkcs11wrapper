@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.params;
 
+import iaik.pkcs.pkcs11.Util;
+
 /**
  * This class encapsulates parameters for the MAC algorithms for the following
  * mechanisms: DES, DES3 (triple-DES), CAST, CAST3, CAST128 (CAST5), IDEA, and
@@ -113,9 +115,7 @@ public class MacGeneralParams implements Params {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("  Mac Length (dec): ").append(macLength);
-        return sb.toString();
+        return Util.concat("  Mac Length (dec): ", Long.toString(macLength));
     }
 
     /**

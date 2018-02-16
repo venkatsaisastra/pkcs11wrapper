@@ -238,10 +238,10 @@ public class ECPublicKey extends PublicKey {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  ECDSA Params (DER, hex): ").append(ecdsaParams);
-        sb.append("\n  EC Point (DER, hex): ").append(ecPoint);
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+                "\n  ECDSA Params (DER, hex): ", ecdsaParams,
+                "\n  EC Point (DER, hex): ", ecPoint);
     }
 
 }

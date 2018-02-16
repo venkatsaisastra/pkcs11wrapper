@@ -253,11 +253,11 @@ public class DHParams extends DomainParameters {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Prime (hex): ").append(prime);
-        sb.append("\n  Base (hex): ").append(base);
-        sb.append("\n  Prime Bits (dec): ").append(primeBits.toString(10));
-        return sb.toString();
+        String superToString = super.toString();
+        return Util.concatObjectsCap(superToString.length() + 100, superToString,
+                "\n  Prime (hex): ", prime,
+                "\n  Base (hex): ", base,
+                "\n  Prime Bits (dec): ", primeBits.toString(10));
     }
 
 }
