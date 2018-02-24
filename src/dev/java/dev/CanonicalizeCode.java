@@ -361,7 +361,7 @@ public class CanonicalizeCode {
     writeLine(out, newLine,
         "// ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,");
     writeLine(out, newLine,
-        "// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY");
+        "// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY");
     writeLine(out, newLine,
         "// OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE");
     writeLine(out, newLine,
