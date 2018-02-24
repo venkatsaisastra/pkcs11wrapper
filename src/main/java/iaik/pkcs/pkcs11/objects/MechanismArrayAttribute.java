@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -58,139 +58,139 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  */
 public class MechanismArrayAttribute extends Attribute {
 
-    /**
-     * Constructor taking the PKCS#11 type of the attribute.
-     *
-     * @param type
-     *          The PKCS#11 type of this attribute; e.g.
-     *          PKCS11Constants.CKA_VALUE.
-     * @preconditions (type <> null)
-     * @postconditions
-     */
-    public MechanismArrayAttribute(Long type) {
-        super(type);
+  /**
+   * Constructor taking the PKCS#11 type of the attribute.
+   *
+   * @param type
+   *          The PKCS#11 type of this attribute; e.g.
+   *          PKCS11Constants.CKA_VALUE.
+   * @preconditions (type <> null)
+   * @postconditions
+   */
+  public MechanismArrayAttribute(Long type) {
+    super(type);
+  }
+
+  /**
+   * Set the attributes of this mechanism attribute array by specifying a
+   * Mechanism[]. Null, is also valid.
+   * A call to this method sets the present flag to true.
+   *
+   * @param value
+   *          The MechanismArrayAttribute value to set. May be null.
+   * @preconditions
+   * @postconditions
+   */
+  @SuppressWarnings("restriction")
+  public void setMechanismAttributeArrayValue(Mechanism[] value) {
+
+    long[] values = null;
+    if (value != null) {
+      values = new long[value.length];
+      for (int i = 0; i < value.length; i++) {
+        values[i] = value[i].getMechanismCode();
+      }
     }
+    ckAttribute.pValue = values;
+    present = true;
+  }
 
-    /**
-     * Set the attributes of this mechanism attribute array by specifying a
-     * Mechanism[]. Null, is also valid.
-     * A call to this method sets the present flag to true.
-     *
-     * @param value
-     *          The MechanismArrayAttribute value to set. May be null.
-     * @preconditions
-     * @postconditions
-     */
-    @SuppressWarnings("restriction")
-    public void setMechanismAttributeArrayValue(Mechanism[] value) {
-
-        long[] values = null;
-        if (value != null) {
-            values = new long[value.length];
-            for (int i = 0; i < value.length; i++) {
-                values[i] = value[i].getMechanismCode();
-            }
+  /**
+   * Get the mechanism attribute array value of this attribute as Mechanism[].
+   * Null, is also possible.
+   *
+   * @return The mechanism attribute array value of this attribute or null.
+   * @preconditions
+   * @postconditions
+   */
+  @SuppressWarnings("restriction")
+  public Mechanism[] getMechanismAttributeArrayValue() {
+    Mechanism[] mechanisms = null;
+    if (ckAttribute.pValue != null) {
+      long[] values = (long[]) ckAttribute.pValue;
+      if (values != null && values.length > 0) {
+        mechanisms = new Mechanism[values.length];
+        for (int i = 0; i < values.length; i++) {
+          Mechanism mechanism = new Mechanism(values[i]);
+          mechanisms[i] = mechanism;
         }
-        ckAttribute.pValue = values;
-        present = true;
+      }
+    }
+    return mechanisms;
+  }
+
+  /**
+   * Get a string representation of the value of this attribute.
+   *
+   * @return A string representation of the value of this attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  protected String getValueString() {
+    StringBuilder sb = new StringBuilder(1024);
+    Mechanism[] allowedMechanisms = getMechanismAttributeArrayValue();
+    if (allowedMechanisms != null && allowedMechanisms.length > 0) {
+      for (int i = 0; i < allowedMechanisms.length; i++) {
+        sb.append("\n      ").append(allowedMechanisms[i].getName());
+      }
+      return sb.toString();
+    } else {
+      return "<NULL_PTR>";
+    }
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @SuppressWarnings("restriction")
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof MechanismArrayAttribute)) {
+      return false;
     }
 
-    /**
-     * Get the mechanism attribute array value of this attribute as Mechanism[].
-     * Null, is also possible.
-     *
-     * @return The mechanism attribute array value of this attribute or null.
-     * @preconditions
-     * @postconditions
-     */
-    @SuppressWarnings("restriction")
-    public Mechanism[] getMechanismAttributeArrayValue() {
-        Mechanism[] mechanisms = null;
-        if (ckAttribute.pValue != null) {
-            long[] values = (long[]) ckAttribute.pValue;
-            if (values != null && values.length > 0) {
-                mechanisms = new Mechanism[values.length];
-                for (int i = 0; i < values.length; i++) {
-                    Mechanism mechanism = new Mechanism(values[i]);
-                    mechanisms[i] = mechanism;
-                }
-            }
-        }
-        return mechanisms;
+    MechanismArrayAttribute other = (MechanismArrayAttribute) otherObject;
+    if (!this.present && !other.present) {
+      return true;
+    } else if (!(this.present && other.present)) {
+      return false;
+    } else if (this.sensitive != other.sensitive) {
+      return false;
     }
 
-    /**
-     * Get a string representation of the value of this attribute.
-     *
-     * @return A string representation of the value of this attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    protected String getValueString() {
-        StringBuilder sb = new StringBuilder(1024);
-        Mechanism[] allowedMechanisms = getMechanismAttributeArrayValue();
-        if (allowedMechanisms != null && allowedMechanisms.length > 0) {
-            for (int i = 0; i < allowedMechanisms.length; i++) {
-                sb.append("\n      ").append(allowedMechanisms[i].getName());
-            }
-            return sb.toString();
-        } else {
-            return "<NULL_PTR>";
-        }
-    }
+    return Arrays.equals((long[]) this.ckAttribute.pValue,
+        (long[]) other.ckAttribute.pValue);
+  }
 
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @SuppressWarnings("restriction")
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof MechanismArrayAttribute)) {
-            return false;
-        }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @SuppressWarnings("restriction")
+  @Override
+  public int hashCode() {
+    return (ckAttribute.pValue != null) ? Functions
+      .hashCode((long[]) ckAttribute.pValue) : 0;
+  }
 
-        MechanismArrayAttribute other = (MechanismArrayAttribute) otherObject;
-        if (!this.present && !other.present) {
-            return true;
-        } else if (!(this.present && other.present)) {
-            return false;
-        } else if (this.sensitive != other.sensitive) {
-            return false;
-        }
-
-        return Arrays.equals((long[]) this.ckAttribute.pValue,
-                (long[]) other.ckAttribute.pValue);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @SuppressWarnings("restriction")
-    @Override
-    public int hashCode() {
-        return (ckAttribute.pValue != null) ? Functions
-            .hashCode((long[]) ckAttribute.pValue) : 0;
-    }
-
-    @Override
-    public void setValue(Object value) {
-        setMechanismAttributeArrayValue((Mechanism[]) value);
-    }
+  @Override
+  public void setValue(Object value) {
+    setMechanismAttributeArrayValue((Mechanism[]) value);
+  }
 
 }

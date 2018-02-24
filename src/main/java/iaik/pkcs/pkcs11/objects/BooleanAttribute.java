@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -52,49 +52,49 @@ package iaik.pkcs.pkcs11.objects;
  */
 public class BooleanAttribute extends Attribute {
 
-    /**
-     * Constructor taking the PKCS#11 type of the attribute.
-     *
-     * @param type
-     *          The PKCS#11 type of this attribute; e.g.
-     *          PKCS11Constants.CKA_PRIVATE.
-     * @preconditions (type <> null)
-     * @postconditions
-     */
-    public BooleanAttribute(Long type) {
-        super(type);
-    }
+  /**
+   * Constructor taking the PKCS#11 type of the attribute.
+   *
+   * @param type
+   *          The PKCS#11 type of this attribute; e.g.
+   *          PKCS11Constants.CKA_PRIVATE.
+   * @preconditions (type <> null)
+   * @postconditions
+   */
+  public BooleanAttribute(Long type) {
+    super(type);
+  }
 
-    /**
-     * Set the boolean value of this attribute. Null, is also valid.
-     * A call to this method sets the present flag to true.
-     *
-     * @param value
-     *          The boolean value to set. May be null.
-     * @preconditions
-     * @postconditions
-     */
-    @SuppressWarnings("restriction")
-    public void setBooleanValue(Boolean value) {
-        ckAttribute.pValue = value;
-        present = true;
-    }
+  /**
+   * Set the boolean value of this attribute. Null, is also valid.
+   * A call to this method sets the present flag to true.
+   *
+   * @param value
+   *          The boolean value to set. May be null.
+   * @preconditions
+   * @postconditions
+   */
+  @SuppressWarnings("restriction")
+  public void setBooleanValue(Boolean value) {
+    ckAttribute.pValue = value;
+    present = true;
+  }
 
-    /**
-     * Get the boolean value of this attribute. Null, is also possible.
-     *
-     * @return The boolean value of this attribute or null.
-     * @preconditions
-     * @postconditions
-     */
-    @SuppressWarnings("restriction")
-    public Boolean getBooleanValue() {
-        return (Boolean) ckAttribute.pValue;
-    }
+  /**
+   * Get the boolean value of this attribute. Null, is also possible.
+   *
+   * @return The boolean value of this attribute or null.
+   * @preconditions
+   * @postconditions
+   */
+  @SuppressWarnings("restriction")
+  public Boolean getBooleanValue() {
+    return (Boolean) ckAttribute.pValue;
+  }
 
-    @Override
-    public void setValue(Object value) {
-        setBooleanValue((Boolean) value);
-    }
+  @Override
+  public void setValue(Object value) {
+    setBooleanValue((Boolean) value);
+  }
 
 }

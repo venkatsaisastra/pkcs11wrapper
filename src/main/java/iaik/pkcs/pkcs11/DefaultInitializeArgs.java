@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -51,195 +51,196 @@ package iaik.pkcs.pkcs11;
  */
 public class DefaultInitializeArgs implements InitializeArgs {
 
-    /**
-     * The mutex-handler of this object.
-     */
-    private MutexHandler mutexHandler;
+  /**
+   * The mutex-handler of this object.
+   */
+  private MutexHandler mutexHandler;
 
-    /**
-     * Indicates that application threads which are executing calls to the
-     * library may not use native operating system calls to spawn new threads.
-     */
-    private boolean libraryCantCreateOsThreads;
+  /**
+   * Indicates that application threads which are executing calls to the
+   * library may not use native operating system calls to spawn new threads.
+   */
+  private boolean libraryCantCreateOsThreads;
 
-    /**
-     * Indicates that the library may use mechanisms of the operating-system
-     * to do thread-locking.
-     */
-    private boolean osLockingOk;
+  /**
+   * Indicates that the library may use mechanisms of the operating-system
+   * to do thread-locking.
+   */
+  private boolean osLockingOk;
 
-    /**
-     * The reserved parameter in the initialization arguments.
-     */
-    private Object reserved;
+  /**
+   * The reserved parameter in the initialization arguments.
+   */
+  private Object reserved;
 
-    /**
-     * Default constructor.
-     *
-     * @preconditions
-     * @postconditions (mutexHandler == null)
-     *                 and (libraryCantCreateOsThreads == false)
-     *                 and (osLockingOk == true)
-     */
-    public DefaultInitializeArgs() {
-        mutexHandler = null;
-        libraryCantCreateOsThreads = false;
-        osLockingOk = true;
-        reserved = null;
-    }
+  /**
+   * Default constructor.
+   *
+   * @preconditions
+   * @postconditions (mutexHandler == null)
+   *                 and (libraryCantCreateOsThreads == false)
+   *                 and (osLockingOk == true)
+   */
+  public DefaultInitializeArgs() {
+    mutexHandler = null;
+    libraryCantCreateOsThreads = false;
+    osLockingOk = true;
+    reserved = null;
+  }
 
-    /**
-     * Constructor, taking a mutex-handler, the libraryCantCreateOsThreads flag
-     * and the osLockingOk flag.
-     *
-     * @param mutexHandler
-     *          The PKCS#11 module should use this mutex-handler.
-     * @param libraryCantCreateOsThreads
-     *          Indicates that application threads which are executing calls to
-     *          the library may not use native operating system calls to spawn
-     *          new threads .
-     * @param osLockingOk
-     *          Indicates that the library may use mechanisms of the
-     *          operating-system to do thread-locking.
-     * @preconditions
-     * @postconditions (mutexHandler == mutexHandler)
-     *                 and (libraryCantCreateOsThreads
-     *                         == libraryCantCreateOsThreads)
-     *                 and (osLockingOk == osLockingOk)
-     */
-    public DefaultInitializeArgs(MutexHandler mutexHandler,
-            boolean libraryCantCreateOsThreads, boolean osLockingOk) {
-        this.mutexHandler = mutexHandler;
-        this.libraryCantCreateOsThreads = libraryCantCreateOsThreads;
-        this.osLockingOk = osLockingOk;
-        this.reserved = null;
-    }
+  /**
+   * Constructor, taking a mutex-handler, the libraryCantCreateOsThreads flag
+   * and the osLockingOk flag.
+   *
+   * @param mutexHandler
+   *          The PKCS#11 module should use this mutex-handler.
+   * @param libraryCantCreateOsThreads
+   *          Indicates that application threads which are executing calls to
+   *          the library may not use native operating system calls to spawn
+   *          new threads .
+   * @param osLockingOk
+   *          Indicates that the library may use mechanisms of the
+   *          operating-system to do thread-locking.
+   * @preconditions
+   * @postconditions (mutexHandler == mutexHandler)
+   *                 and (libraryCantCreateOsThreads
+   *                         == libraryCantCreateOsThreads)
+   *                 and (osLockingOk == osLockingOk)
+   */
+  public DefaultInitializeArgs(MutexHandler mutexHandler, 
+      boolean libraryCantCreateOsThreads, boolean osLockingOk) {
+    this.mutexHandler = mutexHandler;
+    this.libraryCantCreateOsThreads = libraryCantCreateOsThreads;
+    this.osLockingOk = osLockingOk;
+    this.reserved = null;
+  }
 
-    /**
-     * Returns the object that implements the functionality for
-     * handling mutexes. It returns null, if no handler is set. If this method
-     * returns null, the wrapper does not pass any callback functions to the
-     * underlying module; i.e. is passes null-pointer for the functions.
-     *
-     * @return The handler object for mutex functionality, or null, if there is
-     *         no handler for mutexes.
-     * @preconditions
-     * @postconditions (result == mutexHandler)
-     */
-    @Override
-    public MutexHandler getMutexHandler() {
-        return mutexHandler;
-    }
+  /**
+   * Returns the object that implements the functionality for
+   * handling mutexes. It returns null, if no handler is set. If this method
+   * returns null, the wrapper does not pass any callback functions to the
+   * underlying module; i.e. is passes null-pointer for the functions.
+   *
+   * @return The handler object for mutex functionality, or null, if there is
+   *         no handler for mutexes.
+   * @preconditions
+   * @postconditions (result == mutexHandler)
+   */
+  @Override
+  public MutexHandler getMutexHandler() {
+    return mutexHandler;
+  }
 
-    /**
-     * Check, if application threads which are executing calls to the library
-     * may not use native operating system calls to spawn new threads.
-     *
-     * @return True, if application threads which are executing calls to the
-     *         library may not use native operating system calls to spawn new
-     *         threads. False, if they may.
-     * @preconditions
-     * @postconditions (result == libraryCantCreateOsThreads)
-     */
-    @Override
-    public boolean isLibraryCantCreateOsThreads() {
-        return libraryCantCreateOsThreads;
-    }
+  /**
+   * Check, if application threads which are executing calls to the library
+   * may not use native operating system calls to spawn new threads.
+   *
+   * @return True, if application threads which are executing calls to the
+   *         library may not use native operating system calls to spawn new
+   *         threads. False, if they may.
+   * @preconditions
+   * @postconditions (result == libraryCantCreateOsThreads)
+   */
+  @Override
+  public boolean isLibraryCantCreateOsThreads() {
+    return libraryCantCreateOsThreads;
+  }
 
-    /**
-     * Check, if the library can use the native operation system threading model
-     * for locking.
-     *
-     * @return True, if the library can use the native operation system
-     *         threading model for locking. False, otherwise.
-     * @preconditions
-     * @postconditions (result == osLockingOk)
-     */
-    @Override
-    public boolean isOsLockingOk() {
-        return osLockingOk;
-    }
+  /**
+   * Check, if the library can use the native operation system threading model
+   * for locking.
+   *
+   * @return True, if the library can use the native operation system
+   *         threading model for locking. False, otherwise.
+   * @preconditions
+   * @postconditions (result == osLockingOk)
+   */
+  @Override
+  public boolean isOsLockingOk() {
+    return osLockingOk;
+  }
 
-    /**
-     * Reserved parameter.
-     *
-     * @return Should be null in this version.
-     * @preconditions
-     * @postconditions
-     */
-    public Object getReserved() {
-        return reserved;
-    }
+  /**
+   * Reserved parameter.
+   *
+   * @return Should be null in this version.
+   * @preconditions
+   * @postconditions
+   */
+  public Object getReserved() {
+    return reserved;
+  }
 
-    /**
-     * This method sets the object that implements the functionality for
-     * handling mutexes. It should be null to set no handler.
-     *
-     * @param mutexHandler
-     *          The handler object for mutex functionality, or null to use no
-     *          handler.
-     * @preconditions
-     * @postconditions (mutexHandler = mutexHandler)
-     */
-    public void setMutexHandler(MutexHandler mutexHandler) {
-        this.mutexHandler = mutexHandler;
-    }
+  /**
+   * This method sets the object that implements the functionality for
+   * handling mutexes. It should be null to set no handler.
+   *
+   * @param mutexHandler
+   *          The handler object for mutex functionality, or null to use no
+   *          handler.
+   * @preconditions
+   * @postconditions (mutexHandler = mutexHandler)
+   */
+  public void setMutexHandler(MutexHandler mutexHandler) {
+    this.mutexHandler = mutexHandler;
+  }
 
-    /**
-     * Set, if application threads which are executing calls to the library may
-     * not use native operating system calls to spawn new threads.
-     *
-     * @param libraryCantCreateOsThreads
-     *          True, if application threads which are executing calls to the
-     *          library may not use native operating system calls to spawn new
-     *          threads. False, if they may.
-     * @preconditions
-     * @postconditions (libraryCantCreateOsThreads
-     *                    == libraryCantCreateOsThreads)
-     */
-    public void setLibraryCantCreateOsThreads(
-            boolean libraryCantCreateOsThreads) {
-        this.libraryCantCreateOsThreads = libraryCantCreateOsThreads;
-    }
+  /**
+   * Set, if application threads which are executing calls to the library may
+   * not use native operating system calls to spawn new threads.
+   *
+   * @param libraryCantCreateOsThreads
+   *          True, if application threads which are executing calls to the
+   *          library may not use native operating system calls to spawn new
+   *          threads. False, if they may.
+   * @preconditions
+   * @postconditions (libraryCantCreateOsThreads
+   *                    == libraryCantCreateOsThreads)
+   */
+  public void setLibraryCantCreateOsThreads(
+      boolean libraryCantCreateOsThreads) {
+    this.libraryCantCreateOsThreads = libraryCantCreateOsThreads;
+  }
 
-    /**
-     * set, if the library can use the native operation system threading model
-     * for locking.
-     *
-     * @param osLockingOk
-     *          True, if the library can use the native operation system
-     *          threading model for locking. False, otherwise.
-     * @preconditions
-     * @postconditions (osLockingOk == osLockingOk)
-     */
-    public void setOsLockingOk(boolean osLockingOk) {
-        this.osLockingOk = osLockingOk;
-    }
+  /**
+   * set, if the library can use the native operation system threading model
+   * for locking.
+   *
+   * @param osLockingOk
+   *          True, if the library can use the native operation system
+   *          threading model for locking. False, otherwise.
+   * @preconditions
+   * @postconditions (osLockingOk == osLockingOk)
+   */
+  public void setOsLockingOk(boolean osLockingOk) {
+    this.osLockingOk = osLockingOk;
+  }
 
-    /**
-     * Set the reserved parameter.
-     *
-     * @param reserved
-     *          Should be null in this version.
-     * @preconditions
-     * @postconditions
-     */
-    public void setReserved(Object reserved) {
-        this.reserved = reserved;
-    }
+  /**
+   * Set the reserved parameter.
+   *
+   * @param reserved
+   *          Should be null in this version.
+   * @preconditions
+   * @postconditions
+   */
+  public void setReserved(Object reserved) {
+    this.reserved = reserved;
+  }
 
-    /**
-     * Returns the string representation of this object.
-     *
-     * @return The string representation of object
-     */
-    @Override
-    public String toString() {
-        return Util.concatObjects(
-            "Mutex Handler: ", ((mutexHandler != null) ? "present" : "not present"),
-            "\nLibrary can't create OS-Threads: ", libraryCantCreateOsThreads,
-            "\nOS-Locking OK: ", osLockingOk,
-            "\nThe reserved parameter is: ", ((reserved != null) ? reserved : "null"));
-    }
+  /**
+   * Returns the string representation of this object.
+   *
+   * @return The string representation of object
+   */
+  @Override
+  public String toString() {
+    return Util.concatObjects(
+      "Mutex Handler: ", ((mutexHandler != null) ? "present" : "not present"),
+      "\nLibrary can't create OS-Threads: ", libraryCantCreateOsThreads,
+      "\nOS-Locking OK: ", osLockingOk,
+      "\nThe reserved parameter is: ",
+      ((reserved != null) ? reserved : "null"));
+  }
 
 }

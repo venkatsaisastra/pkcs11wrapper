@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -59,96 +59,96 @@ import sun.security.pkcs11.wrapper.CK_DATE;
 @SuppressWarnings("restriction")
 public class DateAttribute extends Attribute {
 
-    /**
-     * Constructor taking the PKCS#11 type of the attribute.
-     *
-     * @param type
-     *          The PKCS#11 type of this attribute; e.g.
-     *          PKCS11Constants.CKA_START_DATE.
-     * @preconditions (type <> null)
-     * @postconditions
-     */
-    public DateAttribute(Long type) {
-        super(type);
+  /**
+   * Constructor taking the PKCS#11 type of the attribute.
+   *
+   * @param type
+   *          The PKCS#11 type of this attribute; e.g.
+   *          PKCS11Constants.CKA_START_DATE.
+   * @preconditions (type <> null)
+   * @postconditions
+   */
+  public DateAttribute(Long type) {
+    super(type);
+  }
+
+  /**
+   * Set the date value of this attribute. Null, is also valid.
+   * A call to this method sets the present flag to true.
+   *
+   * @param value
+   *          The date value to set. May be null.
+   * @preconditions
+   * @postconditions
+   */
+  public void setDateValue(Date value) {
+    ckAttribute.pValue = Util.convertToCkDate(value);
+    present = true;
+  }
+
+  /**
+   * Get the date value of this attribute. Null, is also possible.
+   *
+   * @return The date value of this attribute or null.
+   * @preconditions
+   * @postconditions
+   */
+  public Date getDateValue() {
+    return Util.convertToDate((CK_DATE) ckAttribute.pValue);
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof DateAttribute)) {
+      return false;
     }
 
-    /**
-     * Set the date value of this attribute. Null, is also valid.
-     * A call to this method sets the present flag to true.
-     *
-     * @param value
-     *          The date value to set. May be null.
-     * @preconditions
-     * @postconditions
-     */
-    public void setDateValue(Date value) {
-        ckAttribute.pValue = Util.convertToCkDate(value);
-        present = true;
+    DateAttribute other = (DateAttribute) otherObject;
+    if (!this.present && !other.present) {
+      return true;
+    } else if (!(this.present && other.present)) {
+      return false;
+    } else if (this.sensitive != other.sensitive) {
+      return false;
+    } else if (this.ckAttribute.type != other.ckAttribute.type) {
+      return false;
     }
 
-    /**
-     * Get the date value of this attribute. Null, is also possible.
-     *
-     * @return The date value of this attribute or null.
-     * @preconditions
-     * @postconditions
-     */
-    public Date getDateValue() {
-        return Util.convertToDate((CK_DATE) ckAttribute.pValue);
-    }
+    return Functions.equals((CK_DATE) this.ckAttribute.pValue,
+        (CK_DATE) other.ckAttribute.pValue);
+  }
 
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof DateAttribute)) {
-            return false;
-        }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return ((int) ckAttribute.type)
+      ^ ((ckAttribute.pValue != null) ? Functions
+        .hashCode((CK_DATE) ckAttribute.pValue) : 0);
+  }
 
-        DateAttribute other = (DateAttribute) otherObject;
-        if (!this.present && !other.present) {
-            return true;
-        } else if (!(this.present && other.present)) {
-            return false;
-        } else if (this.sensitive != other.sensitive) {
-            return false;
-        } else if (this.ckAttribute.type != other.ckAttribute.type) {
-            return false;
-        }
-
-        return Functions.equals((CK_DATE) this.ckAttribute.pValue,
-                (CK_DATE) other.ckAttribute.pValue);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return ((int) ckAttribute.type)
-            ^ ((ckAttribute.pValue != null) ? Functions
-                .hashCode((CK_DATE) ckAttribute.pValue) : 0);
-    }
-
-    @Override
-    public void setValue(Object value) {
-        setDateValue((Date) value);
-    }
+  @Override
+  public void setValue(Object value) {
+    setDateValue((Date) value);
+  }
 
 }

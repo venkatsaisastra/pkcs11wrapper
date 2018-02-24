@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -55,103 +55,103 @@ import iaik.pkcs.pkcs11.Util;
  */
 public class MacGeneralParams implements Params {
 
-    /**
-     * The length of the MAC produced, in bytes.
-     */
-    protected long macLength;
+  /**
+   * The length of the MAC produced, in bytes.
+   */
+  protected long macLength;
 
-    /**
-     * Create a new MacGeneralParameters object with the given MAC length.
-     *
-     * @param macLength
-     *          The length of the MAC produced, in bytes.
-     * @preconditions
-     * @postconditions
-     */
-    public MacGeneralParams(long macLength) {
-        this.macLength = macLength;
+  /**
+   * Create a new MacGeneralParameters object with the given MAC length.
+   *
+   * @param macLength
+   *          The length of the MAC produced, in bytes.
+   * @preconditions
+   * @postconditions
+   */
+  public MacGeneralParams(long macLength) {
+    this.macLength = macLength;
+  }
+
+  /**
+   * Get this parameters object as an Long object.
+   *
+   * @return This object as a Long object.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public Object getPKCS11ParamsObject() {
+    return new Long(macLength);
+  }
+
+  /**
+   * Get the length of the MAC produced, in bytes.
+   *
+   * @return The length of the MAC produced, in bytes.
+   * @preconditions
+   * @postconditions
+   */
+  public long getMacLength() {
+    return macLength;
+  }
+
+  /**
+   * Set the length of the MAC produced, in bytes.
+   *
+   * @param macLength
+   *          The length of the MAC produced, in bytes.
+   * @preconditions
+   * @postconditions
+   */
+  public void setMacLength(long macLength) {
+    this.macLength = macLength;
+  }
+
+  /**
+   * Returns the string representation of this object. Do not parse data from
+   * this string, it is for debugging only.
+   *
+   * @return A string representation of this object.
+   */
+  @Override
+  public String toString() {
+    return Util.concat("  Mac Length (dec): ", Long.toString(macLength));
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof MacGeneralParams)) {
+      return false;
     }
 
-    /**
-     * Get this parameters object as an Long object.
-     *
-     * @return This object as a Long object.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public Object getPKCS11ParamsObject() {
-        return new Long(macLength);
-    }
+    MacGeneralParams other = (MacGeneralParams) otherObject;
+    return (this.macLength == other.macLength);
+  }
 
-    /**
-     * Get the length of the MAC produced, in bytes.
-     *
-     * @return The length of the MAC produced, in bytes.
-     * @preconditions
-     * @postconditions
-     */
-    public long getMacLength() {
-        return macLength;
-    }
-
-    /**
-     * Set the length of the MAC produced, in bytes.
-     *
-     * @param macLength
-     *          The length of the MAC produced, in bytes.
-     * @preconditions
-     * @postconditions
-     */
-    public void setMacLength(long macLength) {
-        this.macLength = macLength;
-    }
-
-    /**
-     * Returns the string representation of this object. Do not parse data from
-     * this string, it is for debugging only.
-     *
-     * @return A string representation of this object.
-     */
-    @Override
-    public String toString() {
-        return Util.concat("  Mac Length (dec): ", Long.toString(macLength));
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof MacGeneralParams)) {
-            return false;
-        }
-
-        MacGeneralParams other = (MacGeneralParams) otherObject;
-        return (this.macLength == other.macLength);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return (int) macLength;
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return (int) macLength;
+  }
 
 }

@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -61,366 +61,364 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
  */
 public class PublicKey extends Key {
 
-    /**
-     * The subject attribute of this public key.
-     */
-    protected ByteArrayAttribute subject;
+  /**
+   * The subject attribute of this public key.
+   */
+  protected ByteArrayAttribute subject;
 
-    /**
-     * True, if this public key can be used for encryption.
-     */
-    protected BooleanAttribute encrypt;
+  /**
+   * True, if this public key can be used for encryption.
+   */
+  protected BooleanAttribute encrypt;
 
-    /**
-     * True, if this public key can be used for verification.
-     */
-    protected BooleanAttribute verify;
+  /**
+   * True, if this public key can be used for verification.
+   */
+  protected BooleanAttribute verify;
 
-    /**
-     * True, if this public key can be used for encryption with recovery.
-     */
-    protected BooleanAttribute verifyRecover;
+  /**
+   * True, if this public key can be used for encryption with recovery.
+   */
+  protected BooleanAttribute verifyRecover;
 
-    /**
-     * True, if this public key can be used for wrapping other keys.
-     */
-    protected BooleanAttribute wrap;
+  /**
+   * True, if this public key can be used for wrapping other keys.
+   */
+  protected BooleanAttribute wrap;
 
-    /**
-     * True, if this public key can be used for wrapping other keys.
-     */
-    protected BooleanAttribute trusted;
+  /**
+   * True, if this public key can be used for wrapping other keys.
+   */
+  protected BooleanAttribute trusted;
 
-    /**
-     * Template of the key, that can be wrapped.
-     */
-    protected AttributeArray wrapTemplate;
+  /**
+   * Template of the key, that can be wrapped.
+   */
+  protected AttributeArray wrapTemplate;
 
-    /**
-     * Default Constructor.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    public PublicKey() {
-        super();
-        objectClass.setLongValue(ObjectClass.PUBLIC_KEY);
+  /**
+   * Default Constructor.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  public PublicKey() {
+    super();
+    objectClass.setLongValue(ObjectClass.PUBLIC_KEY);
+  }
+
+  /**
+   * Called by sub-classes to create an instance of a PKCS#11 public key.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  protected PublicKey(Session session, long objectHandle)
+      throws TokenException {
+    super(session, objectHandle);
+    objectClass.setLongValue(ObjectClass.PUBLIC_KEY);
+  }
+
+  /**
+   * The getInstance method of the PKCS11Object class uses this method to
+   * create an instance of a PKCS#11 public key. This method reads the key
+   * type attribute and calls the getInstance method of the according
+   * sub-class. If the key type is a vendor defined it uses the
+   * VendorDefinedKeyBuilder set by the application. If no public key
+   * could be constructed, Returns null.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @return The object representing the PKCS#11 object.
+   *         The returned object can be casted to the
+   *         according sub-class.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions (result <> null)
+   */
+  public static PKCS11Object getInstance(Session session, long objectHandle)
+      throws TokenException {
+    Util.requireNonNull("session", session);
+
+    KeyTypeAttribute keyTypeAttribute = new KeyTypeAttribute();
+    getAttributeValue(session, objectHandle, keyTypeAttribute);
+
+    Long keyType = keyTypeAttribute.getLongValue();
+
+    PKCS11Object newObject;
+
+    if (keyTypeAttribute.isPresent() && (keyType != null)) {
+      if (keyType.equals(Key.KeyType.RSA)) {
+        newObject = RSAPublicKey.getInstance(session, objectHandle);
+      } else if (keyType.equals(Key.KeyType.DSA)) {
+        newObject = DSAPublicKey.getInstance(session, objectHandle);
+      } else if (keyType.equals(Key.KeyType.EC)) {
+        newObject = ECPublicKey.getInstance(session, objectHandle);
+      } else if (keyType.equals(Key.KeyType.DH)) {
+        newObject = DHPublicKey.getInstance(session, objectHandle);
+      } else if (keyType.equals(Key.KeyType.KEA)) {
+        newObject = KEAPublicKey.getInstance(session, objectHandle);
+      } else if (keyType.equals(Key.KeyType.X9_42_DH)) {
+        newObject = X942DHPublicKey.getInstance(session, objectHandle);
+      } else if (keyType.equals(Key.KeyType.VENDOR_SM2)) {
+        newObject = SM2PublicKey.getInstance(session, objectHandle);
+      } else if ((keyType.longValue()
+              & KeyType.VENDOR_DEFINED.longValue()) != 0L) {
+        newObject = getUnknownPublicKey(session, objectHandle);
+      } else {
+        newObject = getUnknownPublicKey(session, objectHandle);
+      }
+    } else {
+      newObject = getUnknownPublicKey(session, objectHandle);
     }
 
-    /**
-     * Called by sub-classes to create an instance of a PKCS#11 public key.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    protected PublicKey(Session session, long objectHandle)
-        throws TokenException {
-        super(session, objectHandle);
-        objectClass.setLongValue(ObjectClass.PUBLIC_KEY);
+    return newObject;
+  }
+
+  /**
+   * Try to create a key which has no or an unknown public key type attribute.
+   * This implementation will try to use a vendor defined key builder, if such
+   * has been set. If this is impossible or fails, it will create just a
+   * simple {@link iaik.pkcs.pkcs11.objects.PublicKey PublicKey }.
+   *
+   * @param session
+   *          The session to use.
+   * @param objectHandle
+   *          The handle of the object
+   * @return A new PKCS11Object.
+   * @throws TokenException
+   *           If no object could be created.
+   * @preconditions (session <> null)
+   * @postconditions (result <> null)
+   */
+  protected static PKCS11Object getUnknownPublicKey(Session session,
+      long objectHandle) throws TokenException {
+    Util.requireNonNull("session", session);
+
+    PKCS11Object newObject;
+    if (Key.vendorKeyBuilder != null) {
+      try {
+        newObject = Key.vendorKeyBuilder.build(session, objectHandle);
+      } catch (PKCS11Exception ex) {
+        // we can just treat it like some unknown type of public key
+        newObject = new PublicKey(session, objectHandle);
+      }
+    } else {
+      // we can just treat it like some unknown type of public key
+      newObject = new PublicKey(session, objectHandle);
     }
 
-    /**
-     * The getInstance method of the PKCS11Object class uses this method to
-     * create an instance of a PKCS#11 public key. This method reads the key
-     * type attribute and calls the getInstance method of the according
-     * sub-class. If the key type is a vendor defined it uses the
-     * VendorDefinedKeyBuilder set by the application. If no public key
-     * could be constructed, Returns null.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @return The object representing the PKCS#11 object.
-     *         The returned object can be casted to the
-     *         according sub-class.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions (result <> null)
-     */
-    public static PKCS11Object getInstance(Session session, long objectHandle)
-        throws TokenException {
-        Util.requireNonNull("session", session);
+    return newObject;
+  }
 
-        KeyTypeAttribute keyTypeAttribute = new KeyTypeAttribute();
-        getAttributeValue(session, objectHandle, keyTypeAttribute);
+  /**
+   * Put all attributes of the given object into the attributes table of this
+   * object. This method is only static to be able to access invoke the
+   * implementation of this method for each class separately.
+   *
+   * @param object
+   *          The object to handle.
+   * @preconditions (object <> null)
+   * @postconditions
+   */
+  protected static void putAttributesInTable(PublicKey object) {
+    Util.requireNonNull("object", object);
+    object.attributeTable.put(Attribute.SUBJECT, object.subject);
+    object.attributeTable.put(Attribute.ENCRYPT, object.encrypt);
+    object.attributeTable.put(Attribute.VERIFY, object.verify);
+    object.attributeTable.put(Attribute.VERIFY_RECOVER,
+        object.verifyRecover);
+    object.attributeTable.put(Attribute.WRAP, object.wrap);
+    object.attributeTable.put(Attribute.TRUSTED, object.trusted);
+    object.attributeTable.put(Attribute.WRAP_TEMPLATE,
+        object.wrapTemplate);
+  }
 
-        Long keyType = keyTypeAttribute.getLongValue();
+  /**
+   * Allocates the attribute objects for this class and adds them to the
+   * attribute table.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  protected void allocateAttributes() {
+    super.allocateAttributes();
 
-        PKCS11Object newObject;
+    subject = new ByteArrayAttribute(Attribute.SUBJECT);
+    encrypt = new BooleanAttribute(Attribute.ENCRYPT);
+    verify = new BooleanAttribute(Attribute.VERIFY);
+    verifyRecover = new BooleanAttribute(Attribute.VERIFY_RECOVER);
+    wrap = new BooleanAttribute(Attribute.WRAP);
+    trusted = new BooleanAttribute(Attribute.TRUSTED);
+    wrapTemplate = new AttributeArray(Attribute.WRAP_TEMPLATE);
 
-        if (keyTypeAttribute.isPresent() && (keyType != null)) {
-            if (keyType.equals(Key.KeyType.RSA)) {
-                newObject = RSAPublicKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.DSA)) {
-                newObject = DSAPublicKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.EC)) {
-                newObject = ECPublicKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.DH)) {
-                newObject = DHPublicKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.KEA)) {
-                newObject = KEAPublicKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.X9_42_DH)) {
-                newObject = X942DHPublicKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.VENDOR_SM2)) {
-                newObject = SM2PublicKey.getInstance(session, objectHandle);
-            } else if ((keyType.longValue()
-                            & KeyType.VENDOR_DEFINED.longValue()) != 0L) {
-                newObject = getUnknownPublicKey(session, objectHandle);
-            } else {
-                newObject = getUnknownPublicKey(session, objectHandle);
-            }
-        } else {
-            newObject = getUnknownPublicKey(session, objectHandle);
-        }
+    putAttributesInTable(this);
+  }
 
-        return newObject;
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof PublicKey)) {
+      return false;
     }
 
-    /**
-     * Try to create a key which has no or an unknown public key type attribute.
-     * This implementation will try to use a vendor defined key builder, if such
-     * has been set. If this is impossible or fails, it will create just a
-     * simple {@link iaik.pkcs.pkcs11.objects.PublicKey PublicKey }.
-     *
-     * @param session
-     *          The session to use.
-     * @param objectHandle
-     *          The handle of the object
-     * @return A new PKCS11Object.
-     * @throws TokenException
-     *           If no object could be created.
-     * @preconditions (session <> null)
-     * @postconditions (result <> null)
-     */
-    protected static PKCS11Object getUnknownPublicKey(Session session,
-            long objectHandle)
-        throws TokenException {
-        Util.requireNonNull("session", session);
+    PublicKey other = (PublicKey) otherObject;
+    return super.equals(other)
+        && this.subject.equals(other.subject)
+        && this.encrypt.equals(other.encrypt)
+        && this.verify.equals(other.verify)
+        && this.verifyRecover.equals(other.verifyRecover)
+        && this.wrap.equals(other.wrap)
+        && this.trusted.equals(other.trusted)
+        && this.wrapTemplate.equals(other.wrapTemplate);
+  }
 
-        PKCS11Object newObject;
-        if (Key.vendorKeyBuilder != null) {
-            try {
-                newObject = Key.vendorKeyBuilder.build(session, objectHandle);
-            } catch (PKCS11Exception ex) {
-                // we can just treat it like some unknown type of public key
-                newObject = new PublicKey(session, objectHandle);
-            }
-        } else {
-            // we can just treat it like some unknown type of public key
-            newObject = new PublicKey(session, objectHandle);
-        }
+  /**
+   * Gets the subject attribute of this key.
+   *
+   * @return The subject attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getSubject() {
+    return subject;
+  }
 
-        return newObject;
-    }
+  /**
+   * Gets the encrypt attribute of this key.
+   *
+   * @return The encrypt attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getEncrypt() {
+    return encrypt;
+  }
 
-    /**
-     * Put all attributes of the given object into the attributes table of this
-     * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately.
-     *
-     * @param object
-     *          The object to handle.
-     * @preconditions (object <> null)
-     * @postconditions
-     */
-    protected static void putAttributesInTable(PublicKey object) {
-        Util.requireNonNull("object", object);
-        object.attributeTable.put(Attribute.SUBJECT, object.subject);
-        object.attributeTable.put(Attribute.ENCRYPT, object.encrypt);
-        object.attributeTable.put(Attribute.VERIFY, object.verify);
-        object.attributeTable.put(Attribute.VERIFY_RECOVER,
-                object.verifyRecover);
-        object.attributeTable.put(Attribute.WRAP, object.wrap);
-        object.attributeTable.put(Attribute.TRUSTED, object.trusted);
-        object.attributeTable.put(Attribute.WRAP_TEMPLATE,
-                object.wrapTemplate);
-    }
+  /**
+   * Gets the verify attribute of this key.
+   *
+   * @return The verify attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getVerify() {
+    return verify;
+  }
 
-    /**
-     * Allocates the attribute objects for this class and adds them to the
-     * attribute table.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    protected void allocateAttributes() {
-        super.allocateAttributes();
+  /**
+   * Gets the verify recover attribute of this key.
+   *
+   * @return The verify recover attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getVerifyRecover() {
+    return verifyRecover;
+  }
 
-        subject = new ByteArrayAttribute(Attribute.SUBJECT);
-        encrypt = new BooleanAttribute(Attribute.ENCRYPT);
-        verify = new BooleanAttribute(Attribute.VERIFY);
-        verifyRecover = new BooleanAttribute(Attribute.VERIFY_RECOVER);
-        wrap = new BooleanAttribute(Attribute.WRAP);
-        trusted = new BooleanAttribute(Attribute.TRUSTED);
-        wrapTemplate = new AttributeArray(Attribute.WRAP_TEMPLATE);
+  /**
+   * Gets the wrap attribute of this key.
+   *
+   * @return The wrap attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getWrap() {
+    return wrap;
+  }
 
-        putAttributesInTable(this);
-    }
+  /**
+   * Gets the trusted attribute of this key.
+   *
+   * @return The trusted attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getTrusted() {
+    return trusted;
+  }
 
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof PublicKey)) {
-            return false;
-        }
+  /**
+   * Gets the wrap template attribute of this key. This
+   * attribute can only be used with PKCS#11 modules supporting
+   * cryptoki version 2.20 or higher.
+   *
+   * @return The wrap template attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public AttributeArray getWrapTemplate() {
+    return wrapTemplate;
+  }
 
-        PublicKey other = (PublicKey) otherObject;
-        return super.equals(other)
-                && this.subject.equals(other.subject)
-                && this.encrypt.equals(other.encrypt)
-                && this.verify.equals(other.verify)
-                && this.verifyRecover.equals(other.verifyRecover)
-                && this.wrap.equals(other.wrap)
-                && this.trusted.equals(other.trusted)
-                && this.wrapTemplate.equals(other.wrapTemplate);
-    }
+  /**
+   * Read the values of the attributes of this object from the token.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  @Override
+  public void readAttributes(Session session) throws TokenException {
+    super.readAttributes(session);
 
-    /**
-     * Gets the subject attribute of this key.
-     *
-     * @return The subject attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getSubject() {
-        return subject;
-    }
+    PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        subject, encrypt, verify, verifyRecover, wrap, trusted });
+    PKCS11Object.getAttributeValue(session, objectHandle, wrapTemplate);
+  }
 
-    /**
-     * Gets the encrypt attribute of this key.
-     *
-     * @return The encrypt attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getEncrypt() {
-        return encrypt;
-    }
-
-    /**
-     * Gets the verify attribute of this key.
-     *
-     * @return The verify attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getVerify() {
-        return verify;
-    }
-
-    /**
-     * Gets the verify recover attribute of this key.
-     *
-     * @return The verify recover attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getVerifyRecover() {
-        return verifyRecover;
-    }
-
-    /**
-     * Gets the wrap attribute of this key.
-     *
-     * @return The wrap attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getWrap() {
-        return wrap;
-    }
-
-    /**
-     * Gets the trusted attribute of this key.
-     *
-     * @return The trusted attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getTrusted() {
-        return trusted;
-    }
-
-    /**
-     * Gets the wrap template attribute of this key. This
-     * attribute can only be used with PKCS#11 modules supporting
-     * cryptoki version 2.20 or higher.
-     *
-     * @return The wrap template attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public AttributeArray getWrapTemplate() {
-        return wrapTemplate;
-    }
-
-    /**
-     * Read the values of the attributes of this object from the token.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    @Override
-    public void readAttributes(Session session)
-        throws TokenException {
-        super.readAttributes(session);
-
-        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-            subject, encrypt, verify, verifyRecover, wrap, trusted });
-        PKCS11Object.getAttributeValue(session, objectHandle, wrapTemplate);
-    }
-
-    /**
-     * Returns a string representation of the current object. The
-     * output is only for debugging purposes and should not be used for other
-     * purposes.
-     *
-     * @return A string presentation of this object for debugging output.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public String toString() {
-        String superToString = super.toString();
-        return Util.concatObjectsCap(superToString.length() + 100, superToString,
-                "\n  Subject (DER, hex): ", subject,
-                "\n  Encrypt: ", encrypt,
-                "\n  Verify: ", verify,
-                "\n  Verify Recover: ", verifyRecover,
-                "\n  Wrap: ", wrap,
-                "\n  Trusted: ", trusted,
-                "\n  Wrap Template: ", wrapTemplate);
-    }
+  /**
+   * Returns a string representation of the current object. The
+   * output is only for debugging purposes and should not be used for other
+   * purposes.
+   *
+   * @return A string presentation of this object for debugging output.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public String toString() {
+    String superToString = super.toString();
+    return Util.concatObjectsCap(superToString.length() + 100, superToString,
+        "\n  Subject (DER, hex): ", subject,
+        "\n  Encrypt: ", encrypt,
+        "\n  Verify: ", verify,
+        "\n  Verify Recover: ", verifyRecover,
+        "\n  Wrap: ", wrap,
+        "\n  Trusted: ", trusted,
+        "\n  Wrap Template: ", wrapTemplate);
+  }
 
 }

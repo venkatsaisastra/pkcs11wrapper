@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -59,190 +59,189 @@ import iaik.pkcs.pkcs11.Util;
 // CHECKSTYLE:SKIP
 public class ECPrivateKey extends PrivateKey {
 
-    /**
-     * The DER-encoding of an X9.62 ECParameters value of this ECDSA key.
-     */
-    protected ByteArrayAttribute ecdsaParams;
+  /**
+   * The DER-encoding of an X9.62 ECParameters value of this ECDSA key.
+   */
+  protected ByteArrayAttribute ecdsaParams;
 
-    /**
-     * The X9.62 private value (d) of this ECDSA key.
-     */
-    protected ByteArrayAttribute value;
+  /**
+   * The X9.62 private value (d) of this ECDSA key.
+   */
+  protected ByteArrayAttribute value;
 
-    /**
-     * Default Constructor.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    public ECPrivateKey() {
-        keyType.setLongValue(thisKeyType());
+  /**
+   * Default Constructor.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  public ECPrivateKey() {
+    keyType.setLongValue(thisKeyType());
+  }
+
+  /**
+   * Called by getInstance to create an instance of a PKCS#11 ECDSA private
+   * key.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  protected ECPrivateKey(Session session, long objectHandle)
+      throws TokenException {
+    super(session, objectHandle);
+    keyType.setLongValue(thisKeyType());
+  }
+
+  protected Long thisKeyType() {
+    return KeyType.EC;
+  }
+
+  /**
+   * The getInstance method of the PrivateKey class uses this method to create
+   * an instance of a PKCS#11 ECDSA private key.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @return The object representing the PKCS#11 object.
+   *         The returned object can be casted to the
+   *         according sub-class.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions (result <> null)
+   */
+  public static PKCS11Object getInstance(Session session, long objectHandle)
+      throws TokenException {
+    return new ECPrivateKey(session, objectHandle);
+  }
+
+  /**
+   * Put all attributes of the given object into the attributes table of this
+   * object. This method is only static to be able to access invoke the
+   * implementation of this method for each class separately.
+   *
+   * @param object
+   *          The object to handle.
+   * @preconditions (object <> null)
+   * @postconditions
+   */
+  protected static void putAttributesInTable(ECPrivateKey object) {
+    Util.requireNonNull("object", object);
+    object.attributeTable.put(Attribute.EC_PARAMS, object.ecdsaParams);
+    object.attributeTable.put(Attribute.VALUE, object.value);
+  }
+
+  /**
+   * Allocates the attribute objects for this class and adds them to the
+   * attribute table.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  protected void allocateAttributes() {
+    super.allocateAttributes();
+
+    ecdsaParams = new ByteArrayAttribute(Attribute.EC_PARAMS);
+    value = new ByteArrayAttribute(Attribute.VALUE);
+
+    putAttributesInTable(this);
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof ECPrivateKey)) {
+      return false;
     }
 
-    /**
-     * Called by getInstance to create an instance of a PKCS#11 ECDSA private
-     * key.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    protected ECPrivateKey(Session session, long objectHandle)
-        throws TokenException {
-        super(session, objectHandle);
-        keyType.setLongValue(thisKeyType());
-    }
+    ECPrivateKey other = (ECPrivateKey) otherObject;
+    return super.equals(other)
+        && this.ecdsaParams.equals(other.ecdsaParams)
+        && this.value.equals(other.value);
+  }
 
-    protected Long thisKeyType() {
-        return KeyType.EC;
-    }
+  /**
+   * Gets the ECDSA parameters attribute of this ECDSA key.
+   *
+   * @return The ECDSA parameters attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getEcdsaParams() {
+    return ecdsaParams;
+  }
 
-    /**
-     * The getInstance method of the PrivateKey class uses this method to create
-     * an instance of a PKCS#11 ECDSA private key.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @return The object representing the PKCS#11 object.
-     *         The returned object can be casted to the
-     *         according sub-class.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions (result <> null)
-     */
-    public static PKCS11Object getInstance(Session session, long objectHandle)
-        throws TokenException {
-        return new ECPrivateKey(session, objectHandle);
-    }
+  /**
+   * Gets the value attribute of this ECDSA key.
+   *
+   * @return The value attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getValue() {
+    return value;
+  }
 
-    /**
-     * Put all attributes of the given object into the attributes table of this
-     * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately.
-     *
-     * @param object
-     *          The object to handle.
-     * @preconditions (object <> null)
-     * @postconditions
-     */
-    protected static void putAttributesInTable(ECPrivateKey object) {
-        Util.requireNonNull("object", object);
-        object.attributeTable.put(Attribute.EC_PARAMS, object.ecdsaParams);
-        object.attributeTable.put(Attribute.VALUE, object.value);
-    }
+  /**
+   * Read the values of the attributes of this object from the token.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  @Override
+  public void readAttributes(Session session) throws TokenException {
+    super.readAttributes(session);
 
-    /**
-     * Allocates the attribute objects for this class and adds them to the
-     * attribute table.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    protected void allocateAttributes() {
-        super.allocateAttributes();
+    PKCS11Object.getAttributeValue(session, objectHandle, ecdsaParams);
+    PKCS11Object.getAttributeValue(session, objectHandle, value);
+  }
 
-        ecdsaParams = new ByteArrayAttribute(Attribute.EC_PARAMS);
-        value = new ByteArrayAttribute(Attribute.VALUE);
-
-        putAttributesInTable(this);
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof ECPrivateKey)) {
-            return false;
-        }
-
-        ECPrivateKey other = (ECPrivateKey) otherObject;
-        return super.equals(other)
-                && this.ecdsaParams.equals(other.ecdsaParams)
-                && this.value.equals(other.value);
-    }
-
-    /**
-     * Gets the ECDSA parameters attribute of this ECDSA key.
-     *
-     * @return The ECDSA parameters attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getEcdsaParams() {
-        return ecdsaParams;
-    }
-
-    /**
-     * Gets the value attribute of this ECDSA key.
-     *
-     * @return The value attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getValue() {
-        return value;
-    }
-
-    /**
-     * Read the values of the attributes of this object from the token.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    @Override
-    public void readAttributes(Session session)
-        throws TokenException {
-        super.readAttributes(session);
-
-        PKCS11Object.getAttributeValue(session, objectHandle, ecdsaParams);
-        PKCS11Object.getAttributeValue(session, objectHandle, value);
-    }
-
-    /**
-     * Returns a string representation of the current object. The
-     * output is only for debugging purposes and should not be used for other
-     * purposes.
-     *
-     * @return A string presentation of this object for debugging output.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public String toString() {
-        String superToString = super.toString();
-        return Util.concatObjectsCap(superToString.length() + 100, superToString,
-                "\n  ECDSA Params (DER, hex): ", ecdsaParams,
-                "\n  Private Value d (hex): ", value);
-    }
+  /**
+   * Returns a string representation of the current object. The
+   * output is only for debugging purposes and should not be used for other
+   * purposes.
+   *
+   * @return A string presentation of this object for debugging output.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public String toString() {
+    String superToString = super.toString();
+    return Util.concatObjectsCap(superToString.length() + 100, superToString,
+        "\n  ECDSA Params (DER, hex): ", ecdsaParams,
+        "\n  Private Value d (hex): ", value);
+  }
 
 }

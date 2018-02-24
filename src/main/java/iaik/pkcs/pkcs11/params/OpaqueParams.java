@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -54,60 +54,60 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  */
 public class OpaqueParams implements Params {
 
-    protected byte[] bytes;
+  protected byte[] bytes;
 
-    public OpaqueParams(byte[] bytes) {
-        this.bytes = bytes;
+  public OpaqueParams(byte[] bytes) {
+    this.bytes = bytes;
+  }
+
+  /**
+   * Get this parameters object as a byte array.
+   *
+   * @return This object as a byte array.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public Object getPKCS11ParamsObject() {
+    return bytes;
+  }
+
+  /**
+   * Get the public value of the other party in the key agreement protocol.
+   *
+   * @return The public value of the other party in the key agreement
+   *         protocol.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public byte[] getBytes() {
+    return bytes;
+  }
+
+  public void setBytes(byte[] bytes) {
+    this.bytes = Util.requireNonNull("bytes", bytes);
+  }
+
+  @Override
+  public String toString() {
+    return Util.concat("  Bytes (hex): ", Util.toHex(bytes));
+  }
+
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof OpaqueParams)) {
+      return false;
     }
 
-    /**
-     * Get this parameters object as a byte array.
-     *
-     * @return This object as a byte array.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public Object getPKCS11ParamsObject() {
-        return bytes;
-    }
+    OpaqueParams other = (OpaqueParams) otherObject;
+    return Arrays.equals(this.bytes, other.bytes);
+  }
 
-    /**
-     * Get the public value of the other party in the key agreement protocol.
-     *
-     * @return The public value of the other party in the key agreement
-     *         protocol.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public byte[] getBytes() {
-        return bytes;
-    }
-
-    public void setBytes(byte[] bytes) {
-        this.bytes = Util.requireNonNull("bytes", bytes);
-    }
-
-    @Override
-    public String toString() {
-        return Util.concat("  Bytes (hex): ", Util.toHex(bytes));
-    }
-
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof OpaqueParams)) {
-            return false;
-        }
-
-        OpaqueParams other = (OpaqueParams) otherObject;
-        return Arrays.equals(this.bytes, other.bytes);
-    }
-
-    @Override
-    public int hashCode() {
-        return Functions.hashCode(bytes);
-    }
+  @Override
+  public int hashCode() {
+    return Functions.hashCode(bytes);
+  }
 
 }

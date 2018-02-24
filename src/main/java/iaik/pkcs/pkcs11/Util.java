@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -66,326 +66,326 @@ import sun.security.pkcs11.wrapper.CK_DATE;
 @SuppressWarnings("restriction")
 public class Util {
 
-    /**
-     * For converting numbers to their hex presentation.
-     */
-    private static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5',
-        '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+  /**
+   * For converting numbers to their hex presentation.
+   */
+  private static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5',
+    '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
-    public static <T> T requireNonNull(String paramName, T param) {
-        if (param == null) {
-            throw new NullPointerException(
-                    "Argument \"" + paramName + "\" must not be null.");
-        }
-        return param;
+  public static <T> T requireNonNull(String paramName, T param) {
+    if (param == null) {
+      throw new NullPointerException(
+          "Argument \"" + paramName + "\" must not be null.");
+    }
+    return param;
+  }
+
+  /**
+   * Parse a time character array as defined in PKCS#11 and return is as a
+   * Date object.
+   *
+   * @param timeChars
+   *          A time encoded as character array as specified in PKCS#11.
+   * @return A Date object set to the time indicated in the given char-array.
+   *         null, if the given char array is null or the format is wrong.
+   * @preconditions
+   * @postconditions
+   */
+  public static Date parseTime(char[] timeChars) {
+    Date time = null;
+
+    if ((timeChars != null) && timeChars.length > 2) {
+      String timeString = new String(timeChars, 0, timeChars.length - 2);
+      try {
+        SimpleDateFormat utc = new SimpleDateFormat("yyyyMMddhhmmss");
+        utc.setTimeZone(TimeZone.getTimeZone("UTC"));
+        time = utc.parse(timeString);
+      } catch (ParseException ex) { /* nothing else to be done */
+      }
     }
 
-    /**
-     * Parse a time character array as defined in PKCS#11 and return is as a
-     * Date object.
-     *
-     * @param timeChars
-     *          A time encoded as character array as specified in PKCS#11.
-     * @return A Date object set to the time indicated in the given char-array.
-     *         null, if the given char array is null or the format is wrong.
-     * @preconditions
-     * @postconditions
-     */
-    public static Date parseTime(char[] timeChars) {
-        Date time = null;
+    return time;
+  }
 
-        if ((timeChars != null) && timeChars.length > 2) {
-            String timeString = new String(timeChars, 0, timeChars.length - 2);
-            try {
-                SimpleDateFormat utc = new SimpleDateFormat("yyyyMMddhhmmss");
-                utc.setTimeZone(TimeZone.getTimeZone("UTC"));
-                time = utc.parse(timeString);
-            } catch (ParseException ex) { /* nothing else to be done */
-            }
-        }
+  /**
+   * Convert the given CK_DATE object to a Date object.
+   *
+   * @param ckDate
+   *          The object providing the date information.
+   * @return The new Date object or null, if the given ckDate is null.
+   * @preconditions
+   * @postconditions
+   */
+  public static Date convertToDate(CK_DATE ckDate) {
+    Date date = null;
 
-        return time;
+    if (ckDate != null) {
+      int year = Integer.parseInt(new String(ckDate.year));
+      int month = Integer.parseInt(new String(ckDate.month));
+      int day = Integer.parseInt(new String(ckDate.day));
+      // poor performance, consider alternatives
+      Calendar calendar = new GregorianCalendar();
+      // calendar starts months with 0
+      calendar.set(year, Calendar.JANUARY + (month - 1), day);
+      date = calendar.getTime();
     }
 
-    /**
-     * Convert the given CK_DATE object to a Date object.
-     *
-     * @param ckDate
-     *          The object providing the date information.
-     * @return The new Date object or null, if the given ckDate is null.
-     * @preconditions
-     * @postconditions
-     */
-    public static Date convertToDate(CK_DATE ckDate) {
-        Date date = null;
+    return date;
+  }
 
-        if (ckDate != null) {
-            int year = Integer.parseInt(new String(ckDate.year));
-            int month = Integer.parseInt(new String(ckDate.month));
-            int day = Integer.parseInt(new String(ckDate.day));
-            // poor performance, consider alternatives
-            Calendar calendar = new GregorianCalendar();
-            // calendar starts months with 0
-            calendar.set(year, Calendar.JANUARY + (month - 1), day);
-            date = calendar.getTime();
-        }
+  /**
+   * Convert the given Date object to a CK_DATE object.
+   *
+   * @param date
+   *          The object providing the date information.
+   * @return The new CK_DATE object or null, if the given date is null.
+   * @preconditions
+   * @postconditions
+   */
+  public static CK_DATE convertToCkDate(Date date) {
+    CK_DATE ckDate = null;
 
-        return date;
+    if (date != null) {
+      //poor memory/performance behavior, consider alternatives
+      Calendar calendar = new GregorianCalendar();
+      calendar.setTime(date);
+      int year = calendar.get(Calendar.YEAR);
+      // month counting starts with zero
+      int month = calendar.get(Calendar.MONTH) + 1;
+      int day = calendar.get(Calendar.DAY_OF_MONTH);
+      ckDate = new CK_DATE(
+          toCharArray(year, 4),
+          toCharArray(month, 2),
+          toCharArray(day, 2));
     }
 
-    /**
-     * Convert the given Date object to a CK_DATE object.
-     *
-     * @param date
-     *          The object providing the date information.
-     * @return The new CK_DATE object or null, if the given date is null.
-     * @preconditions
-     * @postconditions
-     */
-    public static CK_DATE convertToCkDate(Date date) {
-        CK_DATE ckDate = null;
+    return ckDate;
+  }
 
-        if (date != null) {
-            //poor memory/performance behavior, consider alternatives
-            Calendar calendar = new GregorianCalendar();
-            calendar.setTime(date);
-            int year = calendar.get(Calendar.YEAR);
-            // month counting starts with zero
-            int month = calendar.get(Calendar.MONTH) + 1;
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-            ckDate = new CK_DATE(
-                    toCharArray(year, 4),
-                    toCharArray(month, 2),
-                    toCharArray(day, 2));
-        }
+  /**
+   * Converts the given number into a char-array. If the length of the array
+   * is shorter than the required exact length, the array is padded with
+   * leading '0' chars. If the array is longer than the wanted length the most
+   * significant digits are cut off until the array has the exact length.
+   *
+   * @param number
+   *          The number to convert to a char array.
+   * @param exactArrayLength
+   *          The exact length of the returned array.
+   * @return The number as char array, one char for each decimal digit.
+   * @preconditions (exactArrayLength >= 0)
+   * @postconditions (result <> null)
+   *                 and (result.length == exactArrayLength)
+   */
+  public static char[] toCharArray(int number, int exactArrayLength) {
+    char[] charArray = null;
 
-        return ckDate;
+    String numberString = Integer.toString(number);
+    char[] numberChars = numberString.toCharArray();
+
+    if (numberChars.length > exactArrayLength) {
+      // cut off digits beginning at most significant digit
+      charArray = new char[exactArrayLength];
+      for (int i = 0; i < charArray.length; i++) {
+        charArray[i] = numberChars[i];
+      }
+    } else if (numberChars.length < exactArrayLength) {
+      // pad with '0' leading chars
+      charArray = new char[exactArrayLength];
+      int offset = exactArrayLength - numberChars.length;
+      for (int i = 0; i < charArray.length; i++) {
+        charArray[i] = (i < offset) ? '0' : numberChars[i - offset];
+      }
+    } else {
+      charArray = numberChars;
     }
 
-    /**
-     * Converts the given number into a char-array. If the length of the array
-     * is shorter than the required exact length, the array is padded with
-     * leading '0' chars. If the array is longer than the wanted length the most
-     * significant digits are cut off until the array has the exact length.
-     *
-     * @param number
-     *          The number to convert to a char array.
-     * @param exactArrayLength
-     *          The exact length of the returned array.
-     * @return The number as char array, one char for each decimal digit.
-     * @preconditions (exactArrayLength >= 0)
-     * @postconditions (result <> null)
-     *                 and (result.length == exactArrayLength)
-     */
-    public static char[] toCharArray(int number, int exactArrayLength) {
-        char[] charArray = null;
+    return charArray;
+  }
 
-        String numberString = Integer.toString(number);
-        char[] numberChars = numberString.toCharArray();
+  /**
+   * Converts the given string to a char-array of exactly the given length.
+   * If the given string is short than the wanted length, then the array is
+   * padded with trailing padding chars. If the string is longer, the last
+   * character are cut off that the string has the wanted size.
+   *
+   * @param string
+   *          The string to convert.
+   * @param exactArrayLength
+   *          The length of the returned char-array.
+   * @param paddingChar
+   *          The character to use for padding, if necessary.
+   * @return The string as char array, padded or cut off, if necessary.
+   *         The array will have length exactArrayLength. null, if the
+   *         given string is null.
+   * @preconditions (exactArrayLength >= 0)
+   * @postconditions (result == null)
+   *                 or (result <> null)
+   *                    and (result.length == exactArrayLength)
+   */
+  public static char[] toPaddedCharArray(String string, int exactArrayLength,
+      char paddingChar) {
+    char[] charArray = null;
 
-        if (numberChars.length > exactArrayLength) {
-            // cut off digits beginning at most significant digit
-            charArray = new char[exactArrayLength];
-            for (int i = 0; i < charArray.length; i++) {
-                charArray[i] = numberChars[i];
-            }
-        } else if (numberChars.length < exactArrayLength) {
-            // pad with '0' leading chars
-            charArray = new char[exactArrayLength];
-            int offset = exactArrayLength - numberChars.length;
-            for (int i = 0; i < charArray.length; i++) {
-                charArray[i] = (i < offset) ? '0' : numberChars[i - offset];
-            }
-        } else {
-            charArray = numberChars;
-        }
-
-        return charArray;
+    if (string != null) {
+      int stringLength = string.length();
+      charArray = new char[exactArrayLength];
+      string.getChars(0, Math.min(stringLength, exactArrayLength),
+          charArray, 0);
+      // fill the rest of the array with padding char
+      for (int i = stringLength; i < charArray.length; i++) {
+        charArray[i] = paddingChar;
+      }
     }
 
-    /**
-     * Converts the given string to a char-array of exactly the given length.
-     * If the given string is short than the wanted length, then the array is
-     * padded with trailing padding chars. If the string is longer, the last
-     * character are cut off that the string has the wanted size.
-     *
-     * @param string
-     *          The string to convert.
-     * @param exactArrayLength
-     *          The length of the returned char-array.
-     * @param paddingChar
-     *          The character to use for padding, if necessary.
-     * @return The string as char array, padded or cut off, if necessary.
-     *         The array will have length exactArrayLength. null, if the
-     *         given string is null.
-     * @preconditions (exactArrayLength >= 0)
-     * @postconditions (result == null)
-     *                 or (result <> null)
-     *                    and (result.length == exactArrayLength)
-     */
-    public static char[] toPaddedCharArray(String string, int exactArrayLength,
-            char paddingChar) {
-        char[] charArray = null;
+    return charArray;
+  }
 
-        if (string != null) {
-            int stringLength = string.length();
-            charArray = new char[exactArrayLength];
-            string.getChars(0, Math.min(stringLength, exactArrayLength),
-                    charArray, 0);
-            // fill the rest of the array with padding char
-            for (int i = stringLength; i < charArray.length; i++) {
-                charArray[i] = paddingChar;
-            }
-        }
-
-        return charArray;
+  /**
+   * Convert a BigInteger to a byte-array, but treat the byte-array given from
+   * the BigInteger as unsigned and removing any leading zero bytes; e.g. a
+   * 1024 bit integer with its highest bit set will result in an 128 byte
+   * array.
+   *
+   * @param bigInteger
+   *          The BigInteger to convert.
+   * @return The byte-array representation of the BigInterger without
+   *         signum-bit. null, if the BigInteger is null.
+   * @preconditions
+   * @postconditions
+   */
+  public static byte[] unsignedBigIntergerToByteArray(BigInteger bigInteger) {
+    if (bigInteger == null) {
+      return null;
+    }
+    byte[] integerBytes = bigInteger.toByteArray();
+    byte[] unsignedIntegerBytes;
+    if ((integerBytes.length > 0) && (integerBytes[0] == 0x00)) {
+      unsignedIntegerBytes = new byte[integerBytes.length - 1];
+      for (int i = 0; i < unsignedIntegerBytes.length; i++) {
+        unsignedIntegerBytes[i] = integerBytes[i + 1];
+      }
+    } else {
+      unsignedIntegerBytes = integerBytes;
     }
 
-    /**
-     * Convert a BigInteger to a byte-array, but treat the byte-array given from
-     * the BigInteger as unsigned and removing any leading zero bytes; e.g. a
-     * 1024 bit integer with its highest bit set will result in an 128 byte
-     * array.
-     *
-     * @param bigInteger
-     *          The BigInteger to convert.
-     * @return The byte-array representation of the BigInterger without
-     *         signum-bit. null, if the BigInteger is null.
-     * @preconditions
-     * @postconditions
-     */
-    public static byte[] unsignedBigIntergerToByteArray(BigInteger bigInteger) {
-        if (bigInteger == null) {
-            return null;
-        }
-        byte[] integerBytes = bigInteger.toByteArray();
-        byte[] unsignedIntegerBytes;
-        if ((integerBytes.length > 0) && (integerBytes[0] == 0x00)) {
-            unsignedIntegerBytes = new byte[integerBytes.length - 1];
-            for (int i = 0; i < unsignedIntegerBytes.length; i++) {
-                unsignedIntegerBytes[i] = integerBytes[i + 1];
-            }
-        } else {
-            unsignedIntegerBytes = integerBytes;
-        }
+    return unsignedIntegerBytes;
+  }
 
-        return unsignedIntegerBytes;
+  /**
+   * Converts the given vector into an array of CK_ATTRIBUTE elements.
+   * Elements not of type CK_ATTRIBUTE will not be present in the resulting
+   * array and be set to null.
+   *
+   * @param attributes
+   *          The vector which contains the attributes.
+   * @return The array of the attributes.
+   * @preconditions
+   * @postconditions (attributes <> null) implies
+   *                 (result.length == attributes.size())
+   */
+  public static CK_ATTRIBUTE[] convertAttributesVectorToArray(
+      Vector<CK_ATTRIBUTE> attributes) {
+    if (attributes == null) {
+      return null;
+    }
+    int numberOfAttributes = attributes.size();
+    CK_ATTRIBUTE[] attributeArray = new CK_ATTRIBUTE[numberOfAttributes];
+
+    for (int i = 0; i < numberOfAttributes; i++) {
+      attributeArray[i] = attributes.elementAt(i);
     }
 
-    /**
-     * Converts the given vector into an array of CK_ATTRIBUTE elements.
-     * Elements not of type CK_ATTRIBUTE will not be present in the resulting
-     * array and be set to null.
-     *
-     * @param attributes
-     *          The vector which contains the attributes.
-     * @return The array of the attributes.
-     * @preconditions
-     * @postconditions (attributes <> null) implies
-     *                 (result.length == attributes.size())
-     */
-    public static CK_ATTRIBUTE[] convertAttributesVectorToArray(
-            Vector<CK_ATTRIBUTE> attributes) {
-        if (attributes == null) {
-            return null;
-        }
-        int numberOfAttributes = attributes.size();
-        CK_ATTRIBUTE[] attributeArray = new CK_ATTRIBUTE[numberOfAttributes];
+    return attributeArray;
+  }
 
-        for (int i = 0; i < numberOfAttributes; i++) {
-            attributeArray[i] = attributes.elementAt(i);
-        }
+  public static boolean objEquals(Object obj1, Object obj2) {
+    if (obj1 == null) {
+      return obj2 == null;
+    } else {
+      return obj1.equals(obj2);
+    }
+  }
 
-        return attributeArray;
+  /**
+   * Converts a long value to a hexadecimal String of length 16. Includes
+   * leading zeros if necessary.
+   *
+   * @param value
+   *          The long value to be converted.
+   * @return The hexadecimal string representation of the long value.
+   */
+  public static String toFullHex(long value) {
+    long currentValue = value;
+    StringBuilder stringBuffer = new StringBuilder(16);
+    for (int j = 0; j < 16; j++) {
+      int currentDigit = (int) currentValue & 0xf;
+      stringBuffer.append(HEX_DIGITS[currentDigit]);
+      currentValue >>>= 4;
     }
 
-    public static boolean objEquals(Object obj1, Object obj2) {
-        if (obj1 == null) {
-            return obj2 == null;
-        } else {
-            return obj1.equals(obj2);
-        }
+    return stringBuffer.reverse().toString();
+  }
+
+  /**
+   * Converts a byte array to a hexadecimal String. Each byte is presented by
+   * its two digit hex-code; 0x0A -> "0a", 0x00 -> "00". No leading "0x" is
+   * included in the result.
+   *
+   * @param value
+   *          The byte array to be converted
+   * @return the hexadecimal string representation of the byte array
+   */
+  public static String toHex(byte[] value) {
+    if (value == null) {
+      return null;
     }
 
-    /**
-     * Converts a long value to a hexadecimal String of length 16. Includes
-     * leading zeros if necessary.
-     *
-     * @param value
-     *          The long value to be converted.
-     * @return The hexadecimal string representation of the long value.
-     */
-    public static String toFullHex(long value) {
-        long currentValue = value;
-        StringBuilder stringBuffer = new StringBuilder(16);
-        for (int j = 0; j < 16; j++) {
-            int currentDigit = (int) currentValue & 0xf;
-            stringBuffer.append(HEX_DIGITS[currentDigit]);
-            currentValue >>>= 4;
-        }
+    StringBuilder buffer = new StringBuilder(2 * value.length);
+    int single;
 
-        return stringBuffer.reverse().toString();
-    }
-    
-    /**
-     * Converts a byte array to a hexadecimal String. Each byte is presented by
-     * its two digit hex-code; 0x0A -> "0a", 0x00 -> "00". No leading "0x" is
-     * included in the result.
-     *
-     * @param value
-     *          The byte array to be converted
-     * @return the hexadecimal string representation of the byte array
-     */
-    public static String toHex(byte[] value) {
-        if (value == null) {
-            return null;
-        }
+    for (int i = 0; i < value.length; i++) {
+      single = value[i] & 0xFF;
 
-        StringBuilder buffer = new StringBuilder(2 * value.length);
-        int single;
+      if (single < 0x10) {
+        buffer.append('0');
+      }
 
-        for (int i = 0; i < value.length; i++) {
-            single = value[i] & 0xFF;
-
-            if (single < 0x10) {
-                buffer.append('0');
-            }
-
-            buffer.append(Integer.toString(single, 16));
-        }
-
-        return buffer.toString();
+      buffer.append(Integer.toString(single, 16));
     }
 
-    public static String concat(String s1, String... strs) {
-        int len = (s1 == null) ? 4 : s1.length();
-        for (String str : strs) {
-            len += (str == null) ? 4 : str.length();
-        }
-        StringBuilder sb = new StringBuilder(len);
-        sb.append(s1);
-        for (String str : strs) {
-            sb.append(str);
-        }
-        return sb.toString();
-    }
+    return buffer.toString();
+  }
 
-    public static String concatObjects(Object o1, Object... objs) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(o1);
-        for (Object obj : objs) {
-            sb.append(obj);
-        }
-        return sb.toString();
+  public static String concat(String s1, String... strs) {
+    int len = (s1 == null) ? 4 : s1.length();
+    for (String str : strs) {
+      len += (str == null) ? 4 : str.length();
     }
+    StringBuilder sb = new StringBuilder(len);
+    sb.append(s1);
+    for (String str : strs) {
+      sb.append(str);
+    }
+    return sb.toString();
+  }
 
-    public static String concatObjectsCap(int cap, Object o1, Object... objs) {
-        StringBuilder sb = new StringBuilder(cap);
-        sb.append(o1);
-        for (Object obj : objs) {
-            sb.append(obj);
-        }
-        return sb.toString();
+  public static String concatObjects(Object o1, Object... objs) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(o1);
+    for (Object obj : objs) {
+      sb.append(obj);
     }
+    return sb.toString();
+  }
+
+  public static String concatObjectsCap(int cap, Object o1, Object... objs) {
+    StringBuilder sb = new StringBuilder(cap);
+    sb.append(o1);
+    for (Object obj : objs) {
+      sb.append(obj);
+    }
+    return sb.toString();
+  }
 
 }

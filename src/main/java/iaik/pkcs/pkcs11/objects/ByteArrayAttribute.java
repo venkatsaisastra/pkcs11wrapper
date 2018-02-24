@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -57,122 +57,122 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
  */
 public class ByteArrayAttribute extends Attribute {
 
-    /**
-     * Constructor taking the PKCS#11 type of the attribute.
-     *
-     * @param type
-     *          The PKCS#11 type of this attribute; e.g.
-     *          PKCS11Constants.CKA_VALUE.
-     * @preconditions (type <> null)
-     * @postconditions
-     */
-    public ByteArrayAttribute(Long type) {
-        super(type);
+  /**
+   * Constructor taking the PKCS#11 type of the attribute.
+   *
+   * @param type
+   *          The PKCS#11 type of this attribute; e.g.
+   *          PKCS11Constants.CKA_VALUE.
+   * @preconditions (type <> null)
+   * @postconditions
+   */
+  public ByteArrayAttribute(Long type) {
+    super(type);
+  }
+
+  /**
+   * Set the byte-array value of this attribute. Null, is also valid.
+   * A call to this method sets the present flag to true.
+   *
+   * @param value
+   *          The byte-array value to set. May be null.
+   * @preconditions
+   * @postconditions
+   */
+  @SuppressWarnings("restriction")
+  public void setByteArrayValue(byte[] value) {
+    ckAttribute.pValue = value;
+    present = true;
+  }
+
+  /**
+   * Get the byte-array value of this attribute. Null, is also possible.
+   *
+   * @return The byte-array value of this attribute or null.
+   * @preconditions
+   * @postconditions
+   */
+  @SuppressWarnings("restriction")
+  public byte[] getByteArrayValue() {
+    return (byte[]) ckAttribute.pValue;
+  }
+
+  /**
+   * Get a string representation of the value of this attribute.
+   *
+   * @return A string representation of the value of this attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @SuppressWarnings("restriction")
+  @Override
+  protected String getValueString() {
+    return ((ckAttribute != null) && (ckAttribute.pValue != null))
+      ? Util.toHex((byte[]) ckAttribute.pValue) : "<NULL_PTR>";
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @SuppressWarnings("restriction")
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
     }
 
-    /**
-     * Set the byte-array value of this attribute. Null, is also valid.
-     * A call to this method sets the present flag to true.
-     *
-     * @param value
-     *          The byte-array value to set. May be null.
-     * @preconditions
-     * @postconditions
-     */
-    @SuppressWarnings("restriction")
-    public void setByteArrayValue(byte[] value) {
-        ckAttribute.pValue = value;
-        present = true;
+    if (!(otherObject instanceof ByteArrayAttribute)) {
+      return false;
     }
 
-    /**
-     * Get the byte-array value of this attribute. Null, is also possible.
-     *
-     * @return The byte-array value of this attribute or null.
-     * @preconditions
-     * @postconditions
-     */
-    @SuppressWarnings("restriction")
-    public byte[] getByteArrayValue() {
-        return (byte[]) ckAttribute.pValue;
+    ByteArrayAttribute other = (ByteArrayAttribute) otherObject;
+    if (!this.present && !other.present) {
+      return true;
     }
 
-    /**
-     * Get a string representation of the value of this attribute.
-     *
-     * @return A string representation of the value of this attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @SuppressWarnings("restriction")
-    @Override
-    protected String getValueString() {
-        return ((ckAttribute != null) && (ckAttribute.pValue != null)) 
-            ? Util.toHex((byte[]) ckAttribute.pValue) : "<NULL_PTR>";
+    if (!(this.present && other.present)) {
+      return false;
     }
 
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @SuppressWarnings("restriction")
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        }
-
-        if (!(otherObject instanceof ByteArrayAttribute)) {
-            return false;
-        }
-
-        ByteArrayAttribute other = (ByteArrayAttribute) otherObject;
-        if (!this.present && !other.present) {
-            return true;
-        }
-
-        if (!(this.present && other.present)) {
-            return false;
-        }
-
-        if (this.sensitive != other.sensitive) {
-            return false;
-        }
-
-        /* In the original implementation, the type will not be compared.
-        if (this.ckAttribute.type != other.ckAttribute.type) {
-            return false;
-        }*/
-
-        return Arrays.equals((byte[]) this.ckAttribute.pValue,
-                (byte[]) other.ckAttribute.pValue);
+    if (this.sensitive != other.sensitive) {
+      return false;
     }
 
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @SuppressWarnings("restriction")
-    @Override
-    public int hashCode() {
-        return (ckAttribute.pValue != null) ? Functions
-            .hashCode((byte[]) ckAttribute.pValue) : 0;
-    }
+    /* In the original implementation, the type will not be compared.
+    if (this.ckAttribute.type != other.ckAttribute.type) {
+      return false;
+    }*/
 
-    @Override
-    public void setValue(Object value) {
-        setByteArrayValue((byte[]) value);
-    }
+    return Arrays.equals((byte[]) this.ckAttribute.pValue,
+        (byte[]) other.ckAttribute.pValue);
+  }
+
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @SuppressWarnings("restriction")
+  @Override
+  public int hashCode() {
+    return (ckAttribute.pValue != null) ? Functions
+      .hashCode((byte[]) ckAttribute.pValue) : 0;
+  }
+
+  @Override
+  public void setValue(Object value) {
+    setByteArrayValue((byte[]) value);
+  }
 
 }

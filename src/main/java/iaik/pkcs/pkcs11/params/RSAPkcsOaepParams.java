@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -62,213 +62,214 @@ import sun.security.pkcs11.wrapper.CK_RSA_PKCS_OAEP_PARAMS;
 // CHECKSTYLE:SKIP
 public class RSAPkcsOaepParams extends RSAPkcsParams {
 
+  /**
+   * This interface defines the available source types as defined by
+   * PKCS#11: CKZ_DATA_SPECIFIED.
+   *
+   * @author Karl Scheibelhofer
+   * @version 1.0
+   * @invariants
+   */
+  public interface SourceType {
+
     /**
-     * This interface defines the available source types as defined by
-     * PKCS#11: CKZ_DATA_SPECIFIED.
-     *
-     * @author Karl Scheibelhofer
-     * @version 1.0
-     * @invariants
+     * The identifier for empty parameter. This is not defined explicitly
+     * in the PKCS#11 v2.11 standard but in the text.
      */
-    public interface SourceType {
+    public static final long EMPTY = 0L;
 
-        /**
-         * The identifier for empty parameter. This is not defined explicitly
-         * in the PKCS#11 v2.11 standard but in the text.
-         */
-        public static final long EMPTY = 0L;
+    /**
+     * The identifier for CKZ_SALT_SPECIFIED.
+     */
+    public static final long SALT_SPECIFIED
+        = PKCS11Constants.CKZ_SALT_SPECIFIED;
 
-        /**
-         * The identifier for CKZ_SALT_SPECIFIED.
-         */
-        public static final long SALT_SPECIFIED
-                = PKCS11Constants.CKZ_SALT_SPECIFIED;
+    /**
+     * Deprecated, use SALT_SPECIFIED instead.
+     *
+     */
+    @Deprecated
+    public static final long DATA_SPECIFIED
+        = PKCS11Constants.CKZ_SALT_SPECIFIED;
+  }
 
-        /**
-         * @deprecated use SALT_SPECIFIED instead.
-         */
-        public static final long DATA_SPECIFIED
-                = PKCS11Constants.CKZ_SALT_SPECIFIED;
+  /**
+   * The source of the encoding parameter.
+   */
+  protected long source;
+
+  /**
+   * The data used as the input for the encoding parameter source.
+   */
+  protected byte[] sourceData;
+
+  /**
+   * Create a new RSAPkcsOaepParameters object with the given attributes.
+   *
+   * @param hashAlgorithm
+   *          The message digest algorithm used to calculate the digest of the
+   *          encoding parameter.
+   * @param maskGenerationFunction
+   *          The mask to apply to the encoded block. One of the constants
+   *          defined in the MessageGenerationFunctionType interface.
+   * @param source
+   *          The source of the encoding parameter. One of the constants
+   *          defined in the SourceType interface.
+   * @param sourceData
+   *          The data used as the input for the encoding parameter source.
+   * @preconditions (hashAlgorithm <> null)
+   *                and (maskGenerationFunction
+   *                      == MessageGenerationFunctionType.Sha1)
+   *                and ((source == SourceType.Empty)
+   *                     or (source == SourceType.DataSpecified))
+   * @postconditions
+   */
+  public RSAPkcsOaepParams(Mechanism hashAlgorithm,
+      long maskGenerationFunction, long source, byte[] sourceData) {
+    super(hashAlgorithm, maskGenerationFunction);
+    if ((source != SourceType.EMPTY)
+        && (source != SourceType.SALT_SPECIFIED)) {
+      throw new IllegalArgumentException(
+          "Illegal value for argument\"source\": " + Long.toHexString(source));
+    }
+    this.source = source;
+    this.sourceData = sourceData;
+  }
+
+  /**
+   * Get this parameters object as an object of the CK_RSA_PKCS_OAEP_PARAMS
+   * class.
+   *
+   * @return This object as a CK_RSA_PKCS_OAEP_PARAMS object.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public Object getPKCS11ParamsObject() {
+    CK_RSA_PKCS_OAEP_PARAMS params = new CK_RSA_PKCS_OAEP_PARAMS();
+
+    params.hashAlg = hashAlg.getMechanismCode();
+    params.mgf = mgf;
+    params.source = source;
+    params.pSourceData = sourceData;
+
+    return params;
+  }
+
+  /**
+   * Get the source of the encoding parameter.
+   *
+   * @return The source of the encoding parameter.
+   * @preconditions
+   * @postconditions
+   */
+  public long getSource() {
+    return source;
+  }
+
+  /**
+   * Get the data used as the input for the encoding parameter source.
+   *
+   * @return The data used as the input for the encoding parameter source.
+   * @preconditions
+   * @postconditions
+   */
+  public byte[] getSourceData() {
+    return sourceData;
+  }
+
+  /**
+   * Set the source of the encoding parameter. One of the constants defined in
+   * the SourceType interface.
+   *
+   * @param source
+   *          The source of the encoding parameter.
+   * @preconditions ((source == SourceType.Empty)
+   *                 or (source == SourceType.DataSpecified))
+   * @postconditions
+   */
+  public void setSource(long source) {
+    if ((source != SourceType.EMPTY)
+        && (source != SourceType.DATA_SPECIFIED)) {
+      throw new IllegalArgumentException(
+        "Illegal value for argument\"source\": "
+        + Long.toHexString(source));
+    }
+    this.source = source;
+  }
+
+  /**
+   * Set the data used as the input for the encoding parameter source.
+   *
+   * @param sourceData
+   *          The data used as the input for the encoding parameter source.
+   * @preconditions
+   * @postconditions
+   */
+  public void setSourceData(byte[] sourceData) {
+    this.sourceData = sourceData;
+  }
+
+  /**
+   * Returns the string representation of this object. Do not parse data from
+   * this string, it is for debugging only.
+   *
+   * @return A string representation of this object.
+   */
+  @Override
+  public String toString() {
+    String sourceStr;
+    if (source == SourceType.EMPTY) {
+      sourceStr = "Empty";
+    } else if (source == SourceType.DATA_SPECIFIED) {
+      sourceStr = "Data Specified";
+    } else {
+      sourceStr = "<unknown>";
     }
 
-    /**
-     * The source of the encoding parameter.
-     */
-    protected long source;
+    String upperStr = super.toString();
+    return Util.concatObjectsCap(upperStr.length() + 100, upperStr,
+        "\n  Source: ", sourceStr,
+        "\n  Source Data (hex): ", Util.toHex(sourceData));
+  }
 
-    /**
-     * The data used as the input for the encoding parameter source.
-     */
-    protected byte[] sourceData;
-
-    /**
-     * Create a new RSAPkcsOaepParameters object with the given attributes.
-     *
-     * @param hashAlgorithm
-     *          The message digest algorithm used to calculate the digest of the
-     *          encoding parameter.
-     * @param maskGenerationFunction
-     *          The mask to apply to the encoded block. One of the constants
-     *          defined in the MessageGenerationFunctionType interface.
-     * @param source
-     *          The source of the encoding parameter. One of the constants
-     *          defined in the SourceType interface.
-     * @param sourceData
-     *          The data used as the input for the encoding parameter source.
-     * @preconditions (hashAlgorithm <> null)
-     *                and (maskGenerationFunction
-     *                      == MessageGenerationFunctionType.Sha1)
-     *                and ((source == SourceType.Empty)
-     *                     or (source == SourceType.DataSpecified))
-     * @postconditions
-     */
-    public RSAPkcsOaepParams(Mechanism hashAlgorithm,
-            long maskGenerationFunction, long source, byte[] sourceData) {
-        super(hashAlgorithm, maskGenerationFunction);
-        if ((source != SourceType.EMPTY)
-                && (source != SourceType.DATA_SPECIFIED)) {
-            throw new IllegalArgumentException(
-                    "Illegal value for argument\"source\": "
-                    + Long.toHexString(source));
-        }
-        this.source = source;
-        this.sourceData = sourceData;
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof RSAPkcsOaepParams)) {
+      return false;
     }
 
-    /**
-     * Get this parameters object as an object of the CK_RSA_PKCS_OAEP_PARAMS
-     * class.
-     *
-     * @return This object as a CK_RSA_PKCS_OAEP_PARAMS object.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public Object getPKCS11ParamsObject() {
-        CK_RSA_PKCS_OAEP_PARAMS params = new CK_RSA_PKCS_OAEP_PARAMS();
+    RSAPkcsOaepParams other = (RSAPkcsOaepParams) otherObject;
+    return super.equals(other)
+        && (this.source == other.source)
+        && Arrays.equals(this.sourceData, other.sourceData);
+  }
 
-        params.hashAlg = hashAlg.getMechanismCode();
-        params.mgf = mgf;
-        params.source = source;
-        params.pSourceData = sourceData;
-
-        return params;
-    }
-
-    /**
-     * Get the source of the encoding parameter.
-     *
-     * @return The source of the encoding parameter.
-     * @preconditions
-     * @postconditions
-     */
-    public long getSource() {
-        return source;
-    }
-
-    /**
-     * Get the data used as the input for the encoding parameter source.
-     *
-     * @return The data used as the input for the encoding parameter source.
-     * @preconditions
-     * @postconditions
-     */
-    public byte[] getSourceData() {
-        return sourceData;
-    }
-
-    /**
-     * Set the source of the encoding parameter. One of the constants defined in
-     * the SourceType interface.
-     *
-     * @param source
-     *          The source of the encoding parameter.
-     * @preconditions ((source == SourceType.Empty)
-     *                 or (source == SourceType.DataSpecified))
-     * @postconditions
-     */
-    public void setSource(long source) {
-        if ((source != SourceType.EMPTY)
-                && (source != SourceType.DATA_SPECIFIED)) {
-            throw new IllegalArgumentException(
-                "Illegal value for argument\"source\": "
-                + Long.toHexString(source));
-        }
-        this.source = source;
-    }
-
-    /**
-     * Set the data used as the input for the encoding parameter source.
-     *
-     * @param sourceData
-     *          The data used as the input for the encoding parameter source.
-     * @preconditions
-     * @postconditions
-     */
-    public void setSourceData(byte[] sourceData) {
-        this.sourceData = sourceData;
-    }
-
-    /**
-     * Returns the string representation of this object. Do not parse data from
-     * this string, it is for debugging only.
-     *
-     * @return A string representation of this object.
-     */
-    @Override
-    public String toString() {
-        String sourceStr;
-        if (source == SourceType.EMPTY) {
-            sourceStr = "Empty";
-        } else if (source == SourceType.DATA_SPECIFIED) {
-            sourceStr = "Data Specified";
-        } else {
-            sourceStr = "<unknown>";
-        }
-
-        String upperStr = super.toString();
-        return Util.concatObjectsCap(upperStr.length() + 100, upperStr,
-                "\n  Source: ", sourceStr,
-                "\n  Source Data (hex): ", Util.toHex(sourceData));
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof RSAPkcsOaepParams)) {
-            return false;
-        }
-
-        RSAPkcsOaepParams other = (RSAPkcsOaepParams) otherObject;
-        return super.equals(other)
-                && (this.source == other.source)
-                && Arrays.equals(this.sourceData, other.sourceData);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return super.hashCode() ^ ((int) source)
-                ^ Functions.hashCode(sourceData);
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return super.hashCode() ^ ((int) source)
+        ^ Functions.hashCode(sourceData);
+  }
 
 }

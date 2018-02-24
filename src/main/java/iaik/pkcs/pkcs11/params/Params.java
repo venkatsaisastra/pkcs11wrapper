@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -51,15 +51,15 @@ package iaik.pkcs.pkcs11.params;
  */
 public interface Params {
 
-    /**
-     * Get this parameters object as an object of the corresponding *_PARAMS
-     * class of the sun.security.pkcs11.wrapper package.
-     *
-     * @return The object of the corresponding *_PARAMS class.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    // CHECKSTYLE:SKIP
-    public Object getPKCS11ParamsObject();
+  /**
+   * Get this parameters object as an object of the corresponding *_PARAMS
+   * class of the sun.security.pkcs11.wrapper package.
+   *
+   * @return The object of the corresponding *_PARAMS class.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  // CHECKSTYLE:SKIP
+  public Object getPKCS11ParamsObject();
 
 }

@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -60,264 +60,263 @@ import iaik.pkcs.pkcs11.Util;
  */
 public class X509AttributeCertificate extends Certificate {
 
-    /**
-     * The owner attribute of this certificate.
-     */
-    protected ByteArrayAttribute owner;
+  /**
+   * The owner attribute of this certificate.
+   */
+  protected ByteArrayAttribute owner;
 
-    /**
-     * The owner attribute of this certificate.
-     */
-    protected ByteArrayAttribute acIssuer;
+  /**
+   * The owner attribute of this certificate.
+   */
+  protected ByteArrayAttribute acIssuer;
 
-    /**
-     * The serial number attribute of this certificate.
-     */
-    protected ByteArrayAttribute serialNumber;
+  /**
+   * The serial number attribute of this certificate.
+   */
+  protected ByteArrayAttribute serialNumber;
 
-    /**
-     * The attribute types attribute of this certificate.
-     */
-    protected ByteArrayAttribute attrTypes;
+  /**
+   * The attribute types attribute of this certificate.
+   */
+  protected ByteArrayAttribute attrTypes;
 
-    /**
-     * The value attribute of this certificate; i.e. BER-encoded certificate.
-     */
-    protected ByteArrayAttribute value;
+  /**
+   * The value attribute of this certificate; i.e. BER-encoded certificate.
+   */
+  protected ByteArrayAttribute value;
 
-    /**
-     * Default Constructor.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    public X509AttributeCertificate() {
-        certificateType.setLongValue(CertificateType.X_509_ATTRIBUTE);
+  /**
+   * Default Constructor.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  public X509AttributeCertificate() {
+    certificateType.setLongValue(CertificateType.X_509_ATTRIBUTE);
+  }
+
+  /**
+   * Called by getInstance to create an instance of a PKCS#11 X.509 attribute
+   * certificate.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  protected X509AttributeCertificate(Session session, long objectHandle)
+      throws TokenException {
+    super(session, objectHandle);
+    certificateType.setLongValue(CertificateType.X_509_ATTRIBUTE);
+  }
+
+  /**
+   * The getInstance method of the Certificate class uses this method to
+   * create an instance of a PKCS#11 X.509 attribute certificate.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @return The object representing the PKCS#11 object.
+   *         The returned object can be casted to the
+   *         according sub-class.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions (result <> null)
+   */
+  public static PKCS11Object getInstance(Session session, long objectHandle)
+      throws TokenException {
+    return new X509AttributeCertificate(session, objectHandle);
+  }
+
+  /**
+   * Put all attributes of the given object into the attributes table of this
+   * object. This method is only static to be able to access invoke the
+   * implementation of this method for each class separately.
+   *
+   * @param object
+   *          The object to handle.
+   * @preconditions (object <> null)
+   * @postconditions
+   */
+  protected static void putAttributesInTable(
+      X509AttributeCertificate object) {
+    Util.requireNonNull("object", object);
+    object.attributeTable.put(Attribute.OWNER, object.owner);
+    object.attributeTable.put(Attribute.AC_ISSUER, object.acIssuer);
+    object.attributeTable.put(Attribute.SERIAL_NUMBER,
+        object.serialNumber);
+    object.attributeTable.put(Attribute.ATTR_TYPES, object.attrTypes);
+    object.attributeTable.put(Attribute.VALUE, object.value);
+  }
+
+  /**
+   * Allocates the attribute objects for this class and adds them to the
+   * attribute table.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  protected void allocateAttributes() {
+    super.allocateAttributes();
+
+    owner = new ByteArrayAttribute(Attribute.OWNER);
+    acIssuer = new ByteArrayAttribute(Attribute.AC_ISSUER);
+    serialNumber = new ByteArrayAttribute(Attribute.SERIAL_NUMBER);
+    attrTypes = new ByteArrayAttribute(Attribute.ATTR_TYPES);
+    value = new ByteArrayAttribute(Attribute.VALUE);
+
+    putAttributesInTable(this);
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof X509AttributeCertificate)) {
+      return false;
     }
 
-    /**
-     * Called by getInstance to create an instance of a PKCS#11 X.509 attribute
-     * certificate.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    protected X509AttributeCertificate(Session session, long objectHandle)
-        throws TokenException {
-        super(session, objectHandle);
-        certificateType.setLongValue(CertificateType.X_509_ATTRIBUTE);
-    }
+    X509AttributeCertificate other = (X509AttributeCertificate) otherObject;
+    return super.equals(other)
+        && this.owner.equals(other.owner)
+        && this.acIssuer.equals(other.acIssuer)
+        && this.serialNumber.equals(other.serialNumber)
+        && this.attrTypes.equals(other.attrTypes)
+        && this.value.equals(other.value);
+  }
 
-    /**
-     * The getInstance method of the Certificate class uses this method to
-     * create an instance of a PKCS#11 X.509 attribute certificate.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @return The object representing the PKCS#11 object.
-     *         The returned object can be casted to the
-     *         according sub-class.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions (result <> null)
-     */
-    public static PKCS11Object getInstance(Session session, long objectHandle)
-        throws TokenException {
-        return new X509AttributeCertificate(session, objectHandle);
-    }
+  /**
+   * Gets the owner attribute of this X.509 attribute certificate.
+   *
+   * @return The owner attribute of this X.509 attribute certificate.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getOwner() {
+    return owner;
+  }
 
-    /**
-     * Put all attributes of the given object into the attributes table of this
-     * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately.
-     *
-     * @param object
-     *          The object to handle.
-     * @preconditions (object <> null)
-     * @postconditions
-     */
-    protected static void putAttributesInTable(
-            X509AttributeCertificate object) {
-        Util.requireNonNull("object", object);
-        object.attributeTable.put(Attribute.OWNER, object.owner);
-        object.attributeTable.put(Attribute.AC_ISSUER, object.acIssuer);
-        object.attributeTable.put(Attribute.SERIAL_NUMBER,
-                object.serialNumber);
-        object.attributeTable.put(Attribute.ATTR_TYPES, object.attrTypes);
-        object.attributeTable.put(Attribute.VALUE, object.value);
-    }
+  /**
+   * Gets the attribute certificate issuer attribute of this X.509 attribute
+   * certificate.
+   *
+   * @return The attribute certificate issuer attribute of this X.509
+   *         attribute certificate.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getAcIssuer() {
+    return acIssuer;
+  }
 
-    /**
-     * Allocates the attribute objects for this class and adds them to the
-     * attribute table.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    protected void allocateAttributes() {
-        super.allocateAttributes();
+  /**
+   * Gets the serial number attribute of this X.509 attribute certificate.
+   *
+   * @return The serial number attribute of this X.509 attribute certificate.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getSerialNumber() {
+    return serialNumber;
+  }
 
-        owner = new ByteArrayAttribute(Attribute.OWNER);
-        acIssuer = new ByteArrayAttribute(Attribute.AC_ISSUER);
-        serialNumber = new ByteArrayAttribute(Attribute.SERIAL_NUMBER);
-        attrTypes = new ByteArrayAttribute(Attribute.ATTR_TYPES);
-        value = new ByteArrayAttribute(Attribute.VALUE);
+  /**
+   * Gets the attribute types attribute of this X.509 attribute certificate.
+   *
+   * @return The attribute types attribute of this X.509 attribute
+   *         certificate.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getAttrTypes() {
+    return attrTypes;
+  }
 
-        putAttributesInTable(this);
-    }
+  /**
+   * Gets the value attribute of this X.509 attribute certificate.
+   *
+   * @return The value attribute of this X.509 attribute certificate.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getValue() {
+    return value;
+  }
 
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof X509AttributeCertificate)) {
-            return false;
-        }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return acIssuer.hashCode() ^ serialNumber.hashCode();
+  }
 
-        X509AttributeCertificate other = (X509AttributeCertificate) otherObject;
-        return super.equals(other)
-                && this.owner.equals(other.owner)
-                && this.acIssuer.equals(other.acIssuer)
-                && this.serialNumber.equals(other.serialNumber)
-                && this.attrTypes.equals(other.attrTypes)
-                && this.value.equals(other.value);
-    }
+  /**
+   * Read the values of the attributes of this object from the token.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  @Override
+  public void readAttributes(Session session) throws TokenException {
+    super.readAttributes(session);
 
-    /**
-     * Gets the owner attribute of this X.509 attribute certificate.
-     *
-     * @return The owner attribute of this X.509 attribute certificate.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getOwner() {
-        return owner;
-    }
+    PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        owner, acIssuer, serialNumber, attrTypes, value });
+  }
 
-    /**
-     * Gets the attribute certificate issuer attribute of this X.509 attribute
-     * certificate.
-     *
-     * @return The attribute certificate issuer attribute of this X.509
-     *         attribute certificate.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getAcIssuer() {
-        return acIssuer;
-    }
-
-    /**
-     * Gets the serial number attribute of this X.509 attribute certificate.
-     *
-     * @return The serial number attribute of this X.509 attribute certificate.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getSerialNumber() {
-        return serialNumber;
-    }
-
-    /**
-     * Gets the attribute types attribute of this X.509 attribute certificate.
-     *
-     * @return The attribute types attribute of this X.509 attribute
-     *         certificate.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getAttrTypes() {
-        return attrTypes;
-    }
-
-    /**
-     * Gets the value attribute of this X.509 attribute certificate.
-     *
-     * @return The value attribute of this X.509 attribute certificate.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getValue() {
-        return value;
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return acIssuer.hashCode() ^ serialNumber.hashCode();
-    }
-
-    /**
-     * Read the values of the attributes of this object from the token.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    @Override
-    public void readAttributes(Session session)
-        throws TokenException {
-        super.readAttributes(session);
-
-        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-            owner, acIssuer, serialNumber, attrTypes, value });
-    }
-
-    /**
-     * Returns a string representation of the current object. The
-     * output is only for debugging purposes and should not be used for other
-     * purposes.
-     *
-     * @return A string presentation of this object for debugging output.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public String toString() {
-        String superToString = super.toString();
-        return Util.concatObjectsCap(superToString.length() + 100, superToString,
-            "\n  Owner (DER, hex): ", owner,
-            "\n  Attribute Certificate Issuer (DER, hex): ", acIssuer,
-            "\n  Serial Number (DER, hex): ", serialNumber,
-            "\n  Attribute Types (BER, hex): ", attrTypes,
-            "\n  Value (BER, hex): ", value);
-    }
+  /**
+   * Returns a string representation of the current object. The
+   * output is only for debugging purposes and should not be used for other
+   * purposes.
+   *
+   * @return A string presentation of this object for debugging output.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public String toString() {
+    String superToString = super.toString();
+    return Util.concatObjectsCap(superToString.length() + 100, superToString,
+      "\n  Owner (DER, hex): ", owner,
+      "\n  Attribute Certificate Issuer (DER, hex): ", acIssuer,
+      "\n  Serial Number (DER, hex): ", serialNumber,
+      "\n  Attribute Types (BER, hex): ", attrTypes,
+      "\n  Value (BER, hex): ", value);
+  }
 
 }

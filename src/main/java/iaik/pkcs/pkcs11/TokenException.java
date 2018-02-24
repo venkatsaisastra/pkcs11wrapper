@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -52,91 +52,91 @@ package iaik.pkcs.pkcs11;
  */
 public class TokenException extends Exception {
 
-    private static final long serialVersionUID = 2259867040069453007L;
+  private static final long serialVersionUID = 2259867040069453007L;
 
-    /**
-     * An encapsulated (inner) exception. Possibly, an exception from a lower
-     * layer that can be propagated to a higher layer only in wrapped form.
-     */
-    protected Exception encapsulatedException;
+  /**
+   * An encapsulated (inner) exception. Possibly, an exception from a lower
+   * layer that can be propagated to a higher layer only in wrapped form.
+   */
+  protected Exception encapsulatedException;
 
-    /**
-     * The default constructor.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    public TokenException() {
+  /**
+   * The default constructor.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  public TokenException() {
+  }
+
+  /**
+   * Constructor taking an exception message.
+   *
+   * @param message
+   *          The message giving details about the exception to ease
+   *          debugging.
+   * @preconditions
+   * @postconditions
+   */
+  public TokenException(String message) {
+    super(message);
+  }
+
+  /**
+   * Constructor taking an other exception to wrap.
+   *
+   * @param encapsulatedException
+   *          The other exception the wrap into this.
+   * @preconditions
+   * @postconditions
+   */
+  public TokenException(Exception encapsulatedException) {
+    this.encapsulatedException = encapsulatedException;
+  }
+
+  /**
+   * Constructor taking a message for this exception and an other exception to
+   * wrap.
+   *
+   * @param message
+   *          The message giving details about the exception to ease
+   *          debugging.
+   * @param encapsulatedException
+   *          The other exception the wrap into this.
+   * @preconditions
+   * @postconditions
+   */
+  public TokenException(String message, Exception encapsulatedException) {
+    super(message);
+    this.encapsulatedException = encapsulatedException;
+  }
+
+  /**
+   * Get the encapsulated (wrapped) exception. May be null.
+   *
+   * @return The encapsulated (wrapped) exception, or null if there is no
+   *         inner exception.
+   * @preconditions
+   * @postconditions
+   */
+  public Exception getEncapsulatedException() {
+    return encapsulatedException;
+  }
+
+  /**
+   * Returns the string representation of this exception, including the string
+   * representation of the wrapped (encapsulated) exception.
+   *
+   * @return The string representation of exception.
+   */
+  @Override
+  public String toString() {
+    if (encapsulatedException == null) {
+      return super.toString();
+    } else {
+      return Util.concatObjects(super.toString(),
+          ", Encasulated Exception: ", encapsulatedException);
     }
-
-    /**
-     * Constructor taking an exception message.
-     *
-     * @param message
-     *          The message giving details about the exception to ease
-     *          debugging.
-     * @preconditions
-     * @postconditions
-     */
-    public TokenException(String message) {
-        super(message);
-    }
-
-    /**
-     * Constructor taking an other exception to wrap.
-     *
-     * @param encapsulatedException
-     *          The other exception the wrap into this.
-     * @preconditions
-     * @postconditions
-     */
-    public TokenException(Exception encapsulatedException) {
-        this.encapsulatedException = encapsulatedException;
-    }
-
-    /**
-     * Constructor taking a message for this exception and an other exception to
-     * wrap.
-     *
-     * @param message
-     *          The message giving details about the exception to ease
-     *          debugging.
-     * @param encapsulatedException
-     *          The other exception the wrap into this.
-     * @preconditions
-     * @postconditions
-     */
-    public TokenException(String message, Exception encapsulatedException) {
-        super(message);
-        this.encapsulatedException = encapsulatedException;
-    }
-
-    /**
-     * Get the encapsulated (wrapped) exception. May be null.
-     *
-     * @return The encapsulated (wrapped) exception, or null if there is no
-     *         inner exception.
-     * @preconditions
-     * @postconditions
-     */
-    public Exception getEncapsulatedException() {
-        return encapsulatedException;
-    }
-
-    /**
-     * Returns the string representation of this exception, including the string
-     * representation of the wrapped (encapsulated) exception.
-     *
-     * @return The string representation of exception.
-     */
-    @Override
-    public String toString() {
-        if (encapsulatedException == null) {
-            return super.toString();
-        } else {
-            return Util.concatObjects(super.toString(),
-                    ", Encasulated Exception: ", encapsulatedException);
-        }
-    }
+  }
 
 }

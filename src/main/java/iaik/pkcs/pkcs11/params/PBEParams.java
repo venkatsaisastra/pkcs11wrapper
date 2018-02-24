@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -64,227 +64,227 @@ import sun.security.pkcs11.wrapper.CK_PBE_PARAMS;
 // CHECKSTYLE:SKIP
 public class PBEParams implements Params {
 
-    /**
-     * The 8-byte initialization vector (IV), if an IV is required.
-     */
-    protected char[] iv;
+  /**
+   * The 8-byte initialization vector (IV), if an IV is required.
+   */
+  protected char[] iv;
 
-    /**
-     * The password to be used in the PBE key generation.
-     */
-    protected char[] password;
+  /**
+   * The password to be used in the PBE key generation.
+   */
+  protected char[] password;
 
-    /**
-     * The salt to be used in the PBE key generation.
-     */
-    protected char[] salt;
+  /**
+   * The salt to be used in the PBE key generation.
+   */
+  protected char[] salt;
 
-    /**
-     * The number of iterations required for the generation.
-     */
-    protected long iterations;
+  /**
+   * The number of iterations required for the generation.
+   */
+  protected long iterations;
 
-    /**
-     * Create a new PBEDeriveParameters object with the given attributes.
-     *
-     * @param initializationVector
-     *          The 8-byte initialization vector (IV), if an IV is required.
-     * @param password
-     *          The password to be used in the PBE key generation.
-     * @param salt
-     *          The salt to be used in the PBE key generation.
-     * @param iterations
-     *          The number of iterations required for the generation.
-     * @preconditions (initializationVector == null)
-     *                or ((initializationVector <> null)
-     *                    and (initializationVector.length == 8))
-     *                and (password <> null)
-     *                and (salt <> null)
-     * @postconditions
-     */
-    public PBEParams(char[] iv, char[] password, char[] salt, long iterations) {
-        if ((iv != null) && (iv.length != 8)) {
-            throw new IllegalArgumentException(
-                "Argument \"iv\" must be null or must have"
-                + " length 8, if it is not null.");
-        }
-        this.iv = iv;
-        this.password = Util.requireNonNull("password", password);
-        this.salt = Util.requireNonNull("salt", salt);
-        this.iterations = iterations;
+  /**
+   * Create a new PBEDeriveParameters object with the given attributes.
+   *
+   * @param initializationVector
+   *          The 8-byte initialization vector (IV), if an IV is required.
+   * @param password
+   *          The password to be used in the PBE key generation.
+   * @param salt
+   *          The salt to be used in the PBE key generation.
+   * @param iterations
+   *          The number of iterations required for the generation.
+   * @preconditions (initializationVector == null)
+   *                or ((initializationVector <> null)
+   *                    and (initializationVector.length == 8))
+   *                and (password <> null)
+   *                and (salt <> null)
+   * @postconditions
+   */
+  public PBEParams(char[] iv, char[] password, char[] salt, long iterations) {
+    if ((iv != null) && (iv.length != 8)) {
+      throw new IllegalArgumentException(
+        "Argument \"iv\" must be null or must have"
+        + " length 8, if it is not null.");
+    }
+    this.iv = iv;
+    this.password = Util.requireNonNull("password", password);
+    this.salt = Util.requireNonNull("salt", salt);
+    this.iterations = iterations;
+  }
+
+  /**
+   * Get this parameters object as an object of the CK_PBE_PARAMS class.
+   *
+   * @return This object as a CK_PBE_PARAMS object.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public Object getPKCS11ParamsObject() {
+    CK_PBE_PARAMS params = new CK_PBE_PARAMS();
+
+    params.pInitVector = iv;
+    params.pPassword = password;
+    params.pSalt = salt;
+    params.ulIteration = iterations;
+
+    return params;
+  }
+
+  /**
+   * Get the 8-byte initialization vector (IV), if an IV is required.
+   *
+   * @return The 8-byte initialization vector (IV), if an IV is required.
+   * @preconditions
+   * @postconditions (result == null)
+   *                 or ((result <> null)
+   *                     and (result.length == 8))
+   */
+  public char[] getInitializationVector() {
+    return iv;
+  }
+
+  /**
+   * Get the password to be used in the PBE key generation.
+   *
+   * @return The password to be used in the PBE key generation.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public char[] getPassword() {
+    return password;
+  }
+
+  /**
+   * Get the salt to be used in the PBE key generation.
+   *
+   * @return The salt to be used in the PBE key generation.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public char[] getSalt() {
+    return salt;
+  }
+
+  /**
+   * Get the number of iterations required for the generation.
+   *
+   * @return The number of iterations required for the generation.
+   * @preconditions
+   * @postconditions
+   */
+  public long getIterations() {
+    return iterations;
+  }
+
+  /**
+   * Set the 8-byte initialization vector (IV), if an IV is required.
+   *
+   * @param initializationVector
+   *          The 8-byte initialization vector (IV), if an IV is required.
+   * @preconditions (initializationVector == null)
+   *                or ((initializationVector <> null)
+   *                    and (initializationVector.length == 8))
+   * @postconditions
+   */
+  public void setInitializationVector(char[] iv) {
+    if ((iv != null) && (iv.length != 8)) {
+      throw new IllegalArgumentException("Argument \"iv\" must be null"
+          + " or must have length 8, if it is not null.");
+    }
+    this.iv = iv;
+  }
+
+  /**
+   * Set the password to be used in the PBE key generation.
+   *
+   * @param password
+   *          The password to be used in the PBE key generation.
+   * @preconditions (password <> null)
+   * @postconditions
+   */
+  public void setPassword(char[] password) {
+    this.password = Util.requireNonNull("password", password);
+  }
+
+  /**
+   * Set the salt to be used in the PBE key generation.
+   *
+   * @param salt
+   *          The salt to be used in the PBE key generation.
+   * @preconditions (salt <> null)
+   * @postconditions
+   */
+  public void setSalt(char[] salt) {
+    this.salt = Util.requireNonNull("salt", salt);;
+  }
+
+  /**
+   * Set the number of iterations required for the generation.
+   *
+   * @param iterations
+   *          The number of iterations required for the generation.
+   * @preconditions
+   * @postconditions
+   */
+  public void setIterations(long iterations) {
+    this.iterations = iterations;
+  }
+
+  /**
+   * Returns the string representation of this object. Do not parse data from
+   * this string, it is for debugging only.
+   *
+   * @return A string representation of this object.
+   */
+  @Override
+  public String toString() {
+    return Util.concatObjects("  IV: ", ((iv != null) ? new String(iv) : null),
+        "\n  Password: ", ((password != null) ? new String(password) : null),
+        "\n  Salt: ", ((salt != null) ? new String(salt) : null),
+        "\n  Iterations (dec): ", iterations);
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof PBEParams)) {
+      return false;
     }
 
-    /**
-     * Get this parameters object as an object of the CK_PBE_PARAMS class.
-     *
-     * @return This object as a CK_PBE_PARAMS object.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public Object getPKCS11ParamsObject() {
-        CK_PBE_PARAMS params = new CK_PBE_PARAMS();
+    PBEParams other = (PBEParams) otherObject;
+    return Arrays.equals(this.iv, other.iv)
+         && Arrays.equals(this.password, other.password)
+         && Arrays.equals(this.salt, other.salt)
+         && (this.iterations == other.iterations);
+  }
 
-        params.pInitVector = iv;
-        params.pPassword = password;
-        params.pSalt = salt;
-        params.ulIteration = iterations;
-
-        return params;
-    }
-
-    /**
-     * Get the 8-byte initialization vector (IV), if an IV is required.
-     *
-     * @return The 8-byte initialization vector (IV), if an IV is required.
-     * @preconditions
-     * @postconditions (result == null)
-     *                 or ((result <> null)
-     *                     and (result.length == 8))
-     */
-    public char[] getInitializationVector() {
-        return iv;
-    }
-
-    /**
-     * Get the password to be used in the PBE key generation.
-     *
-     * @return The password to be used in the PBE key generation.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public char[] getPassword() {
-        return password;
-    }
-
-    /**
-     * Get the salt to be used in the PBE key generation.
-     *
-     * @return The salt to be used in the PBE key generation.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public char[] getSalt() {
-        return salt;
-    }
-
-    /**
-     * Get the number of iterations required for the generation.
-     *
-     * @return The number of iterations required for the generation.
-     * @preconditions
-     * @postconditions
-     */
-    public long getIterations() {
-        return iterations;
-    }
-
-    /**
-     * Set the 8-byte initialization vector (IV), if an IV is required.
-     *
-     * @param initializationVector
-     *          The 8-byte initialization vector (IV), if an IV is required.
-     * @preconditions (initializationVector == null)
-     *                or ((initializationVector <> null)
-     *                    and (initializationVector.length == 8))
-     * @postconditions
-     */
-    public void setInitializationVector(char[] iv) {
-        if ((iv != null) && (iv.length != 8)) {
-            throw new IllegalArgumentException("Argument \"iv\" must be null"
-                    + " or must have length 8, if it is not null.");
-        }
-        this.iv = iv;
-    }
-
-    /**
-     * Set the password to be used in the PBE key generation.
-     *
-     * @param password
-     *          The password to be used in the PBE key generation.
-     * @preconditions (password <> null)
-     * @postconditions
-     */
-    public void setPassword(char[] password) {
-        this.password = Util.requireNonNull("password", password);
-    }
-
-    /**
-     * Set the salt to be used in the PBE key generation.
-     *
-     * @param salt
-     *          The salt to be used in the PBE key generation.
-     * @preconditions (salt <> null)
-     * @postconditions
-     */
-    public void setSalt(char[] salt) {
-        this.salt = Util.requireNonNull("salt", salt);;
-    }
-
-    /**
-     * Set the number of iterations required for the generation.
-     *
-     * @param iterations
-     *          The number of iterations required for the generation.
-     * @preconditions
-     * @postconditions
-     */
-    public void setIterations(long iterations) {
-        this.iterations = iterations;
-    }
-
-    /**
-     * Returns the string representation of this object. Do not parse data from
-     * this string, it is for debugging only.
-     *
-     * @return A string representation of this object.
-     */
-    @Override
-    public String toString() {
-        return Util.concatObjects("  IV: ", ((iv != null) ? new String(iv) : null),
-                "\n  Password: ", ((password != null) ? new String(password) : null),
-                "\n  Salt: ", ((salt != null) ? new String(salt) : null),
-                "\n  Iterations (dec): ", iterations);
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof PBEParams)) {
-            return false;
-        }
-
-        PBEParams other = (PBEParams) otherObject;
-        return Arrays.equals(this.iv, other.iv)
-               && Arrays.equals(this.password, other.password)
-               && Arrays.equals(this.salt, other.salt)
-               && (this.iterations == other.iterations);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return Functions.hashCode(iv) ^ Functions.hashCode(password)
-                ^ Functions.hashCode(salt) ^ ((int) iterations);
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return Functions.hashCode(iv) ^ Functions.hashCode(password)
+        ^ Functions.hashCode(salt) ^ ((int) iterations);
+  }
 
 }

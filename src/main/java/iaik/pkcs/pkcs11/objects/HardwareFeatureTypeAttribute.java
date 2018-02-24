@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -53,32 +53,32 @@ package iaik.pkcs.pkcs11.objects;
  */
 public class HardwareFeatureTypeAttribute extends LongAttribute {
 
-    /**
-     * Empty constructor.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    public HardwareFeatureTypeAttribute() {
-        super(Attribute.HW_FEATURE_TYPE);
-    }
+  /**
+   * Empty constructor.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  public HardwareFeatureTypeAttribute() {
+    super(Attribute.HW_FEATURE_TYPE);
+  }
 
-    /**
-     * Get a string representation of the value of this attribute.
-     *
-     * @return A string representation of the value of this attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @SuppressWarnings("restriction")
-    @Override
-    protected String getValueString() {
-        if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
-            return HardwareFeature
-                .getHardwareFeatureTypeName((Long) ckAttribute.pValue);
-        } else {
-            return "<NULL_PTR>";
-        }
+  /**
+   * Get a string representation of the value of this attribute.
+   *
+   * @return A string representation of the value of this attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @SuppressWarnings("restriction")
+  @Override
+  protected String getValueString() {
+    if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
+      return HardwareFeature
+        .getHardwareFeatureTypeName((Long) ckAttribute.pValue);
+    } else {
+      return "<NULL_PTR>";
     }
+  }
 
 }

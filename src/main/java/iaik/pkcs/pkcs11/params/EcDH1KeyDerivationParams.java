@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -59,117 +59,118 @@ import sun.security.pkcs11.wrapper.CK_ECDH1_DERIVE_PARAMS;
 @SuppressWarnings("restriction")
 public class EcDH1KeyDerivationParams extends DHKeyDerivationParams {
 
-    /**
-     * The data shared between the two parties.
-     */
-    protected byte[] sharedData;
+  /**
+   * The data shared between the two parties.
+   */
+  protected byte[] sharedData;
 
-    /**
-     * Create a new EcDH1KeyDerivationParameters object with the given
-     * attributes.
-     *
-     * @param kdf
-     *          The key derivation function used on the shared secret value.
-     *          One of the values defined in KeyDerivationFunctionType.
-     * @param sharedData
-     *          The data shared between the two parties.
-     * @param publicData
-     *          The other partie's public key value.
-     * @preconditions ((kdf == KeyDerivationFunctionType.NULL)
-     *              or (kdf == KeyDerivationFunctionType.SHA1_KDF)
-     *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1)
-     *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
-     *              and (publicData <> null)
-     * @postconditions
-     */
-    public EcDH1KeyDerivationParams(long kdf, byte[] sharedData,
-            byte[] publicData) {
-        super(kdf, publicData);
-        this.sharedData = sharedData;
+  /**
+   * Create a new EcDH1KeyDerivationParameters object with the given
+   * attributes.
+   *
+   * @param kdf
+   *          The key derivation function used on the shared secret value.
+   *          One of the values defined in KeyDerivationFunctionType.
+   * @param sharedData
+   *          The data shared between the two parties.
+   * @param publicData
+   *          The other partie's public key value.
+   * @preconditions ((kdf == KeyDerivationFunctionType.NULL)
+   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF)
+   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1)
+   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
+   *              and (publicData <> null)
+   * @postconditions
+   */
+  public EcDH1KeyDerivationParams(long kdf, byte[] sharedData,
+      byte[] publicData) {
+    super(kdf, publicData);
+    this.sharedData = sharedData;
+  }
+
+  /**
+   * Get this parameters object as an object of the CK_ECDH1_DERIVE_PARAMS
+   * class.
+   *
+   * @return This object as a CK_ECDH1_DERIVE_PARAMS object.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public Object getPKCS11ParamsObject() {
+    return new CK_ECDH1_DERIVE_PARAMS(kdf, sharedData, publicData);
+  }
+
+  /**
+   * Get the data shared between the two parties.
+   *
+   * @return The data shared between the two parties.
+   * @preconditions
+   * @postconditions
+   */
+  public byte[] getSharedData() {
+    return sharedData;
+  }
+
+  /**
+   * Set the data shared between the two parties.
+   *
+   * @param sharedData
+   *          The data shared between the two parties.
+   * @preconditions (sharedData <> null)
+   * @postconditions
+   */
+  public void setSharedData(byte[] sharedData) {
+    this.sharedData = sharedData;
+  }
+
+  /**
+   * Returns the string representation of this object. Do not parse data from
+   * this string, it is for debugging only.
+   *
+   * @return A string representation of this object.
+   */
+  @Override
+  public String toString() {
+    return Util.concat(super.toString(),
+        "\n  Shared Data: ", Util.toHex(sharedData));
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof EcDH1KeyDerivationParams)) {
+      return false;
     }
 
-    /**
-     * Get this parameters object as an object of the CK_ECDH1_DERIVE_PARAMS
-     * class.
-     *
-     * @return This object as a CK_ECDH1_DERIVE_PARAMS object.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public Object getPKCS11ParamsObject() {
-        return new CK_ECDH1_DERIVE_PARAMS(kdf, sharedData, publicData);
-    }
+    EcDH1KeyDerivationParams other = (EcDH1KeyDerivationParams) otherObject;
+    return super.equals(other)
+        && Arrays.equals(this.sharedData, other.sharedData);
+  }
 
-    /**
-     * Get the data shared between the two parties.
-     *
-     * @return The data shared between the two parties.
-     * @preconditions
-     * @postconditions
-     */
-    public byte[] getSharedData() {
-        return sharedData;
-    }
-
-    /**
-     * Set the data shared between the two parties.
-     *
-     * @param sharedData
-     *          The data shared between the two parties.
-     * @preconditions (sharedData <> null)
-     * @postconditions
-     */
-    public void setSharedData(byte[] sharedData) {
-        this.sharedData = sharedData;
-    }
-
-    /**
-     * Returns the string representation of this object. Do not parse data from
-     * this string, it is for debugging only.
-     *
-     * @return A string representation of this object.
-     */
-    @Override
-    public String toString() {
-        return Util.concat(super.toString(), "\n  Shared Data: ", Util.toHex(sharedData));
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof EcDH1KeyDerivationParams)) {
-            return false;
-        }
-
-        EcDH1KeyDerivationParams other = (EcDH1KeyDerivationParams) otherObject;
-        return super.equals(other)
-                && Arrays.equals(this.sharedData, other.sharedData);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return super.hashCode() ^ Functions.hashCode(sharedData);
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return super.hashCode() ^ Functions.hashCode(sharedData);
+  }
 
 }

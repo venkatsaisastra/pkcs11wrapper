@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -60,225 +60,224 @@ import iaik.pkcs.pkcs11.Util;
 // CHECKSTYLE:SKIP
 public class DSAParams extends DomainParameters {
 
-    /**
-     * The prime (p) of this DSA key.
-     */
-    protected ByteArrayAttribute prime;
+  /**
+   * The prime (p) of this DSA key.
+   */
+  protected ByteArrayAttribute prime;
 
-    /**
-     * The sub-prime (q) of this DSA key.
-     */
-    protected ByteArrayAttribute subprime;
+  /**
+   * The sub-prime (q) of this DSA key.
+   */
+  protected ByteArrayAttribute subprime;
 
-    /**
-     * The base (g) of this DSA key.
-     */
-    protected ByteArrayAttribute base;
+  /**
+   * The base (g) of this DSA key.
+   */
+  protected ByteArrayAttribute base;
 
-    /**
-     * The bit length of the prime value.
-     */
-    protected LongAttribute primeBits;
+  /**
+   * The bit length of the prime value.
+   */
+  protected LongAttribute primeBits;
 
-    /**
-     * Default Constructor.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    public DSAParams() {
-        keyType.setLongValue(Key.KeyType.DSA);
+  /**
+   * Default Constructor.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  public DSAParams() {
+    keyType.setLongValue(Key.KeyType.DSA);
+  }
+
+  /**
+   * Called by getInstance to create an instance of a PKCS#11 DSA private key.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  protected DSAParams(Session session, long objectHandle)
+      throws TokenException {
+    super(session, objectHandle);
+    keyType.setLongValue(Key.KeyType.DSA);
+  }
+
+  /**
+   * The getInstance method of the PrivateKey class uses this method to create
+   * an instance of PKCS#11 DSA domain parameters.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @return The object representing the PKCS#11 object.
+   *         The returned object can be casted to the
+   *         according sub-class.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions (result <> null)
+   */
+  public static PKCS11Object getInstance(Session session, long objectHandle)
+      throws TokenException {
+    return new DSAParams(session, objectHandle);
+  }
+
+  /**
+   * Put all attributes of the given object into the attributes table of this
+   * object. This method is only static to be able to access invoke the
+   * implementation of this method for each class separately.
+   *
+   * @param object
+   *          The object to handle.
+   * @preconditions (object <> null)
+   * @postconditions
+   */
+  protected static void putAttributesInTable(DSAParams object) {
+    Util.requireNonNull("object", object);
+    object.attributeTable.put(Attribute.PRIME, object.prime);
+    object.attributeTable.put(Attribute.SUBPRIME, object.subprime);
+    object.attributeTable.put(Attribute.BASE, object.base);
+    object.attributeTable.put(Attribute.PRIME_BITS, object.primeBits);
+  }
+
+  /**
+   * Allocates the attribute objects for this class and adds them to the
+   * attribute table.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  protected void allocateAttributes() {
+    super.allocateAttributes();
+
+    prime = new ByteArrayAttribute(Attribute.PRIME);
+    subprime = new ByteArrayAttribute(Attribute.SUBPRIME);
+    base = new ByteArrayAttribute(Attribute.BASE);
+    primeBits = new LongAttribute(Attribute.PRIME_BITS);
+
+    putAttributesInTable(this);
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof DSAParams)) {
+      return false;
     }
 
-    /**
-     * Called by getInstance to create an instance of a PKCS#11 DSA private key.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    protected DSAParams(Session session, long objectHandle)
-        throws TokenException {
-        super(session, objectHandle);
-        keyType.setLongValue(Key.KeyType.DSA);
-    }
+    DSAParams other = (DSAParams) otherObject;
+    return super.equals(other)
+        && this.prime.equals(other.prime)
+        && this.subprime.equals(other.subprime)
+        && this.base.equals(other.base)
+        && this.primeBits.equals(other.primeBits);
+  }
 
-    /**
-     * The getInstance method of the PrivateKey class uses this method to create
-     * an instance of PKCS#11 DSA domain parameters.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @return The object representing the PKCS#11 object.
-     *         The returned object can be casted to the
-     *         according sub-class.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions (result <> null)
-     */
-    public static PKCS11Object getInstance(Session session, long objectHandle)
-        throws TokenException {
-        return new DSAParams(session, objectHandle);
-    }
+  /**
+   * Gets the prime attribute of this DSA key.
+   *
+   * @return The prime attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getPrime() {
+    return prime;
+  }
 
-    /**
-     * Put all attributes of the given object into the attributes table of this
-     * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately.
-     *
-     * @param object
-     *          The object to handle.
-     * @preconditions (object <> null)
-     * @postconditions
-     */
-    protected static void putAttributesInTable(DSAParams object) {
-        Util.requireNonNull("object", object);
-        object.attributeTable.put(Attribute.PRIME, object.prime);
-        object.attributeTable.put(Attribute.SUBPRIME, object.subprime);
-        object.attributeTable.put(Attribute.BASE, object.base);
-        object.attributeTable.put(Attribute.PRIME_BITS, object.primeBits);
-    }
+  /**
+   * Gets the subprime attribute of this DSA key.
+   *
+   * @return The subprime attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getSubprime() {
+    return subprime;
+  }
 
-    /**
-     * Allocates the attribute objects for this class and adds them to the
-     * attribute table.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    protected void allocateAttributes() {
-        super.allocateAttributes();
+  /**
+   * Gets the base attribute of this DSA key.
+   *
+   * @return The base attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getBase() {
+    return base;
+  }
 
-        prime = new ByteArrayAttribute(Attribute.PRIME);
-        subprime = new ByteArrayAttribute(Attribute.SUBPRIME);
-        base = new ByteArrayAttribute(Attribute.BASE);
-        primeBits = new LongAttribute(Attribute.PRIME_BITS);
+  /**
+   * Gets the bit length of the prime value.
+   *
+   * @return The bit length of the prime value.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public LongAttribute getPrimeBits() {
+    return primeBits;
+  }
 
-        putAttributesInTable(this);
-    }
+  /**
+   * Read the values of the attributes of this object from the token.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  @Override
+  public void readAttributes(Session session) throws TokenException {
+    super.readAttributes(session);
 
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof DSAParams)) {
-            return false;
-        }
+    PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        prime, subprime, base, primeBits});
+  }
 
-        DSAParams other = (DSAParams) otherObject;
-        return super.equals(other)
-                && this.prime.equals(other.prime)
-                && this.subprime.equals(other.subprime)
-                && this.base.equals(other.base)
-                && this.primeBits.equals(other.primeBits);
-    }
-
-    /**
-     * Gets the prime attribute of this DSA key.
-     *
-     * @return The prime attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getPrime() {
-        return prime;
-    }
-
-    /**
-     * Gets the subprime attribute of this DSA key.
-     *
-     * @return The subprime attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getSubprime() {
-        return subprime;
-    }
-
-    /**
-     * Gets the base attribute of this DSA key.
-     *
-     * @return The base attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getBase() {
-        return base;
-    }
-
-    /**
-     * Gets the bit length of the prime value.
-     *
-     * @return The bit length of the prime value.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public LongAttribute getPrimeBits() {
-        return primeBits;
-    }
-
-    /**
-     * Read the values of the attributes of this object from the token.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    @Override
-    public void readAttributes(Session session)
-        throws TokenException {
-        super.readAttributes(session);
-
-        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-            prime, subprime, base, primeBits});
-    }
-
-    /**
-     * Returns a string representation of the current object. The
-     * output is only for debugging purposes and should not be used for other
-     * purposes.
-     *
-     * @return A string presentation of this object for debugging output.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public String toString() {
-        String superToString = super.toString();
-        return Util.concatObjectsCap(superToString.length() + 100, superToString,
-                "\n  Prime (hex): ", prime,
-                "\n  Subprime (hex): ", subprime,
-                "\n  Base (hex): ", base,
-                "\n  Prime Bits (dec): ", primeBits.toString(10));
-    }
+  /**
+   * Returns a string representation of the current object. The
+   * output is only for debugging purposes and should not be used for other
+   * purposes.
+   *
+   * @return A string presentation of this object for debugging output.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public String toString() {
+    String superToString = super.toString();
+    return Util.concatObjectsCap(superToString.length() + 100, superToString,
+        "\n  Prime (hex): ", prime,
+        "\n  Subprime (hex): ", subprime,
+        "\n  Base (hex): ", base,
+        "\n  Prime Bits (dec): ", primeBits.toString(10));
+  }
 
 }

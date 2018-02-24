@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -58,106 +58,106 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
 // CHECKSTYLE:SKIP
 public class DHPkcsDeriveParams implements Params {
 
-    /**
-     * The initialization vector.
-     */
-    protected byte[] publicValue;
+  /**
+   * The initialization vector.
+   */
+  protected byte[] publicValue;
 
-    /**
-     * Create a new DHPkcsDeriveParameters object with the given public value.
-     *
-     * @param publicValue
-     *          The public value of the other party in the key agreement
-     *          protocol.
-     * @preconditions (publicValue <> null)
-     * @postconditions
-     */
-    public DHPkcsDeriveParams(byte[] publicValue) {
-        this.publicValue = publicValue;
+  /**
+   * Create a new DHPkcsDeriveParameters object with the given public value.
+   *
+   * @param publicValue
+   *          The public value of the other party in the key agreement
+   *          protocol.
+   * @preconditions (publicValue <> null)
+   * @postconditions
+   */
+  public DHPkcsDeriveParams(byte[] publicValue) {
+    this.publicValue = publicValue;
+  }
+
+  /**
+   * Get this parameters object as a byte array.
+   *
+   * @return This object as a byte array.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public Object getPKCS11ParamsObject() {
+    return publicValue;
+  }
+
+  /**
+   * Get the public value of the other party in the key agreement protocol.
+   *
+   * @return The public value of the other party in the key agreement
+   *         protocol.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public byte[] getPublicValue() {
+    return publicValue;
+  }
+
+  /**
+   * Set the public value of the other party in the key agreement protocol.
+   *
+   * @param publicValue
+   *          The public value of the other party in the key agreement
+   *          protocol.
+   * @preconditions (publicValue <> null)
+   * @postconditions
+   */
+  public void setPublicValue(byte[] publicValue) {
+    this.publicValue = Util.requireNonNull("publicValue", publicValue);
+  }
+
+  /**
+   * Returns the string representation of this object. Do not parse data from
+   * this string, it is for debugging only.
+   *
+   * @return A string representation of this object.
+   */
+  @Override
+  public String toString() {
+    return Util.concat("  Public Value (hex): ", Util.toHex(publicValue));
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof DHPkcsDeriveParams)) {
+      return false;
     }
 
-    /**
-     * Get this parameters object as a byte array.
-     *
-     * @return This object as a byte array.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public Object getPKCS11ParamsObject() {
-        return publicValue;
-    }
+    DHPkcsDeriveParams other = (DHPkcsDeriveParams) otherObject;
+    return Arrays.equals(this.publicValue, other.publicValue);
+  }
 
-    /**
-     * Get the public value of the other party in the key agreement protocol.
-     *
-     * @return The public value of the other party in the key agreement
-     *         protocol.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public byte[] getPublicValue() {
-        return publicValue;
-    }
-
-    /**
-     * Set the public value of the other party in the key agreement protocol.
-     *
-     * @param publicValue
-     *          The public value of the other party in the key agreement
-     *          protocol.
-     * @preconditions (publicValue <> null)
-     * @postconditions
-     */
-    public void setPublicValue(byte[] publicValue) {
-        this.publicValue = Util.requireNonNull("publicValue", publicValue);
-    }
-
-    /**
-     * Returns the string representation of this object. Do not parse data from
-     * this string, it is for debugging only.
-     *
-     * @return A string representation of this object.
-     */
-    @Override
-    public String toString() {
-        return Util.concat("  Public Value (hex): ", Util.toHex(publicValue));
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof DHPkcsDeriveParams)) {
-            return false;
-        }
-
-        DHPkcsDeriveParams other = (DHPkcsDeriveParams) otherObject;
-        return Arrays.equals(this.publicValue, other.publicValue);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return Functions.hashCode(publicValue);
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return Functions.hashCode(publicValue);
+  }
 
 }

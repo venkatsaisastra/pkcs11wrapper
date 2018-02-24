@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -57,119 +57,119 @@ import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
 // CHECKSTYLE:SKIP
 public class RSAPkcsPssParams extends RSAPkcsParams {
 
-    /**
-     * The length of the salt value in octets.
-     */
-    protected long saltLength;
+  /**
+   * The length of the salt value in octets.
+   */
+  protected long saltLength;
 
-    /**
-     * Create a new RSAPkcsOaepParameters object with the given attributes.
-     *
-     * @param hashAlg
-     *          The message digest algorithm used to calculate the digest of the
-     *          encoding parameter.
-     * @param mgf
-     *          The mask to apply to the encoded block. One of the constants
-     *          defined in the MessageGenerationFunctionType interface.
-     * @param saltLength
-     *          The length of the salt value in octets.
-     * @preconditions (hashAlg <> null)
-     *                and (mgf == MessageGenerationFunctionType.Sha1)
-     * @postconditions
-     */
-    public RSAPkcsPssParams(Mechanism hashAlg, long mgf, long saltLength) {
-        super(hashAlg, mgf);
-        this.saltLength = saltLength;
+  /**
+   * Create a new RSAPkcsOaepParameters object with the given attributes.
+   *
+   * @param hashAlg
+   *          The message digest algorithm used to calculate the digest of the
+   *          encoding parameter.
+   * @param mgf
+   *          The mask to apply to the encoded block. One of the constants
+   *          defined in the MessageGenerationFunctionType interface.
+   * @param saltLength
+   *          The length of the salt value in octets.
+   * @preconditions (hashAlg <> null)
+   *                and (mgf == MessageGenerationFunctionType.Sha1)
+   * @postconditions
+   */
+  public RSAPkcsPssParams(Mechanism hashAlg, long mgf, long saltLength) {
+    super(hashAlg, mgf);
+    this.saltLength = saltLength;
+  }
+
+  /**
+   * Get this parameters object as an object of the CK_RSA_PKCS_PSS_PARAMS
+   * class.
+   *
+   * @return This object as a CK_RSA_PKCS_PSS_PARAMS object.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public Object getPKCS11ParamsObject() {
+    CK_RSA_PKCS_PSS_PARAMS params = new CK_RSA_PKCS_PSS_PARAMS();
+
+    params.hashAlg = hashAlg.getMechanismCode();
+    params.mgf = mgf;
+    params.sLen = saltLength;
+
+    return params;
+  }
+
+  /**
+   * Get the length of the salt value in octets.
+   *
+   * @return The length of the salt value in octets.
+   * @preconditions
+   * @postconditions
+   */
+  public long getSaltLength() {
+    return saltLength;
+  }
+
+  /**
+   * Set the length of the salt value in octets.
+   *
+   * @param saltLength
+   *          The length of the salt value in octets.
+   * @preconditions
+   * @postconditions
+   */
+  public void setSaltLength(long saltLength) {
+    this.saltLength = saltLength;
+  }
+
+  /**
+   * Returns the string representation of this object. Do not parse data from
+   * this string, it is for debugging only.
+   *
+   * @return A string representation of this object.
+   */
+  @Override
+  public String toString() {
+    return Util.concat(super.toString(),
+        "\n  Salt Length (octets, dec): ", Long.toString(saltLength));
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof RSAPkcsPssParams)) {
+      return false;
     }
 
-    /**
-     * Get this parameters object as an object of the CK_RSA_PKCS_PSS_PARAMS
-     * class.
-     *
-     * @return This object as a CK_RSA_PKCS_PSS_PARAMS object.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public Object getPKCS11ParamsObject() {
-        CK_RSA_PKCS_PSS_PARAMS params = new CK_RSA_PKCS_PSS_PARAMS();
+    RSAPkcsPssParams other = (RSAPkcsPssParams) otherObject;
+    return super.equals(other) && (this.saltLength == other.saltLength);
+  }
 
-        params.hashAlg = hashAlg.getMechanismCode();
-        params.mgf = mgf;
-        params.sLen = saltLength;
-
-        return params;
-    }
-
-    /**
-     * Get the length of the salt value in octets.
-     *
-     * @return The length of the salt value in octets.
-     * @preconditions
-     * @postconditions
-     */
-    public long getSaltLength() {
-        return saltLength;
-    }
-
-    /**
-     * Set the length of the salt value in octets.
-     *
-     * @param saltLength
-     *          The length of the salt value in octets.
-     * @preconditions
-     * @postconditions
-     */
-    public void setSaltLength(long saltLength) {
-        this.saltLength = saltLength;
-    }
-
-    /**
-     * Returns the string representation of this object. Do not parse data from
-     * this string, it is for debugging only.
-     *
-     * @return A string representation of this object.
-     */
-    @Override
-    public String toString() {
-        return Util.concat(super.toString(),
-                "\n  Salt Length (octets, dec): ", Long.toString(saltLength));
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof RSAPkcsPssParams)) {
-            return false;
-        }
-
-        RSAPkcsPssParams other = (RSAPkcsPssParams) otherObject;
-        return super.equals(other) && (this.saltLength == other.saltLength);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return super.hashCode() ^ ((int) saltLength);
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return super.hashCode() ^ ((int) saltLength);
+  }
 
 }

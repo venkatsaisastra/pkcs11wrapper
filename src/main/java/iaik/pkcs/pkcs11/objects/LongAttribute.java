@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -52,104 +52,104 @@ package iaik.pkcs.pkcs11.objects;
  */
 public class LongAttribute extends Attribute {
 
-    /**
-     * Default constructor - only for internal use in
-     * AttributeArrayAttribute.getValueString().
-     */
-    LongAttribute() {
-        super();
+  /**
+   * Default constructor - only for internal use in
+   * AttributeArrayAttribute.getValueString().
+   */
+  LongAttribute() {
+    super();
+  }
+
+  /**
+   * Constructor taking the PKCS#11 type of the attribute.
+   *
+   * @param type
+   *          The PKCS#11 type of this attribute; e.g.
+   *          PKCS11Constants.CKA_VALUE_LEN.
+   * @preconditions (type <> null)
+   * @postconditions
+   */
+  public LongAttribute(Long type) {
+    super(type);
+  }
+
+  /**
+   * Set the long value of this attribute. Null, is also valid.
+   * A call to this method sets the present flag to true.
+   *
+   * @param value
+   *          The long value to set. May be null.
+   * @preconditions
+   * @postconditions
+   */
+  @SuppressWarnings("restriction")
+  public void setLongValue(Long value) {
+    ckAttribute.pValue = value;
+    present = true;
+  }
+
+  /**
+   * Get the long value of this attribute. Null, is also possible.
+   *
+   * @return The long value of this attribute or null.
+   * @preconditions
+   * @postconditions
+   */
+  @SuppressWarnings("restriction")
+  public Long getLongValue() {
+    return (Long) ckAttribute.pValue;
+  }
+
+  /**
+   * Get a string representation of the value of this attribute. The radix
+   * for the presentation can be specified; e.g. 16 for hex, 10 for decimal.
+   *
+   * @param radix
+   *          The radix for the representation of the value.
+   * @return A string representation of the value of this attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @SuppressWarnings("restriction")
+  protected String getValueString(int radix) {
+    String valueString;
+
+    if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
+      valueString = Long.toString(
+          ((Long) ckAttribute.pValue).longValue(), radix);
+    } else {
+      valueString = "<NULL_PTR>";
     }
 
-    /**
-     * Constructor taking the PKCS#11 type of the attribute.
-     *
-     * @param type
-     *          The PKCS#11 type of this attribute; e.g.
-     *          PKCS11Constants.CKA_VALUE_LEN.
-     * @preconditions (type <> null)
-     * @postconditions
-     */
-    public LongAttribute(Long type) {
-        super(type);
+    return valueString;
+  }
+
+  /**
+   * Get a string representation of this attribute. The radix for the
+   * presentation of the value can be specified; e.g. 16 for hex, 10 for
+   * decimal.
+   *
+   * @param radix
+   *          The radix for the representation of the value.
+   * @return A string representation of the value of this attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public String toString(int radix) {
+    if (present) {
+      if (sensitive) {
+        return "<Value is sensitive>";
+      } else {
+        return getValueString(radix);
+      }
+    } else {
+      return "<Attribute not present>";
     }
+  }
 
-    /**
-     * Set the long value of this attribute. Null, is also valid.
-     * A call to this method sets the present flag to true.
-     *
-     * @param value
-     *          The long value to set. May be null.
-     * @preconditions
-     * @postconditions
-     */
-    @SuppressWarnings("restriction")
-    public void setLongValue(Long value) {
-        ckAttribute.pValue = value;
-        present = true;
-    }
-
-    /**
-     * Get the long value of this attribute. Null, is also possible.
-     *
-     * @return The long value of this attribute or null.
-     * @preconditions
-     * @postconditions
-     */
-    @SuppressWarnings("restriction")
-    public Long getLongValue() {
-        return (Long) ckAttribute.pValue;
-    }
-
-    /**
-     * Get a string representation of the value of this attribute. The radix
-     * for the presentation can be specified; e.g. 16 for hex, 10 for decimal.
-     *
-     * @param radix
-     *          The radix for the representation of the value.
-     * @return A string representation of the value of this attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @SuppressWarnings("restriction")
-    protected String getValueString(int radix) {
-        String valueString;
-
-        if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
-            valueString = Long.toString(
-                    ((Long) ckAttribute.pValue).longValue(), radix);
-        } else {
-            valueString = "<NULL_PTR>";
-        }
-
-        return valueString;
-    }
-
-    /**
-     * Get a string representation of this attribute. The radix for the
-     * presentation of the value can be specified; e.g. 16 for hex, 10 for
-     * decimal.
-     *
-     * @param radix
-     *          The radix for the representation of the value.
-     * @return A string representation of the value of this attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public String toString(int radix) {
-        if (present) {
-            if (sensitive) {
-                return "<Value is sensitive>";
-            } else {
-                return getValueString(radix);
-            }
-        } else {
-            return "<Attribute not present>";
-        }
-    }
-
-    @Override
-    public void setValue(Object value) {
-        setLongValue((Long) value);
-    }
+  @Override
+  public void setValue(Object value) {
+    setLongValue((Long) value);
+  }
 
 }

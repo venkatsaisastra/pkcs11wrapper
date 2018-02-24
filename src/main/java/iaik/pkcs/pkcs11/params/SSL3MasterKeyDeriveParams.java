@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -60,145 +60,145 @@ import sun.security.pkcs11.wrapper.CK_VERSION;
 // CHECKSTYLE:SKIP
 public class SSL3MasterKeyDeriveParams implements Params {
 
-    /**
-     * The client's and server's random data information.
-     */
-    protected SSL3RandomDataParams randomInfo;
+  /**
+   * The client's and server's random data information.
+   */
+  protected SSL3RandomDataParams randomInfo;
 
-    /**
-     * The SSL protocol version information.
-     */
-    protected VersionParams version;
+  /**
+   * The SSL protocol version information.
+   */
+  protected VersionParams version;
 
-    /**
-     * Create a new SSL3MasterKeyDeriveParameters object with the given
-     * random info and version.
-     *
-     * @param randomInfo
-     *          The client's and server's random data information.
-     * @param version
-     *          The SSL protocol version information.
-     * @preconditions (randomInfo <> null)
-     *                and (version <> null)
-     * @postconditions
-     */
-    public SSL3MasterKeyDeriveParams(SSL3RandomDataParams randomInfo,
-            VersionParams version) {
-        this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
-        this.version = Util.requireNonNull("version", version);
+  /**
+   * Create a new SSL3MasterKeyDeriveParameters object with the given
+   * random info and version.
+   *
+   * @param randomInfo
+   *          The client's and server's random data information.
+   * @param version
+   *          The SSL protocol version information.
+   * @preconditions (randomInfo <> null)
+   *                and (version <> null)
+   * @postconditions
+   */
+  public SSL3MasterKeyDeriveParams(SSL3RandomDataParams randomInfo,
+      VersionParams version) {
+    this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
+    this.version = Util.requireNonNull("version", version);
+  }
+
+  /**
+   * Get this parameters object as a CK_SSL3_RANDOM_DATA object.
+   *
+   * @return This object as a CK_SSL3_RANDOM_DATA object.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public Object getPKCS11ParamsObject() {
+    CK_SSL3_MASTER_KEY_DERIVE_PARAMS params = 
+        new CK_SSL3_MASTER_KEY_DERIVE_PARAMS(
+            (CK_SSL3_RANDOM_DATA) randomInfo.getPKCS11ParamsObject(),
+            (CK_VERSION) version.getPKCS11ParamsObject());
+
+    return params;
+  }
+
+  /**
+   * Get the client's and server's random data information.
+   *
+   * @return The client's and server's random data information.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public SSL3RandomDataParams getRandomInfo() {
+    return randomInfo;
+  }
+
+  /**
+   * Get the SSL protocol version information.
+   *
+   * @return The SSL protocol version information.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public VersionParams getVersion() {
+    return version;
+  }
+
+  /**
+   * Set the client's and server's random data information.
+   *
+   * @param randomInfo
+   *          The client's and server's random data information.
+   * @preconditions (randomInfo <> null)
+   * @postconditions
+   */
+  public void setRandomInfo(SSL3RandomDataParams randomInfo) {
+    this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
+  }
+
+  /**
+   * Set the SSL protocol version information.
+   *
+   * @param version
+   *          The SSL protocol version information.
+   * @preconditions (version <> null)
+   * @postconditions
+   */
+  public void setVersion(VersionParams version) {
+    this.version = Util.requireNonNull("version", version);
+  }
+
+  /**
+   * Returns the string representation of this object. Do not parse data from
+   * this string, it is for debugging only.
+   *
+   * @return A string representation of this object.
+   */
+  @Override
+  public String toString() {
+    return Util.concatObjects("  Random Information:\n", randomInfo,
+        "\n  Version: ", version);
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof SSL3MasterKeyDeriveParams)) {
+      return false;
     }
 
-    /**
-     * Get this parameters object as a CK_SSL3_RANDOM_DATA object.
-     *
-     * @return This object as a CK_SSL3_RANDOM_DATA object.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public Object getPKCS11ParamsObject() {
-        CK_SSL3_MASTER_KEY_DERIVE_PARAMS params
-            = new CK_SSL3_MASTER_KEY_DERIVE_PARAMS(
-                (CK_SSL3_RANDOM_DATA) randomInfo.getPKCS11ParamsObject(),
-                (CK_VERSION) version.getPKCS11ParamsObject());
+    SSL3MasterKeyDeriveParams other
+        = (SSL3MasterKeyDeriveParams) otherObject;
+    return this.randomInfo.equals(other.randomInfo)
+        && this.version.equals(other.version);
+  }
 
-        return params;
-    }
-
-    /**
-     * Get the client's and server's random data information.
-     *
-     * @return The client's and server's random data information.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public SSL3RandomDataParams getRandomInfo() {
-        return randomInfo;
-    }
-
-    /**
-     * Get the SSL protocol version information.
-     *
-     * @return The SSL protocol version information.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public VersionParams getVersion() {
-        return version;
-    }
-
-    /**
-     * Set the client's and server's random data information.
-     *
-     * @param randomInfo
-     *          The client's and server's random data information.
-     * @preconditions (randomInfo <> null)
-     * @postconditions
-     */
-    public void setRandomInfo(SSL3RandomDataParams randomInfo) {
-        this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
-    }
-
-    /**
-     * Set the SSL protocol version information.
-     *
-     * @param version
-     *          The SSL protocol version information.
-     * @preconditions (version <> null)
-     * @postconditions
-     */
-    public void setVersion(VersionParams version) {
-        this.version = Util.requireNonNull("version", version);
-    }
-
-    /**
-     * Returns the string representation of this object. Do not parse data from
-     * this string, it is for debugging only.
-     *
-     * @return A string representation of this object.
-     */
-    @Override
-    public String toString() {
-        return Util.concatObjects("  Random Information:\n", randomInfo,
-                "\n  Version: ", version);
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof SSL3MasterKeyDeriveParams)) {
-            return false;
-        }
-
-        SSL3MasterKeyDeriveParams other
-                = (SSL3MasterKeyDeriveParams) otherObject;
-        return this.randomInfo.equals(other.randomInfo)
-                && this.version.equals(other.version);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return randomInfo.hashCode() ^ version.hashCode();
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return randomInfo.hashCode() ^ version.hashCode();
+  }
 
 }

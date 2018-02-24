@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -54,114 +54,114 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  */
 public class State {
 
-    /**
-     * Constant for a read-only public session.
-     */
-    public static final State RO_PUBLIC_SESSION = new State(
-        PKCS11Constants.CKS_RO_PUBLIC_SESSION);
+  /**
+   * Constant for a read-only public session.
+   */
+  public static final State RO_PUBLIC_SESSION = 
+      new State(PKCS11Constants.CKS_RO_PUBLIC_SESSION);
 
-    /**
-     * Constant for a read-only user session.
-     */
-    public static final State RO_USER_FUNCTIONS = new State(
-        PKCS11Constants.CKS_RO_USER_FUNCTIONS);
+  /**
+   * Constant for a read-only user session.
+   */
+  public static final State RO_USER_FUNCTIONS = 
+      new State(PKCS11Constants.CKS_RO_USER_FUNCTIONS);
 
-    /**
-     * Constant for a read-write public session.
-     */
-    public static final State RW_PUBLIC_SESSION = new State(
-        PKCS11Constants.CKS_RW_PUBLIC_SESSION);
+  /**
+   * Constant for a read-write public session.
+   */
+  public static final State RW_PUBLIC_SESSION = 
+      new State(PKCS11Constants.CKS_RW_PUBLIC_SESSION);
 
-    /**
-     * Constant for a read-write user session.
-     */
-    public static final State RW_USER_FUNCTIONS = new State(
-        PKCS11Constants.CKS_RW_USER_FUNCTIONS);
+  /**
+   * Constant for a read-write user session.
+   */
+  public static final State RW_USER_FUNCTIONS = 
+      new State(PKCS11Constants.CKS_RW_USER_FUNCTIONS);
 
-    /**
-     * Constant for a read-write security officer session.
-     */
-    public static final State RW_SO_FUNCTIONS = new State(
-        PKCS11Constants.CKS_RW_SO_FUNCTIONS);
+  /**
+   * Constant for a read-write security officer session.
+   */
+  public static final State RW_SO_FUNCTIONS = 
+      new State(PKCS11Constants.CKS_RW_SO_FUNCTIONS);
 
-    /**
-     * The status code of this state as defined in PKCS#11.
-     */
-    protected long code;
+  /**
+   * The status code of this state as defined in PKCS#11.
+   */
+  protected long code;
 
-    /**
-     * Constructor that simply takes the status code as defined in PKCS#11.
-     *
-     * @param code
-     *          One of: PKCS11Constants.CKS_RO_PUBLIC_SESSION,
-     *                  PKCS11Constants.CKS_RO_USER_FUNCTIONS,
-     *                  PKCS11Constants.CKS_RW_PUBLIC_SESSION,
-     *                  PKCS11Constants.CKS_RW_USER_FUNCTIONS or
-     *                  PKCS11Constants.CKS_RW_SO_FUNCTIONS.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    protected State(long code) {
-        this.code = code;
+  /**
+   * Constructor that simply takes the status code as defined in PKCS#11.
+   *
+   * @param code
+   *          One of: PKCS11Constants.CKS_RO_PUBLIC_SESSION,
+   *                  PKCS11Constants.CKS_RO_USER_FUNCTIONS,
+   *                  PKCS11Constants.CKS_RW_PUBLIC_SESSION,
+   *                  PKCS11Constants.CKS_RW_USER_FUNCTIONS or
+   *                  PKCS11Constants.CKS_RW_SO_FUNCTIONS.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  protected State(long code) {
+    this.code = code;
+  }
+
+  /**
+   * Compares the state code of this object with the other
+   * object. Returns only true, if those are equal in both objects.
+   *
+   * @param otherObject
+   *          The other State object.
+   * @return True, if other is an instance of State and the state code
+   *         of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof State)) {
+      return false;
     }
 
-    /**
-     * Compares the state code of this object with the other
-     * object. Returns only true, if those are equal in both objects.
-     *
-     * @param otherObject
-     *          The other State object.
-     * @return True, if other is an instance of State and the state code
-     *         of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof State)) {
-            return false;
-        }
+    State other = (State) otherObject;
+    return (this.code == other.code);
+  }
 
-        State other = (State) otherObject;
-        return (this.code == other.code);
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object. Gained from the state code.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return (int) code;
+  }
 
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object. Gained from the state code.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return (int) code;
+  /**
+   * Returns the string representation of this object.
+   *
+   * @return The string representation of object
+   */
+  @Override
+  public String toString() {
+    if (code == PKCS11Constants.CKS_RO_PUBLIC_SESSION) {
+      return "Read-Only Public Session";
+    } else if (code == PKCS11Constants.CKS_RO_USER_FUNCTIONS) {
+      return "Read-Only User Session";
+    } else if (code == PKCS11Constants.CKS_RW_PUBLIC_SESSION) {
+      return "Read/Write Public Session";
+    } else if (code == PKCS11Constants.CKS_RW_USER_FUNCTIONS) {
+      return "Read/Write User Functions";
+    } else if (code == PKCS11Constants.CKS_RW_SO_FUNCTIONS) {
+      return "Read/Write Security Officer Functions";
+    } else {
+      return "ERROR: unknown session state with code: " + code;
     }
-
-    /**
-     * Returns the string representation of this object.
-     *
-     * @return The string representation of object
-     */
-    @Override
-    public String toString() {
-        if (code == PKCS11Constants.CKS_RO_PUBLIC_SESSION) {
-            return "Read-Only Public Session";
-        } else if (code == PKCS11Constants.CKS_RO_USER_FUNCTIONS) {
-            return "Read-Only User Session";
-        } else if (code == PKCS11Constants.CKS_RW_PUBLIC_SESSION) {
-            return "Read/Write Public Session";
-        } else if (code == PKCS11Constants.CKS_RW_USER_FUNCTIONS) {
-            return "Read/Write User Functions";
-        } else if (code == PKCS11Constants.CKS_RW_SO_FUNCTIONS) {
-            return "Read/Write Security Officer Functions";
-        } else {
-            return "ERROR: unknown session state with code: " + code;
-        }
-    }
+  }
 
 }

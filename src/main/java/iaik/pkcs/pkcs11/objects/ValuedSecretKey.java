@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -56,192 +56,191 @@ import iaik.pkcs.pkcs11.Util;
 // CHECKSTYLE:SKIP
 public class ValuedSecretKey extends SecretKey {
 
-    /**
-     * The value attribute of this secret key.
-     */
-    protected ByteArrayAttribute value;
+  /**
+   * The value attribute of this secret key.
+   */
+  protected ByteArrayAttribute value;
 
-    /**
-     * The length of this secret key in bytes.
-     */
-    protected LongAttribute valueLen;
+  /**
+   * The length of this secret key in bytes.
+   */
+  protected LongAttribute valueLen;
 
-    /**
-     * Default Constructor.
-     *
-     * @param keyType
-     *          The type of the key.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    public ValuedSecretKey(long keyType) {
-        this.keyType.setLongValue(keyType);
+  /**
+   * Default Constructor.
+   *
+   * @param keyType
+   *          The type of the key.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  public ValuedSecretKey(long keyType) {
+    this.keyType.setLongValue(keyType);
+  }
+
+  /**
+   * Called by getInstance to create an instance of a PKCS#11 secret key.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @param keyType
+   *          The type of the key.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  protected ValuedSecretKey(Session session, long objectHandle, long keyType)
+      throws TokenException {
+    super(session, objectHandle);
+    this.keyType.setLongValue(keyType);
+  }
+
+  /**
+   * The getInstance method of the SecretKey class uses this method to create
+   * an instance of a PKCS#11 AES secret key.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @param keyType
+   *          The type of the key.
+   * @return The object representing the PKCS#11 object.
+   *         The returned object can be casted to the according sub-class.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions (result <> null)
+   */
+  public static PKCS11Object getInstance(Session session, long objectHandle,
+      long keyType) throws TokenException {
+    return new ValuedSecretKey(session, objectHandle, keyType);
+  }
+
+  /**
+   * Put all attributes of the given object into the attributes table of this
+   * object. This method is only static to be able to access invoke the
+   * implementation of this method for each class separately.
+   *
+   * @param object
+   *          The object to handle.
+   * @preconditions (object <> null)
+   * @postconditions
+   */
+  protected static void putAttributesInTable(ValuedSecretKey object) {
+    Util.requireNonNull("object", object);
+    object.attributeTable.put(Attribute.VALUE, object.value);
+    object.attributeTable.put(Attribute.VALUE_LEN, object.valueLen);
+  }
+
+  /**
+   * Allocates the attribute objects for this class and adds them to the
+   * attribute table.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  protected void allocateAttributes() {
+    super.allocateAttributes();
+
+    value = new ByteArrayAttribute(Attribute.VALUE);
+    valueLen = new LongAttribute(Attribute.VALUE_LEN);
+
+    putAttributesInTable(this);
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof ValuedSecretKey)) {
+      return false;
     }
 
-    /**
-     * Called by getInstance to create an instance of a PKCS#11 secret key.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @param keyType
-     *          The type of the key.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    protected ValuedSecretKey(Session session, long objectHandle, long keyType)
-        throws TokenException {
-        super(session, objectHandle);
-        this.keyType.setLongValue(keyType);
-    }
+    ValuedSecretKey other = (ValuedSecretKey) otherObject;
+    return super.equals(other)
+        && this.value.equals(other.value)
+        && this.valueLen.equals(other.valueLen);
+  }
 
-    /**
-     * The getInstance method of the SecretKey class uses this method to create
-     * an instance of a PKCS#11 AES secret key.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @param keyType
-     *          The type of the key.
-     * @return The object representing the PKCS#11 object.
-     *         The returned object can be casted to the according sub-class.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions (result <> null)
-     */
-    public static PKCS11Object getInstance(Session session, long objectHandle,
-            long keyType)
-        throws TokenException {
-        return new ValuedSecretKey(session, objectHandle, keyType);
-    }
+  /**
+   * Gets the value attribute of this AES key.
+   *
+   * @return The value attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getValue() {
+    return value;
+  }
 
-    /**
-     * Put all attributes of the given object into the attributes table of this
-     * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately.
-     *
-     * @param object
-     *          The object to handle.
-     * @preconditions (object <> null)
-     * @postconditions
-     */
-    protected static void putAttributesInTable(ValuedSecretKey object) {
-        Util.requireNonNull("object", object);
-        object.attributeTable.put(Attribute.VALUE, object.value);
-        object.attributeTable.put(Attribute.VALUE_LEN, object.valueLen);
-    }
+  /**
+   * Gets the value length attribute of this AES key (in bytes).
+   *
+   * @return The value attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public LongAttribute getValueLen() {
+    return valueLen;
+  }
 
-    /**
-     * Allocates the attribute objects for this class and adds them to the
-     * attribute table.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    protected void allocateAttributes() {
-        super.allocateAttributes();
+  /**
+   * Read the values of the attributes of this object from the token.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  @Override
+  public void readAttributes(Session session) throws TokenException {
+    super.readAttributes(session);
 
-        value = new ByteArrayAttribute(Attribute.VALUE);
-        valueLen = new LongAttribute(Attribute.VALUE_LEN);
+    PKCS11Object.getAttributeValue(session, objectHandle, value);
+    PKCS11Object.getAttributeValue(session, objectHandle, valueLen);
+  }
 
-        putAttributesInTable(this);
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof ValuedSecretKey)) {
-            return false;
-        }
-
-        ValuedSecretKey other = (ValuedSecretKey) otherObject;
-        return super.equals(other)
-                && this.value.equals(other.value)
-                && this.valueLen.equals(other.valueLen);
-    }
-
-    /**
-     * Gets the value attribute of this AES key.
-     *
-     * @return The value attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getValue() {
-        return value;
-    }
-
-    /**
-     * Gets the value length attribute of this AES key (in bytes).
-     *
-     * @return The value attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public LongAttribute getValueLen() {
-        return valueLen;
-    }
-
-    /**
-     * Read the values of the attributes of this object from the token.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    @Override
-    public void readAttributes(Session session)
-        throws TokenException {
-        super.readAttributes(session);
-
-        PKCS11Object.getAttributeValue(session, objectHandle, value);
-        PKCS11Object.getAttributeValue(session, objectHandle, valueLen);
-    }
-
-    /**
-     * Returns a string representation of the current object. The
-     * output is only for debugging purposes and should not be used for other
-     * purposes.
-     *
-     * @return A string presentation of this object for debugging output.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public String toString() {
-        String superToString = super.toString();
-        return Util.concatObjectsCap(superToString.length() + 100, superToString,
-                "\n  Value (hex): ", value,
-                (valueLen.isPresent() ? "\n  Value Length (dec): " : valueLen.toString(10)));
-    }
+  /**
+   * Returns a string representation of the current object. The
+   * output is only for debugging purposes and should not be used for other
+   * purposes.
+   *
+   * @return A string presentation of this object for debugging output.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public String toString() {
+    String superToString = super.toString();
+    return Util.concatObjectsCap(superToString.length() + 100, superToString,
+        "\n  Value (hex): ", value,
+        (valueLen.isPresent()
+            ? "\n  Value Length (dec): " : valueLen.toString(10)));
+  }
 
 }

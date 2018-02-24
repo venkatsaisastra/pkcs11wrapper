@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -62,191 +62,191 @@ import sun.security.pkcs11.wrapper.CK_SLOT_INFO;
 @SuppressWarnings("restriction")
 public class SlotInfo {
 
-    /**
-     * A short description of this slot.
-     */
-    private String slotDescription;
+  /**
+   * A short description of this slot.
+   */
+  private String slotDescription;
 
-    /**
-     * A string identifying the manufacturer of this slot.
-     */
-    // CHECKSTYLE:SKIP
-    private String manufacturerID;
+  /**
+   * A string identifying the manufacturer of this slot.
+   */
+  // CHECKSTYLE:SKIP
+  private String manufacturerID;
 
-    /**
-     * The version of the slot's hardware.
-     */
-    private Version hardwareVersion;
+  /**
+   * The version of the slot's hardware.
+   */
+  private Version hardwareVersion;
 
-    /**
-     * The version of the slot's firmware.
-     */
-    private Version firmwareVersion;
+  /**
+   * The version of the slot's firmware.
+   */
+  private Version firmwareVersion;
 
-    /**
-     * The flags.
-     */
-    private long flags;
+  /**
+   * The flags.
+   */
+  private long flags;
 
-    /**
-     * Constructor that takes the CK_SLOT_INFO object as given by
-     * PKCS11.C_GetSlotInfo().
-     *
-     * @param ckSlotInfo
-     *          The CK_SLOT_INFO object as given by PKCS11.C_GetSlotInfo().
-     * @preconditions (ckSlotInfo <> null)
-     * @postconditions
-     */
-    protected SlotInfo(CK_SLOT_INFO ckSlotInfo) {
-        Util.requireNonNull("ckSlotInfo", ckSlotInfo);
-        this.slotDescription = new String(ckSlotInfo.slotDescription);
-        this.manufacturerID = new String(ckSlotInfo.manufacturerID);
-        this.hardwareVersion = new Version(ckSlotInfo.hardwareVersion);
-        this.firmwareVersion = new Version(ckSlotInfo.firmwareVersion);
-        this.flags = ckSlotInfo.flags;
+  /**
+   * Constructor that takes the CK_SLOT_INFO object as given by
+   * PKCS11.C_GetSlotInfo().
+   *
+   * @param ckSlotInfo
+   *          The CK_SLOT_INFO object as given by PKCS11.C_GetSlotInfo().
+   * @preconditions (ckSlotInfo <> null)
+   * @postconditions
+   */
+  protected SlotInfo(CK_SLOT_INFO ckSlotInfo) {
+    Util.requireNonNull("ckSlotInfo", ckSlotInfo);
+    this.slotDescription = new String(ckSlotInfo.slotDescription);
+    this.manufacturerID = new String(ckSlotInfo.manufacturerID);
+    this.hardwareVersion = new Version(ckSlotInfo.hardwareVersion);
+    this.firmwareVersion = new Version(ckSlotInfo.firmwareVersion);
+    this.flags = ckSlotInfo.flags;
+  }
+
+  /**
+   * Get a short description of this slot.
+   *
+   * @return A string describing this slot.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public String getSlotDescription() {
+    return slotDescription;
+  }
+
+  /**
+   * Get an identifier for the manufacturer of this slot.
+   *
+   * @return A string identifying the manufacturer of this slot.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  // CHECKSTYLE:SKIP
+  public String getManufacturerID() {
+    return manufacturerID;
+  }
+
+  /**
+   * Get the version of the slot's hardware.
+   *
+   * @return The version of the hardware of this slot.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public Version getHardwareVersion() {
+    return hardwareVersion;
+  }
+
+  /**
+   * Get the version of the slot's firmware.
+   *
+   * @return The version of the firmware of this slot.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public Version getFirmwareVersion() {
+    return firmwareVersion;
+  }
+
+  /**
+   * Indicates, if there is a token present in this slot. Notice, that this
+   * refers to the time this object was created and not when this method is
+   * invoked.
+   *
+   * @return True, if there is a (compatible) token in the slot. False,
+   *         otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  public boolean isTokenPresent() {
+    return (flags & PKCS11Constants.CKF_TOKEN_PRESENT) != 0L;
+  }
+
+  /**
+   * Indicate, if the token is removable from this slot or not. In some
+   * cases slot and token will be one device.
+   *
+   * @return True, if the tokens are removable. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  public boolean isRemovableDevice() {
+    return (flags & PKCS11Constants.CKF_REMOVABLE_DEVICE) != 0L;
+  }
+
+  /**
+   * Indicate, if the token is a hardware device or if it is just a pure
+   * software implementation; e.g. in case of a pure software token.
+   *
+   * @return True, if it is a hardware slot. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  public boolean isHwSlot() {
+    return (flags & PKCS11Constants.CKF_HW_SLOT) != 0L;
+  }
+
+  /**
+   * Returns the string representation of this object.
+   *
+   * @return the string representation of object
+   */
+  @Override
+  public String toString() {
+    return Util.concatObjectsCap(200,
+        "Slot Description: ", slotDescription,
+        "\nManufacturer ID: ", manufacturerID,
+        "\nHardware Version: ", hardwareVersion,
+        "\nFirmware Version: ", firmwareVersion,
+        "\nFlags: 0X", Util.toFullHex(flags),
+        "\nToken present: ", isTokenPresent(),
+        "\nRemovable Device: ", isRemovableDevice(),
+        "\nHardware Slot: ", isHwSlot());
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other SlotInfo object.
+   * @return True, if other is an instance of Info and all member variables of
+   *         both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof SlotInfo)) {
+      return false;
     }
 
-    /**
-     * Get a short description of this slot.
-     *
-     * @return A string describing this slot.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public String getSlotDescription() {
-        return slotDescription;
-    }
+    SlotInfo other = (SlotInfo) otherObject;
+    return this.slotDescription.equals(other.slotDescription)
+        && this.manufacturerID.equals(other.manufacturerID)
+        && this.hardwareVersion.equals(other.hardwareVersion)
+        && this.firmwareVersion.equals(other.firmwareVersion)
+        && (this.flags == other.flags);
+  }
 
-    /**
-     * Get an identifier for the manufacturer of this slot.
-     *
-     * @return A string identifying the manufacturer of this slot.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    // CHECKSTYLE:SKIP
-    public String getManufacturerID() {
-        return manufacturerID;
-    }
-
-    /**
-     * Get the version of the slot's hardware.
-     *
-     * @return The version of the hardware of this slot.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public Version getHardwareVersion() {
-        return hardwareVersion;
-    }
-
-    /**
-     * Get the version of the slot's firmware.
-     *
-     * @return The version of the firmware of this slot.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public Version getFirmwareVersion() {
-        return firmwareVersion;
-    }
-
-    /**
-     * Indicates, if there is a token present in this slot. Notice, that this
-     * refers to the time this object was created and not when this method is
-     * invoked.
-     *
-     * @return True, if there is a (compatible) token in the slot. False,
-     *         otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    public boolean isTokenPresent() {
-        return (flags & PKCS11Constants.CKF_TOKEN_PRESENT) != 0L;
-    }
-
-    /**
-     * Indicate, if the token is removable from this slot or not. In some
-     * cases slot and token will be one device.
-     *
-     * @return True, if the tokens are removable. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    public boolean isRemovableDevice() {
-        return (flags & PKCS11Constants.CKF_REMOVABLE_DEVICE) != 0L;
-    }
-
-    /**
-     * Indicate, if the token is a hardware device or if it is just a pure
-     * software implementation; e.g. in case of a pure software token.
-     *
-     * @return True, if it is a hardware slot. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    public boolean isHwSlot() {
-        return (flags & PKCS11Constants.CKF_HW_SLOT) != 0L;
-    }
-
-    /**
-     * Returns the string representation of this object.
-     *
-     * @return the string representation of object
-     */
-    @Override
-    public String toString() {
-        return Util.concatObjectsCap(200,
-                "Slot Description: ", slotDescription,
-                "\nManufacturer ID: ", manufacturerID,
-                "\nHardware Version: ", hardwareVersion,
-                "\nFirmware Version: ", firmwareVersion,
-                "\nFlags: 0X", Util.toFullHex(flags),
-                "\nToken present: ", isTokenPresent(),
-                "\nRemovable Device: ", isRemovableDevice(),
-                "\nHardware Slot: ", isHwSlot());
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other SlotInfo object.
-     * @return True, if other is an instance of Info and all member variables of
-     *         both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof SlotInfo)) {
-            return false;
-        }
-
-        SlotInfo other = (SlotInfo) otherObject;
-        return this.slotDescription.equals(other.slotDescription)
-                && this.manufacturerID.equals(other.manufacturerID)
-                && this.hardwareVersion.equals(other.hardwareVersion)
-                && this.firmwareVersion.equals(other.firmwareVersion)
-                && (this.flags == other.flags);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object. Gained from the slotDescription,
-     *         manufacturerID, hardwareVersion and firmwareVersion.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return slotDescription.hashCode() ^ manufacturerID.hashCode()
-            ^ hardwareVersion.hashCode() ^ firmwareVersion.hashCode();
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object. Gained from the slotDescription,
+   *         manufacturerID, hardwareVersion and firmwareVersion.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return slotDescription.hashCode() ^ manufacturerID.hashCode()
+      ^ hardwareVersion.hashCode() ^ firmwareVersion.hashCode();
+  }
 
 }

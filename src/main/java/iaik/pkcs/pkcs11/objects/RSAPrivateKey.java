@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -64,311 +64,308 @@ import iaik.pkcs.pkcs11.Util;
 // CHECKSTYLE:SKIP
 public class RSAPrivateKey extends PrivateKey {
 
-    /**
-     * The modulus (n) of this RSA key.
-     */
-    protected ByteArrayAttribute modulus;
+  /**
+   * The modulus (n) of this RSA key.
+   */
+  protected ByteArrayAttribute modulus;
 
-    /**
-     * The public exponent (e) of this RSA key.
-     */
-    protected ByteArrayAttribute publicExponent;
+  /**
+   * The public exponent (e) of this RSA key.
+   */
+  protected ByteArrayAttribute publicExponent;
 
-    /**
-     * The private exponent (d) of this RSA key.
-     */
-    protected ByteArrayAttribute privateExponent;
+  /**
+   * The private exponent (d) of this RSA key.
+   */
+  protected ByteArrayAttribute privateExponent;
 
-    /**
-     * The first prime factor (p) of this RSA key, for use with CRT.
-     */
-    protected ByteArrayAttribute prime1;
+  /**
+   * The first prime factor (p) of this RSA key, for use with CRT.
+   */
+  protected ByteArrayAttribute prime1;
 
-    /**
-     * The second prime factor (q) of this RSA key, for use with CRT.
-     */
-    protected ByteArrayAttribute prime2;
+  /**
+   * The second prime factor (q) of this RSA key, for use with CRT.
+   */
+  protected ByteArrayAttribute prime2;
 
-    /**
-     * The first exponent (d mod (p-1)) of this RSA key, for use with CRT.
-     */
-    protected ByteArrayAttribute exponent1;
+  /**
+   * The first exponent (d mod (p-1)) of this RSA key, for use with CRT.
+   */
+  protected ByteArrayAttribute exponent1;
 
-    /**
-     * The second exponent (d mod (q-1)) of this RSA key, for use with CRT.
-     */
-    protected ByteArrayAttribute exponent2;
+  /**
+   * The second exponent (d mod (q-1)) of this RSA key, for use with CRT.
+   */
+  protected ByteArrayAttribute exponent2;
 
-    /**
-     * The coefficient (1/q mod (p)) of this RSA key, for use with CRT.
-     */
-    protected ByteArrayAttribute coefficient;
+  /**
+   * The coefficient (1/q mod (p)) of this RSA key, for use with CRT.
+   */
+  protected ByteArrayAttribute coefficient;
 
-    /**
-     * Default Constructor.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    public RSAPrivateKey() {
-        super();
-        keyType.setLongValue(KeyType.RSA);
+  /**
+   * Default Constructor.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  public RSAPrivateKey() {
+    super();
+    keyType.setLongValue(KeyType.RSA);
+  }
+
+  /**
+   * Called by getInstance to create an instance of a PKCS#11 RSA private key.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  protected RSAPrivateKey(Session session, long objectHandle)
+      throws TokenException {
+    super(session, objectHandle);
+    keyType.setLongValue(KeyType.RSA);
+  }
+
+  /**
+   * The getInstance method of the PrivateKey class uses this method to create
+   * an instance of a PKCS#11 RSA private key.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @return The object representing the PKCS#11 object.
+   *         The returned object can be casted to the
+   *         according sub-class.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions (result <> null)
+   */
+  public static PKCS11Object getInstance(Session session, long objectHandle)
+      throws TokenException {
+    return new RSAPrivateKey(session, objectHandle);
+  }
+
+  /**
+   * Put all attributes of the given object into the attributes table of this
+   * object. This method is only static to be able to access invoke the
+   * implementation of this method for each class separately.
+   *
+   * @param object
+   *          The object to handle.
+   * @preconditions (object <> null)
+   * @postconditions
+   */
+  protected static void putAttributesInTable(RSAPrivateKey object) {
+    Util.requireNonNull("object", object);
+    object.attributeTable.put(Attribute.MODULUS, object.modulus);
+    object.attributeTable.put(Attribute.PUBLIC_EXPONENT, object.publicExponent);
+    object.attributeTable.put(Attribute.PRIVATE_EXPONENT,
+        object.privateExponent);
+    object.attributeTable.put(Attribute.PRIME_1, object.prime1);
+    object.attributeTable.put(Attribute.PRIME_2, object.prime2);
+    object.attributeTable.put(Attribute.EXPONENT_1, object.exponent1);
+    object.attributeTable.put(Attribute.EXPONENT_2, object.exponent2);
+    object.attributeTable.put(Attribute.COEFFICIENT, object.coefficient);
+  }
+
+  /**
+   * Allocates the attribute objects for this class and adds them to the
+   * attribute table.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  protected void allocateAttributes() {
+    super.allocateAttributes();
+
+    modulus = new ByteArrayAttribute(Attribute.MODULUS);
+    publicExponent = new ByteArrayAttribute(Attribute.PUBLIC_EXPONENT);
+    privateExponent = new ByteArrayAttribute(Attribute.PRIVATE_EXPONENT);
+    prime1 = new ByteArrayAttribute(Attribute.PRIME_1);
+    prime2 = new ByteArrayAttribute(Attribute.PRIME_2);
+    exponent1 = new ByteArrayAttribute(Attribute.EXPONENT_1);
+    exponent2 = new ByteArrayAttribute(Attribute.EXPONENT_2);
+    coefficient = new ByteArrayAttribute(Attribute.COEFFICIENT);
+
+    putAttributesInTable(this);
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof RSAPrivateKey)) {
+      return false;
     }
 
-    /**
-     * Called by getInstance to create an instance of a PKCS#11 RSA private key.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    protected RSAPrivateKey(Session session, long objectHandle)
-        throws TokenException {
-        super(session, objectHandle);
-        keyType.setLongValue(KeyType.RSA);
-    }
+    RSAPrivateKey other = (RSAPrivateKey) otherObject;
+    return super.equals(other)
+        && this.modulus.equals(other.modulus)
+        && this.publicExponent.equals(other.publicExponent)
+        && this.privateExponent.equals(other.privateExponent)
+        && this.prime1.equals(other.prime1)
+        && this.prime2.equals(other.prime2)
+        && this.exponent1.equals(other.exponent1)
+        && this.exponent2.equals(other.exponent2)
+        && this.coefficient.equals(other.coefficient);
+  }
 
-    /**
-     * The getInstance method of the PrivateKey class uses this method to create
-     * an instance of a PKCS#11 RSA private key.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @return The object representing the PKCS#11 object.
-     *         The returned object can be casted to the
-     *         according sub-class.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions (result <> null)
-     */
-    public static PKCS11Object getInstance(Session session, long objectHandle)
-        throws TokenException {
-        return new RSAPrivateKey(session, objectHandle);
-    }
+  /**
+   * Gets the modulus attribute of this RSA key.
+   *
+   * @return The modulus attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getModulus() {
+    return modulus;
+  }
 
-    /**
-     * Put all attributes of the given object into the attributes table of this
-     * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately.
-     *
-     * @param object
-     *          The object to handle.
-     * @preconditions (object <> null)
-     * @postconditions
-     */
-    protected static void putAttributesInTable(RSAPrivateKey object) {
-        Util.requireNonNull("object", object);
-        object.attributeTable.put(Attribute.MODULUS, object.modulus);
-        object.attributeTable.put(Attribute.PUBLIC_EXPONENT,
-                object.publicExponent);
-        object.attributeTable.put(Attribute.PRIVATE_EXPONENT,
-                object.privateExponent);
-        object.attributeTable.put(Attribute.PRIME_1, object.prime1);
-        object.attributeTable.put(Attribute.PRIME_2, object.prime2);
-        object.attributeTable.put(Attribute.EXPONENT_1, object.exponent1);
-        object.attributeTable.put(Attribute.EXPONENT_2, object.exponent2);
-        object.attributeTable.put(Attribute.COEFFICIENT, object.coefficient);
-    }
+  /**
+   * Gets the public exponent attribute of this RSA key.
+   *
+   * @return The public exponent attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getPublicExponent() {
+    return publicExponent;
+  }
 
-    /**
-     * Allocates the attribute objects for this class and adds them to the
-     * attribute table.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    protected void allocateAttributes() {
-        super.allocateAttributes();
+  /**
+   * Gets the private exponent attribute of this RSA key.
+   *
+   * @return The private exponent attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getPrivateExponent() {
+    return privateExponent;
+  }
 
-        modulus = new ByteArrayAttribute(Attribute.MODULUS);
-        publicExponent = new ByteArrayAttribute(Attribute.PUBLIC_EXPONENT);
-        privateExponent = new ByteArrayAttribute(Attribute.PRIVATE_EXPONENT);
-        prime1 = new ByteArrayAttribute(Attribute.PRIME_1);
-        prime2 = new ByteArrayAttribute(Attribute.PRIME_2);
-        exponent1 = new ByteArrayAttribute(Attribute.EXPONENT_1);
-        exponent2 = new ByteArrayAttribute(Attribute.EXPONENT_2);
-        coefficient = new ByteArrayAttribute(Attribute.COEFFICIENT);
+  /**
+   * Gets the first prime attribute of this RSA key.
+   *
+   * @return The first prime attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getPrime1() {
+    return prime1;
+  }
 
-        putAttributesInTable(this);
-    }
+  /**
+   * Gets the second prime attribute of this RSA key.
+   *
+   * @return The second prime attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getPrime2() {
+    return prime2;
+  }
 
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof RSAPrivateKey)) {
-            return false;
-        }
+  /**
+   * Gets the first exponent (d mod (p-1)) attribute of this RSA key.
+   *
+   * @return The first exponent (d mod (p-1)) attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getExponent1() {
+    return exponent1;
+  }
 
-        RSAPrivateKey other = (RSAPrivateKey) otherObject;
-        return super.equals(other)
-                && this.modulus.equals(other.modulus)
-                && this.publicExponent.equals(other.publicExponent)
-                && this.privateExponent.equals(other.privateExponent)
-                && this.prime1.equals(other.prime1)
-                && this.prime2.equals(other.prime2)
-                && this.exponent1.equals(other.exponent1)
-                && this.exponent2.equals(other.exponent2)
-                && this.coefficient.equals(other.coefficient);
-    }
+  /**
+   * Gets the second exponent (d mod (q-1)) attribute of this RSA key.
+   *
+   * @return The second exponent (d mod (q-1)) attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getExponent2() {
+    return exponent2;
+  }
 
-    /**
-     * Gets the modulus attribute of this RSA key.
-     *
-     * @return The modulus attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getModulus() {
-        return modulus;
-    }
+  /**
+   * Gets the coefficient (1/q mod (p)) attribute of this RSA key.
+   *
+   * @return The coefficient (1/q mod (p)) attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getCoefficient() {
+    return coefficient;
+  }
 
-    /**
-     * Gets the public exponent attribute of this RSA key.
-     *
-     * @return The public exponent attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getPublicExponent() {
-        return publicExponent;
-    }
+  /**
+   * Read the values of the attributes of this object from the token.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  @Override
+  public void readAttributes(Session session) throws TokenException {
+    super.readAttributes(session);
 
-    /**
-     * Gets the private exponent attribute of this RSA key.
-     *
-     * @return The private exponent attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getPrivateExponent() {
-        return privateExponent;
-    }
+    PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        modulus, publicExponent });
+    PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        privateExponent, prime1, prime2, exponent1, exponent2, coefficient });
+  }
 
-    /**
-     * Gets the first prime attribute of this RSA key.
-     *
-     * @return The first prime attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getPrime1() {
-        return prime1;
-    }
-
-    /**
-     * Gets the second prime attribute of this RSA key.
-     *
-     * @return The second prime attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getPrime2() {
-        return prime2;
-    }
-
-    /**
-     * Gets the first exponent (d mod (p-1)) attribute of this RSA key.
-     *
-     * @return The first exponent (d mod (p-1)) attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getExponent1() {
-        return exponent1;
-    }
-
-    /**
-     * Gets the second exponent (d mod (q-1)) attribute of this RSA key.
-     *
-     * @return The second exponent (d mod (q-1)) attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getExponent2() {
-        return exponent2;
-    }
-
-    /**
-     * Gets the coefficient (1/q mod (p)) attribute of this RSA key.
-     *
-     * @return The coefficient (1/q mod (p)) attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getCoefficient() {
-        return coefficient;
-    }
-
-    /**
-     * Read the values of the attributes of this object from the token.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    @Override
-    public void readAttributes(Session session)
-        throws TokenException {
-        super.readAttributes(session);
-
-        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-            modulus, publicExponent });
-        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-            privateExponent, prime1, prime2, exponent1, exponent2,
-            coefficient });
-    }
-
-    /**
-     * Returns a string representation of the current object. The
-     * output is only for debugging purposes and should not be used for other
-     * purposes.
-     *
-     * @return A string presentation of this object for debugging output.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public String toString() {
-        String superToString = super.toString();
-        return Util.concatObjectsCap(superToString.length() + 100, superToString,
-                "\n  Modulus (hex): ", modulus,
-                "\n  Public Exponent (hex): ", publicExponent,
-                "\n  Private Exponent (hex): ", privateExponent,
-                "\n  Prime 1 (hex): ", prime1,
-                "\n  Prime 2 (hex): ", prime2,
-                "\n  Exponent 1 (hex): ", exponent1,
-                "\n  Exponent 2 (hex): ", exponent2,
-                "\n  Coefficient (hex): ", coefficient);
-    }
+  /**
+   * Returns a string representation of the current object. The
+   * output is only for debugging purposes and should not be used for other
+   * purposes.
+   *
+   * @return A string presentation of this object for debugging output.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public String toString() {
+    String superToString = super.toString();
+    return Util.concatObjectsCap(superToString.length() + 100, superToString,
+        "\n  Modulus (hex): ", modulus,
+        "\n  Public Exponent (hex): ", publicExponent,
+        "\n  Private Exponent (hex): ", privateExponent,
+        "\n  Prime 1 (hex): ", prime1,
+        "\n  Prime 2 (hex): ", prime2,
+        "\n  Exponent 1 (hex): ", exponent1,
+        "\n  Exponent 2 (hex): ", exponent2,
+        "\n  Coefficient (hex): ", coefficient);
+  }
 
 }

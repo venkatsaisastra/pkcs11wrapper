@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -53,109 +53,109 @@ import iaik.pkcs.pkcs11.Util;
  */
 public class ExtractParams implements Params {
 
-    /**
-     * The bit of the base key that should be used as the first bit of the
-     * derived key.
-     */
-    protected long bitIndex;
+  /**
+   * The bit of the base key that should be used as the first bit of the
+   * derived key.
+   */
+  protected long bitIndex;
 
-    /**
-     * Create a new ExtractParameters object with the given bit index.
-     *
-     * @param bitIndex
-     *          The bit of the base key that should be used as the first bit of
-     *          the derived key.
-     * @preconditions
-     * @postconditions
-     */
-    public ExtractParams(long bitIndex) {
-        this.bitIndex = bitIndex;
+  /**
+   * Create a new ExtractParameters object with the given bit index.
+   *
+   * @param bitIndex
+   *          The bit of the base key that should be used as the first bit of
+   *          the derived key.
+   * @preconditions
+   * @postconditions
+   */
+  public ExtractParams(long bitIndex) {
+    this.bitIndex = bitIndex;
+  }
+
+  /**
+   * Get this parameters object as an Long object.
+   *
+   * @return This object as a Long object.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public Object getPKCS11ParamsObject() {
+    return new Long(bitIndex);
+  }
+
+  /**
+   * Get the bit of the base key that should be used as the first bit of the
+   * derived key.
+   *
+   * @return The bit of the base key that should be used as the first bit of
+   *         the derived key.
+   * @preconditions
+   * @postconditions
+   */
+  public long getBitIndex() {
+    return bitIndex;
+  }
+
+  /**
+   * Set the bit of the base key that should be used as the first bit of the
+   * derived key.
+   *
+   * @param bitIndex
+   *          The bit of the base key that should be used as the first bit of
+   *          the derived key.
+   * @preconditions
+   * @postconditions
+   */
+  public void setBitIndex(long bitIndex) {
+    this.bitIndex = bitIndex;
+  }
+
+  /**
+   * Returns the string representation of this object. Do not parse data from
+   * this string, it is for debugging only.
+   *
+   * @return A string representation of this object.
+   */
+  @Override
+  public String toString() {
+    return Util.concat("  Bit Index (dec): ", Long.toString(bitIndex));
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof ExtractParams)) {
+      return false;
     }
 
-    /**
-     * Get this parameters object as an Long object.
-     *
-     * @return This object as a Long object.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public Object getPKCS11ParamsObject() {
-        return new Long(bitIndex);
-    }
+    ExtractParams other = (ExtractParams) otherObject;
+    return this.bitIndex == other.bitIndex;
+  }
 
-    /**
-     * Get the bit of the base key that should be used as the first bit of the
-     * derived key.
-     *
-     * @return The bit of the base key that should be used as the first bit of
-     *         the derived key.
-     * @preconditions
-     * @postconditions
-     */
-    public long getBitIndex() {
-        return bitIndex;
-    }
-
-    /**
-     * Set the bit of the base key that should be used as the first bit of the
-     * derived key.
-     *
-     * @param bitIndex
-     *          The bit of the base key that should be used as the first bit of
-     *          the derived key.
-     * @preconditions
-     * @postconditions
-     */
-    public void setBitIndex(long bitIndex) {
-        this.bitIndex = bitIndex;
-    }
-
-    /**
-     * Returns the string representation of this object. Do not parse data from
-     * this string, it is for debugging only.
-     *
-     * @return A string representation of this object.
-     */
-    @Override
-    public String toString() {
-        return Util.concat("  Bit Index (dec): ", Long.toString(bitIndex));
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof ExtractParams)) {
-            return false;
-        }
-
-        ExtractParams other = (ExtractParams) otherObject;
-        return this.bitIndex == other.bitIndex;
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return (int) bitIndex;
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return (int) bitIndex;
+  }
 
 }

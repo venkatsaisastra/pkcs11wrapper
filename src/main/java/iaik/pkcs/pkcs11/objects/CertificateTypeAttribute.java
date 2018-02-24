@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -53,31 +53,31 @@ package iaik.pkcs.pkcs11.objects;
  */
 public class CertificateTypeAttribute extends LongAttribute {
 
-    /**
-     * Empty constructor.
-     *
-     * @postconditions
-     */
-    public CertificateTypeAttribute() {
-        super(Attribute.CERTIFICATE_TYPE);
-    }
+  /**
+   * Empty constructor.
+   *
+   * @postconditions
+   */
+  public CertificateTypeAttribute() {
+    super(Attribute.CERTIFICATE_TYPE);
+  }
 
-    /**
-     * Get a string representation of the value of this attribute.
-     *
-     * @return A string representation of the value of this attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @SuppressWarnings("restriction")
-    @Override
-    protected String getValueString() {
-        if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
-            return Certificate.getCertificateTypeName(
-                (Long) ckAttribute.pValue);
-        } else {
-            return "<NULL_PTR>";
-        }
+  /**
+   * Get a string representation of the value of this attribute.
+   *
+   * @return A string representation of the value of this attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @SuppressWarnings("restriction")
+  @Override
+  protected String getValueString() {
+    if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
+      return Certificate.getCertificateTypeName(
+        (Long) ckAttribute.pValue);
+    } else {
+      return "<NULL_PTR>";
     }
+  }
 
 }

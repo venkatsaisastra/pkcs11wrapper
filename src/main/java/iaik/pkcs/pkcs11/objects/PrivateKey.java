@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -68,540 +68,533 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
  */
 public class PrivateKey extends Key {
 
-    /**
-     * The subject of this private key.
-     */
-    protected ByteArrayAttribute subject;
+  /**
+   * The subject of this private key.
+   */
+  protected ByteArrayAttribute subject;
 
-    /**
-     * True, if this private key is sensitive.
-     */
-    protected BooleanAttribute sensitive;
+  /**
+   * True, if this private key is sensitive.
+   */
+  protected BooleanAttribute sensitive;
 
-    /**
-     * True, if this private key supports secondary authentication.
-     */
-    protected BooleanAttribute secondaryAuth;
+  /**
+   * True, if this private key supports secondary authentication.
+   */
+  protected BooleanAttribute secondaryAuth;
 
-    /**
-     * The authentication flags for secondary authentication. Only defined, if
-     * the secondaryAuth is set.
-     */
-    protected LongAttribute authPinFlags;
+  /**
+   * The authentication flags for secondary authentication. Only defined, if
+   * the secondaryAuth is set.
+   */
+  protected LongAttribute authPinFlags;
 
-    /**
-     * True, if this private key can be used for encryption.
-     */
-    protected BooleanAttribute decrypt;
+  /**
+   * True, if this private key can be used for encryption.
+   */
+  protected BooleanAttribute decrypt;
 
-    /**
-     * True, if this private key can be used for signing.
-     */
-    protected BooleanAttribute sign;
+  /**
+   * True, if this private key can be used for signing.
+   */
+  protected BooleanAttribute sign;
 
-    /**
-     * True, if this private key can be used for signing with recover.
-     */
-    protected BooleanAttribute signRecover;
+  /**
+   * True, if this private key can be used for signing with recover.
+   */
+  protected BooleanAttribute signRecover;
 
-    /**
-     * True, if this private key can be used for unwrapping wrapped keys.
-     */
-    protected BooleanAttribute unwrap;
+  /**
+   * True, if this private key can be used for unwrapping wrapped keys.
+   */
+  protected BooleanAttribute unwrap;
 
-    /**
-     * True, if this private key can not be extracted from the token.
-     */
-    protected BooleanAttribute extractable;
+  /**
+   * True, if this private key can not be extracted from the token.
+   */
+  protected BooleanAttribute extractable;
 
-    /**
-     * True, if this private key was always sensitive.
-     */
-    protected BooleanAttribute alwaysSensitive;
+  /**
+   * True, if this private key was always sensitive.
+   */
+  protected BooleanAttribute alwaysSensitive;
 
-    /**
-     * True, if this private key was never extractable.
-     */
-    protected BooleanAttribute neverExtractable;
+  /**
+   * True, if this private key was never extractable.
+   */
+  protected BooleanAttribute neverExtractable;
 
-    /**
-     * True, if this private key can only be wrapped with a wrapping key
-     * having set the attribute trusted to true.
-     */
-    protected BooleanAttribute wrapWithTrusted;
+  /**
+   * True, if this private key can only be wrapped with a wrapping key
+   * having set the attribute trusted to true.
+   */
+  protected BooleanAttribute wrapWithTrusted;
 
-    /**
-     * Template of the key, that can be unwrapped.
-     */
-    protected AttributeArray unwrapTemplate;
+  /**
+   * Template of the key, that can be unwrapped.
+   */
+  protected AttributeArray unwrapTemplate;
 
-    /**
-     * True, if the user has to supply the PIN for each use
-     * (sign or decrypt) with the key.
-     */
-    protected BooleanAttribute alwaysAuthenticate;
+  /**
+   * True, if the user has to supply the PIN for each use
+   * (sign or decrypt) with the key.
+   */
+  protected BooleanAttribute alwaysAuthenticate;
 
-    /**
-     * Default Constructor.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    public PrivateKey() {
-        objectClass.setLongValue(ObjectClass.PRIVATE_KEY);
+  /**
+   * Default Constructor.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  public PrivateKey() {
+    objectClass.setLongValue(ObjectClass.PRIVATE_KEY);
+  }
+
+  /**
+   * Called by sub-classes to create an instance of a PKCS#11 private key.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  protected PrivateKey(Session session, long objectHandle)
+      throws TokenException {
+    super(session, objectHandle);
+    objectClass.setLongValue(ObjectClass.PRIVATE_KEY);
+  }
+
+  /**
+   * The getInstance method of the PKCS11Object class uses this method to
+   * create an instance of a PKCS#11 private key. This method reads the key
+   * type attribute and calls the getInstance method of the according
+   * sub-class.
+   * If the key type is a vendor defined it uses the
+   * VendorDefinedKeyBuilder set by the application. If no private key
+   * could be constructed, Returns null.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @return The object representing the PKCS#11 object.
+   *         The returned object can be casted to the
+   *         according sub-class.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions (result <> null)
+   */
+  public static PKCS11Object getInstance(Session session, long objectHandle)
+      throws TokenException {
+    Util.requireNonNull("session", session);
+
+    KeyTypeAttribute keyTypeAttribute = new KeyTypeAttribute();
+    getAttributeValue(session, objectHandle, keyTypeAttribute);
+
+    Long keyType = keyTypeAttribute.getLongValue();
+
+    PKCS11Object newObject;
+
+    if (keyTypeAttribute.isPresent() && (keyType != null)) {
+      if (keyType.equals(Key.KeyType.RSA)) {
+        newObject = RSAPrivateKey.getInstance(session, objectHandle);
+      } else if (keyType.equals(Key.KeyType.DSA)) {
+        newObject = DSAPrivateKey.getInstance(session, objectHandle);
+      } else if (keyType.equals(Key.KeyType.EC)) {
+        newObject = ECPrivateKey.getInstance(session, objectHandle);
+      } else if (keyType.equals(Key.KeyType.DH)) {
+        newObject = DHPrivateKey.getInstance(session, objectHandle);
+      } else if (keyType.equals(Key.KeyType.KEA)) {
+        newObject = KEAPrivateKey.getInstance(session, objectHandle);
+      } else if (keyType.equals(Key.KeyType.X9_42_DH)) {
+        newObject = X942DHPrivateKey.getInstance(session, objectHandle);
+      } else if (keyType.equals(Key.KeyType.VENDOR_SM2)) {
+        newObject = SM2PrivateKey.getInstance(session, objectHandle);
+      } else if ((keyType.longValue()
+              & KeyType.VENDOR_DEFINED.longValue()) != 0L) {
+        newObject = getUnknownPrivateKey(session, objectHandle);
+      } else {
+        newObject = getUnknownPrivateKey(session, objectHandle);
+      }
+    } else {
+      newObject = getUnknownPrivateKey(session, objectHandle);
     }
 
-    /**
-     * Called by sub-classes to create an instance of a PKCS#11 private key.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    protected PrivateKey(Session session, long objectHandle)
-        throws TokenException {
-        super(session, objectHandle);
-        objectClass.setLongValue(ObjectClass.PRIVATE_KEY);
+    return newObject;
+  }
+
+  /**
+   * Try to create a key which has no or an unknown private key type
+   * type attribute.
+   * This implementation will try to use a vendor defined key
+   * builder, if such has been set.
+   * If this is impossible or fails, it will create just
+   * a simple {@link iaik.pkcs.pkcs11.objects.PrivateKey PrivateKey }.
+   *
+   * @param session
+   *          The session to use.
+   * @param objectHandle
+   *          The handle of the object
+   * @return A new PKCS11Object.
+   * @throws TokenException
+   *           If no object could be created.
+   * @preconditions (session <> null)
+   * @postconditions (result <> null)
+   */
+  protected static PKCS11Object getUnknownPrivateKey(Session session,
+      long objectHandle) throws TokenException {
+    Util.requireNonNull("session", session);
+
+    PKCS11Object newObject;
+    if (Key.vendorKeyBuilder != null) {
+      try {
+        newObject = Key.vendorKeyBuilder.build(session, objectHandle);
+      } catch (PKCS11Exception ex) {
+        // we can just treat it like some unknown type of private key
+        newObject = new PrivateKey(session, objectHandle);
+      }
+    } else {
+      // we can just treat it like some unknown type of private key
+      newObject = new PrivateKey(session, objectHandle);
     }
 
-    /**
-     * The getInstance method of the PKCS11Object class uses this method to
-     * create an instance of a PKCS#11 private key. This method reads the key
-     * type attribute and calls the getInstance method of the according
-     * sub-class.
-     * If the key type is a vendor defined it uses the
-     * VendorDefinedKeyBuilder set by the application. If no private key
-     * could be constructed, Returns null.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @return The object representing the PKCS#11 object.
-     *         The returned object can be casted to the
-     *         according sub-class.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions (result <> null)
-     */
-    public static PKCS11Object getInstance(Session session, long objectHandle)
-        throws TokenException {
-        Util.requireNonNull("session", session);
+    return newObject;
+  }
 
-        KeyTypeAttribute keyTypeAttribute = new KeyTypeAttribute();
-        getAttributeValue(session, objectHandle, keyTypeAttribute);
+  /**
+   * Put all attributes of the given object into the attributes table of this
+   * object. This method is only static to be able to access invoke the
+   * implementation of this method for each class separately.
+   *
+   * @param object
+   *          The object to handle.
+   * @preconditions (object <> null)
+   * @postconditions
+   */
+  protected static void putAttributesInTable(PrivateKey object) {
+    Util.requireNonNull("object", object);
+    object.attributeTable.put(Attribute.SUBJECT, object.subject);
+    object.attributeTable.put(Attribute.SENSITIVE, object.sensitive);
+    object.attributeTable.put(Attribute.SECONDARY_AUTH,
+        object.secondaryAuth);
+    object.attributeTable.put(Attribute.AUTH_PIN_FLAGS,
+        object.authPinFlags);
+    object.attributeTable.put(Attribute.DECRYPT, object.decrypt);
+    object.attributeTable.put(Attribute.SIGN, object.sign);
+    object.attributeTable.put(Attribute.SIGN_RECOVER, object.signRecover);
+    object.attributeTable.put(Attribute.UNWRAP, object.unwrap);
+    object.attributeTable.put(Attribute.EXTRACTABLE, object.extractable);
+    object.attributeTable.put(Attribute.ALWAYS_SENSITIVE,
+        object.alwaysSensitive);
+    object.attributeTable.put(Attribute.NEVER_EXTRACTABLE,
+        object.neverExtractable);
+    object.attributeTable.put(Attribute.WRAP_WITH_TRUSTED,
+        object.wrapWithTrusted);
+    object.attributeTable.put(Attribute.UNWRAP_TEMPLATE,
+        object.unwrapTemplate);
+    object.attributeTable.put(Attribute.ALWAYS_AUTHENTICATE,
+        object.alwaysAuthenticate);
+  }
 
-        Long keyType = keyTypeAttribute.getLongValue();
+  /**
+   * Allocates the attribute objects for this class and adds them to the
+   * attribute table.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  protected void allocateAttributes() {
+    super.allocateAttributes();
 
-        PKCS11Object newObject;
+    subject = new ByteArrayAttribute(Attribute.SUBJECT);
+    sensitive = new BooleanAttribute(Attribute.SENSITIVE);
+    secondaryAuth = new BooleanAttribute(Attribute.SECONDARY_AUTH);
+    authPinFlags = new LongAttribute(Attribute.AUTH_PIN_FLAGS);
+    decrypt = new BooleanAttribute(Attribute.DECRYPT);
+    sign = new BooleanAttribute(Attribute.SIGN);
+    signRecover = new BooleanAttribute(Attribute.SIGN_RECOVER);
+    unwrap = new BooleanAttribute(Attribute.UNWRAP);
+    extractable = new BooleanAttribute(Attribute.EXTRACTABLE);
+    alwaysSensitive = new BooleanAttribute(Attribute.ALWAYS_SENSITIVE);
+    neverExtractable = new BooleanAttribute(Attribute.NEVER_EXTRACTABLE);
+    wrapWithTrusted = new BooleanAttribute(Attribute.WRAP_WITH_TRUSTED);
+    unwrapTemplate = new AttributeArray(Attribute.UNWRAP_TEMPLATE);
+    alwaysAuthenticate = new BooleanAttribute(Attribute.ALWAYS_AUTHENTICATE);
 
-        if (keyTypeAttribute.isPresent() && (keyType != null)) {
-            if (keyType.equals(Key.KeyType.RSA)) {
-                newObject = RSAPrivateKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.DSA)) {
-                newObject = DSAPrivateKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.EC)) {
-                newObject = ECPrivateKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.DH)) {
-                newObject = DHPrivateKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.KEA)) {
-                newObject = KEAPrivateKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.X9_42_DH)) {
-                newObject = X942DHPrivateKey.getInstance(session, objectHandle);
-            } else if (keyType.equals(Key.KeyType.VENDOR_SM2)) {
-                newObject = SM2PrivateKey.getInstance(session, objectHandle);
-            } else if ((keyType.longValue()
-                            & KeyType.VENDOR_DEFINED.longValue()) != 0L) {
-                newObject = getUnknownPrivateKey(session, objectHandle);
-            } else {
-                newObject = getUnknownPrivateKey(session, objectHandle);
-            }
-        } else {
-            newObject = getUnknownPrivateKey(session, objectHandle);
-        }
+    putAttributesInTable(this);
+  }
 
-        return newObject;
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof PrivateKey)) {
+      return false;
     }
 
-    /**
-     * Try to create a key which has no or an unknown private key type
-     * type attribute.
-     * This implementation will try to use a vendor defined key
-     * builder, if such has been set.
-     * If this is impossible or fails, it will create just
-     * a simple {@link iaik.pkcs.pkcs11.objects.PrivateKey PrivateKey }.
-     *
-     * @param session
-     *          The session to use.
-     * @param objectHandle
-     *          The handle of the object
-     * @return A new PKCS11Object.
-     * @throws TokenException
-     *           If no object could be created.
-     * @preconditions (session <> null)
-     * @postconditions (result <> null)
-     */
-    protected static PKCS11Object getUnknownPrivateKey(Session session,
-            long objectHandle)
-        throws TokenException {
-        Util.requireNonNull("session", session);
+    PrivateKey other = (PrivateKey) otherObject;
+    return super.equals(other)
+        && this.subject.equals(other.subject)
+        && this.sensitive.equals(other.sensitive)
+        && this.secondaryAuth.equals(other.secondaryAuth)
+        && this.authPinFlags.equals(other.authPinFlags)
+        && this.decrypt.equals(other.decrypt)
+        && this.sign.equals(other.sign)
+        && this.signRecover.equals(other.signRecover)
+        && this.unwrap.equals(other.unwrap)
+        && this.extractable.equals(other.extractable)
+        && this.alwaysSensitive.equals(other.alwaysSensitive)
+        && this.neverExtractable.equals(other.neverExtractable)
+        && this.wrapWithTrusted.equals(other.wrapWithTrusted)
+        && this.unwrapTemplate.equals(other.unwrapTemplate)
+        && this.alwaysAuthenticate.equals(other.alwaysAuthenticate);
+  }
 
-        PKCS11Object newObject;
-        if (Key.vendorKeyBuilder != null) {
-            try {
-                newObject = Key.vendorKeyBuilder.build(session, objectHandle);
-            } catch (PKCS11Exception ex) {
-                // we can just treat it like some unknown type of private key
-                newObject = new PrivateKey(session, objectHandle);
-            }
-        } else {
-            // we can just treat it like some unknown type of private key
-            newObject = new PrivateKey(session, objectHandle);
-        }
+  /**
+   * Gets the subject attribute of this key.
+   *
+   * @return The subject attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getSubject() {
+    return subject;
+  }
 
-        return newObject;
+  /**
+   * Gets the sensitive attribute of this key.
+   *
+   * @return The sensitive attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getSensitive() {
+    return sensitive;
+  }
+
+  /**
+   * Gets the secondary authentication attribute of this key.
+   *
+   * @return The secondary authentication attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getSecondaryAuth() {
+    return secondaryAuth;
+  }
+
+  /**
+   * Gets the authentication flags for secondary authentication of this key.
+   *
+   * @return The authentication flags for secondary authentication attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public LongAttribute getAuthPinFlags() {
+    return authPinFlags;
+  }
+
+  /**
+   * Gets the decrypt attribute of this key.
+   *
+   * @return The decrypt attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getDecrypt() {
+    return decrypt;
+  }
+
+  /**
+   * Gets the sign attribute of this key.
+   *
+   * @return The sign attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getSign() {
+    return sign;
+  }
+
+  /**
+   * Gets the sign recover attribute of this key.
+   *
+   * @return The sign recover attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getSignRecover() {
+    return signRecover;
+  }
+
+  /**
+   * Gets the unwrap attribute of this key.
+   *
+   * @return The unwrap attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getUnwrap() {
+    return unwrap;
+  }
+
+  /**
+   * Gets the extractable attribute of this key.
+   *
+   * @return The extractable attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getExtractable() {
+    return extractable;
+  }
+
+  /**
+   * Gets the always sensitive attribute of this key.
+   *
+   * @return The always sensitive attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getAlwaysSensitive() {
+    return alwaysSensitive;
+  }
+
+  /**
+   * Gets the never extractable attribute of this key.
+   *
+   * @return The never extractable attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getNeverExtractable() {
+    return neverExtractable;
+  }
+
+  /**
+   * Gets the wrap with trusted attribute of this key.
+   *
+   * @return The wrap with trusted attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getWrapWithTrusted() {
+    return wrapWithTrusted;
+  }
+
+  /**
+   * Gets the unwrap template attribute of this key. This
+   * attribute can only be used with PKCS#11 modules supporting
+   * cryptoki version 2.20 or higher.
+   *
+   * @return The unwrap template attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public AttributeArray getUnwrapTemplate() {
+    return unwrapTemplate;
+  }
+
+  /**
+   * Gets the always authenticate attribute of this key.
+   *
+   * @return The always authenticate attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public BooleanAttribute getAlwaysAuthenticate() {
+    return alwaysAuthenticate;
+  }
+
+  /**
+   * Read the values of the attributes of this object from the token.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  @Override
+  public void readAttributes(Session session) throws TokenException {
+    super.readAttributes(session);
+
+    PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        subject, sensitive, secondaryAuth, authPinFlags, decrypt,
+        sign, signRecover, unwrap, extractable, alwaysSensitive,
+        neverExtractable, wrapWithTrusted, alwaysAuthenticate });
+    PKCS11Object.getAttributeValue(session, objectHandle, unwrapTemplate);
+  }
+
+  /**
+   * Returns a string representation of the current object. The
+   * output is only for debugging purposes and should not be used for other
+   * purposes.
+   *
+   * @return A string presentation of this object for debugging output.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder(super.toString());
+    sb.append("\n  Subject (DER, hex): ").append(subject);
+    sb.append("\n  Sensitive: ").append(sensitive);
+    sb.append("\n  Secondary Authentication: ").append(secondaryAuth);
+    sb.append("\n  Secondary Authentication PIN Flags: ");
+    if (authPinFlags.isPresent() && !authPinFlags.isSensitive()
+        && (authPinFlags.getLongValue() != null)) {
+      long authFlagsValue = authPinFlags.getLongValue().longValue();
+
+      sb.append("\n    User PIN-Count low: ").append((authFlagsValue
+            & PKCS11Constants.CKF_USER_PIN_COUNT_LOW) != 0L);
+      sb.append("\n    User PIN final Try: ").append((authFlagsValue
+            & PKCS11Constants.CKF_USER_PIN_FINAL_TRY) != 0L);
+      sb.append("\n    User PIN locked: ").append((authFlagsValue
+            & PKCS11Constants.CKF_USER_PIN_LOCKED) != 0L);
+      sb.append("\n    User PIN to be changed: ").append((authFlagsValue
+            & PKCS11Constants.CKF_USER_PIN_TO_BE_CHANGED) != 0L);
+    } else {
+      sb.append(authPinFlags);
     }
 
-    /**
-     * Put all attributes of the given object into the attributes table of this
-     * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately.
-     *
-     * @param object
-     *          The object to handle.
-     * @preconditions (object <> null)
-     * @postconditions
-     */
-    protected static void putAttributesInTable(PrivateKey object) {
-        Util.requireNonNull("object", object);
-        object.attributeTable.put(Attribute.SUBJECT, object.subject);
-        object.attributeTable.put(Attribute.SENSITIVE, object.sensitive);
-        object.attributeTable.put(Attribute.SECONDARY_AUTH,
-                object.secondaryAuth);
-        object.attributeTable.put(Attribute.AUTH_PIN_FLAGS,
-                object.authPinFlags);
-        object.attributeTable.put(Attribute.DECRYPT, object.decrypt);
-        object.attributeTable.put(Attribute.SIGN, object.sign);
-        object.attributeTable.put(Attribute.SIGN_RECOVER, object.signRecover);
-        object.attributeTable.put(Attribute.UNWRAP, object.unwrap);
-        object.attributeTable.put(Attribute.EXTRACTABLE, object.extractable);
-        object.attributeTable.put(Attribute.ALWAYS_SENSITIVE,
-                object.alwaysSensitive);
-        object.attributeTable.put(Attribute.NEVER_EXTRACTABLE,
-                object.neverExtractable);
-        object.attributeTable.put(Attribute.WRAP_WITH_TRUSTED,
-                object.wrapWithTrusted);
-        object.attributeTable.put(Attribute.UNWRAP_TEMPLATE,
-                object.unwrapTemplate);
-        object.attributeTable.put(Attribute.ALWAYS_AUTHENTICATE,
-                object.alwaysAuthenticate);
-    }
+    sb.append("\n  Decrypt: ").append(decrypt);
+    sb.append("\n  Sign: ").append(sign);
+    sb.append("\n  Sign Recover: ").append(signRecover);
+    sb.append("\n  Unwrap: ").append(unwrap);
+    sb.append("\n  Extractable: ").append(extractable);
+    sb.append("\n  Always Sensitive: ").append(alwaysSensitive);
+    sb.append("\n  Never Extractable: ").append(neverExtractable);
+    sb.append("\n  Wrap With Trusted: ").append(wrapWithTrusted);
+    sb.append("\n  Unwrap Template: ").append(unwrapTemplate);
+    sb.append("\n  Always Authenticate: ").append(alwaysAuthenticate);
 
-    /**
-     * Allocates the attribute objects for this class and adds them to the
-     * attribute table.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    protected void allocateAttributes() {
-        super.allocateAttributes();
-
-        subject = new ByteArrayAttribute(Attribute.SUBJECT);
-        sensitive = new BooleanAttribute(Attribute.SENSITIVE);
-        secondaryAuth = new BooleanAttribute(Attribute.SECONDARY_AUTH);
-        authPinFlags = new LongAttribute(Attribute.AUTH_PIN_FLAGS);
-        decrypt = new BooleanAttribute(Attribute.DECRYPT);
-        sign = new BooleanAttribute(Attribute.SIGN);
-        signRecover = new BooleanAttribute(Attribute.SIGN_RECOVER);
-        unwrap = new BooleanAttribute(Attribute.UNWRAP);
-        extractable = new BooleanAttribute(Attribute.EXTRACTABLE);
-        alwaysSensitive = new BooleanAttribute(Attribute.ALWAYS_SENSITIVE);
-        neverExtractable = new BooleanAttribute(Attribute.NEVER_EXTRACTABLE);
-        wrapWithTrusted = new BooleanAttribute(Attribute.WRAP_WITH_TRUSTED);
-        unwrapTemplate = new AttributeArray(Attribute.UNWRAP_TEMPLATE);
-        alwaysAuthenticate
-            = new BooleanAttribute(Attribute.ALWAYS_AUTHENTICATE);
-
-        putAttributesInTable(this);
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof PrivateKey)) {
-            return false;
-        }
-
-        PrivateKey other = (PrivateKey) otherObject;
-        return super.equals(other)
-                && this.subject.equals(other.subject)
-                && this.sensitive.equals(other.sensitive)
-                && this.secondaryAuth.equals(other.secondaryAuth)
-                && this.authPinFlags.equals(other.authPinFlags)
-                && this.decrypt.equals(other.decrypt)
-                && this.sign.equals(other.sign)
-                && this.signRecover.equals(other.signRecover)
-                && this.unwrap.equals(other.unwrap)
-                && this.extractable.equals(other.extractable)
-                && this.alwaysSensitive.equals(other.alwaysSensitive)
-                && this.neverExtractable.equals(other.neverExtractable)
-                && this.wrapWithTrusted.equals(other.wrapWithTrusted)
-                && this.unwrapTemplate.equals(other.unwrapTemplate)
-                && this.alwaysAuthenticate.equals(other.alwaysAuthenticate);
-    }
-
-    /**
-     * Gets the subject attribute of this key.
-     *
-     * @return The subject attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getSubject() {
-        return subject;
-    }
-
-    /**
-     * Gets the sensitive attribute of this key.
-     *
-     * @return The sensitive attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getSensitive() {
-        return sensitive;
-    }
-
-    /**
-     * Gets the secondary authentication attribute of this key.
-     *
-     * @return The secondary authentication attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getSecondaryAuth() {
-        return secondaryAuth;
-    }
-
-    /**
-     * Gets the authentication flags for secondary authentication of this key.
-     *
-     * @return The authentication flags for secondary authentication attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public LongAttribute getAuthPinFlags() {
-        return authPinFlags;
-    }
-
-    /**
-     * Gets the decrypt attribute of this key.
-     *
-     * @return The decrypt attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getDecrypt() {
-        return decrypt;
-    }
-
-    /**
-     * Gets the sign attribute of this key.
-     *
-     * @return The sign attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getSign() {
-        return sign;
-    }
-
-    /**
-     * Gets the sign recover attribute of this key.
-     *
-     * @return The sign recover attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getSignRecover() {
-        return signRecover;
-    }
-
-    /**
-     * Gets the unwrap attribute of this key.
-     *
-     * @return The unwrap attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getUnwrap() {
-        return unwrap;
-    }
-
-    /**
-     * Gets the extractable attribute of this key.
-     *
-     * @return The extractable attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getExtractable() {
-        return extractable;
-    }
-
-    /**
-     * Gets the always sensitive attribute of this key.
-     *
-     * @return The always sensitive attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getAlwaysSensitive() {
-        return alwaysSensitive;
-    }
-
-    /**
-     * Gets the never extractable attribute of this key.
-     *
-     * @return The never extractable attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getNeverExtractable() {
-        return neverExtractable;
-    }
-
-    /**
-     * Gets the wrap with trusted attribute of this key.
-     *
-     * @return The wrap with trusted attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getWrapWithTrusted() {
-        return wrapWithTrusted;
-    }
-
-    /**
-     * Gets the unwrap template attribute of this key. This
-     * attribute can only be used with PKCS#11 modules supporting
-     * cryptoki version 2.20 or higher.
-     *
-     * @return The unwrap template attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public AttributeArray getUnwrapTemplate() {
-        return unwrapTemplate;
-    }
-
-    /**
-     * Gets the always authenticate attribute of this key.
-     *
-     * @return The always authenticate attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public BooleanAttribute getAlwaysAuthenticate() {
-        return alwaysAuthenticate;
-    }
-
-    /**
-     * Read the values of the attributes of this object from the token.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    @Override
-    public void readAttributes(Session session)
-        throws TokenException {
-        super.readAttributes(session);
-
-        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-            subject, sensitive, secondaryAuth, authPinFlags, decrypt,
-            sign, signRecover, unwrap, extractable, alwaysSensitive,
-            neverExtractable, wrapWithTrusted, alwaysAuthenticate });
-        PKCS11Object.getAttributeValue(session, objectHandle, unwrapTemplate);
-    }
-
-    /**
-     * Returns a string representation of the current object. The
-     * output is only for debugging purposes and should not be used for other
-     * purposes.
-     *
-     * @return A string presentation of this object for debugging output.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\n  Subject (DER, hex): ").append(subject);
-        sb.append("\n  Sensitive: ").append(sensitive);
-        sb.append("\n  Secondary Authentication: ").append(secondaryAuth);
-        sb.append("\n  Secondary Authentication PIN Flags: ");
-        if (authPinFlags.isPresent() && !authPinFlags.isSensitive()
-            && (authPinFlags.getLongValue() != null)) {
-            long authFlagsValue = authPinFlags.getLongValue().longValue();
-
-            sb.append("\n    User PIN-Count low: ")
-                .append((authFlagsValue
-                        & PKCS11Constants.CKF_USER_PIN_COUNT_LOW) != 0L);
-            sb.append("\n    User PIN final Try: ")
-                .append((authFlagsValue
-                        & PKCS11Constants.CKF_USER_PIN_FINAL_TRY) != 0L);
-            sb.append("\n    User PIN locked: ")
-                .append((authFlagsValue
-                        & PKCS11Constants.CKF_USER_PIN_LOCKED) != 0L);
-            sb.append("\n    User PIN to be changed: ")
-                .append((authFlagsValue
-                        & PKCS11Constants.CKF_USER_PIN_TO_BE_CHANGED) != 0L);
-        } else {
-            sb.append(authPinFlags);
-        }
-
-        sb.append("\n  Decrypt: ").append(decrypt);
-        sb.append("\n  Sign: ").append(sign);
-        sb.append("\n  Sign Recover: ").append(signRecover);
-        sb.append("\n  Unwrap: ").append(unwrap);
-        sb.append("\n  Extractable: ").append(extractable);
-        sb.append("\n  Always Sensitive: ").append(alwaysSensitive);
-        sb.append("\n  Never Extractable: ").append(neverExtractable);
-        sb.append("\n  Wrap With Trusted: ").append(wrapWithTrusted);
-        sb.append("\n  Unwrap Template: ").append(unwrapTemplate);
-        sb.append("\n  Always Authenticate: ").append(alwaysAuthenticate);
-
-        return sb.toString();
-    }
+    return sb.toString();
+  }
 
 }

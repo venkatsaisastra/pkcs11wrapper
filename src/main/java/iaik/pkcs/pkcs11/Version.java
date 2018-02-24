@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -55,137 +55,138 @@ import sun.security.pkcs11.wrapper.CK_VERSION;
 @SuppressWarnings("restriction")
 public class Version {
 
-    /**
-     * The major version number.
-     */
-    private byte major;
+  /**
+   * The major version number.
+   */
+  private byte major;
 
-    /**
-     * The minor version number.
-     */
-    private byte minor;
+  /**
+   * The minor version number.
+   */
+  private byte minor;
 
-    /**
-     * Create a new Version object with the given major and minor
-     * version.
-     *
-     * @param major
-     *          The major version number.
-     * @param minor
-     *          The minor version number.
-     * @preconditions
-     * @postconditions
-     */
-    public Version(byte major, byte minor) {
-        this.major = major;
-        this.minor = minor;
+  /**
+   * Create a new Version object with the given major and minor
+   * version.
+   *
+   * @param major
+   *          The major version number.
+   * @param minor
+   *          The minor version number.
+   * @preconditions
+   * @postconditions
+   */
+  public Version(byte major, byte minor) {
+    this.major = major;
+    this.minor = minor;
+  }
+
+  /**
+   * Constructor taking a CK_VERSION object.
+   *
+   * @param ckVersion
+   *          A CK_VERSION object.
+   * @preconditions (ckVersion <> null)
+   * @postconditions
+   */
+  public Version(CK_VERSION ckVersion) {
+    Util.requireNonNull("ckVersion", ckVersion);
+    this.major = ckVersion.major;
+    this.minor = ckVersion.minor;
+  }
+
+  /**
+   * Set the major version number.
+   *
+   * @param major
+   *          The major version number.
+   * @preconditions
+   * @postconditions
+   */
+  public void setMajor(byte major) {
+    this.major = major;
+  }
+
+  /**
+   * Set the minor version number.
+   *
+   * @param minor
+   *          The minor version number.
+   * @preconditions
+   * @postconditions
+   */
+  public void setMinor(byte minor) {
+    this.minor = minor;
+  }
+
+  /**
+   * Get the major version number.
+   *
+   * @return The major version number.
+   * @preconditions
+   * @postconditions
+   */
+  public byte getMajor() {
+    return major;
+  }
+
+  /**
+   * Get the minor version number.
+   *
+   * @return The minor version number.
+   * @preconditions
+   * @postconditions
+   */
+  public byte getMinor() {
+    return minor;
+  }
+
+  /**
+   * Returns the string representation of this object.
+   *
+   * @return the string representation of this object
+   */
+  @Override
+  public String toString() {
+    return Util.concatObjects(major & 0xff, ".",
+        ((minor < 10) ? "0" : ""), minor & 0xff);
+  }
+
+  /**
+   * Compares major and minor version number of this objects with the other
+   * object. Returns only true, if both are equal in both objects.
+   *
+   * @param otherObject
+   *          The other Version object.
+   * @return True, if other is an instance of Info and all member variables of
+   *         both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof Version)) {
+      return false;
     }
 
-    /**
-     * Constructor taking a CK_VERSION object.
-     *
-     * @param ckVersion
-     *          A CK_VERSION object.
-     * @preconditions (ckVersion <> null)
-     * @postconditions
-     */
-    public Version(CK_VERSION ckVersion) {
-        Util.requireNonNull("ckVersion", ckVersion);
-        this.major = ckVersion.major;
-        this.minor = ckVersion.minor;
-    }
+    Version other = (Version) otherObject;
+    return (this.major == other.major) && (this.minor == other.minor);
+  }
 
-    /**
-     * Set the major version number.
-     *
-     * @param major
-     *          The major version number.
-     * @preconditions
-     * @postconditions
-     */
-    public void setMajor(byte major) {
-        this.major = major;
-    }
-
-    /**
-     * Set the minor version number.
-     *
-     * @param minor
-     *          The minor version number.
-     * @preconditions
-     * @postconditions
-     */
-    public void setMinor(byte minor) {
-        this.minor = minor;
-    }
-
-    /**
-     * Get the major version number.
-     *
-     * @return The major version number.
-     * @preconditions
-     * @postconditions
-     */
-    public byte getMajor() {
-        return major;
-    }
-
-    /**
-     * Get the minor version number.
-     *
-     * @return The minor version number.
-     * @preconditions
-     * @postconditions
-     */
-    public byte getMinor() {
-        return minor;
-    }
-
-    /**
-     * Returns the string representation of this object.
-     *
-     * @return the string representation of this object
-     */
-    @Override
-    public String toString() {
-        return Util.concatObjects(major & 0xff, ".", ((minor < 10) ? "0" : ""), minor & 0xff);
-    }
-
-    /**
-     * Compares major and minor version number of this objects with the other
-     * object. Returns only true, if both are equal in both objects.
-     *
-     * @param otherObject
-     *          The other Version object.
-     * @return True, if other is an instance of Info and all member variables of
-     *         both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof Version)) {
-            return false;
-        }
-
-        Version other = (Version) otherObject;
-        return (this.major == other.major) && (this.minor == other.minor);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object. Gained from the slotID, state and
-     *         deviceError.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return major ^ minor;
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object. Gained from the slotID, state and
+   *         deviceError.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return major ^ minor;
+  }
 
 }

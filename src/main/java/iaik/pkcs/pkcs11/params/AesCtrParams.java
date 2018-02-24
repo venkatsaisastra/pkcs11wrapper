@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -50,7 +50,8 @@ import sun.security.pkcs11.wrapper.CK_AES_CTR_PARAMS;
 
 /**
  * This class represents the necessary parameters required by
- * the CKM_AES_CTR mechanism as defined in CK_AES_CTR_PARAMS structure.<p>
+ * the CKM_AES_CTR mechanism as defined in CK_AES_CTR_PARAMS structure.
+ * <p/>
  * <B>PKCS#11 structure:</B>
  * <PRE>
  * typedef struct CK_AES_CTR_PARAMS {
@@ -64,78 +65,78 @@ import sun.security.pkcs11.wrapper.CK_AES_CTR_PARAMS;
 @SuppressWarnings("restriction")
 public class AesCtrParams implements Params {
 
-    private byte[] cb;
+  private byte[] cb;
 
-    public AesCtrParams(byte[] cb) {
-        Util.requireNonNull("cb", cb);
-        if (cb.length != 16) {
-            throw new IllegalArgumentException("cb.length must be 16");
-        }
-        this.cb = cb;
+  public AesCtrParams(byte[] cb) {
+    Util.requireNonNull("cb", cb);
+    if (cb.length != 16) {
+      throw new IllegalArgumentException("cb.length must be 16");
+    }
+    this.cb = cb;
+  }
+
+  public byte[] getCb() {
+    return cb;
+  }
+
+  public void setCb(byte[] cb) {
+    Util.requireNonNull("cb", cb);
+    if (cb.length != 16) {
+      throw new IllegalArgumentException("cb.length must be 16");
+    }
+    this.cb = cb;
+  }
+
+  /**
+   * Returns the string representation of this object. Do not parse data from
+   * this string, it is for debugging only.
+   *
+   * @return A string representation of this object.
+   */
+  @Override
+  public String toString() {
+    return Util.concat("  cb: ", Util.toHex(cb));
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof AesCtrParams)) {
+      return false;
     }
 
-    public byte[] getCb() {
-        return cb;
-    }
+    AesCtrParams other = (AesCtrParams) otherObject;
+    return Arrays.equals(this.cb, other.cb);
+  }
 
-    public void setCb(byte[] cb) {
-        Util.requireNonNull("cb", cb);
-        if (cb.length != 16) {
-            throw new IllegalArgumentException("cb.length must be 16");
-        }
-        this.cb = cb;
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return Functions.hashCode(cb);
+  }
 
-    /**
-     * Returns the string representation of this object. Do not parse data from
-     * this string, it is for debugging only.
-     *
-     * @return A string representation of this object.
-     */
-    @Override
-    public String toString() {
-        return Util.concat("  cb: ", Util.toHex(cb));
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof AesCtrParams)) {
-            return false;
-        }
-
-        AesCtrParams other = (AesCtrParams) otherObject;
-        return Arrays.equals(this.cb, other.cb);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return Functions.hashCode(cb);
-    }
-
-    @Override
-    public Object getPKCS11ParamsObject() {
-        return new CK_AES_CTR_PARAMS(cb);
-    }
+  @Override
+  public Object getPKCS11ParamsObject() {
+    return new CK_AES_CTR_PARAMS(cb);
+  }
 
 }

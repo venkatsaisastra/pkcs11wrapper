@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -65,107 +65,106 @@ import iaik.pkcs.pkcs11.Util;
 // CHECKSTYLE:SKIP
 public class PKCS11Exception extends TokenException {
 
-    private static final long serialVersionUID = -5193259612747392211L;
+  private static final long serialVersionUID = -5193259612747392211L;
 
-    /**
-     * The name of the properties file that holds the names of the PKCS#11
-     * error-codes.
-     */
-    private static final String ERROR_CODE_PROPERTIES
-            = "iaik/pkcs/pkcs11/wrapper/ckr.properties";
+  /**
+   * The name of the properties file that holds the names of the PKCS#11
+   * error-codes.
+   */
+  private static final String ERROR_CODE_PROPERTIES
+      = "iaik/pkcs/pkcs11/wrapper/ckr.properties";
 
-    /**
-     * The properties object that holds the mapping from error-code to the name
-     * of the PKCS#11 error.
-     */
-    private static Map<Long, String> errorCodeNames;
+  /**
+   * The properties object that holds the mapping from error-code to the name
+   * of the PKCS#11 error.
+   */
+  private static Map<Long, String> errorCodeNames;
 
-    /**
-     * True, if the mapping of error codes to PKCS#11 error names is available.
-     */
-    private static boolean errorCodeNamesAvailable;
+  /**
+   * True, if the mapping of error codes to PKCS#11 error names is available.
+   */
+  private static boolean errorCodeNamesAvailable;
 
-    /**
-     * The code of the error which was the reason for this exception.
-     */
-    private long errorCode;
+  /**
+   * The code of the error which was the reason for this exception.
+   */
+  private long errorCode;
 
-    /**
-     * Constructor taking the error code as defined for the CKR_* constants
-     * in PKCS#11.
-     *
-     * @param errorCode
-     *          The PKCS#11 error code (return value).
-     */
-    public PKCS11Exception(long errorCode) {
-        this.errorCode = errorCode;
-    }
+  /**
+   * Constructor taking the error code as defined for the CKR_* constants
+   * in PKCS#11.
+   *
+   * @param errorCode
+   *          The PKCS#11 error code (return value).
+   */
+  public PKCS11Exception(long errorCode) {
+    this.errorCode = errorCode;
+  }
 
-    @SuppressWarnings("restriction")
-    public PKCS11Exception(sun.security.pkcs11.wrapper.PKCS11Exception ex) {
-        this(ex.getErrorCode());
-    }
+  @SuppressWarnings("restriction")
+  public PKCS11Exception(sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+    this(ex.getErrorCode());
+  }
 
-    /**
-     * This method gets the corresponding text error message from
-     * a property file. If this file is not available, it returns the error
-     * code as a hex-string.
-     *
-     * @return The message or the error code; e.g. "CKR_DEVICE_ERROR" or
-     *         "0x00000030".
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public synchronized String getMessage() {
-        // if the names of the defined error codes are not yet loaded, load them
-        if (errorCodeNames == null) {
-            // ensure that another thread has not loaded the codes meanwhile
-            Map<Long, String> codeNamMap = new HashMap<>();
-            Properties props = new Properties();
-            try {
-                props.load(Functions.class.getClassLoader().getResourceAsStream(
-                    ERROR_CODE_PROPERTIES));
-                for (String propName : props.stringPropertyNames()) {
-                    String errorName = props.getProperty(propName);
-                    if (errorName == null) {
-                        System.out.println("No name defined for error code "
-                                + Util.toFullHex((int) errorCode));
-                    }
-                    long code;
-                    if (propName.startsWith("0x")
-                            || propName.startsWith("0X")) {
-                        code = Long.parseLong(propName.substring(2), 16);
-                    } else {
-                        code = Long.parseLong(propName);
-                    }
-                    codeNamMap.put(code, errorName);
-                }
-                errorCodeNames = codeNamMap;
-                errorCodeNamesAvailable = true;
-            } catch (Exception ex) {
-                System.err.println(
-                    "Could not read properties for error code names: "
-                    + ex.getMessage());
-            }
+  /**
+   * This method gets the corresponding text error message from
+   * a property file. If this file is not available, it returns the error
+   * code as a hex-string.
+   *
+   * @return The message or the error code; e.g. "CKR_DEVICE_ERROR" or
+   *         "0x00000030".
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public synchronized String getMessage() {
+    // if the names of the defined error codes are not yet loaded, load them
+    if (errorCodeNames == null) {
+      // ensure that another thread has not loaded the codes meanwhile
+      Map<Long, String> codeNamMap = new HashMap<>();
+      Properties props = new Properties();
+      try {
+        props.load(Functions.class.getClassLoader().getResourceAsStream(
+            ERROR_CODE_PROPERTIES));
+        for (String propName : props.stringPropertyNames()) {
+          String errorName = props.getProperty(propName);
+          if (errorName == null) {
+            System.out.println("No name defined for error code "
+                + Util.toFullHex((int) errorCode));
+          }
+          long code;
+          if (propName.startsWith("0x")
+              || propName.startsWith("0X")) {
+            code = Long.parseLong(propName.substring(2), 16);
+          } else {
+            code = Long.parseLong(propName);
+          }
+          codeNamMap.put(code, errorName);
         }
-
-        String name = errorCodeNamesAvailable
-                ? errorCodeNames.get(new Long(errorCode)) : null;
-
-        // if we can get the name of the error code, take the name, otherwise
-        // return the code
-        return (name != null) ? name : "0x" + Util.toFullHex((int) errorCode);
+        errorCodeNames = codeNamMap;
+        errorCodeNamesAvailable = true;
+      } catch (Exception ex) {
+        System.err.println("Could not read properties for error code names: "
+            + ex.getMessage());
+      }
     }
 
-    /**
-     * Returns the PKCS#11 error code.
-     *
-     * @return The error code; e.g. 0x00000030.
-     * @preconditions
-     * @postconditions
-     */
-    public long getErrorCode() {
-        return errorCode;
-    }
+    String name = errorCodeNamesAvailable
+        ? errorCodeNames.get(new Long(errorCode)) : null;
+
+    // if we can get the name of the error code, take the name, otherwise
+    // return the code
+    return (name != null) ? name : "0x" + Util.toFullHex((int) errorCode);
+  }
+
+  /**
+   * Returns the PKCS#11 error code.
+   *
+   * @return The error code; e.g. 0x00000030.
+   * @preconditions
+   * @postconditions
+   */
+  public long getErrorCode() {
+    return errorCode;
+  }
 
 }

@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -57,41 +57,41 @@ import iaik.pkcs.pkcs11.TokenException;
 // CHECKSTYLE:SKIP
 public class SM2PublicKey extends ECPublicKey {
 
-    public SM2PublicKey() {
+  public SM2PublicKey() {
+  }
+
+  protected SM2PublicKey(Session session, long objectHandle)
+      throws TokenException {
+    super(session, objectHandle);
+  }
+
+  @Override
+  protected Long thisKeyType() {
+    return KeyType.VENDOR_SM2;
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof SM2PublicKey)) {
+      return false;
     }
 
-    protected SM2PublicKey(Session session, long objectHandle)
-        throws TokenException {
-        super(session, objectHandle);
-    }
+    return super.equals(otherObject);
+  }
 
-    @Override
-    protected Long thisKeyType() {
-        return KeyType.VENDOR_SM2;
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof SM2PublicKey)) {
-            return false;
-        }
-
-        return super.equals(otherObject);
-    }
-
-    // TODO: add toString()
+  // TODO: add toString()
 
 }

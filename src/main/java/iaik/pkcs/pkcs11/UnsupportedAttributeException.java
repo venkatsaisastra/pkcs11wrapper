@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -44,10 +44,10 @@ package iaik.pkcs.pkcs11;
 
 public class UnsupportedAttributeException extends Exception {
 
-    private static final long serialVersionUID = 5489254472596633973L;
+  private static final long serialVersionUID = 5489254472596633973L;
 
-    public UnsupportedAttributeException(String message) {
-        super(message);
-    }
+  public UnsupportedAttributeException(String message) {
+    super(message);
+  }
 
 }

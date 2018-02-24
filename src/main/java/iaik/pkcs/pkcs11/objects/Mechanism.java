@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -54,140 +54,140 @@ import iaik.pkcs.pkcs11.Util;
  */
 public class Mechanism extends PKCS11Object {
 
-    /**
-     * The mechanism Type of this Mechanism object.
-     */
-    protected LongAttribute mechanismType;
+  /**
+   * The mechanism Type of this Mechanism object.
+   */
+  protected LongAttribute mechanismType;
 
-    /**
-     * The default constructor. An application use this constructor to
-     * instantiate an object that serves as a template. It may also be useful
-     * for working with vendor-defined objects.
-     */
-    public Mechanism() {
+  /**
+   * The default constructor. An application use this constructor to
+   * instantiate an object that serves as a template. It may also be useful
+   * for working with vendor-defined objects.
+   */
+  public Mechanism() {
+  }
+
+  /**
+   * Constructor taking the reference to the PKCS#11 module for accessing the
+   * object's attributes, the session handle to use for reading the attribute
+   * values and the object handle.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   */
+  protected Mechanism(Session session, long objectHandle)
+      throws TokenException {
+    super(session, objectHandle);
+  }
+
+  /**
+   * Put all attributes of the given object into the attributes table of this
+   * object. This method is only static to be able to access invoke the
+   * implementation of this method for each class separately.
+   *
+   * @param object
+   *          The object to handle.
+   * @preconditions (object <> null)
+   * @postconditions
+   */
+  protected static void putAttributesInTable(Mechanism object) {
+    Util.requireNonNull("object", object);
+    object.attributeTable.put(Attribute.MECHANISM_TYPE,
+        object.mechanismType);
+  }
+
+  /**
+   * Allocates the attribute objects for this class and adds them to the
+   * attribute table.
+   */
+  @Override
+  protected void allocateAttributes() {
+    super.allocateAttributes();
+
+    mechanismType = new LongAttribute(Attribute.MECHANISM_TYPE);
+
+    putAttributesInTable(this);
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof Mechanism)) {
+      return false;
     }
 
-    /**
-     * Constructor taking the reference to the PKCS#11 module for accessing the
-     * object's attributes, the session handle to use for reading the attribute
-     * values and the object handle.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @exception TokenException
-     *              If getting the attributes failed.
+    Mechanism other = (Mechanism) otherObject;
+    return super.equals(other)
+        && this.mechanismType.equals(other.mechanismType);
+  }
+
+  /**
+   * Read the values of the attributes of this object from the token.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   */
+  @Override
+  public void readAttributes(Session session) throws TokenException {
+    super.readAttributes(session);
+
+    /*
+     * read multiple attributes at once might cause a performance gain
+     * but we only have one attribute here.
      */
-    protected Mechanism(Session session, long objectHandle)
-        throws TokenException {
-        super(session, objectHandle);
-    }
+    PKCS11Object.getAttributeValue(session, objectHandle, mechanismType);
+  }
 
-    /**
-     * Put all attributes of the given object into the attributes table of this
-     * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately.
-     *
-     * @param object
-     *          The object to handle.
-     * @preconditions (object <> null)
-     * @postconditions
-     */
-    protected static void putAttributesInTable(Mechanism object) {
-        Util.requireNonNull("object", object);
-        object.attributeTable.put(Attribute.MECHANISM_TYPE,
-                object.mechanismType);
-    }
+  /**
+   * Returns the mechanism type of this mechanism object.
+   * @return returns the mechanism type of this mechanism object.
+   */
+  public LongAttribute getMechanismType() {
+    return mechanismType;
+  }
 
-    /**
-     * Allocates the attribute objects for this class and adds them to the
-     * attribute table.
-     */
-    @Override
-    protected void allocateAttributes() {
-        super.allocateAttributes();
+  /**
+   * Returns a string representation of the current object. The
+   * output is only for debugging purposes and should not be used for other
+   * purposes.
+   *
+   * @return A string presentation of this object for debugging output.
+   */
+  @Override
+  public String toString() {
+    String superToString = super.toString();
+    return Util.concatObjectsCap(superToString.length() + 40, superToString,
+        "\n  Mechanism Type: ", mechanismType);
+  }
 
-        mechanismType = new LongAttribute(Attribute.MECHANISM_TYPE);
-
-        putAttributesInTable(this);
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof Mechanism)) {
-            return false;
-        }
-
-        Mechanism other = (Mechanism) otherObject;
-        return super.equals(other)
-                && this.mechanismType.equals(other.mechanismType);
-    }
-
-    /**
-     * Read the values of the attributes of this object from the token.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     */
-    @Override
-    public void readAttributes(Session session)
-        throws TokenException {
-        super.readAttributes(session);
-
-        /*
-         * read multiple attributes at once might cause a performance gain
-         * but we only have one attribute here.
-         */
-        PKCS11Object.getAttributeValue(session, objectHandle, mechanismType);
-    }
-
-    /**
-     * @return returns the mechanism type of this mechanism object.
-     */
-    public LongAttribute getMechanismType() {
-        return mechanismType;
-    }
-
-    /**
-     * Returns a string representation of the current object. The
-     * output is only for debugging purposes and should not be used for other
-     * purposes.
-     *
-     * @return A string presentation of this object for debugging output.
-     */
-    @Override
-    public String toString() {
-        String superToString = super.toString();
-        return Util.concatObjectsCap(superToString.length() + 40, superToString,
-                "\n  Mechanism Type: ", mechanismType);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     */
-    @Override
-    public int hashCode() {
-        return mechanismType.hashCode();
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   */
+  @Override
+  public int hashCode() {
+    return mechanismType.hashCode();
+  }
 }

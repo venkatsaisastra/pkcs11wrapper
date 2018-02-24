@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -56,78 +56,78 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  */
 public class MechanismAttribute extends LongAttribute {
 
-    /**
-     * Default constructor - only for internal use in
-     * AttributeArrayAttribute.getValueString().
-     */
-    MechanismAttribute() {
-    }
+  /**
+   * Default constructor - only for internal use in
+   * AttributeArrayAttribute.getValueString().
+   */
+  MechanismAttribute() {
+  }
 
-    /**
-     * Constructor taking the PKCS#11 type of the attribute.
-     *
-     * @param type
-     *          The PKCS#11 type of this attribute; e.g.
-     *          PKCS11Constants.CKA_VALUE_LEN.
-     * @preconditions (type <> null)
-     * @postconditions
-     */
-    public MechanismAttribute(Long type) {
-        super(type);
-    }
+  /**
+   * Constructor taking the PKCS#11 type of the attribute.
+   *
+   * @param type
+   *          The PKCS#11 type of this attribute; e.g.
+   *          PKCS11Constants.CKA_VALUE_LEN.
+   * @preconditions (type <> null)
+   * @postconditions
+   */
+  public MechanismAttribute(Long type) {
+    super(type);
+  }
 
-    /**
-     * Set the mechanism value of this attribute.
-     * <code>null</code>, is also valid.
-     * A call to this method sets the present flag to true.
-     *
-     * @param mechanism
-     *          The mechanism value to set. May be <code>null</code>.
-     * @preconditions
-     * @postconditions
-     */
-    @SuppressWarnings("restriction")
-    public void setMechanism(Mechanism mechanism) {
-        ckAttribute.pValue = (mechanism != null)
-                ? new Long(mechanism.getMechanismCode()) : null;
-        present = true;
-    }
+  /**
+   * Set the mechanism value of this attribute.
+   * <code>null</code>, is also valid.
+   * A call to this method sets the present flag to true.
+   *
+   * @param mechanism
+   *          The mechanism value to set. May be <code>null</code>.
+   * @preconditions
+   * @postconditions
+   */
+  @SuppressWarnings("restriction")
+  public void setMechanism(Mechanism mechanism) {
+    ckAttribute.pValue = (mechanism != null)
+        ? new Long(mechanism.getMechanismCode()) : null;
+    present = true;
+  }
 
-    /**
-     * Get the long value of this attribute. Null, is also possible.
-     *
-     * @return The long value of this attribute or null.
-     * @preconditions
-     * @postconditions
-     */
-    @SuppressWarnings("restriction")
-    public Mechanism getMechanism() {
-        return ((ckAttribute != null) && (ckAttribute.pValue != null))
-                ? new Mechanism(((Long) ckAttribute.pValue).longValue())
-                : null;
-    }
+  /**
+   * Get the long value of this attribute. Null, is also possible.
+   *
+   * @return The long value of this attribute or null.
+   * @preconditions
+   * @postconditions
+   */
+  @SuppressWarnings("restriction")
+  public Mechanism getMechanism() {
+    return ((ckAttribute != null) && (ckAttribute.pValue != null))
+        ? new Mechanism(((Long) ckAttribute.pValue).longValue())
+        : null;
+  }
 
-    /**
-     * Get a string representation of the value of this attribute.
-     *
-     * @return A string representation of the value of this attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @SuppressWarnings("restriction")
-    @Override
-    protected String getValueString() {
-        if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
-            if (((Long) ckAttribute.pValue).longValue()
-                    != PKCS11Constants.CK_UNAVAILABLE_INFORMATION) {
-                return Functions.mechanismCodeToString(
-                        ((Long) ckAttribute.pValue).longValue());
-            } else {
-                return "<Information unavailable>";
-            }
-        } else {
-            return "<NULL_PTR>";
-        }
+  /**
+   * Get a string representation of the value of this attribute.
+   *
+   * @return A string representation of the value of this attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @SuppressWarnings("restriction")
+  @Override
+  protected String getValueString() {
+    if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
+      if (((Long) ckAttribute.pValue).longValue()
+          != PKCS11Constants.CK_UNAVAILABLE_INFORMATION) {
+        return Functions.mechanismCodeToString(
+            ((Long) ckAttribute.pValue).longValue());
+      } else {
+        return "<Information unavailable>";
+      }
+    } else {
+      return "<NULL_PTR>";
     }
+  }
 
 }

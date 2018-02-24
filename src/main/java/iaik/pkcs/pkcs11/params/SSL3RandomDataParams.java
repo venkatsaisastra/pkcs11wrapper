@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -61,139 +61,139 @@ import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
 // CHECKSTYLE:SKIP
 public class SSL3RandomDataParams implements Params {
 
-    /**
-     * The client's random data.
-     */
-    protected byte[] clientRandom;
+  /**
+   * The client's random data.
+   */
+  protected byte[] clientRandom;
 
-    /**
-     * The server's random data.
-     */
-    protected byte[] serverRandom;
+  /**
+   * The server's random data.
+   */
+  protected byte[] serverRandom;
 
-    /**
-     * Create a new SSL3RandomDataParameters object with the given client and
-     * server random.
-     *
-     * @param clientRandom
-     *          The client's random data.
-     * @param serverRandom
-     *          The server's random data.
-     * @preconditions (clientRandom <> null)
-     *                and (serverRandom <> null)
-     * @postconditions
-     */
-    public SSL3RandomDataParams(byte[] clientRandom, byte[] serverRandom) {
-        this.clientRandom = Util.requireNonNull("clientRandom", clientRandom);
-        this.serverRandom = Util.requireNonNull("serverRandom", serverRandom);
+  /**
+   * Create a new SSL3RandomDataParameters object with the given client and
+   * server random.
+   *
+   * @param clientRandom
+   *          The client's random data.
+   * @param serverRandom
+   *          The server's random data.
+   * @preconditions (clientRandom <> null)
+   *                and (serverRandom <> null)
+   * @postconditions
+   */
+  public SSL3RandomDataParams(byte[] clientRandom, byte[] serverRandom) {
+    this.clientRandom = Util.requireNonNull("clientRandom", clientRandom);
+    this.serverRandom = Util.requireNonNull("serverRandom", serverRandom);
+  }
+
+  /**
+   * Get this parameters object as a CK_SSL3_RANDOM_DATA object.
+   *
+   * @return This object as a CK_SSL3_RANDOM_DATA object.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public Object getPKCS11ParamsObject() {
+    return new CK_SSL3_RANDOM_DATA(clientRandom, serverRandom);
+  }
+
+  /**
+   * Get the client's random data.
+   *
+   * @return The client's random data.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public byte[] getClientRandom() {
+    return clientRandom;
+  }
+
+  /**
+   * Get the server's random data.
+   *
+   * @return The server's random data.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public byte[] getServerRandom() {
+    return serverRandom;
+  }
+
+  /**
+   * Set the client's random data.
+   *
+   * @param clientRandom
+   *          The client's random data.
+   * @preconditions (clientRandom <> null)
+   * @postconditions
+   */
+  public void setClientRandom(byte[] clientRandom) {
+    this.clientRandom = Util.requireNonNull("clientRandom", clientRandom);
+  }
+
+  /**
+   * Set the server's random data.
+   *
+   * @param serverRandom
+   *          The server's random data.
+   * @preconditions (serverRandom <> null)
+   * @postconditions
+   */
+  public void setServerRandom(byte[] serverRandom) {
+    this.serverRandom = Util.requireNonNull("serverRandom", serverRandom);
+  }
+
+  /**
+   * Returns the string representation of this object. Do not parse data from
+   * this string, it is for debugging only.
+   *
+   * @return A string representation of this object.
+   */
+  @Override
+  public String toString() {
+    return Util.concat("  Client Random (hex): ", Util.toHex(clientRandom),
+        "\n  Server Random (hex): ", Util.toHex(serverRandom));
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof SSL3RandomDataParams)) {
+      return false;
     }
 
-    /**
-     * Get this parameters object as a CK_SSL3_RANDOM_DATA object.
-     *
-     * @return This object as a CK_SSL3_RANDOM_DATA object.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public Object getPKCS11ParamsObject() {
-        return new CK_SSL3_RANDOM_DATA(clientRandom, serverRandom);
-    }
+    SSL3RandomDataParams other = (SSL3RandomDataParams) otherObject;
+    return Arrays.equals(this.clientRandom, other.clientRandom)
+        && Arrays.equals(this.serverRandom, other.serverRandom);
+  }
 
-    /**
-     * Get the client's random data.
-     *
-     * @return The client's random data.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public byte[] getClientRandom() {
-        return clientRandom;
-    }
-
-    /**
-     * Get the server's random data.
-     *
-     * @return The server's random data.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public byte[] getServerRandom() {
-        return serverRandom;
-    }
-
-    /**
-     * Set the client's random data.
-     *
-     * @param clientRandom
-     *          The client's random data.
-     * @preconditions (clientRandom <> null)
-     * @postconditions
-     */
-    public void setClientRandom(byte[] clientRandom) {
-        this.clientRandom = Util.requireNonNull("clientRandom", clientRandom);
-    }
-
-    /**
-     * Set the server's random data.
-     *
-     * @param serverRandom
-     *          The server's random data.
-     * @preconditions (serverRandom <> null)
-     * @postconditions
-     */
-    public void setServerRandom(byte[] serverRandom) {
-        this.serverRandom = Util.requireNonNull("serverRandom", serverRandom);
-    }
-
-    /**
-     * Returns the string representation of this object. Do not parse data from
-     * this string, it is for debugging only.
-     *
-     * @return A string representation of this object.
-     */
-    @Override
-    public String toString() {
-        return Util.concat("  Client Random (hex): ", Util.toHex(clientRandom),
-                "\n  Server Random (hex): ", Util.toHex(serverRandom));
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof SSL3RandomDataParams)) {
-            return false;
-        }
-
-        SSL3RandomDataParams other = (SSL3RandomDataParams) otherObject;
-        return Arrays.equals(this.clientRandom, other.clientRandom)
-                && Arrays.equals(this.serverRandom, other.serverRandom);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return Functions.hashCode(clientRandom)
-                ^ Functions.hashCode(serverRandom);
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return Functions.hashCode(clientRandom)
+        ^ Functions.hashCode(serverRandom);
+  }
 
 }

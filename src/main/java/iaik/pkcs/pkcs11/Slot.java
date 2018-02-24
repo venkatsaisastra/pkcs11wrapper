@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -67,168 +67,167 @@ import sun.security.pkcs11.wrapper.CK_SLOT_INFO;
 @SuppressWarnings("restriction")
 public class Slot {
 
-    /**
-     * The module that created this slot object.
-     */
-    private Module module;
+  /**
+   * The module that created this slot object.
+   */
+  private Module module;
 
-    /**
-     * The identifier of the slot.
-     */
-    // CHECKSTYLE:SKIP
-    private long slotID;
+  /**
+   * The identifier of the slot.
+   */
+  // CHECKSTYLE:SKIP
+  private long slotID;
 
-    /**
-     * True, if UTF8 encoding is used as character encoding for character array
-     * attributes and PINs.
-     */
-    private boolean useUtf8Encoding = true;
+  /**
+   * True, if UTF8 encoding is used as character encoding for character array
+   * attributes and PINs.
+   */
+  private boolean useUtf8Encoding = true;
 
-    /**
-     * The constructor that takes a reference to the module and the slot ID.
-     *
-     * @param module
-     *          The reference to the module of this slot.
-     * @param slotID
-     *           The identifier of the slot.
-     * @preconditions (pkcs11Module <> null)
-     * @postconditions
-     */
-    protected Slot(Module module, long slotID) { // CHECKSTYLE:SKIP
-        this.module = Util.requireNonNull("module", module);
-        this.slotID = slotID;
+  /**
+   * The constructor that takes a reference to the module and the slot ID.
+   *
+   * @param module
+   *          The reference to the module of this slot.
+   * @param slotID
+   *           The identifier of the slot.
+   * @preconditions (pkcs11Module <> null)
+   * @postconditions
+   */
+  protected Slot(Module module, long slotID) { // CHECKSTYLE:SKIP
+    this.module = Util.requireNonNull("module", module);
+    this.slotID = slotID;
+  }
+
+  /**
+   * Compares the slot ID and the module_ of this object with the slot ID and
+   * module_ of the other object. Returns only true, if both are equal.
+   *
+   * @param otherObject
+   *          The other Slot object.
+   * @return True, if other is an instance of Slot and the slot ID and module_
+   *         of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof Slot)) {
+      return false;
     }
 
-    /**
-     * Compares the slot ID and the module_ of this object with the slot ID and
-     * module_ of the other object. Returns only true, if both are equal.
-     *
-     * @param otherObject
-     *          The other Slot object.
-     * @return True, if other is an instance of Slot and the slot ID and module_
-     *         of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof Slot)) {
-            return false;
-        }
+    Slot other = (Slot) otherObject;
+    return (this.slotID == other.slotID)
+        && this.module.equals(other.module);
+  }
 
-        Slot other = (Slot) otherObject;
-        return (this.slotID == other.slotID)
-                && this.module.equals(other.module);
+  /**
+   * Specify, whether UTF8 character encoding shall be used for character
+   * array attributes and PINs.
+   * @param useUtf8Encoding
+   *          true, if UTF8 shall be used
+   */
+  public void setUseUtf8Encoding(boolean useUtf8Encoding) {
+    this.useUtf8Encoding = useUtf8Encoding;
+  }
+
+  /**
+   * Returns whether UTF8 encoding is set.
+   * @return true, if UTF8 is used as character encoding for character array
+   *         attributes and PINs.
+   */
+  public boolean isUseUtf8Encoding() {
+    return useUtf8Encoding;
+  }
+
+  /**
+   * Get the module that created this Slot object.
+   *
+   * @return The module of this slot.
+   * @preconditions
+   * @postconditions
+   */
+  public Module getModule() {
+    return module;
+  }
+
+  /**
+   * Get the ID of this slot. This is the ID returned by the PKCS#11 module.
+   *
+   * @return The ID of this slot.
+   * @preconditions
+   * @postconditions
+   */
+  // CHECKSTYLE:SKIP
+  public long getSlotID() {
+    return slotID;
+  }
+
+  /**
+   * Get information about this slot object.
+   *
+   * @return An object that contains information about this slot.
+   * @exception TokenException
+   *              If reading the information fails.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public SlotInfo getSlotInfo() throws TokenException {
+    CK_SLOT_INFO ckSlotInfo;
+    try {
+      ckSlotInfo = module.getPKCS11Module().C_GetSlotInfo(slotID);
+    } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+      throw new PKCS11Exception(ex);
     }
 
-    /**
-     * Specify, whether UTF8 character encoding shall be used for character
-     * array attributes and PINs.
-     * @param useUtf8Encoding
-     *          true, if UTF8 shall be used
-     */
-    public void setUseUtf8Encoding(boolean useUtf8Encoding) {
-        this.useUtf8Encoding = useUtf8Encoding;
+    return new SlotInfo(ckSlotInfo);
+  }
+
+  /**
+   * Get an object for handling the token that is currently present in this
+   * slot, or null, if there is no token present.
+   *
+   * @return The object for accessing the token. Or null, if none is present
+   *         in this slot.
+   * @exception TokenException
+   *              If determining if a token is present fails.
+   * @preconditions
+   * @postconditions
+   */
+  public Token getToken() throws TokenException {
+    Token token = null;
+
+    if (getSlotInfo().isTokenPresent()) {
+      token = new Token(this);
     }
 
-    /**
-     * Returns whether UTF8 encoding is set.
-     * @return true, if UTF8 is used as character encoding for character array
-     *         attributes and PINs.
-     */
-    public boolean isUseUtf8Encoding() {
-        return useUtf8Encoding;
-    }
+    return token;
+  }
 
-    /**
-     * Get the module that created this Slot object.
-     *
-     * @return The module of this slot.
-     * @preconditions
-     * @postconditions
-     */
-    public Module getModule() {
-        return module;
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object. Gained from the slot ID.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return (int) slotID;
+  }
 
-    /**
-     * Get the ID of this slot. This is the ID returned by the PKCS#11 module.
-     *
-     * @return The ID of this slot.
-     * @preconditions
-     * @postconditions
-     */
-    // CHECKSTYLE:SKIP
-    public long getSlotID() {
-        return slotID;
-    }
-
-    /**
-     * Get information about this slot object.
-     *
-     * @return An object that contains information about this slot.
-     * @exception TokenException
-     *              If reading the information fails.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public SlotInfo getSlotInfo()
-        throws TokenException {
-        CK_SLOT_INFO ckSlotInfo;
-        try {
-            ckSlotInfo = module.getPKCS11Module().C_GetSlotInfo(slotID);
-        } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
-            throw new PKCS11Exception(ex);
-        }
-
-        return new SlotInfo(ckSlotInfo);
-    }
-
-    /**
-     * Get an object for handling the token that is currently present in this
-     * slot, or null, if there is no token present.
-     *
-     * @return The object for accessing the token. Or null, if none is present
-     *         in this slot.
-     * @exception TokenException
-     *              If determining if a token is present fails.
-     * @preconditions
-     * @postconditions
-     */
-    public Token getToken()
-        throws TokenException {
-        Token token = null;
-
-        if (getSlotInfo().isTokenPresent()) {
-            token = new Token(this);
-        }
-
-        return token;
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object. Gained from the slot ID.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return (int) slotID;
-    }
-
-    /**
-     * Returns the string representation of this object.
-     *
-     * @return the string representation of this object
-     */
-    @Override
-    public String toString() {
-        return Util.concatObjects("Slot ID: 0x", Long.toHexString(slotID), "\nModule: ", module);
-    }
+  /**
+   * Returns the string representation of this object.
+   *
+   * @return the string representation of this object
+   */
+  @Override
+  public String toString() {
+    return Util.concatObjects("Slot ID: 0x", Long.toHexString(slotID),
+        "\nModule: ", module);
+  }
 
 }

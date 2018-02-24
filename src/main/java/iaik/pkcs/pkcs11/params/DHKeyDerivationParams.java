@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -69,188 +69,187 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 // CHECKSTYLE:SKIP
 abstract public class DHKeyDerivationParams implements Params {
 
-    public interface KeyDerivationFunctionType {
+  public interface KeyDerivationFunctionType {
 
-        /**
-         * The identifier for CKD_NULL.
-         */
-        public static final long NULL = PKCS11Constants.CKD_NULL;
+    /**
+     * The identifier for CKD_NULL.
+     */
+    public static final long NULL = PKCS11Constants.CKD_NULL;
 
-        /**
-         * The identifier for CKD_SHA1_KDF.
-         */
-        public static final long SHA1_KDF = PKCS11Constants.CKD_SHA1_KDF;
+    /**
+     * The identifier for CKD_SHA1_KDF.
+     */
+    public static final long SHA1_KDF = PKCS11Constants.CKD_SHA1_KDF;
 
-        /**
-         * The identifier for CKD_SHA1_KDF_ASN1.
-         */
-        public static final long SHA1_KDF_ASN1
-            = PKCS11Constants.CKD_SHA1_KDF_ASN1;
+    /**
+     * The identifier for CKD_SHA1_KDF_ASN1.
+     */
+    public static final long SHA1_KDF_ASN1 = PKCS11Constants.CKD_SHA1_KDF_ASN1;
 
-        /**
-         * The identifier for CKD_SHA1_KDF_CONCATENATE.
-         */
-        public static final long SHA1_KDF_CONCATENATE
-            = PKCS11Constants.CKD_SHA1_KDF_CONCATENATE;
+    /**
+     * The identifier for CKD_SHA1_KDF_CONCATENATE.
+     */
+    public static final long SHA1_KDF_CONCATENATE =
+        PKCS11Constants.CKD_SHA1_KDF_CONCATENATE;
 
+  }
+
+  /**
+   * The key derivation function used on the shared secret value.
+   */
+  protected long kdf;
+
+  /**
+   * The other partie's public key value.
+   */
+  protected byte[] publicData;
+
+  /**
+   * Create a new DHKeyDerivationParameters object with the given attributes.
+   *
+   * @param kdf
+   *          The key derivation function used on the shared secret value.
+   *          One of the values defined in KeyDerivationFunctionType.
+   * @param publicData
+   *          The other partie's public key value.
+   * @preconditions ((kdf == KeyDerivationFunctionType.NULL)
+   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF)
+   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1)
+   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
+   *              and (publicData <> null)
+   * @postconditions
+   */
+  protected DHKeyDerivationParams(long kdf, byte[] publicData) {
+    if ((kdf != KeyDerivationFunctionType.NULL)
+        && (kdf != KeyDerivationFunctionType.SHA1_KDF)
+        && (kdf != KeyDerivationFunctionType.SHA1_KDF_ASN1)
+        && (kdf != KeyDerivationFunctionType.SHA1_KDF_CONCATENATE)) {
+      throw new IllegalArgumentException(
+        "Illegal value for argument\"kdf\": " + Long.toHexString(kdf));
     }
 
-    /**
-     * The key derivation function used on the shared secret value.
-     */
-    protected long kdf;
+    this.publicData = Util.requireNonNull("publicData", publicData);
+    this.kdf = kdf;
+  }
 
-    /**
-     * The other partie's public key value.
-     */
-    protected byte[] publicData;
+  /**
+   * Get the key derivation function used on the shared secret value.
+   *
+   * @return The key derivation function used on the shared secret value.
+   *         One of the values defined in KeyDerivationFunctionType.
+   * @preconditions
+   * @postconditions
+   */
+  public long getKeyDerivationFunction() {
+    return kdf;
+  }
 
-    /**
-     * Create a new DHKeyDerivationParameters object with the given attributes.
-     *
-     * @param kdf
-     *          The key derivation function used on the shared secret value.
-     *          One of the values defined in KeyDerivationFunctionType.
-     * @param publicData
-     *          The other partie's public key value.
-     * @preconditions ((kdf == KeyDerivationFunctionType.NULL)
-     *              or (kdf == KeyDerivationFunctionType.SHA1_KDF)
-     *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1)
-     *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
-     *              and (publicData <> null)
-     * @postconditions
-     */
-    protected DHKeyDerivationParams(long kdf, byte[] publicData) {
-        if ((kdf != KeyDerivationFunctionType.NULL)
-            && (kdf != KeyDerivationFunctionType.SHA1_KDF)
-            && (kdf != KeyDerivationFunctionType.SHA1_KDF_ASN1)
-            && (kdf != KeyDerivationFunctionType.SHA1_KDF_CONCATENATE)) {
-            throw new IllegalArgumentException(
-                "Illegal value for argument\"kdf\": " + Long.toHexString(kdf));
-        }
+  /**
+   * Get the other partie's public key value.
+   *
+   * @return The other partie's public key value.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public byte[] getPublicData() {
+    return publicData;
+  }
 
-        this.publicData = Util.requireNonNull("publicData", publicData);
-        this.kdf = kdf;
+  /**
+   * Set the key derivation function used on the shared secret value.
+   *
+   * @param kdf
+   *          The key derivation function used on the shared secret value.
+   *          One of the values defined in KeyDerivationFunctionType.
+   * @preconditions (kdf  == KeyDerivationFunctionType.NULL)
+   *             or (kdf == KeyDerivationFunctionType.SHA1_KDF))
+   *             or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1))
+   *             or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
+   * @postconditions
+   */
+  public void setKeyDerivationFunction(long kdf) {
+    if ((kdf != KeyDerivationFunctionType.NULL)
+        && (kdf != KeyDerivationFunctionType.SHA1_KDF)
+        && (kdf != KeyDerivationFunctionType.SHA1_KDF_ASN1)
+        && (kdf != KeyDerivationFunctionType.SHA1_KDF_CONCATENATE)) {
+      throw new IllegalArgumentException(
+        "Illegal value for argument\"kdf\": " + Long.toHexString(kdf));
+    }
+    this.kdf = kdf;
+  }
+
+  /**
+   * Set the other partie's public key value.
+   *
+   * @param publicData
+   *          The other partie's public key value.
+   * @preconditions (publicData <> null)
+   * @postconditions
+   */
+  public void setPublicData(byte[] publicData) {
+    this.publicData = Util.requireNonNull("publicData", publicData);
+  }
+
+  /**
+   * Returns the string representation of this object. Do not parse data from
+   * this string, it is for debugging only.
+   *
+   * @return A string representation of this object.
+   */
+  @Override
+  public String toString() {
+    String kdfStr;
+    if (kdf == KeyDerivationFunctionType.NULL) {
+      kdfStr = "NULL";
+    } else if (kdf == KeyDerivationFunctionType.SHA1_KDF) {
+      kdfStr = "SHA1_KDF";
+    } else if (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1) {
+      kdfStr = "SHA1_KDF_ASN1";
+    } else if (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE) {
+      kdfStr = "SHA1_KDF_CONCATENATE";
+    } else {
+      kdfStr = "<unknown>";
     }
 
-    /**
-     * Get the key derivation function used on the shared secret value.
-     *
-     * @return The key derivation function used on the shared secret value.
-     *         One of the values defined in KeyDerivationFunctionType.
-     * @preconditions
-     * @postconditions
-     */
-    public long getKeyDerivationFunction() {
-        return kdf;
+    return Util.concat("  Key Derivation Function: ", kdfStr,
+        "\n  Public Data: ", Util.toHex(publicData));
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof DHKeyDerivationParams)) {
+      return false;
     }
 
-    /**
-     * Get the other partie's public key value.
-     *
-     * @return The other partie's public key value.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public byte[] getPublicData() {
-        return publicData;
-    }
+    DHKeyDerivationParams other = (DHKeyDerivationParams) otherObject;
+    return (this.kdf == other.kdf)
+        && Arrays.equals(this.publicData, other.publicData);
+  }
 
-    /**
-     * Set the key derivation function used on the shared secret value.
-     *
-     * @param kdf
-     *          The key derivation function used on the shared secret value.
-     *          One of the values defined in KeyDerivationFunctionType.
-     * @preconditions (kdf  == KeyDerivationFunctionType.NULL)
-     *             or (kdf == KeyDerivationFunctionType.SHA1_KDF))
-     *             or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1))
-     *             or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
-     * @postconditions
-     */
-    public void setKeyDerivationFunction(long kdf) {
-        if ((kdf != KeyDerivationFunctionType.NULL)
-            && (kdf != KeyDerivationFunctionType.SHA1_KDF)
-            && (kdf != KeyDerivationFunctionType.SHA1_KDF_ASN1)
-            && (kdf != KeyDerivationFunctionType.SHA1_KDF_CONCATENATE)) {
-            throw new IllegalArgumentException(
-                "Illegal value for argument\"kdf\": " + Long.toHexString(kdf));
-        }
-        this.kdf = kdf;
-    }
-
-    /**
-     * Set the other partie's public key value.
-     *
-     * @param publicData
-     *          The other partie's public key value.
-     * @preconditions (publicData <> null)
-     * @postconditions
-     */
-    public void setPublicData(byte[] publicData) {
-        this.publicData = Util.requireNonNull("publicData", publicData);
-    }
-
-    /**
-     * Returns the string representation of this object. Do not parse data from
-     * this string, it is for debugging only.
-     *
-     * @return A string representation of this object.
-     */
-    @Override
-    public String toString() {
-        String kdfStr;
-        if (kdf == KeyDerivationFunctionType.NULL) {
-            kdfStr = "NULL";
-        } else if (kdf == KeyDerivationFunctionType.SHA1_KDF) {
-            kdfStr = "SHA1_KDF";
-        } else if (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1) {
-            kdfStr = "SHA1_KDF_ASN1";
-        } else if (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE) {
-            kdfStr = "SHA1_KDF_CONCATENATE";
-        } else {
-            kdfStr = "<unknown>";
-        }
-
-        return Util.concat("  Key Derivation Function: ", kdfStr,
-                "\n  Public Data: ", Util.toHex(publicData));
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof DHKeyDerivationParams)) {
-            return false;
-        }
-
-        DHKeyDerivationParams other = (DHKeyDerivationParams) otherObject;
-        return (this.kdf == other.kdf)
-                && Arrays.equals(this.publicData, other.publicData);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return ((int) kdf) ^ Functions.hashCode(publicData);
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return ((int) kdf) ^ Functions.hashCode(publicData);
+  }
 
 }

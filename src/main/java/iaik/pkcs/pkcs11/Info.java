@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -58,139 +58,139 @@ import sun.security.pkcs11.wrapper.CK_INFO;
 @SuppressWarnings("restriction")
 public class Info {
 
-    /**
-     * The module claims to be compliant to this version of PKCS#11.
-     */
-    private Version cryptokiVersion;
+  /**
+   * The module claims to be compliant to this version of PKCS#11.
+   */
+  private Version cryptokiVersion;
 
-    /**
-     * The identifer for the manufacturer of this module.
-     */
-    // CHECKSTYLE:SKIP
-    private String manufacturerID;
+  /**
+   * The identifer for the manufacturer of this module.
+   */
+  // CHECKSTYLE:SKIP
+  private String manufacturerID;
 
-    /**
-     * A description of this module.
-     */
-    private String libraryDescription;
+  /**
+   * A description of this module.
+   */
+  private String libraryDescription;
 
-    /**
-     * The version number of this module.
-     */
-    private Version libraryVersion;
+  /**
+   * The version number of this module.
+   */
+  private Version libraryVersion;
 
-    /**
-     * Constructor taking the CK_INFO object of the token.
-     *
-     * @param ckInfo
-     *          The info object as got from PKCS11.C_GetInfo().
-     * @preconditions (ckInfo <> null)
-     * @postconditions
-     */
-    public Info(CK_INFO ckInfo) {
-        Util.requireNonNull("ckInfo", ckInfo);
-        cryptokiVersion = new Version(ckInfo.cryptokiVersion);
-        manufacturerID = new String(ckInfo.manufacturerID);
-        libraryDescription = new String(ckInfo.libraryDescription);
-        libraryVersion = new Version(ckInfo.libraryVersion);
+  /**
+   * Constructor taking the CK_INFO object of the token.
+   *
+   * @param ckInfo
+   *          The info object as got from PKCS11.C_GetInfo().
+   * @preconditions (ckInfo <> null)
+   * @postconditions
+   */
+  public Info(CK_INFO ckInfo) {
+    Util.requireNonNull("ckInfo", ckInfo);
+    cryptokiVersion = new Version(ckInfo.cryptokiVersion);
+    manufacturerID = new String(ckInfo.manufacturerID);
+    libraryDescription = new String(ckInfo.libraryDescription);
+    libraryVersion = new Version(ckInfo.libraryVersion);
+  }
+
+  /**
+   * Get the version of PKCS#11 that this module claims to be compliant to.
+   *
+   * @return The version object.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public Version getCryptokiVersion() {
+    return cryptokiVersion;
+  }
+
+  /**
+   * Get the identifier of the manufacturer.
+   *
+   * @return A string identifying the manufacturer of this module.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  // CHECKSTYLE:SKIP
+  public String getManufacturerID() {
+    return manufacturerID;
+  }
+
+  /**
+   * Get a short description of this module.
+   *
+   * @return A string describing the module.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public String getLibraryDescription() {
+    return libraryDescription;
+  }
+
+  /**
+   * Get the version of this PKCS#11 module.
+   *
+   * @return The version of this module.
+   * @preconditions
+   * @postconditions
+   */
+  public Version getLibraryVersion() {
+    return libraryVersion;
+  }
+
+  /**
+   * Returns the string representation of this object.
+   *
+   * @return the string representation of object
+   */
+  @Override
+  public String toString() {
+    return Util.concatObjects("Cryptoki Version: ", cryptokiVersion,
+        "\nManufacturerID: ", manufacturerID,
+        "\nLibrary Description: ", libraryDescription,
+        "\nLibrary Version: ", libraryVersion);
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other Info object.
+   * @return True, if other is an instance of Info and all member variables of
+   *         both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof Info)) {
+      return false;
     }
 
-    /**
-     * Get the version of PKCS#11 that this module claims to be compliant to.
-     *
-     * @return The version object.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public Version getCryptokiVersion() {
-        return cryptokiVersion;
-    }
+    Info other = (Info) otherObject;
+    return this.cryptokiVersion.equals(other.cryptokiVersion)
+        && this.manufacturerID.equals(other.manufacturerID)
+        && this.libraryDescription.equals(other.libraryDescription)
+        && this.libraryVersion.equals(other.libraryVersion);
+  }
 
-    /**
-     * Get the identifier of the manufacturer.
-     *
-     * @return A string identifying the manufacturer of this module.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    // CHECKSTYLE:SKIP
-    public String getManufacturerID() {
-        return manufacturerID;
-    }
-
-    /**
-     * Get a short description of this module.
-     *
-     * @return A string describing the module.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public String getLibraryDescription() {
-        return libraryDescription;
-    }
-
-    /**
-     * Get the version of this PKCS#11 module.
-     *
-     * @return The version of this module.
-     * @preconditions
-     * @postconditions
-     */
-    public Version getLibraryVersion() {
-        return libraryVersion;
-    }
-
-    /**
-     * Returns the string representation of this object.
-     *
-     * @return the string representation of object
-     */
-    @Override
-    public String toString() {
-        return Util.concatObjects("Cryptoki Version: ", cryptokiVersion,
-                "\nManufacturerID: ", manufacturerID,
-                "\nLibrary Description: ", libraryDescription,
-                "\nLibrary Version: ", libraryVersion);
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other Info object.
-     * @return True, if other is an instance of Info and all member variables of
-     *         both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof Info)) {
-            return false;
-        }
-
-        Info other = (Info) otherObject;
-        return this.cryptokiVersion.equals(other.cryptokiVersion)
-                && this.manufacturerID.equals(other.manufacturerID)
-                && this.libraryDescription.equals(other.libraryDescription)
-                && this.libraryVersion.equals(other.libraryVersion);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object. Gained from all member variables.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return cryptokiVersion.hashCode() ^ manufacturerID.hashCode()
-            ^ libraryDescription.hashCode() ^ libraryVersion.hashCode();
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object. Gained from all member variables.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return cryptokiVersion.hashCode() ^ manufacturerID.hashCode()
+      ^ libraryDescription.hashCode() ^ libraryVersion.hashCode();
+  }
 
 }

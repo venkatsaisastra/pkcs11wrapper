@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -56,39 +56,39 @@ import sun.security.pkcs11.wrapper.PKCS11Exception;
 @SuppressWarnings("restriction")
 public interface Notify {
 
-    /**
-     * This is the code to return in a PKCS11Exception to signal surrender
-     * to the library.
-     */
-    static final long CANCEL = PKCS11Constants.CKR_CANCEL;
+  /**
+   * This is the code to return in a PKCS11Exception to signal surrender
+   * to the library.
+   */
+  static final long CANCEL = PKCS11Constants.CKR_CANCEL;
 
-    /**
-     * The module calls this method in certain events. 'Surrender' is the only
-     * event defined by now. If the application wants to return an error code,
-     * it can do this using PKCS11Exceptions. Throwing no exception means a
-     * return value of CKR_OK, and throwing an PKCS11Exception means a return
-     * value of the error code of the exception; e.g.<code><br>
-     * throw new PKCS11Exception(PKCS11Constants.CKR_CANCEL);<br>
-     * </code><br>
-     * causes a return value of CKR_CANCEL.
-     *
-     * @param session
-     *          The session performing the callback.
-     * @param surrender
-     *          See CK_NOTIFICATION in PKCS#11. A return value of CKR_OK is
-     *          generated, if this method call returns regularly.
-     *          CKR_CANCEL can be returned to the module by throwing a
-     *          PKCS11Exception with the error-code CKR_CANCEL.
-     * @param application
-     *          The application-object passed to openSession.
-     * @exception PKCS11Exception
-     *              If the method fails for some reason, or as PKCS11Exception
-     *              with error-code CKR_CANCEL to signal the module to cancel
-     *              the ongoing operation.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    void notify(Session session, boolean surrender, Object application)
-        throws PKCS11Exception;
+  /**
+   * The module calls this method in certain events. 'Surrender' is the only
+   * event defined by now. If the application wants to return an error code,
+   * it can do this using PKCS11Exceptions. Throwing no exception means a
+   * return value of CKR_OK, and throwing an PKCS11Exception means a return
+   * value of the error code of the exception; e.g.<code><br>
+   * throw new PKCS11Exception(PKCS11Constants.CKR_CANCEL);<br>
+   * </code><br>
+   * causes a return value of CKR_CANCEL.
+   *
+   * @param session
+   *          The session performing the callback.
+   * @param surrender
+   *          See CK_NOTIFICATION in PKCS#11. A return value of CKR_OK is
+   *          generated, if this method call returns regularly.
+   *          CKR_CANCEL can be returned to the module by throwing a
+   *          PKCS11Exception with the error-code CKR_CANCEL.
+   * @param application
+   *          The application-object passed to openSession.
+   * @exception PKCS11Exception
+   *              If the method fails for some reason, or as PKCS11Exception
+   *              with error-code CKR_CANCEL to signal the module to cancel
+   *              the ongoing operation.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  void notify(Session session, boolean surrender, Object application)
+      throws PKCS11Exception;
 
 }

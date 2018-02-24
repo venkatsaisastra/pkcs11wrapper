@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -59,208 +59,207 @@ import iaik.pkcs.pkcs11.Util;
 // CHECKSTYLE:SKIP
 public class RSAPublicKey extends PublicKey {
 
-    /**
-     * The modulus (n) of this RSA key.
-     */
-    protected ByteArrayAttribute modulus;
+  /**
+   * The modulus (n) of this RSA key.
+   */
+  protected ByteArrayAttribute modulus;
 
-    /**
-     * The public exponent (e) of this RSA key.
-     */
-    protected ByteArrayAttribute publicExponent;
+  /**
+   * The public exponent (e) of this RSA key.
+   */
+  protected ByteArrayAttribute publicExponent;
 
-    /**
-     * The bit-length of the modulus of this RSA key.
-     */
-    protected LongAttribute modulusBits;
+  /**
+   * The bit-length of the modulus of this RSA key.
+   */
+  protected LongAttribute modulusBits;
 
-    /**
-     * Default Constructor.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    public RSAPublicKey() {
-        super();
-        keyType.setLongValue(KeyType.RSA);
+  /**
+   * Default Constructor.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  public RSAPublicKey() {
+    super();
+    keyType.setLongValue(KeyType.RSA);
+  }
+
+  /**
+   * Called by getInstance to create an instance of a PKCS#11 RSA public key.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  protected RSAPublicKey(Session session, long objectHandle)
+      throws TokenException {
+    super(session, objectHandle);
+    keyType.setLongValue(KeyType.RSA);
+  }
+
+  /**
+   * The getInstance method of the PublicKey class uses this method to create
+   * an instance of a PKCS#11 RSA public key.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @param objectHandle
+   *          The object handle as given from the PKCS#111 module.
+   * @return The object representing the PKCS#11 object.
+   *         The returned object can be casted to the
+   *         according sub-class.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions (result <> null)
+   */
+  public static PKCS11Object getInstance(Session session, long objectHandle)
+      throws TokenException {
+    return new RSAPublicKey(session, objectHandle);
+  }
+
+  /**
+   * Put all attributes of the given object into the attributes table of this
+   * object. This method is only static to be able to access invoke the
+   * implementation of this method for each class separately.
+   *
+   * @param object
+   *          The object to handle.
+   * @preconditions (object <> null)
+   * @postconditions
+   */
+  protected static void putAttributesInTable(RSAPublicKey object) {
+    Util.requireNonNull("object", object);
+    object.attributeTable.put(Attribute.MODULUS, object.modulus);
+    object.attributeTable.put(Attribute.PUBLIC_EXPONENT,
+        object.publicExponent);
+    object.attributeTable.put(Attribute.MODULUS_BITS, object.modulusBits);
+  }
+
+  /**
+   * Allocates the attribute objects for this class and adds them to the
+   * attribute table.
+   *
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  protected void allocateAttributes() {
+    super.allocateAttributes();
+
+    modulus = new ByteArrayAttribute(Attribute.MODULUS);
+    publicExponent = new ByteArrayAttribute(Attribute.PUBLIC_EXPONENT);
+    modulusBits = new LongAttribute(Attribute.MODULUS_BITS);
+
+    putAttributesInTable(this);
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof RSAPublicKey)) {
+      return false;
     }
 
-    /**
-     * Called by getInstance to create an instance of a PKCS#11 RSA public key.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    protected RSAPublicKey(Session session, long objectHandle)
-        throws TokenException {
-        super(session, objectHandle);
-        keyType.setLongValue(KeyType.RSA);
-    }
+    RSAPublicKey other = (RSAPublicKey) otherObject;
+    return super.equals(other)
+        && this.modulus.equals(other.modulus)
+        && this.publicExponent.equals(other.publicExponent)
+        && this.modulusBits.equals(other.modulusBits);
+  }
 
-    /**
-     * The getInstance method of the PublicKey class uses this method to create
-     * an instance of a PKCS#11 RSA public key.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @param objectHandle
-     *          The object handle as given from the PKCS#111 module.
-     * @return The object representing the PKCS#11 object.
-     *         The returned object can be casted to the
-     *         according sub-class.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions (result <> null)
-     */
-    public static PKCS11Object getInstance(Session session, long objectHandle)
-        throws TokenException {
-        return new RSAPublicKey(session, objectHandle);
-    }
+  /**
+   * Gets the modulus attribute of this RSA key.
+   *
+   * @return The modulus attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getModulus() {
+    return modulus;
+  }
 
-    /**
-     * Put all attributes of the given object into the attributes table of this
-     * object. This method is only static to be able to access invoke the
-     * implementation of this method for each class separately.
-     *
-     * @param object
-     *          The object to handle.
-     * @preconditions (object <> null)
-     * @postconditions
-     */
-    protected static void putAttributesInTable(RSAPublicKey object) {
-        Util.requireNonNull("object", object);
-        object.attributeTable.put(Attribute.MODULUS, object.modulus);
-        object.attributeTable.put(Attribute.PUBLIC_EXPONENT,
-                object.publicExponent);
-        object.attributeTable.put(Attribute.MODULUS_BITS, object.modulusBits);
-    }
+  /**
+   * Gets the public exponent attribute of this RSA key.
+   *
+   * @return The public exponent attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public ByteArrayAttribute getPublicExponent() {
+    return publicExponent;
+  }
 
-    /**
-     * Allocates the attribute objects for this class and adds them to the
-     * attribute table.
-     *
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    protected void allocateAttributes() {
-        super.allocateAttributes();
+  /**
+   * Gets the modulus bits (bit-length of the modulus) attribute of this RSA
+   * key.
+   *
+   * @return The public exponent attribute.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public LongAttribute getModulusBits() {
+    return modulusBits;
+  }
 
-        modulus = new ByteArrayAttribute(Attribute.MODULUS);
-        publicExponent = new ByteArrayAttribute(Attribute.PUBLIC_EXPONENT);
-        modulusBits = new LongAttribute(Attribute.MODULUS_BITS);
+  /**
+   * Read the values of the attributes of this object from the token.
+   *
+   * @param session
+   *          The session to use for reading attributes. This session must
+   *          have the appropriate rights; i.e. it must be a user-session, if
+   *          it is a private object.
+   * @exception TokenException
+   *              If getting the attributes failed.
+   * @preconditions (session <> null)
+   * @postconditions
+   */
+  @Override
+  public void readAttributes(Session session) throws TokenException {
+    super.readAttributes(session);
 
-        putAttributesInTable(this);
-    }
+    PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        modulus, publicExponent, modulusBits });
+  }
 
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof RSAPublicKey)) {
-            return false;
-        }
-
-        RSAPublicKey other = (RSAPublicKey) otherObject;
-        return super.equals(other)
-                && this.modulus.equals(other.modulus)
-                && this.publicExponent.equals(other.publicExponent)
-                && this.modulusBits.equals(other.modulusBits);
-    }
-
-    /**
-     * Gets the modulus attribute of this RSA key.
-     *
-     * @return The modulus attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getModulus() {
-        return modulus;
-    }
-
-    /**
-     * Gets the public exponent attribute of this RSA key.
-     *
-     * @return The public exponent attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public ByteArrayAttribute getPublicExponent() {
-        return publicExponent;
-    }
-
-    /**
-     * Gets the modulus bits (bit-length of the modulus) attribute of this RSA
-     * key.
-     *
-     * @return The public exponent attribute.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    public LongAttribute getModulusBits() {
-        return modulusBits;
-    }
-
-    /**
-     * Read the values of the attributes of this object from the token.
-     *
-     * @param session
-     *          The session to use for reading attributes. This session must
-     *          have the appropriate rights; i.e. it must be a user-session, if
-     *          it is a private object.
-     * @exception TokenException
-     *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions
-     */
-    @Override
-    public void readAttributes(Session session)
-        throws TokenException {
-        super.readAttributes(session);
-
-        PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-            modulus, publicExponent, modulusBits });
-    }
-
-    /**
-     * Returns a string representation of the current object. The
-     * output is only for debugging purposes and should not be used for other
-     * purposes.
-     *
-     * @return A string presentation of this object for debugging output.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public String toString() {
-        String superToString = super.toString();
-        return Util.concatObjectsCap(superToString.length() + 100, superToString,
-                "\n  Modulus (hex): ", modulus,
-                "\n  Public Exponent (hex): ", publicExponent,
-                "\n  Modulus Bits (dec): ", modulusBits.toString(10));
-    }
+  /**
+   * Returns a string representation of the current object. The
+   * output is only for debugging purposes and should not be used for other
+   * purposes.
+   *
+   * @return A string presentation of this object for debugging output.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public String toString() {
+    String superToString = super.toString();
+    return Util.concatObjectsCap(superToString.length() + 100, superToString,
+        "\n  Modulus (hex): ", modulus,
+        "\n  Public Exponent (hex): ", publicExponent,
+        "\n  Modulus Bits (dec): ", modulusBits.toString(10));
+  }
 
 }

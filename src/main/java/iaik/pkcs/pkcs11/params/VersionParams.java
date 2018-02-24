@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -56,70 +56,70 @@ import sun.security.pkcs11.wrapper.CK_VERSION;
  */
 @SuppressWarnings("restriction")
 public class VersionParams implements Params {
-    
-    private Version version;
 
-    /**
-     * Create a new VersionParameters object with the given version
-     *
-     * @param version
-     *          The version.
-     * @preconditions
-     * @postconditions
-     */
-    public VersionParams(Version version) {
-        this.version = Util.requireNonNull("version", version);
+  private Version version;
+
+  /**
+   * Create a new VersionParameters object with the given version.
+   *
+   * @param version
+   *          The version.
+   * @preconditions
+   * @postconditions
+   */
+  public VersionParams(Version version) {
+    this.version = Util.requireNonNull("version", version);
+  }
+
+  /**
+   * Get this parameters object as a CK_VERSION object.
+   *
+   * @return This object as a CK_VERSION object.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public Object getPKCS11ParamsObject() {
+    return new CK_VERSION(version.getMajor(), version.getMinor());
+  }
+
+  /**
+   * This method allows setting the major and minor version numbers using
+   * a version object of the lower level API.
+   *
+   * @param input
+   *          The version object providing the major and minor version.
+   * @preconditions (input <> null)
+   * @postconditions
+   */
+  // CHECKSTYLE:SKIP
+  public void setPKCS11ParamsObject(CK_VERSION input) {
+    this.version = new Version(input);
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof VersionParams)) {
+      return false;
     }
 
-    /**
-     * Get this parameters object as a CK_VERSION object.
-     *
-     * @return This object as a CK_VERSION object.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public Object getPKCS11ParamsObject() {
-        return new CK_VERSION(version.getMajor(), version.getMinor());
-    }
+    VersionParams other = (VersionParams) otherObject;
+    return this.version.equals(other.version);
+  }
 
-    /**
-     * This method allows setting the major and minor version numbers using
-     * a version object of the lower level API.
-     *
-     * @param input
-     *          The version object providing the major and minor version.
-     * @preconditions (input <> null)
-     * @postconditions
-     */
-    // CHECKSTYLE:SKIP
-    public void setPKCS11ParamsObject(CK_VERSION input) {
-        this.version = new Version(input);
-    }
-    
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof VersionParams)) {
-            return false;
-        }
-
-        VersionParams other = (VersionParams) otherObject;
-        return this.version.equals(other.version);
-    }
-
-    @Override
-    public String toString() {
-        return Util.concatObjects("Version: ", version);
-    }
+  @Override
+  public String toString() {
+    return Util.concatObjects("Version: ", version);
+  }
 }

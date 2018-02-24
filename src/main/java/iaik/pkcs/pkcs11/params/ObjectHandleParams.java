@@ -36,7 +36,7 @@
 // PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
 // OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 // ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY  WAY
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
@@ -54,105 +54,105 @@ import iaik.pkcs.pkcs11.objects.PKCS11Object;
  */
 public class ObjectHandleParams implements Params {
 
-    /**
-     * The PKCS#11 object.
-     */
-    protected PKCS11Object object;
+  /**
+   * The PKCS#11 object.
+   */
+  protected PKCS11Object object;
 
-    /**
-     * Create a new ObjectHandleParameters object using the given object.
-     *
-     * @param object
-     *          The PKCS#11 object which's handle to use.
-     * @preconditions
-     * @postconditions
-     */
-    public ObjectHandleParams(PKCS11Object object) {
-        this.object = object;
+  /**
+   * Create a new ObjectHandleParameters object using the given object.
+   *
+   * @param object
+   *          The PKCS#11 object which's handle to use.
+   * @preconditions
+   * @postconditions
+   */
+  public ObjectHandleParams(PKCS11Object object) {
+    this.object = object;
+  }
+
+  /**
+   * Get this parameters object as a Long object, which is the handle of the
+   * underlying object.
+   *
+   * @return This object as a Long object.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public Object getPKCS11ParamsObject() {
+    return new Long(object.getObjectHandle());
+  }
+
+  /**
+   * Get the PKCS#11 object.
+   *
+   * @return The PKCS#11 object.
+   * @preconditions
+   * @postconditions
+   */
+  public PKCS11Object getObject() {
+    return object;
+  }
+
+  /**
+   * Set the PKCS#11 object.
+   *
+   * @param object
+   *          The PKCS#11 object.
+   * @preconditions
+   * @postconditions
+   */
+  public void setObjectHandle(PKCS11Object object) {
+    this.object = object;
+  }
+
+  /**
+   * Returns the string representation of this object. Do not parse data from
+   * this string, it is for debugging only.
+   *
+   * @return A string representation of this object.
+   */
+  @Override
+  public String toString() {
+    return Util.concatObjects("  The PKCS11Object:\n", object);
+  }
+
+  /**
+   * Compares all member variables of this object with the other object.
+   * Returns only true, if all are equal in both objects.
+   *
+   * @param otherObject
+   *          The other object to compare to.
+   * @return True, if other is an instance of this class and all member
+   *         variables of both objects are equal. False, otherwise.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof ObjectHandleParams)) {
+      return false;
     }
 
-    /**
-     * Get this parameters object as a Long object, which is the handle of the
-     * underlying object.
-     *
-     * @return This object as a Long object.
-     * @preconditions
-     * @postconditions (result <> null)
-     */
-    @Override
-    public Object getPKCS11ParamsObject() {
-        return new Long(object.getObjectHandle());
-    }
+    ObjectHandleParams other = (ObjectHandleParams) otherObject;
+    return (this != null)
+        && this.object.equals(other.object);
+  }
 
-    /**
-     * Get the PKCS#11 object.
-     *
-     * @return The PKCS#11 object.
-     * @preconditions
-     * @postconditions
-     */
-    public PKCS11Object getObject() {
-        return object;
-    }
-
-    /**
-     * Set the PKCS#11 object.
-     *
-     * @param object
-     *          The PKCS#11 object.
-     * @preconditions
-     * @postconditions
-     */
-    public void setObjectHandle(PKCS11Object object) {
-        this.object = object;
-    }
-
-    /**
-     * Returns the string representation of this object. Do not parse data from
-     * this string, it is for debugging only.
-     *
-     * @return A string representation of this object.
-     */
-    @Override
-    public String toString() {
-        return Util.concatObjects("  The PKCS11Object:\n", object);
-    }
-
-    /**
-     * Compares all member variables of this object with the other object.
-     * Returns only true, if all are equal in both objects.
-     *
-     * @param otherObject
-     *          The other object to compare to.
-     * @return True, if other is an instance of this class and all member
-     *         variables of both objects are equal. False, otherwise.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public boolean equals(Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        } else if (!(otherObject instanceof ObjectHandleParams)) {
-            return false;
-        }
-
-        ObjectHandleParams other = (ObjectHandleParams) otherObject;
-        return (this != null)
-                && this.object.equals(other.object);
-    }
-
-    /**
-     * The overriding of this method should ensure that the objects of this
-     * class work correctly in a hashtable.
-     *
-     * @return The hash code of this object.
-     * @preconditions
-     * @postconditions
-     */
-    @Override
-    public int hashCode() {
-        return (object != null) ? object.hashCode() : 0;
-    }
+  /**
+   * The overriding of this method should ensure that the objects of this
+   * class work correctly in a hashtable.
+   *
+   * @return The hash code of this object.
+   * @preconditions
+   * @postconditions
+   */
+  @Override
+  public int hashCode() {
+    return (object != null) ? object.hashCode() : 0;
+  }
 
 }
