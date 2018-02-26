@@ -141,9 +141,11 @@ public class DateAttribute extends Attribute {
    */
   @Override
   public int hashCode() {
-    return ((int) ckAttribute.type) ^
-        ((ckAttribute.pValue != null)
-            ? hashCode((CK_DATE) ckAttribute.pValue) : 0);
+    if ((ckAttribute.pValue == null)) {
+      return (int) ckAttribute.type;
+    }
+
+    return ((int) ckAttribute.type) ^ hashCode((CK_DATE) ckAttribute.pValue);
   }
 
   @Override
