@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.params;
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.constants.Functions;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import sun.security.pkcs11.wrapper.CK_ECDH2_DERIVE_PARAMS;
 
@@ -254,7 +253,7 @@ public class EcDH2KeyDerivationParams extends EcDH1KeyDerivationParams {
   @Override
   public int hashCode() {
     return super.hashCode() ^ ((int) privateDataLength)
-        ^ privateData.hashCode() ^ Functions.hashCode(publicData2);
+        ^ privateData.hashCode() ^ Util.hashCode(publicData2);
   }
 
 }

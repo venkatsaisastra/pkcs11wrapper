@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.params;
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.constants.Functions;
 import sun.security.pkcs11.wrapper.CK_ECDH1_DERIVE_PARAMS;
 
 /**
@@ -170,7 +169,7 @@ public class EcDH1KeyDerivationParams extends DHKeyDerivationParams {
    */
   @Override
   public int hashCode() {
-    return super.hashCode() ^ Functions.hashCode(sharedData);
+    return super.hashCode() ^ Util.hashCode(sharedData);
   }
 
 }

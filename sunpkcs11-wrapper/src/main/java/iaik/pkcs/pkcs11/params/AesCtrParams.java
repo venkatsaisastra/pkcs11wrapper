@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.params;
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.constants.Functions;
 import sun.security.pkcs11.wrapper.CK_AES_CTR_PARAMS;
 
 /**
@@ -131,7 +130,7 @@ public class AesCtrParams implements Params {
    */
   @Override
   public int hashCode() {
-    return Functions.hashCode(cb);
+    return Util.hashCode(cb);
   }
 
   @Override

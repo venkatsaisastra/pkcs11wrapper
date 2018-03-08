@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.params;
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.constants.Functions;
 import iaik.pkcs.pkcs11.constants.PKCS11Constants;
 
 /**
@@ -249,7 +248,7 @@ abstract public class DHKeyDerivationParams implements Params {
    */
   @Override
   public int hashCode() {
-    return ((int) kdf) ^ Functions.hashCode(publicData);
+    return ((int) kdf) ^ Util.hashCode(publicData);
   }
 
 }

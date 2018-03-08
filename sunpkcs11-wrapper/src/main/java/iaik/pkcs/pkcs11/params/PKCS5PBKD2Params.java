@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.params;
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.constants.Functions;
 import iaik.pkcs.pkcs11.constants.PKCS11Constants;
 import sun.security.pkcs11.wrapper.CK_PKCS5_PBKD2_PARAMS;
 
@@ -388,9 +387,9 @@ public class PKCS5PBKD2Params implements Params {
    */
   @Override
   public int hashCode() {
-    return ((int) saltSource) ^ Functions.hashCode(saltSourceData)
+    return ((int) saltSource) ^ Util.hashCode(saltSourceData)
       ^ ((int) iterations) ^ ((int) pseudoRandomFunction)
-      ^ Functions.hashCode(pseudoRandomFunctionData);
+      ^ Util.hashCode(pseudoRandomFunctionData);
   }
 
 }

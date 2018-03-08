@@ -310,7 +310,7 @@ public class Util {
    *          The long value to be converted.
    * @return The hexadecimal string representation of the long value.
    */
-  public static String toFullHex(long value) {
+  static String toFullHex(long value) {
     return Functions.toFullHex(value);
   }
 
@@ -373,6 +373,70 @@ public class Util {
       sb.append(obj);
     }
     return sb.toString();
+  }
+
+  /**
+   * Calculate a hash code for the given byte array.
+   *
+   * @param array
+   *          The byte array.
+   * @return A hash code for the given array.
+   * @preconditions
+   * @postconditions
+   */
+  public static int hashCode(byte[] array) {
+    int hash = 0;
+
+    if (array != null) {
+      for (int i = 0; (i < 4) && (i < array.length); i++) {
+        hash ^= (0xFF & array[i]) << ((i % 4) << 3);
+      }
+    }
+
+    return hash;
+  }
+
+  /**
+   * Calculate a hash code for the given char array.
+   *
+   * @param array
+   *          The char array.
+   * @return A hash code for the given array.
+   * @preconditions
+   * @postconditions
+   */
+  public static int hashCode(char[] array) {
+    int hash = 0;
+
+    if (array != null) {
+      for (int i = 0; (i < 4) && (i < array.length); i++) {
+        hash ^= (0xFFFFFFFF & array[i]);
+      }
+    }
+
+    return hash;
+  }
+
+  /**
+   * Calculate a hash code for the given long array.
+   *
+   * @param array
+   *          The long array.
+   * @return A hash code for the given array.
+   * @preconditions
+   * @postconditions
+   */
+  public static int hashCode(long[] array) {
+    int hash = 0;
+
+    if (array != null) {
+      for (int i = 0; (i < 4) && (i < array.length); i++) {
+        hash ^= (0xFFFFFFFF & (array[i] >> 4));
+        hash ^= (0xFFFFFFFF & array[i]);
+      }
+    }
+
+    return hash;
   }
 
 }

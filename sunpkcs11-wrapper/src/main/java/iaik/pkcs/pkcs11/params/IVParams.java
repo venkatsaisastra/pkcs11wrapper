@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.params;
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.constants.Functions;
 
 /**
  * This class encapsulates parameters for general block ciphers in CBC mode.
@@ -157,7 +156,7 @@ public class IVParams implements Params {
    */
   @Override
   public int hashCode() {
-    return Functions.hashCode(iv);
+    return Util.hashCode(iv);
   }
 
 }

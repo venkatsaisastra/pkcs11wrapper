@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.params;
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.constants.Functions;
 import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
 
 /**
@@ -192,8 +191,8 @@ public class SSL3RandomDataParams implements Params {
    */
   @Override
   public int hashCode() {
-    return Functions.hashCode(clientRandom)
-        ^ Functions.hashCode(serverRandom);
+    return Util.hashCode(clientRandom)
+        ^ Util.hashCode(serverRandom);
   }
 
 }

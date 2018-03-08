@@ -51,8 +51,7 @@ public class CodeGenerator {
       for (int i = 0; i < 8; i++) {
         int idx2 = line.indexOf(',', idx1);
         if (idx2 == -1) {
-          throw new IllegalArgumentException(
-              "invalid CkmInfo '" + line + "'");
+          throw new IllegalArgumentException("invalid CkmInfo '" + line + "'");
         }
         tokens[i] = line.substring(idx1, idx2);
         idx1 = idx2 + 1;
@@ -69,8 +68,7 @@ public class CodeGenerator {
         fullEncryptDecrypt = true;
       } else if (!token.isEmpty()) {
         throw new IllegalArgumentException(
-            "invalid EncryptDecrypt '" + token
-            + "' in line '" + line + "'");
+            "invalid EncryptDecrypt '" + token + "' in line '" + line + "'");
       }
 
       // SignVerify
@@ -81,8 +79,7 @@ public class CodeGenerator {
         fullSignVerify = true;
       } else if (!token.isEmpty()) {
         throw new IllegalArgumentException(
-            "invalid SignVerify '" + token
-            + "' in line '" + line + "'");
+            "invalid SignVerify '" + token + "' in line '" + line + "'");
       }
 
       // SRVR
@@ -91,8 +88,7 @@ public class CodeGenerator {
         signVerifyRecover = true;
       } else if (!token.isEmpty()) {
         throw new IllegalArgumentException(
-            "invalid SRVR '" + token
-            + "' in line '" + line + "'");
+            "invalid SRVR '" + token + "' in line '" + line + "'");
       }
 
       // Digest
@@ -101,8 +97,7 @@ public class CodeGenerator {
         digest = true;
       } else if (!token.isEmpty()) {
         throw new IllegalArgumentException(
-            "invalid Digest '" + token
-            + "' in line '" + line + "'");
+            "invalid Digest '" + token + "' in line '" + line + "'");
       }
 
       // KeyPairGen
@@ -146,8 +141,7 @@ public class CodeGenerator {
 
   public static final String DIR_RESOURCES = "src/dev/resources/";
 
-  public static final String FILE_PKCS11_HEADER
-      = DIR_RESOURCES + "pkcs11t.h";
+  public static final String FILE_PKCS11_HEADER = DIR_RESOURCES + "pkcs11t.h";
 
   public static final String FILE_PKCS11_CKM_META
       = DIR_RESOURCES + "pkcs11t_ckm.csv";
@@ -175,11 +169,9 @@ public class CodeGenerator {
   public static final String FILE_SIGNRECOVERVERIFY
       = DIR_OUTPUT + "signVerifyRecover.txt";
 
-  public static final String FILE_KEYPAIRGEN
-      = DIR_OUTPUT + "keypairgen.txt";
+  public static final String FILE_KEYPAIRGEN = DIR_OUTPUT + "keypairgen.txt";
 
-  public static final String FILE_KEYGEN
-      = DIR_OUTPUT + "keygen.txt";
+  public static final String FILE_KEYGEN = DIR_OUTPUT + "keygen.txt";
 
   public static final String FILE_DIGEST = DIR_OUTPUT + "digest.txt";
 
@@ -211,8 +203,7 @@ public class CodeGenerator {
 
       generateCkmInfo();
 
-      System.out.println(
-          "Generated files are in " + dir.getAbsolutePath());
+      System.out.println("Generated files are in " + dir.getAbsolutePath());
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -389,7 +380,7 @@ public class CodeGenerator {
 
       constantsWriter.write("    ");
       constantsWriter.write(
-          "public static final long " + formatName(name) + " = ");
+          "static final long " + formatName(name) + " = ");
       if (longValue != null) {
         constantsWriter.write("0x" + value + "L;");
       } else {
@@ -447,7 +438,7 @@ public class CodeGenerator {
       }
 
       CkmInfo ckmInfo = new CkmInfo(line);
-      String text = "PKCS11Constants." + ckmInfo.name + "," + NEWLINE;
+      String text = ckmInfo.name + "," + NEWLINE;
 
       if (ckmInfo.fullEncryptDecrypt) {
         fullEncryptWriter.write(text);

@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.objects;
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.constants.Functions;
 
 /**
  * Objects of this class represent a byte-array attribute of a PKCS#11 object
@@ -166,8 +165,8 @@ public class ByteArrayAttribute extends Attribute {
   @SuppressWarnings("restriction")
   @Override
   public int hashCode() {
-    return (ckAttribute.pValue != null) ? Functions
-      .hashCode((byte[]) ckAttribute.pValue) : 0;
+    return (ckAttribute.pValue != null)
+        ? Util.hashCode((byte[]) ckAttribute.pValue) : 0;
   }
 
   @Override

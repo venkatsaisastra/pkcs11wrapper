@@ -45,7 +45,7 @@ package iaik.pkcs.pkcs11.objects;
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.constants.Functions;
+import iaik.pkcs.pkcs11.Util;
 
 /**
  * Objects of this class represent a mechanism array attribute of a PKCS#11
@@ -184,8 +184,8 @@ public class MechanismArrayAttribute extends Attribute {
   @SuppressWarnings("restriction")
   @Override
   public int hashCode() {
-    return (ckAttribute.pValue != null) ? Functions
-      .hashCode((long[]) ckAttribute.pValue) : 0;
+    return (ckAttribute.pValue != null)
+        ? Util.hashCode((long[]) ckAttribute.pValue) : 0;
   }
 
   @Override

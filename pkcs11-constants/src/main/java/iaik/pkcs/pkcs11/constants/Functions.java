@@ -176,9 +176,6 @@ public class Functions implements PKCS11Constants {
   public static String mechanismCodeToString(long mechCode) {
     initMechanismMap();
     String name = mechCodeNamesAvailable ? mechNames.get(mechCode) : null;
-    if (name == null) {
-      name = PKCS11VendorConstants.mechanismCodeToString(mechCode);
-    }
 
     if (name == null) {
       name = "Unknwon mechanism with code: 0x" + toFullHex(mechCode);
@@ -198,9 +195,6 @@ public class Functions implements PKCS11Constants {
     initMechanismMap();
     Long code = mechCodeNamesAvailable
         ? mechNameToCodes.get(mechName) : null;
-    if (code == null) {
-      code = PKCS11VendorConstants.mechanismStringToCode(mechName);
-    }
     return (code != null) ? code : -1;
   }
 
@@ -235,12 +229,34 @@ public class Functions implements PKCS11Constants {
 
         String mainMechName = tokens.nextToken();
         codeNameMap.put(code, mainMechName);
-        nameCodeMap.put(mainMechName, code);
 
         while (tokens.hasMoreTokens()) {
           nameCodeMap.put(tokens.nextToken(), code);
         }
       }
+
+      codeNameMap.put(CKM_VENDOR_ISO2_SM4_MAC, "CKM_VENDOR_ISO2_SM4_MAC");
+      codeNameMap.put(CKM_VENDOR_ISO2_SM4_MAC_GENERAL,
+          "CKM_VENDOR_ISO2_SM4_MAC_GENERAL");
+      codeNameMap.put(CKM_VENDOR_SM2, "CKM_VENDOR_SM2");
+      codeNameMap.put(CKM_VENDOR_SM2_ENCRYPT, "CKM_VENDOR_SM2_ENCRYPT");
+      codeNameMap.put(CKM_VENDOR_SM2_KEY_PAIR_GEN,
+          "CKM_VENDOR_SM2_KEY_PAIR_GEN");
+      codeNameMap.put(CKM_VENDOR_SM2_SM3, "CKM_VENDOR_SM2_SM3");
+      codeNameMap.put(CKM_VENDOR_SM3, "CKM_VENDOR_SM3");
+      codeNameMap.put(CKM_VENDOR_SM4_CBC, "CKM_VENDOR_SM4_CBC");
+      codeNameMap.put(CKM_VENDOR_SM4_ECB, "CKM_VENDOR_SM4_ECB");
+      codeNameMap.put(CKM_VENDOR_SM4_ECB_ENCRYPT_DATA,
+          "CKM_VENDOR_SM4_ECB_ENCRYPT_DATA");
+      codeNameMap.put(CKM_VENDOR_SM4_KEY_GEN, "CKM_VENDOR_SM4_KEY_GEN");
+      codeNameMap.put(CKM_VENDOR_SM4_MAC, "CKM_VENDOR_SM4_MAC");
+      codeNameMap.put(CKM_VENDOR_SM4_MAC_GENERAL, "CKM_VENDOR_SM4_MAC_GENERAL");
+
+      Set<Long> codes = codeNameMap.keySet();
+      for (Long code : codes) {
+        nameCodeMap.put(codeNameMap.get(code), code);
+      }
+
       mechNames = codeNameMap;
       mechNameToCodes = nameCodeMap;
       mechCodeNamesAvailable = true;
@@ -299,70 +315,6 @@ public class Functions implements PKCS11Constants {
     }
   }
 
-  /**
-   * Calculate a hash code for the given byte array.
-   *
-   * @param array
-   *          The byte array.
-   * @return A hash code for the given array.
-   * @preconditions
-   * @postconditions
-   */
-  public static int hashCode(byte[] array) {
-    int hash = 0;
-
-    if (array != null) {
-      for (int i = 0; (i < 4) && (i < array.length); i++) {
-        hash ^= (0xFF & array[i]) << ((i % 4) << 3);
-      }
-    }
-
-    return hash;
-  }
-
-  /**
-   * Calculate a hash code for the given char array.
-   *
-   * @param array
-   *          The char array.
-   * @return A hash code for the given array.
-   * @preconditions
-   * @postconditions
-   */
-  public static int hashCode(char[] array) {
-    int hash = 0;
-
-    if (array != null) {
-      for (int i = 0; (i < 4) && (i < array.length); i++) {
-        hash ^= (0xFFFFFFFF & array[i]);
-      }
-    }
-
-    return hash;
-  }
-
-  /**
-   * Calculate a hash code for the given long array.
-   *
-   * @param array
-   *          The long array.
-   * @return A hash code for the given array.
-   * @preconditions
-   * @postconditions
-   */
-  public static int hashCode(long[] array) {
-    int hash = 0;
-
-    if (array != null) {
-      for (int i = 0; (i < 4) && (i < array.length); i++) {
-        hash ^= (0xFFFFFFFF & (array[i] >> 4));
-        hash ^= (0xFFFFFFFF & array[i]);
-      }
-    }
-
-    return hash;
-  }
-
   private static Set<Long> asSet(long[] elements) {
     HashSet<Long> set = new HashSet<>();
     for (long el : elements) {
@@ -397,12 +349,13 @@ public class Functions implements PKCS11Constants {
         CKM_BLOWFISH_CBC, CKM_BLOWFISH_CBC_PAD,
         CKM_CAMELLIA_ECB, CKM_CAMELLIA_CBC, CKM_CAMELLIA_CBC_PAD,
         CKM_ARIA_ECB, CKM_ARIA_CBC, CKM_ARIA_CBC_PAD,
-        CKM_SEED_CBC_PAD, CKM_GOST28147_ECB, CKM_GOST28147};
+        CKM_SEED_CBC_PAD, CKM_GOST28147_ECB, CKM_GOST28147,
+        // Vendor Mechanisms
+        CKM_VENDOR_SM4_CBC, CKM_VENDOR_SM4_ECB};
       fullEncryptDecryptMechs = asSet(mechs);
     }
 
-    return fullEncryptDecryptMechs.contains(mechCode)
-      || PKCS11VendorConstants.isFullEncryptDecryptMechanism(mechCode);
+    return fullEncryptDecryptMechs.contains(mechCode);
   }
 
   /**
@@ -428,9 +381,7 @@ public class Functions implements PKCS11Constants {
       sglOpEncryptDecryptMechs = asSet(mechs);
     }
 
-    return sglOpEncryptDecryptMechs.contains(mechCode)
-      || PKCS11VendorConstants.isSingleOperationEncryptDecryptMechanism(
-          mechCode);
+    return sglOpEncryptDecryptMechs.contains(mechCode);
   }
 
   /**
@@ -486,12 +437,15 @@ public class Functions implements PKCS11Constants {
         CKM_MD2_HMAC_GENERAL, CKM_MD2_HMAC, CKM_MD5_HMAC_GENERAL,
         CKM_MD5_HMAC, CKM_RIPEMD128_HMAC_GENERAL, CKM_RIPEMD128_HMAC,
         CKM_RIPEMD160_HMAC_GENERAL, CKM_RIPEMD160_HMAC,
-        CKM_RIPEMD128_RSA_PKCS, CKM_RIPEMD160_RSA_PKCS};
+        CKM_RIPEMD128_RSA_PKCS, CKM_RIPEMD160_RSA_PKCS,
+        // Vendor Mechanisms
+        CKM_VENDOR_SM2, CKM_VENDOR_SM2_SM3, CKM_VENDOR_ISO2_SM4_MAC,
+        CKM_VENDOR_SM4_MAC, CKM_VENDOR_SM4_MAC_GENERAL,
+        CKM_VENDOR_ISO2_SM4_MAC, CKM_VENDOR_ISO2_SM4_MAC_GENERAL};
       fullSignVerifyMechs = asSet(mechs);
     }
 
-    return fullSignVerifyMechs.contains(mechCode)
-      || PKCS11VendorConstants.isFullEncryptDecryptMechanism(mechCode);
+    return fullSignVerifyMechs.contains(mechCode);
   }
 
   /**
@@ -517,9 +471,7 @@ public class Functions implements PKCS11Constants {
       sglOpSignVerifyMechs = asSet(mechs);
     }
 
-    return sglOpSignVerifyMechs.contains(mechCode)
-      || PKCS11VendorConstants.isSingleOperationSignVerifyMechanism(
-          mechCode);
+    return sglOpSignVerifyMechs.contains(mechCode);
   }
 
   /**
@@ -543,8 +495,7 @@ public class Functions implements PKCS11Constants {
       signVerifyRecoverMechs = asSet(mechs);
     }
 
-    return signVerifyRecoverMechs.contains(mechCode)
-      || PKCS11VendorConstants.isSignVerifyRecoverMechanism(mechCode);
+    return signVerifyRecoverMechs.contains(mechCode);
   }
 
   /**
@@ -567,12 +518,13 @@ public class Functions implements PKCS11Constants {
         CKM_SHA384, CKM_SHA512, CKM_SHA512_224, CKM_SHA512_256,
         CKM_SHA512_T, CKM_SEED_MAC, CKM_GOSTR3411, CKM_SHA3_224,
         CKM_SHA3_256, CKM_SHA3_384, CKM_SHA3_512, CKM_MD2, CKM_MD5,
-        CKM_RIPEMD128, CKM_RIPEMD160};
+        CKM_RIPEMD128, CKM_RIPEMD160,
+        // Vendor Mechanisms
+        CKM_VENDOR_SM3};
       digestMechs = asSet(mechs);
     }
 
-    return digestMechs.contains(mechCode)
-      || PKCS11VendorConstants.isDigestMechanism(mechCode);
+    return digestMechs.contains(mechCode);
   }
 
   /**
@@ -602,12 +554,13 @@ public class Functions implements PKCS11Constants {
         CKM_PKCS5_PBKD2, CKM_SSL3_PRE_MASTER_KEY_GEN,
         CKM_WTLS_PRE_MASTER_KEY_GEN, CKM_CAMELLIA_KEY_GEN,
         CKM_ARIA_KEY_GEN, CKM_SEED_KEY_GEN, CKM_SECURID_KEY_GEN,
-        CKM_HOTP_KEY_GEN, CKM_ACTI_KEY_GEN, CKM_GOST28147_KEY_GEN};
+        CKM_HOTP_KEY_GEN, CKM_ACTI_KEY_GEN, CKM_GOST28147_KEY_GEN,
+        // Vendor Mechnisms
+        CKM_VENDOR_SM4_KEY_GEN};
       keyGenMechs = asSet(mechs);
     }
 
-    return keyGenMechs.contains(mechCode)
-      || PKCS11VendorConstants.isKeyGenerationMechanism(mechCode);
+    return keyGenMechs.contains(mechCode);
   }
 
   /**
@@ -629,12 +582,13 @@ public class Functions implements PKCS11Constants {
       long[] mechs = new long[]{CKM_RSA_PKCS_KEY_PAIR_GEN,
         CKM_RSA_X9_31_KEY_PAIR_GEN, CKM_DSA_KEY_PAIR_GEN,
         CKM_EC_KEY_PAIR_GEN, CKM_DH_PKCS_KEY_PAIR_GEN,
-        CKM_X9_42_DH_KEY_PAIR_GEN, CKM_GOSTR3410_KEY_PAIR_GEN};
+        CKM_X9_42_DH_KEY_PAIR_GEN, CKM_GOSTR3410_KEY_PAIR_GEN,
+        // Vendor Mechnisms
+        CKM_VENDOR_SM2_KEY_PAIR_GEN};
       keyPairGenMechs = asSet(mechs);
     }
 
-    return keyPairGenMechs.contains(mechCode)
-      || PKCS11VendorConstants.isKeyPairGenerationMechanism(mechCode);
+    return keyPairGenMechs.contains(mechCode);
   }
 
   /**
@@ -665,12 +619,13 @@ public class Functions implements PKCS11Constants {
         CKM_CAMELLIA_CBC_PAD, CKM_ARIA_ECB, CKM_ARIA_CBC,
         CKM_ARIA_CBC_PAD, CKM_SEED_CBC_PAD, CKM_KIP_WRAP,
         CKM_GOST28147_ECB, CKM_GOST28147, CKM_GOST28147_KEY_WRAP,
-        CKM_GOSTR3410_KEY_WRAP};
+        CKM_GOSTR3410_KEY_WRAP,
+        // Vendor Mechanisms
+        CKM_VENDOR_SM2_ENCRYPT, CKM_VENDOR_SM4_ECB};
       wrapUnwrapMechs = asSet(mechs);
     }
 
-    return wrapUnwrapMechs.contains(mechCode)
-        || PKCS11VendorConstants.isWrapUnwrapMechanism(mechCode);
+    return wrapUnwrapMechs.contains(mechCode);
   }
 
   /**
@@ -717,15 +672,16 @@ public class Functions implements PKCS11Constants {
         CKM_SHA3_384_KEY_DERIVE, CKM_SHA3_512_KEY_DERIVE,
         CKM_SHAKE_128_KEY_DERIVE, CKM_SHAKE_256_KEY_DERIVE,
         CKM_SHA256_KEY_DERIVATION, CKM_SHA256_KEY_DERIVATION,
-        CKM_SHA256_KEY_DERIVATION, CKM_SHA256_KEY_DERIVATION};
+        CKM_SHA256_KEY_DERIVATION, CKM_SHA256_KEY_DERIVATION,
+        // Vendor Mechanisms
+        CKM_VENDOR_SM4_ECB_ENCRYPT_DATA};
       keyDerivationMechs = asSet(mechs);
     }
 
-    return keyDerivationMechs.contains(mechCode)
-        || PKCS11VendorConstants.isKeyDerivationMechanism(mechCode);
+    return keyDerivationMechs.contains(mechCode);
   }
 
-  /**
+  /**CKM_VENDOR_SM4_CBC
    * Converts a long value to a hexadecimal String of length 16. Includes
    * leading zeros if necessary.
    *

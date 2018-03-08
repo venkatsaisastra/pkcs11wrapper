@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.params;
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.constants.Functions;
 import sun.security.pkcs11.wrapper.CK_PBE_PARAMS;
 
 /**
@@ -283,8 +282,8 @@ public class PBEParams implements Params {
    */
   @Override
   public int hashCode() {
-    return Functions.hashCode(iv) ^ Functions.hashCode(password)
-        ^ Functions.hashCode(salt) ^ ((int) iterations);
+    return Util.hashCode(iv) ^ Util.hashCode(password)
+        ^ Util.hashCode(salt) ^ ((int) iterations);
   }
 
 }

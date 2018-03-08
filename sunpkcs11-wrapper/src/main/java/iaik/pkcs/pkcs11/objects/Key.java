@@ -48,7 +48,6 @@ import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.constants.PKCS11Constants;
-import iaik.pkcs.pkcs11.constants.PKCS11VendorConstants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 
 /**
@@ -209,13 +208,13 @@ public class Key extends Storage {
      * The identifier for a SM2 key.
      */
     public static final Long VENDOR_SM2 =
-        new Long(PKCS11VendorConstants.CKK_VENDOR_SM2);
+        new Long(PKCS11Constants.CKK_VENDOR_SM2);
 
     /**
      * The identifier for a SM4 key.
      */
     public static final Long VENDOR_SM4 =
-        new Long(PKCS11VendorConstants.CKK_VENDOR_SM4);
+        new Long(PKCS11Constants.CKK_VENDOR_SM4);
 
     /**
      * The identifier for a VENDOR_DEFINED key. Any Long object with a

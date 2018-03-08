@@ -44,7 +44,7 @@ package iaik.pkcs.pkcs11.objects;
 
 import java.util.Arrays;
 
-import iaik.pkcs.pkcs11.constants.Functions;
+import iaik.pkcs.pkcs11.Util;
 
 /**
  * Objects of this class represent a char-array attribute of a PKCS#11 object
@@ -171,8 +171,8 @@ public class CharArrayAttribute extends Attribute {
   @SuppressWarnings("restriction")
   @Override
   public int hashCode() {
-    return (ckAttribute.pValue != null) ? Functions
-      .hashCode((char[]) ckAttribute.pValue) : 0;
+    return (ckAttribute.pValue != null) ?
+        Util.hashCode((char[]) ckAttribute.pValue) : 0;
   }
 
   @Override

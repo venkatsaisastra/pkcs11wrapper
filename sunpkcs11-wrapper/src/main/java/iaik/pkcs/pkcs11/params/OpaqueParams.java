@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.params;
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.constants.Functions;
 
 /**
  * This class encapsulates parameters byte arrays.
@@ -107,7 +106,7 @@ public class OpaqueParams implements Params {
 
   @Override
   public int hashCode() {
-    return Functions.hashCode(bytes);
+    return Util.hashCode(bytes);
   }
 
 }

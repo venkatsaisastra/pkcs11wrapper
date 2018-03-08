@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.params;
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.constants.Functions;
 
 /**
  * This class encapsulates parameters for the algorithms
@@ -157,7 +156,7 @@ public class DHPkcsDeriveParams implements Params {
    */
   @Override
   public int hashCode() {
-    return Functions.hashCode(publicValue);
+    return Util.hashCode(publicValue);
   }
 
 }

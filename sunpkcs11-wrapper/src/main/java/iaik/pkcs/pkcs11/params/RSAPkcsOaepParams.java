@@ -46,7 +46,6 @@ import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.constants.Functions;
 import iaik.pkcs.pkcs11.constants.PKCS11Constants;
 import sun.security.pkcs11.wrapper.CK_RSA_PKCS_OAEP_PARAMS;
 
@@ -269,7 +268,7 @@ public class RSAPkcsOaepParams extends RSAPkcsParams {
   @Override
   public int hashCode() {
     return super.hashCode() ^ ((int) source)
-        ^ Functions.hashCode(sourceData);
+        ^ Util.hashCode(sourceData);
   }
 
 }

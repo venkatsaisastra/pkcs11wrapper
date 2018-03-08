@@ -45,7 +45,6 @@ package iaik.pkcs.pkcs11.params;
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.constants.Functions;
 import sun.security.pkcs11.wrapper.CK_X9_42_DH1_DERIVE_PARAMS;
 
 /**
@@ -180,7 +179,7 @@ public class X942DH1KeyDerivationParams extends DHKeyDerivationParams {
    */
   @Override
   public int hashCode() {
-    return super.hashCode() ^ Functions.hashCode(otherInfo);
+    return super.hashCode() ^ Util.hashCode(otherInfo);
   }
 
 }
