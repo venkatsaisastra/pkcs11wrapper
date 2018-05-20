@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/xipki/pkcs11wrapper.svg)](http://travis-ci.org/xipki/pkcs11wrapper)
+[![Build Status](https://api.travis-ci.org/xipki/pkcs11wrapper.svg)](http://travis-ci.org/xipki/pkcs11wrapper)
 
 Changes of current branch sunpkcs11 compared to master
 =============================================
