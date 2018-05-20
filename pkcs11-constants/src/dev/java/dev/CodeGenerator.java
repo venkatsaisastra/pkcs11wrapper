@@ -311,7 +311,7 @@ public class CodeGenerator {
         new FileWriter(FILE_CONSTANTS));
     while ((line = reader.readLine()) != null) {
       if (!line.trim().startsWith("#define CK")) {
-        constantsWriter.write("    ");
+        constantsWriter.write("  ");
         constantsWriter.write(line);
         constantsWriter.write(NEWLINE);
         continue;
@@ -320,7 +320,7 @@ public class CodeGenerator {
       line = line.trim();
       StringTokenizer st = new StringTokenizer(line, " \t");
       if (st.countTokens() < 3) {
-        constantsWriter.write("    ");
+        constantsWriter.write("  ");
         constantsWriter.write(line);
         constantsWriter.write(NEWLINE);
         System.out.println("Please check line: " + line);
@@ -365,22 +365,19 @@ public class CodeGenerator {
           }
 
           if (name2 != null && !name.equals(name2)) {
-            constantsWriter.write("    /**");
+            constantsWriter.write("  /**");
             constantsWriter.write(NEWLINE);
-            constantsWriter.write("     * Use " + name2 + " instead.");
+            constantsWriter.write("   * Use " + name2 + " instead.");
             constantsWriter.write(NEWLINE);
-            constantsWriter.write("     */");
+            constantsWriter.write("   */");
             constantsWriter.write(NEWLINE);
           }
         }
-        constantsWriter.write("    ");
-        constantsWriter.write("@Deprecated");
+        constantsWriter.write("  @Deprecated");
         constantsWriter.write(NEWLINE);
       }
 
-      constantsWriter.write("    ");
-      constantsWriter.write(
-          "static final long " + formatName(name) + " = ");
+      constantsWriter.write("  long " + formatName(name) + " = ");
       if (longValue != null) {
         constantsWriter.write("0x" + value + "L;");
       } else {
