@@ -185,6 +185,23 @@ public class Functions implements PKCS11Constants {
   }
 
   /**
+   * Describes the mechanism in form of &lt;hex digital>(name), like 0x00001082 (CKM_AES_CBC).
+   *
+   * @param mechCode
+   *          The code of the mechanism to be converted to a string.
+   * @return The description of the mechanism.
+   */
+  public static String getMechanismDescription(long mechCode) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(String.format("%#010x", mechCode));
+    String name = mechanismCodeToString(mechCode);
+    if (name != null) {
+      sb.append(" (").append(name).append(")");
+    }
+    return sb.toString();
+  }
+
+  /**
    * Converts the mechanism name to code value.
    *
    * @param mechName
