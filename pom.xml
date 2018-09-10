@@ -14,9 +14,6 @@
   <version>1.4.3-SNAPSHOT</version>
   <name>PKCS#11 wrapper parent</name>
   <description>PKCS#11 wrapper parent</description>
-  <prerequisites>
-    <maven>3.0.5</maven>
-  </prerequisites>
   <licenses>
     <license>
       <name>IAIK of Graz University of Technology License</name>
@@ -160,6 +157,26 @@
             <timestampFormat>{0,date,yyyy-MM-dd-HH:mm:ss}</timestampFormat>
           </configuration>
         </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M2</version>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>3.0.5</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       </plugins>
   </build>
   <profiles>
