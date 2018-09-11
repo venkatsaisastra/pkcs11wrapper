@@ -64,7 +64,7 @@ public class Info {
   private Version cryptokiVersion;
 
   /**
-   * The identifer for the manufacturer of this module.
+   * The identifier for the manufacturer of this module.
    */
   // CHECKSTYLE:SKIP
   private String manufacturerID;

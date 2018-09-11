@@ -185,7 +185,8 @@ public class Functions implements PKCS11Constants {
   }
 
   /**
-   * Describes the mechanism in form of &lt;hex digital>(name), like 0x00001082 (CKM_AES_CBC).
+   * Describes the mechanism in form of &lt;hex digital>(name), like
+   * 0x00001082 (CKM_AES_CBC).
    *
    * @param mechCode
    *          The code of the mechanism to be converted to a string.
