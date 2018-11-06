@@ -1,5 +1,10 @@
 .gitignore
 
+.pmd
+
+# log files
+*.log
+
 # CheckStyle #
 .checkstyle
 
