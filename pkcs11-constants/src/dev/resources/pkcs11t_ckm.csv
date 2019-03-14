@@ -76,7 +76,10 @@ CKM_AES_CFB1,1,,,,,,1,
 CKM_AES_XCBC_MAC,,1,,,,,,
 CKM_AES_XCBC_MAC_96,,1,,,,,,
 ,,,,,,,,
-#Mechanism,EncryptDecrypt,SignVerify,SRVR,Digest,KeypairGen,KeyGen,WrapUnwrap,Derive
+# version 3.0,,,,,,,,
+CKM_AES_XTS,1,,,,,,1,
+CKM_AES_XTS_KEY_GEN,,,,,,1,,
+,,,,,,,,
 "#Table 57, AES with Counter Mechanisms vs. Functions",,,,,,,,
 CKM_AES_CTR,1,,,,,,1,
 CKM_AES_CTS,1,,,,,,1,
@@ -89,8 +92,10 @@ CKM_AES_CMAC_GENERAL,,1,,,,,,
 CKM_AES_CMAC,,1,,,,,,
 ,,,,,,,,
 "#Table 65, AES Key Wrap Mechanisms vs. Functions",,,,,,,,
-CKM_AES_KEY_WRAP,,,,,,,1,
-CKM_AES_KEY_WRAP_PAD,1,,,,,,,
+CKM_AES_KEY_WRAP,1,,,,,,1,
+CKM_AES_KEY_WRAP_PAD,1,,,,,,1,
+#version 3.0,,,,,,,,
+CKM_AES_KEY_WRAP_KWP,1,,,,,,1,
 ,,,,,,,,
 "#Table 66, Key derivation by data encryption Mechanisms vs. Functions",,,,,,,,
 CKM_DES_ECB_ENCRYPT_DATA,,,,,,,,1
@@ -277,6 +282,12 @@ CKM_GOSTR3410_WITH_GOSTR3411,,1,,,,,,
 CKM_GOSTR3410_KEY_WRAP,,,,,,,1,
 CKM_GOSTR3410_DERIVE,,,,,,,,1
 ,,,,,,,,
+# version 3.0,,,,,,,,
+CKM_CHACHA20_KEY_GEN,,,,,,1,,
+CKM_CHACHA20,1,,,,,,1,
+CKM_POLY1305_KEY_GEN,,,,,,1,,
+CKM_POLY1305,,1,,,,,,
+,,,,,,,,
 # version 2.4 errata 1,,,,,,,,
 CKM_DSA_SHA3_224,,1,,,,,,
 CKM_DSA_SHA3_256,,1,,,,,,
@@ -343,8 +354,8 @@ CKM_SHA256_KEY_DERIVATION,,,,,,,,1
 ,,,,,,,,
 CKM_RIPEMD128_RSA_PKCS,,1,,,,,,
 CKM_RIPEMD160_RSA_PKCS,,1,,,,,,
-
-# Vendor mechanisms
+,,,,,,,,
+# Vendor mechanisms,,,,,,,,
 #Mechanism,EncryptDecrypt,SignVerify,SRVR,Digest,KeypairGen,KeyGen,WrapUnwrap,Derive
 CKM_VENDOR_SM2_KEY_PAIR_GEN,,,,,1,,,
 CKM_VENDOR_SM2,,1,,,,,,
@@ -359,3 +370,52 @@ CKM_VENDOR_SM4_MAC,,1,,,,,,
 CKM_VENDOR_ISO2_SM4_MAC_GENERAL,,1,,,,,,
 CKM_VENDOR_ISO2_SM4_MAC,,1,,,,,,
 CKM_VENDOR_SM4_ECB_ENCRYPT_DATA,,,,,,,,1
+,,,,,,,,
+#version 3.0,,,,,,,,
+CKM_SHA_1_KEY_GEN,,,,,,1,,
+CKM_SHA224_KEY_GEN,,,,,,1,,
+CKM_SHA256_KEY_GEN,,,,,,1,,
+CKM_SHA384_KEY_GEN,,,,,,1,,
+CKM_SHA512_KEY_GEN,,,,,,1,,
+CKM_SHA512_224_KEY_GEN,,,,,,1,,
+CKM_SHA512_256_KEY_GEN,,,,,,1,,
+CKM_SHA512_T_KEY_GEN,,,,,,1,,
+,,,,,,,,
+#Mechanism,EncryptDecrypt,SignVerify,SRVR,Digest,KeypairGen,KeyGen,WrapUnwrap,Derive
+CKM_BLAKE2B_160,,,,1,,,,
+CKM_BLAKE2B_160_HMAC,,1,,,,,,
+CKM_BLAKE2B_160_HMAC_GENERAL,,1,,,,,,
+CKM_BLAKE2B_160_KEY_DERIVE,,,,,,,,1
+CKM_BLAKE2B_160_KEY_GEN,,,,,,1,,
+CKM_BLAKE2B_256,,,,1,,,,
+CKM_BLAKE2B_256_HMAC,,1,,,,,,
+CKM_BLAKE2B_256_HMAC_GENERAL,,1,,,,,,
+CKM_BLAKE2B_256_KEY_DERIVE,,,,,,,,1
+CKM_BLAKE2B_256_KEY_GEN,,,,,,1,,
+CKM_BLAKE2B_384,,,,1,,,,
+CKM_BLAKE2B_384_HMAC,,1,,,,,,
+CKM_BLAKE2B_384_HMAC_GENERAL,,1,,,,,,
+CKM_BLAKE2B_384_KEY_DERIVE,,,,,,,,1
+CKM_BLAKE2B_384_KEY_GEN,,,,,,1,,
+CKM_BLAKE2B_512,,,,1,,,,
+CKM_BLAKE2B_512_HMAC,,1,,,,,,
+CKM_BLAKE2B_512_HMAC_GENERAL,,1,,,,,,
+CKM_BLAKE2B_512_KEY_DERIVE,,,,,,,,1
+CKM_BLAKE2B_512_KEY_GEN,,,,,,1,,
+CKM_SALSA20,1,,,,,,1,
+CKM_SALSA20_KEY_GEN,,,,,,1,,
+CKM_CHACHA20_POLY1305,1,,,,,,,
+CKM_SALSA20_POLY1305,1,,,,,,,
+CKM_X3DH_INITIALIZE,,,,,,,,1
+CKM_X3DH_RESPOND,,,,,,,,1
+CKM_X2RATCHET_INITIALIZE,,,,,,,,1
+CKM_X2RATCHET_RESPOND,,,,,,,,1
+CKM_X2RATCHET_ENCRYPT,1,,,,,,1,
+CKM_X2RATCHET_DECRYPT,1,,,,,,1,
+CKM_XEDDSA,,1,,,,,,
+CKM_EC_EDWARDS_KEY_PAIR_GEN,,,,,1,,,
+CKM_EC_MONTGOMERY_KEY_PAIR_GEN,,,,,1,,,
+CKM_EDDSA,,1,,,,,,
+CKM_SP800_108_COUNTER_KDF,,,,,,,,1
+CKM_SP800_108_FEEDBACK_KDF,,,,,,,,1
+CKM_SP800_108_DOUBLE_PIPELINE_KDF,,,,,,,,1
