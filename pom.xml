@@ -11,7 +11,7 @@
   <groupId>org.xipki.iaik</groupId>
   <artifactId>pkcs11wrapper-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.4.3</version>
+  <version>1.4.4-SNAPSHOT</version>
   <name>PKCS#11 wrapper parent</name>
   <description>PKCS#11 wrapper parent</description>
   <licenses>
