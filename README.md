@@ -1,6 +1,5 @@
 [![Build Status](https://secure.travis-ci.org/xipki/pkcs11wrapper.svg)](http://travis-ci.org/xipki/pkcs11wrapper)
 [![GitHub release](https://img.shields.io/github/release/xipki/pkcs11wrapper.svg)](https://github.com/xipki/pkcs11wrapper/releases)
-[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Github forks](https://img.shields.io/github/forks/xipki/pkcs11wrapper.svg)](https://github.com/xipki/pkcs11wrapper/network)
 [![Github stars](https://img.shields.io/github/stars/xipki/pkcs11wrapper.svg)](https://github.com/xipki/pkcs11wrapper/stargazers)
 
