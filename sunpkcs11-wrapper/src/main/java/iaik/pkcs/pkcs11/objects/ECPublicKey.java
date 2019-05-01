@@ -75,7 +75,20 @@ public class ECPublicKey extends PublicKey {
    * @postconditions
    */
   public ECPublicKey() {
-    keyType.setLongValue(thisKeyType());
+    this(KeyType.EC);
+  }
+
+  /**
+   * Default Constructor with the specification of keyType
+   *
+   * @param keyType key type. Valid Values are EC, VENDOR_SM2, EC_EDWARDS and
+   *        EC_MONTGOMERY defined in {@link KeyType}.
+   * @preconditions
+   * @postconditions
+   * @see KeyType
+   */
+  public ECPublicKey(long keyType) {
+    this.keyType.setLongValue(keyType);
   }
 
   /**
@@ -96,11 +109,6 @@ public class ECPublicKey extends PublicKey {
   protected ECPublicKey(Session session, long objectHandle)
       throws TokenException {
     super(session, objectHandle);
-    keyType.setLongValue(thisKeyType());
-  }
-
-  protected Long thisKeyType() {
-    return KeyType.EC;
   }
 
   /**
@@ -138,6 +146,7 @@ public class ECPublicKey extends PublicKey {
    */
   protected static void putAttributesInTable(ECPublicKey object) {
     Util.requireNonNull("object", object);
+    object.attributeTable.put(Attribute.KEY_TYPE, object.keyType);
     object.attributeTable.put(Attribute.EC_PARAMS, object.ecdsaParams);
     object.attributeTable.put(Attribute.EC_POINT, object.ecPoint);
   }

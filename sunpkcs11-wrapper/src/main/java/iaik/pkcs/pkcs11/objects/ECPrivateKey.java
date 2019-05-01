@@ -76,7 +76,18 @@ public class ECPrivateKey extends PrivateKey {
    * @postconditions
    */
   public ECPrivateKey() {
-    keyType.setLongValue(thisKeyType());
+    this(KeyType.EC);
+  }
+
+  /**
+   * Default Constructor with the specification of keyType
+   *
+   * @param keyType key type
+   * @preconditions
+   * @postconditions
+   */
+  public ECPrivateKey(long keyType) {
+    this.keyType.setLongValue(keyType);
   }
 
   /**
@@ -97,11 +108,6 @@ public class ECPrivateKey extends PrivateKey {
   protected ECPrivateKey(Session session, long objectHandle)
       throws TokenException {
     super(session, objectHandle);
-    keyType.setLongValue(thisKeyType());
-  }
-
-  protected Long thisKeyType() {
-    return KeyType.EC;
   }
 
   /**
@@ -139,6 +145,7 @@ public class ECPrivateKey extends PrivateKey {
    */
   protected static void putAttributesInTable(ECPrivateKey object) {
     Util.requireNonNull("object", object);
+    object.attributeTable.put(Attribute.KEY_TYPE, object.keyType);
     object.attributeTable.put(Attribute.EC_PARAMS, object.ecdsaParams);
     object.attributeTable.put(Attribute.VALUE, object.value);
   }

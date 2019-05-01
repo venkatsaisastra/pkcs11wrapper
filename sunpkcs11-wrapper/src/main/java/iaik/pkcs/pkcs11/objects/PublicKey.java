@@ -165,7 +165,10 @@ public class PublicKey extends Key {
         newObject = RSAPublicKey.getInstance(session, objectHandle);
       } else if (keyType.equals(Key.KeyType.DSA)) {
         newObject = DSAPublicKey.getInstance(session, objectHandle);
-      } else if (keyType.equals(Key.KeyType.EC)) {
+      } else if (keyType.equals(Key.KeyType.EC)
+          | keyType.equals(Key.KeyType.EC_EDWARDS)
+          | keyType.equals(Key.KeyType.EC_MONTGOMERY)
+          | keyType.equals(Key.KeyType.VENDOR_SM2)) {
         newObject = ECPublicKey.getInstance(session, objectHandle);
       } else if (keyType.equals(Key.KeyType.DH)) {
         newObject = DHPublicKey.getInstance(session, objectHandle);
@@ -173,8 +176,6 @@ public class PublicKey extends Key {
         newObject = KEAPublicKey.getInstance(session, objectHandle);
       } else if (keyType.equals(Key.KeyType.X9_42_DH)) {
         newObject = X942DHPublicKey.getInstance(session, objectHandle);
-      } else if (keyType.equals(Key.KeyType.VENDOR_SM2)) {
-        newObject = SM2PublicKey.getInstance(session, objectHandle);
       } else if ((keyType.longValue()
               & KeyType.VENDOR_DEFINED.longValue()) != 0L) {
         newObject = getUnknownPublicKey(session, objectHandle);

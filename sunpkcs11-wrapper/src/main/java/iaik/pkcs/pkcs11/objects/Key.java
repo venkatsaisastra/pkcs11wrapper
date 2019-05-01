@@ -104,6 +104,16 @@ public class Key extends Storage {
     public static final Long EC = new Long(PKCS11Constants.CKK_EC);
 
     /**
+     * The identifier for a EC EDWARDS key.
+     */
+    public static final Long EC_EDWARDS = new Long(PKCS11Constants.CKK_EC_EDWARDS);
+
+    /**
+     * The identifier for a EC MONTGOMERY key.
+     */
+    public static final Long EC_MONTGOMERY = new Long(PKCS11Constants.CKK_EC_MONTGOMERY);
+
+    /**
      * The identifier for a EC key.
      */
     public static final Long X9_42_DH = new Long(PKCS11Constants.CKK_X9_42_DH);
@@ -390,6 +400,8 @@ public class Key extends Storage {
       keyTypeNames.put(KeyType.DSA, "DSA");
       keyTypeNames.put(KeyType.DH, "DH");
       keyTypeNames.put(KeyType.EC, "EC");
+      keyTypeNames.put(KeyType.EC_EDWARDS, "EC_EDWARDS");
+      keyTypeNames.put(KeyType.EC_MONTGOMERY, "EC_MONTGOMERY");
       keyTypeNames.put(KeyType.X9_42_DH, "X9_42_DH");
       keyTypeNames.put(KeyType.KEA, "KEA");
       keyTypeNames.put(KeyType.GENERIC_SECRET, "GENERIC_SECRET");
@@ -630,7 +642,7 @@ public class Key extends Storage {
     super.readAttributes(session);
 
     PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-        id, startDate, endDate, derive, local, keyGenMechanism });
+        keyType, id, startDate, endDate, derive, local, keyGenMechanism });
     PKCS11Object.getAttributeValue(session, objectHandle,
         allowedMechanisms);
   }

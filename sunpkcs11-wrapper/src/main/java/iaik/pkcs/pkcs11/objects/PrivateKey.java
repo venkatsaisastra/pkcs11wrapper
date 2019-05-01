@@ -210,7 +210,10 @@ public class PrivateKey extends Key {
         newObject = RSAPrivateKey.getInstance(session, objectHandle);
       } else if (keyType.equals(Key.KeyType.DSA)) {
         newObject = DSAPrivateKey.getInstance(session, objectHandle);
-      } else if (keyType.equals(Key.KeyType.EC)) {
+      } else if (keyType.equals(Key.KeyType.EC)
+        | keyType.equals(Key.KeyType.EC_EDWARDS)
+        | keyType.equals(Key.KeyType.EC_MONTGOMERY)
+        | keyType.equals(Key.KeyType.VENDOR_SM2)) {
         newObject = ECPrivateKey.getInstance(session, objectHandle);
       } else if (keyType.equals(Key.KeyType.DH)) {
         newObject = DHPrivateKey.getInstance(session, objectHandle);
@@ -218,8 +221,6 @@ public class PrivateKey extends Key {
         newObject = KEAPrivateKey.getInstance(session, objectHandle);
       } else if (keyType.equals(Key.KeyType.X9_42_DH)) {
         newObject = X942DHPrivateKey.getInstance(session, objectHandle);
-      } else if (keyType.equals(Key.KeyType.VENDOR_SM2)) {
-        newObject = SM2PrivateKey.getInstance(session, objectHandle);
       } else if ((keyType.longValue()
               & KeyType.VENDOR_DEFINED.longValue()) != 0L) {
         newObject = getUnknownPrivateKey(session, objectHandle);
