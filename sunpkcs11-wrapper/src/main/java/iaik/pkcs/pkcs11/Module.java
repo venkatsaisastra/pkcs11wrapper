@@ -59,19 +59,24 @@ import sun.security.pkcs11.wrapper.CK_UNLOCKMUTEX;
 import sun.security.pkcs11.wrapper.PKCS11;
 //FIXME: check if pkcs11module is not null.
 /**
+ * <B>Caution:
+ * Unlike the original PKCS#11 wrapper, we only call initialize() once per
+ * native .so/.dll. Once finalize(Object) has been called, the module cannot
+ * be initialized anymore.
+ * </B>
+ * <p/>
  * Objects of this class represent a PKCS#11 module. The application should
  * create an instance by calling getInstance and passing the name of the
  * PKCS#11 module of the desired token; e.g. "slbck.dll". The application
  * must give the full path of the PKCS#11 module unless the module is in the
  * system's search path or in the path of the java.library.path system
  * property.
- * By default, it is assumed that the required PKCS#11-wrapper-library
- * is named "pkcs11wrapper" and is located in the system path. The name of the
- * library with the absolute path can also be passed as parameter.
+ * <p/>
  * According to the specification, the application must call the initialize
  * method before calling any other method of the module.
  * This class contains slot and token management functions as defined by the
  * PKCS#11 standard.
+ *
  * All applications using this library will contain the following code.
  * <pre><code>
  *      Module pkcs11Module = Module.getInstance("cryptoki.dll");
@@ -253,6 +258,7 @@ public class Module {
    * @postconditions (result <> null)
    */
   public Info getInfo() throws TokenException {
+    assertInitialized();
     CK_INFO ckInfo;
     try {
       ckInfo = pkcs11Module.C_GetInfo();
@@ -357,6 +363,7 @@ public class Module {
    * @postconditions (result <> null)
    */
   public Slot[] getSlotList(boolean tokenPresent) throws TokenException {
+    assertInitialized();
     long[] slotIDs;
     try {
       slotIDs = pkcs11Module.C_GetSlotList(tokenPresent);
@@ -409,6 +416,7 @@ public class Module {
    */
   // CHECKSTYLE:SKIP
   public PKCS11 getPKCS11Module() {
+    assertInitialized();
     return pkcs11Module;
   }
 
@@ -438,15 +446,23 @@ public class Module {
    */
   // CHECKSTYLE:SKIP
   public void finalize() throws Throwable {
-    // pkcs11Module_.finalize();
-    Method method = PKCS11.class.getDeclaredMethod("finalize");
-    method.setAccessible(true);
-    method.invoke(pkcs11Module);
+    if (pkcs11Module != null) {
+      // pkcs11Module_.finalize();
+      Method method = PKCS11.class.getDeclaredMethod("finalize");
+      method.setAccessible(true);
+      method.invoke(pkcs11Module);
+    }
 
     super.finalize();
   }
 
   /**
+   * <B>Caution:
+   * Unlike the original PKCS#11 wrapper, we only call initialize() once per
+   * native .so/.dll. Once finalize(Object) has been called, the module cannot
+   * be initialized anymore.
+   * </B>
+   * <p/>
    * Finalizes this module. The application should call this method when it
    * finished using the module.
    * Note that this method is different from the <code>finalize</code> method,
@@ -462,6 +478,10 @@ public class Module {
    * @postconditions
    */
   public void finalize(Object args) throws TokenException {
+    if (pkcs11Module == null) {
+      return;
+    }
+
     try {
       pkcs11Module.C_Finalize(args);
     } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
@@ -502,7 +522,14 @@ public class Module {
    */
   @Override
   public int hashCode() {
-    return pkcs11Module.hashCode();
+    return pkcs11Module == null ? 0 : pkcs11Module.hashCode();
+  }
+
+  private void assertInitialized() {
+    if (pkcs11Module == null) {
+      throw new IllegalStateException(
+          "Module not initialized yet, please call initialize() first");
+    }
   }
 
 }
