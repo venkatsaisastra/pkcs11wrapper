@@ -313,8 +313,7 @@ public class Functions implements PKCS11Constants {
     Map<Long, String> codeNamMap = new HashMap<>();
     Properties props = new Properties();
     try {
-      props.load(Functions.class.getClassLoader().getResourceAsStream(
-          CKR_CODE_PROPERTIES));
+      props.load(Functions.class.getResourceAsStream(CKR_CODE_PROPERTIES));
       for (String propName : props.stringPropertyNames()) {
         String errorName = props.getProperty(propName);
         long code;
