@@ -34,7 +34,6 @@ Changes of current branch sunpkcs11 compared to master
   - `PKCS11Constants` is repackaged to `iaik.pkcs.pkcs11.constants`.
   - `Functions` is repackaged to `iaik.pkcs.pkcs11.constants`.
   - `Token.closeAllSession()` cannot be supported, since it is not supported in the underlying JNI (JDK's SunPKCS11 provider). Please manage your session by yourself. You can close a single session by `Session.closeSession()`.
-  - Unlike the original PKCS#11 wrapper, we only call initialize() once per native .so/.dll. Once finalize(Object) has been called, the module cannot be initialized anymore.
 
 IAIK PKCS#11 Wrapper for Java, Version 1.3
 =============================================
