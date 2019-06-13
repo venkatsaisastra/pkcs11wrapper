@@ -347,7 +347,7 @@ public class MechanismInfo {
    * @postconditions
    */
   public boolean isEcNamedCurve() {
-    return (flags & PKCS11Constants.CKF_EC_NAMEDCURVE) != 0L;
+    return (flags & PKCS11Constants.CKF_EC_OID) != 0L;
   }
 
   /**
@@ -622,7 +622,7 @@ public class MechanismInfo {
    * @postconditions
    */
   public void setEcNamedCurve(boolean ecNamedCurve) {
-    setFlagBit(PKCS11Constants.CKF_EC_NAMEDCURVE, ecNamedCurve);
+    setFlagBit(PKCS11Constants.CKF_EC_OID, ecNamedCurve);
   }
 
   /**
