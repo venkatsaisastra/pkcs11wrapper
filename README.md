@@ -25,13 +25,12 @@ Changes of current branch sunpkcs11 compared to master
     - [sunpkcs11-wrapper-1.4.4.jar](http://central.maven.org/maven2/org/xipki/iaik/sunpkcs11-wrapper/1.4.4/sunpkcs11-wrapper-1.4.4.jar)
     - [pkcs11-constants-1.4.4.jar](http://central.maven.org/maven2/org/xipki/iaik/pkcs11-constants/1.4.4/pkcs11-constants-1.4.4.jar)
 - Port from mikma/pkcs11wrapper to xipki/pkcs11wrapper
-  - For `*SecretKey`, please use class `ValuedSecretKey(long keyType)` instead, e.g. for use `new ValuedSecretKey(PKCS11Constants.CKK_AES)` instead.
+  - For `*SecretKey`, please use class `ValuedSecretKey(long keyType)` instead, e.g. use `new ValuedSecretKey(PKCS11Constants.CKK_AES)` for `new AESSecretKey()`.
   - For `ECDSAPrivateKey` and `ECDSAPublicKey`, please use `ECPrivateKey` and `ECPublicKey` instead.
   - `Object` is renamed to `PKCS11Object`.
   - `Parameters` is renamed to `Params`. And the package `iaik.pkcs.pkcs11.parameters` is renamed to `iaik.pkcs.pkcs11.params`.
   - `PKCS11Constants` is repackaged to `iaik.pkcs.pkcs11.constants`.
   - `Functions` is repackaged to `iaik.pkcs.pkcs11.constants`.
-  - `Session.destroyObject(PKCS11Object)` should be there. Please re-check it.
   - `Token.closeAllSession()` cannot be supported, since it is not supported in the underlying JNI (JDK's SunPKCS11 provider). Please manage your session by yourself. You can close a single session by `Session.closeSession()`.
   - Unlike the original PKCS#11 wrapper, we only call initialize() once per native .so/.dll. Once finalize(Object) has been called, the module cannot be initialized anymore.
 
