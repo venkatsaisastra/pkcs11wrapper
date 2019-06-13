@@ -1,13 +1,10 @@
-/* Copyright (c) OASIS Open 2016, 2019. All Rights Reserved./
- * /Distributed under the terms of the OASIS IPR Policy,
+/* Copyright (c) OASIS Open 2016-2019. All Rights Reserved.
+ * Distributed under the terms of the OASIS IPR Policy,
  * [http://www.oasis-open.org/policies-guidelines/ipr], AS-IS, WITHOUT ANY
  * IMPLIED OR EXPRESS WARRANTY; there is no warranty of MERCHANTABILITY, FITNESS FOR A
  * PARTICULAR PURPOSE or NONINFRINGEMENT of the rights of others.
  */
         
-/* Latest version of the specification:
- * http://docs.oasis-open.org/pkcs11/pkcs11-base/v2.40/pkcs11-base-v2.40.html
- */
 
 /* See top of pkcs11.h for information about the macros that
  * must be defined and the structure-packing conventions that
@@ -324,11 +321,12 @@ typedef CK_ULONG          CK_OBJECT_CLASS;
 typedef CK_OBJECT_CLASS CK_PTR CK_OBJECT_CLASS_PTR;
 
 /* Profile ID's */
-#define CKP_INVALID_ID           0x00000000UL
-#define CKP_BASELINE_PROVIDER    0x00000001UL
-#define CKP_EXTENDED_PROVIDER    0x00000002UL
-#define CKP_AUTHENTICATION_TOKEN 0x00000003UL
-#define CKP_VENDOR_DEFINED       0x80000000UL
+#define CKP_INVALID_ID                0x00000000UL
+#define CKP_BASELINE_PROVIDER         0x00000001UL
+#define CKP_EXTENDED_PROVIDER         0x00000002UL
+#define CKP_AUTHENTICATION_TOKEN      0x00000003UL
+#define CKP_PUBLIC_CERTIFICATES_TOKEN 0x00000004UL
+#define CKP_VENDOR_DEFINED            0x80000000UL
 
 /* CK_HW_FEATURE_TYPE is a value that identifies the hardware feature type
  * of an object with CK_OBJECT_CLASS equal to CKO_HW_FEATURE.
@@ -377,7 +375,7 @@ typedef CK_ULONG          CK_KEY_TYPE;
 #define CKK_CAMELLIA            0x00000025UL
 #define CKK_ARIA                0x00000026UL
 
-/* the following definitions were added in the 2.3 header file,
+/* the following definitions were added in the 2.30 header file,
  * but never defined in the spec. */
 #define CKK_MD5_HMAC            0x00000027UL
 #define CKK_SHA_1_HMAC          0x00000028UL
@@ -407,6 +405,7 @@ typedef CK_ULONG          CK_KEY_TYPE;
 #define CKK_X2RATCHET           0x0000003fUL
 #define CKK_EC_EDWARDS          0x00000040UL
 #define CKK_EC_MONTGOMERY       0x00000041UL
+#define CKK_HKDF                0x00000042UL
 
 #define CKK_VENDOR_DEFINED      0x80000000UL
 
@@ -1080,6 +1079,10 @@ typedef CK_ULONG          CK_MECHANISM_TYPE;
 #define CKM_X2RATCHET_ENCRYPT          0x00004027UL
 #define CKM_X2RATCHET_DECRYPT          0x00004028UL
 #define CKM_XEDDSA                     0x00004029UL
+#define CKM_HKDF_DERIVE                0x0000402aUL
+#define CKM_HKDF_DATA                  0x0000402bUL
+#define CKM_HKDF_KEY_GEN               0x0000402cUL
+
 #define CKM_ECDSA_SHA3_224             0x00001047UL
 #define CKM_ECDSA_SHA3_256             0x00001048UL
 #define CKM_ECDSA_SHA3_384             0x00001049UL
@@ -1149,7 +1152,7 @@ typedef struct CK_MECHANISM_INFO {
 #define CKF_EC_F_2M            0x00200000UL
 #define CKF_EC_ECPARAMETERS    0x00400000UL
 #define CKF_EC_OID             0x00800000UL
-#define CKF_EC_NAMEDCURVE      CKF_EC_OID
+#define CKF_EC_NAMEDCURVE      CKF_EC_OID   /* deprecated since PKCS#11 3.00 */
 #define CKF_EC_UNCOMPRESS      0x01000000UL
 #define CKF_EC_COMPRESS        0x02000000UL
 #define CKF_EC_CURVENAME       0x04000000UL
@@ -1395,12 +1398,6 @@ typedef CK_RSA_PKCS_MGF_TYPE CK_PTR CK_RSA_PKCS_MGF_TYPE_PTR;
 #define CKG_MGF1_SHA384       0x00000003UL
 #define CKG_MGF1_SHA512       0x00000004UL
 #define CKG_MGF1_SHA224       0x00000005UL
-
-/* The CKG_MGF1_SHA3_* were defined in 2.40 draft, but removed from 3.0 draft */
-#define CKG_MGF1_SHA3_224     0x00000006UL;
-#define CKG_MGF1_SHA3_256     0x00000007UL;
-#define CKG_MGF1_SHA3_384     0x00000008UL;
-#define CKG_MGF1_SHA3_512     0x00000009UL;
 
 /* CK_RSA_PKCS_OAEP_SOURCE_TYPE  is used to indicate the source
  * of the encoding parameter when formatting a message block
@@ -2382,6 +2379,21 @@ typedef struct CK_XEDDSA_PARAMS {
 } CK_XEDDSA_PARAMS;
 typedef CK_XEDDSA_PARAMS CK_PTR CK_XEDDSA_PARAMS_PTR;
 
+typedef struct CK_HKDF_PARAMS {
+   CK_BOOL bExtract;
+   CK_BOOL bExpand;
+   CK_MECHANISM_TYPE prfHashMechanism;
+   CK_ULONG ulSaltType;
+   CK_BYTE_PTR pSalt;
+   CK_ULONG ulSaltLen;
+   CK_HANDLE hSaltKey;
+   CK_BYTE_PTR pInfo;
+   CK_ULONG ulInfoLen;
+} CK_HKDF_PARAMS;
+
+#define CKF_HKDF_SALT_NULL   0x00000001UL
+#define CKF_HKDF_SALT_DATA   0x00000002UL
+#define CKF_HKDF_SALT_KEY    0x00000004UL
 
 #endif /* _PKCS11T_H_ */
 

@@ -340,6 +340,7 @@ public interface PKCS11Constants {
   long CKK_X2RATCHET                            = 0x0000003fL;
   long CKK_EC_EDWARDS                           = 0x00000040L;
   long CKK_EC_MONTGOMERY                        = 0x00000041L;
+  long CKK_HKDF                                 = 0x00000042L;
 
   long CKK_VENDOR_DEFINED                       = 0x80000000L;
 
@@ -1009,6 +1010,9 @@ public interface PKCS11Constants {
   long CKM_X2RATCHET_ENCRYPT                    = 0x00004027L;
   long CKM_X2RATCHET_DECRYPT                    = 0x00004028L;
   long CKM_XEDDSA                               = 0x00004029L;
+  long CKM_HKDF_DERIVE                          = 0x0000402aL;
+  long CKM_HKDF_DATA                            = 0x0000402bL;
+  long CKM_HKDF_KEY_GEN                         = 0x0000402cL;
   long CKM_ECDSA_SHA3_224                       = 0x00001047L;
   long CKM_ECDSA_SHA3_256                       = 0x00001048L;
   long CKM_ECDSA_SHA3_384                       = 0x00001049L;
@@ -1054,6 +1058,10 @@ public interface PKCS11Constants {
   long CKF_EC_F_2M                              = 0x00200000L;
   long CKF_EC_ECPARAMETERS                      = 0x00400000L;
   long CKF_EC_OID                               = 0x00800000L;
+  /**
+   * Use CKF_EC_OID instead.
+   */
+  @Deprecated
   long CKF_EC_NAMEDCURVE                        = CKF_EC_OID;
   long CKF_EC_UNCOMPRESS                        = 0x01000000L;
   long CKF_EC_COMPRESS                          = 0x02000000L;

@@ -740,6 +740,7 @@ public class Functions implements PKCS11Constants {
         CKM_BLAKE2B_256_KEY_GEN,
         CKM_BLAKE2B_384_KEY_GEN,
         CKM_BLAKE2B_512_KEY_GEN,
+        CKM_HKDF_KEY_GEN,
         // Vendor Mechnisms
         CKM_VENDOR_SM4_KEY_GEN};
       keyGenMechs = asSet(mechs);
@@ -942,6 +943,8 @@ public class Functions implements PKCS11Constants {
         CKM_SP800_108_COUNTER_KDF,
         CKM_SP800_108_FEEDBACK_KDF,
         CKM_SP800_108_DOUBLE_PIPELINE_KDF,
+        CKM_HKDF_DERIVE,
+        CKM_HKDF_DATA,
         // Vendor Mechanisms
         CKM_VENDOR_SM4_ECB_ENCRYPT_DATA};
       keyDerivationMechs = asSet(mechs);

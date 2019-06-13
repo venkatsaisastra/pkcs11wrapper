@@ -114,6 +114,11 @@ public class Key extends Storage {
     public static final Long EC_MONTGOMERY = new Long(PKCS11Constants.CKK_EC_MONTGOMERY);
 
     /**
+     * The identifier for a HKDF key.
+     */
+    public static final Long HKDF = new Long(PKCS11Constants.CKK_HKDF);
+
+    /**
      * The identifier for a EC key.
      */
     public static final Long X9_42_DH = new Long(PKCS11Constants.CKK_X9_42_DH);
