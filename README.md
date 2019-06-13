@@ -3,6 +3,20 @@
 [![Github forks](https://img.shields.io/github/forks/xipki/pkcs11wrapper.svg)](https://github.com/xipki/pkcs11wrapper/network)
 [![Github stars](https://img.shields.io/github/stars/xipki/pkcs11wrapper.svg)](https://github.com/xipki/pkcs11wrapper/stargazers)
 
+Use xipki/pkcs11wrapper in your project
+=====
+- Maven  
+  ```
+  <dependency>
+      <groupId>org.xipki.iaik</groupId>
+      <artifactId>sunpkcs11-wrapper</artifactId>
+      <version>1.4.4</version>
+  </dependency>
+  ```
+- Or copy the following jar files to your classpath:
+  - [sunpkcs11-wrapper-1.4.4.jar](http://central.maven.org/maven2/org/xipki/iaik/sunpkcs11-wrapper/1.4.4/sunpkcs11-wrapper-1.4.4.jar)
+  - [pkcs11-constants-1.4.4.jar](http://central.maven.org/maven2/org/xipki/iaik/pkcs11-constants/1.4.4/pkcs11-constants-1.4.4.jar)
+
 Changes of current branch sunpkcs11 compared to master
 =============================================
 
@@ -12,18 +26,6 @@ Changes of current branch sunpkcs11 compared to master
 
 - Support PKCS#11 version 2.40
 
-- Use xipki/pkcs11wrapper in your project:
-  - Maven  
-    ```
-    <dependency>
-        <groupId>org.xipki.iaik</groupId>
-        <artifactId>sunpkcs11-wrapper</artifactId>
-        <version>1.4.4</version>
-    </dependency>
-    ```
-  - Or copy the following jar files to your classpath:
-    - [sunpkcs11-wrapper-1.4.4.jar](http://central.maven.org/maven2/org/xipki/iaik/sunpkcs11-wrapper/1.4.4/sunpkcs11-wrapper-1.4.4.jar)
-    - [pkcs11-constants-1.4.4.jar](http://central.maven.org/maven2/org/xipki/iaik/pkcs11-constants/1.4.4/pkcs11-constants-1.4.4.jar)
 - Port from mikma/pkcs11wrapper to xipki/pkcs11wrapper
   - For `*SecretKey`, please use class `ValuedSecretKey(long keyType)` instead, e.g. use `new ValuedSecretKey(PKCS11Constants.CKK_AES)` for `new AESSecretKey()`.
   - For `ECDSAPrivateKey` and `ECDSAPublicKey`, please use `ECPrivateKey` and `ECPublicKey` instead.
