@@ -1398,6 +1398,10 @@ typedef CK_RSA_PKCS_MGF_TYPE CK_PTR CK_RSA_PKCS_MGF_TYPE_PTR;
 #define CKG_MGF1_SHA384       0x00000003UL
 #define CKG_MGF1_SHA512       0x00000004UL
 #define CKG_MGF1_SHA224       0x00000005UL
+#define CKG_MGF1_SHA3_224     0x00000006UL
+#define CKG_MGF1_SHA3_256     0x00000007UL
+#define CKG_MGF1_SHA3_384     0x00000008UL
+#define CKG_MGF1_SHA3_512     0x00000009UL
 
 /* CK_RSA_PKCS_OAEP_SOURCE_TYPE  is used to indicate the source
  * of the encoding parameter when formatting a message block

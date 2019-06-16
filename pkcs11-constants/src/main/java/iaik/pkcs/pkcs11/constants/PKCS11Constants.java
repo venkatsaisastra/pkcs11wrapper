@@ -1215,11 +1215,6 @@ public interface PKCS11Constants {
   long CKG_MGF1_SHA384                          = 0x00000003L;
   long CKG_MGF1_SHA512                          = 0x00000004L;
   long CKG_MGF1_SHA224                          = 0x00000005L;
-
-  /*
-   * The CKG_MGF1_SHA3_* were defined in 2.40 draft, but removed from
-   * 3.0 draft
-   */
   long CKG_MGF1_SHA3_224                        = 0x00000006L;
   long CKG_MGF1_SHA3_256                        = 0x00000007L;
   long CKG_MGF1_SHA3_384                        = 0x00000008L;
