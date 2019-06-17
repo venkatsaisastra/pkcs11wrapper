@@ -81,7 +81,7 @@ public class ObjectHandleParameters implements Parameters {
    */
   @Override
   public Object getPKCS11ParamsObject() {
-    return new Long(object.getObjectHandle());
+    return Long.valueOf(object.getObjectHandle());
   }
 
   /**

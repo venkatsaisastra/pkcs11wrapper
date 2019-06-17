@@ -87,49 +87,49 @@ public class PKCS11Object {
     /**
      * The identifier for a data object or any sub-class of it.
      */
-    public static final Long DATA = new Long(PKCS11Constants.CKO_DATA);
+    public static final Long DATA = Long.valueOf(PKCS11Constants.CKO_DATA);
 
     /**
      * The identifier for a certificate object or any sub-class of it.
      */
     public static final Long CERTIFICATE =
-        new Long(PKCS11Constants.CKO_CERTIFICATE);
+        Long.valueOf(PKCS11Constants.CKO_CERTIFICATE);
 
     /**
      * The identifier for a public key object or any sub-class of it.
      */
     public static final Long PUBLIC_KEY =
-        new Long(PKCS11Constants.CKO_PUBLIC_KEY);
+        Long.valueOf(PKCS11Constants.CKO_PUBLIC_KEY);
 
     /**
      * The identifier for a private key object or any sub-class of it.
      */
     public static final Long PRIVATE_KEY =
-        new Long(PKCS11Constants.CKO_PRIVATE_KEY);
+        Long.valueOf(PKCS11Constants.CKO_PRIVATE_KEY);
 
     /**
      * The identifier for a secret key object or any sub-class of it.
      */
     public static final Long SECRET_KEY =
-        new Long(PKCS11Constants.CKO_SECRET_KEY);
+        Long.valueOf(PKCS11Constants.CKO_SECRET_KEY);
 
     /**
      * The identifier for a hardware feature object or any sub-class of it.
      */
     public static final Long HW_FEATURE =
-        new Long(PKCS11Constants.CKO_HW_FEATURE);
+        Long.valueOf(PKCS11Constants.CKO_HW_FEATURE);
 
     /**
      * The identifier for a domain parameters object or any sub-class of it.
      */
     public static final Long DOMAIN_PARAMETERS =
-        new Long(PKCS11Constants.CKO_DOMAIN_PARAMETERS);
+        Long.valueOf(PKCS11Constants.CKO_DOMAIN_PARAMETERS);
 
     /**
      * The identifier for a mechanism object or any sub-class of it.
      */
     public static final Long MECHANISM =
-        new Long(PKCS11Constants.CKO_MECHANISM);
+        Long.valueOf(PKCS11Constants.CKO_MECHANISM);
 
     /**
      * The identifier for a vendor-defined object. Any Long object with a
@@ -137,7 +137,7 @@ public class PKCS11Object {
      * class identifier.
      */
     public static final Long VENDOR_DEFINED =
-        new Long(PKCS11Constants.CKO_VENDOR_DEFINED);
+        Long.valueOf(PKCS11Constants.CKO_VENDOR_DEFINED);
 
   }
 
@@ -513,7 +513,7 @@ public class PKCS11Object {
    * @return the attribute
    */
   public Attribute getAttribute(long attribute) {
-    return (Attribute) attributeTable.get(new Long(attribute));
+    return (Attribute) attributeTable.get(Long.valueOf(attribute));
   }
 
   /**

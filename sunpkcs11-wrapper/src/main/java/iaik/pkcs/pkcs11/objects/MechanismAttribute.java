@@ -89,7 +89,7 @@ public class MechanismAttribute extends LongAttribute {
   @SuppressWarnings("restriction")
   public void setMechanism(Mechanism mechanism) {
     ckAttribute.pValue = (mechanism != null)
-        ? new Long(mechanism.getMechanismCode()) : null;
+        ? Long.valueOf(mechanism.getMechanismCode()) : null;
     present = true;
   }
 

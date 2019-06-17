@@ -71,139 +71,139 @@ import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
 @SuppressWarnings("restriction")
 public abstract class Attribute {
 
-  public static final Long CLASS = new Long(PKCS11Constants.CKA_CLASS);
-  public static final Long TOKEN = new Long(PKCS11Constants.CKA_TOKEN);
-  public static final Long PRIVATE = new Long(PKCS11Constants.CKA_PRIVATE);
-  public static final Long LABEL = new Long(PKCS11Constants.CKA_LABEL);
+  public static final Long CLASS = Long.valueOf(PKCS11Constants.CKA_CLASS);
+  public static final Long TOKEN = Long.valueOf(PKCS11Constants.CKA_TOKEN);
+  public static final Long PRIVATE = Long.valueOf(PKCS11Constants.CKA_PRIVATE);
+  public static final Long LABEL = Long.valueOf(PKCS11Constants.CKA_LABEL);
   public static final Long APPLICATION
-      = new Long(PKCS11Constants.CKA_APPLICATION);
-  public static final Long VALUE = new Long(PKCS11Constants.CKA_VALUE);
+      = Long.valueOf(PKCS11Constants.CKA_APPLICATION);
+  public static final Long VALUE = Long.valueOf(PKCS11Constants.CKA_VALUE);
   public static final Long OBJECT_ID
-      = new Long(PKCS11Constants.CKA_OBJECT_ID);
+      = Long.valueOf(PKCS11Constants.CKA_OBJECT_ID);
   public static final Long CERTIFICATE_TYPE
-      = new Long(PKCS11Constants.CKA_CERTIFICATE_TYPE);
-  public static final Long ISSUER = new Long(PKCS11Constants.CKA_ISSUER);
+      = Long.valueOf(PKCS11Constants.CKA_CERTIFICATE_TYPE);
+  public static final Long ISSUER = Long.valueOf(PKCS11Constants.CKA_ISSUER);
   public static final Long SERIAL_NUMBER
-      = new Long(PKCS11Constants.CKA_SERIAL_NUMBER);
-  public static final Long URL = new Long(PKCS11Constants.CKA_URL);
+      = Long.valueOf(PKCS11Constants.CKA_SERIAL_NUMBER);
+  public static final Long URL = Long.valueOf(PKCS11Constants.CKA_URL);
   public static final Long HASH_OF_SUBJECT_PUBLIC_KEY
-      = new Long(PKCS11Constants.CKA_HASH_OF_SUBJECT_PUBLIC_KEY);
+      = Long.valueOf(PKCS11Constants.CKA_HASH_OF_SUBJECT_PUBLIC_KEY);
   public static final Long HASH_OF_ISSUER_PUBLIC_KEY
-      = new Long(PKCS11Constants.CKA_HASH_OF_ISSUER_PUBLIC_KEY);
+      = Long.valueOf(PKCS11Constants.CKA_HASH_OF_ISSUER_PUBLIC_KEY);
   public static final Long JAVA_MIDP_SECURITY_DOMAIN
-      = new Long(PKCS11Constants.CKA_JAVA_MIDP_SECURITY_DOMAIN);
+      = Long.valueOf(PKCS11Constants.CKA_JAVA_MIDP_SECURITY_DOMAIN);
   public static final Long AC_ISSUER
-      = new Long(PKCS11Constants.CKA_AC_ISSUER);
-  public static final Long OWNER = new Long(PKCS11Constants.CKA_OWNER);
+      = Long.valueOf(PKCS11Constants.CKA_AC_ISSUER);
+  public static final Long OWNER = Long.valueOf(PKCS11Constants.CKA_OWNER);
   public static final Long ATTR_TYPES
-      = new Long(PKCS11Constants.CKA_ATTR_TYPES);
-  public static final Long TRUSTED = new Long(PKCS11Constants.CKA_TRUSTED);
-  public static final Long KEY_TYPE = new Long(PKCS11Constants.CKA_KEY_TYPE);
-  public static final Long SUBJECT = new Long(PKCS11Constants.CKA_SUBJECT);
-  public static final Long ID = new Long(PKCS11Constants.CKA_ID);
+      = Long.valueOf(PKCS11Constants.CKA_ATTR_TYPES);
+  public static final Long TRUSTED = Long.valueOf(PKCS11Constants.CKA_TRUSTED);
+  public static final Long KEY_TYPE = Long.valueOf(PKCS11Constants.CKA_KEY_TYPE);
+  public static final Long SUBJECT = Long.valueOf(PKCS11Constants.CKA_SUBJECT);
+  public static final Long ID = Long.valueOf(PKCS11Constants.CKA_ID);
   public static final Long CHECK_VALUE
-      = new Long(PKCS11Constants.CKA_CHECK_VALUE);
+      = Long.valueOf(PKCS11Constants.CKA_CHECK_VALUE);
   public static final Long CERTIFICATE_CATEGORY
-      = new Long(PKCS11Constants.CKA_CERTIFICATE_CATEGORY);
+      = Long.valueOf(PKCS11Constants.CKA_CERTIFICATE_CATEGORY);
   public static final Long SENSITIVE
-      = new Long(PKCS11Constants.CKA_SENSITIVE);
-  public static final Long ENCRYPT = new Long(PKCS11Constants.CKA_ENCRYPT);
-  public static final Long DECRYPT = new Long(PKCS11Constants.CKA_DECRYPT);
-  public static final Long WRAP = new Long(PKCS11Constants.CKA_WRAP);
+      = Long.valueOf(PKCS11Constants.CKA_SENSITIVE);
+  public static final Long ENCRYPT = Long.valueOf(PKCS11Constants.CKA_ENCRYPT);
+  public static final Long DECRYPT = Long.valueOf(PKCS11Constants.CKA_DECRYPT);
+  public static final Long WRAP = Long.valueOf(PKCS11Constants.CKA_WRAP);
   public static final Long WRAP_TEMPLATE
-      = new Long(PKCS11Constants.CKA_WRAP_TEMPLATE);
-  public static final Long UNWRAP = new Long(PKCS11Constants.CKA_UNWRAP);
+      = Long.valueOf(PKCS11Constants.CKA_WRAP_TEMPLATE);
+  public static final Long UNWRAP = Long.valueOf(PKCS11Constants.CKA_UNWRAP);
   public static final Long UNWRAP_TEMPLATE
-      = new Long(PKCS11Constants.CKA_UNWRAP_TEMPLATE);
-  public static final Long SIGN = new Long(PKCS11Constants.CKA_SIGN);
+      = Long.valueOf(PKCS11Constants.CKA_UNWRAP_TEMPLATE);
+  public static final Long SIGN = Long.valueOf(PKCS11Constants.CKA_SIGN);
   public static final Long SIGN_RECOVER
-      = new Long(PKCS11Constants.CKA_SIGN_RECOVER);
-  public static final Long VERIFY = new Long(PKCS11Constants.CKA_VERIFY);
+      = Long.valueOf(PKCS11Constants.CKA_SIGN_RECOVER);
+  public static final Long VERIFY = Long.valueOf(PKCS11Constants.CKA_VERIFY);
   public static final Long VERIFY_RECOVER
-      = new Long(PKCS11Constants.CKA_VERIFY_RECOVER);
-  public static final Long DERIVE = new Long(PKCS11Constants.CKA_DERIVE);
+      = Long.valueOf(PKCS11Constants.CKA_VERIFY_RECOVER);
+  public static final Long DERIVE = Long.valueOf(PKCS11Constants.CKA_DERIVE);
   public static final Long START_DATE
-      = new Long(PKCS11Constants.CKA_START_DATE);
-  public static final Long END_DATE = new Long(PKCS11Constants.CKA_END_DATE);
+      = Long.valueOf(PKCS11Constants.CKA_START_DATE);
+  public static final Long END_DATE = Long.valueOf(PKCS11Constants.CKA_END_DATE);
   public static final Long MECHANISM_TYPE
-      = new Long(PKCS11Constants.CKA_MECHANISM_TYPE);
-  public static final Long MODULUS = new Long(PKCS11Constants.CKA_MODULUS);
+      = Long.valueOf(PKCS11Constants.CKA_MECHANISM_TYPE);
+  public static final Long MODULUS = Long.valueOf(PKCS11Constants.CKA_MODULUS);
   public static final Long MODULUS_BITS
-      = new Long(PKCS11Constants.CKA_MODULUS_BITS);
+      = Long.valueOf(PKCS11Constants.CKA_MODULUS_BITS);
   public static final Long PUBLIC_EXPONENT
-      = new Long(PKCS11Constants.CKA_PUBLIC_EXPONENT);
+      = Long.valueOf(PKCS11Constants.CKA_PUBLIC_EXPONENT);
   public static final Long PRIVATE_EXPONENT
-      = new Long(PKCS11Constants.CKA_PRIVATE_EXPONENT);
-  public static final Long PRIME_1 = new Long(PKCS11Constants.CKA_PRIME_1);
-  public static final Long PRIME_2 = new Long(PKCS11Constants.CKA_PRIME_2);
+      = Long.valueOf(PKCS11Constants.CKA_PRIVATE_EXPONENT);
+  public static final Long PRIME_1 = Long.valueOf(PKCS11Constants.CKA_PRIME_1);
+  public static final Long PRIME_2 = Long.valueOf(PKCS11Constants.CKA_PRIME_2);
   public static final Long EXPONENT_1
-      = new Long(PKCS11Constants.CKA_EXPONENT_1);
+      = Long.valueOf(PKCS11Constants.CKA_EXPONENT_1);
   public static final Long EXPONENT_2
-      = new Long(PKCS11Constants.CKA_EXPONENT_2);
+      = Long.valueOf(PKCS11Constants.CKA_EXPONENT_2);
   public static final Long COEFFICIENT
-      = new Long(PKCS11Constants.CKA_COEFFICIENT);
-  public static final Long PRIME = new Long(PKCS11Constants.CKA_PRIME);
-  public static final Long SUBPRIME = new Long(PKCS11Constants.CKA_SUBPRIME);
-  public static final Long BASE = new Long(PKCS11Constants.CKA_BASE);
+      = Long.valueOf(PKCS11Constants.CKA_COEFFICIENT);
+  public static final Long PRIME = Long.valueOf(PKCS11Constants.CKA_PRIME);
+  public static final Long SUBPRIME = Long.valueOf(PKCS11Constants.CKA_SUBPRIME);
+  public static final Long BASE = Long.valueOf(PKCS11Constants.CKA_BASE);
   public static final Long PRIME_BITS
-      = new Long(PKCS11Constants.CKA_PRIME_BITS);
+      = Long.valueOf(PKCS11Constants.CKA_PRIME_BITS);
   public static final Long SUB_PRIME_BITS
-      = new Long(PKCS11Constants.CKA_SUB_PRIME_BITS);
+      = Long.valueOf(PKCS11Constants.CKA_SUB_PRIME_BITS);
   public static final Long VALUE_BITS
-      = new Long(PKCS11Constants.CKA_VALUE_BITS);
+      = Long.valueOf(PKCS11Constants.CKA_VALUE_BITS);
   public static final Long VALUE_LEN
-      = new Long(PKCS11Constants.CKA_VALUE_LEN);
+      = Long.valueOf(PKCS11Constants.CKA_VALUE_LEN);
   public static final Long EXTRACTABLE
-      = new Long(PKCS11Constants.CKA_EXTRACTABLE);
-  public static final Long LOCAL = new Long(PKCS11Constants.CKA_LOCAL);
+      = Long.valueOf(PKCS11Constants.CKA_EXTRACTABLE);
+  public static final Long LOCAL = Long.valueOf(PKCS11Constants.CKA_LOCAL);
   public static final Long NEVER_EXTRACTABLE
-      = new Long(PKCS11Constants.CKA_NEVER_EXTRACTABLE);
+      = Long.valueOf(PKCS11Constants.CKA_NEVER_EXTRACTABLE);
   public static final Long WRAP_WITH_TRUSTED
-      = new Long(PKCS11Constants.CKA_WRAP_WITH_TRUSTED);
+      = Long.valueOf(PKCS11Constants.CKA_WRAP_WITH_TRUSTED);
   public static final Long ALWAYS_SENSITIVE
-      = new Long(PKCS11Constants.CKA_ALWAYS_SENSITIVE);
+      = Long.valueOf(PKCS11Constants.CKA_ALWAYS_SENSITIVE);
   public static final Long ALWAYS_AUTHENTICATE
-      = new Long(PKCS11Constants.CKA_ALWAYS_AUTHENTICATE);
+      = Long.valueOf(PKCS11Constants.CKA_ALWAYS_AUTHENTICATE);
   public static final Long KEY_GEN_MECHANISM
-      = new Long(PKCS11Constants.CKA_KEY_GEN_MECHANISM);
+      = Long.valueOf(PKCS11Constants.CKA_KEY_GEN_MECHANISM);
   public static final Long ALLOWED_MECHANISMS
-      = new Long(PKCS11Constants.CKA_ALLOWED_MECHANISMS);
+      = Long.valueOf(PKCS11Constants.CKA_ALLOWED_MECHANISMS);
   public static final Long MODIFIABLE
-      = new Long(PKCS11Constants.CKA_MODIFIABLE);
+      = Long.valueOf(PKCS11Constants.CKA_MODIFIABLE);
   public static final Long EC_PARAMS
-      = new Long(PKCS11Constants.CKA_EC_PARAMS);
-  public static final Long EC_POINT = new Long(PKCS11Constants.CKA_EC_POINT);
+      = Long.valueOf(PKCS11Constants.CKA_EC_PARAMS);
+  public static final Long EC_POINT = Long.valueOf(PKCS11Constants.CKA_EC_POINT);
   @SuppressWarnings("deprecation")
   public static final Long SECONDARY_AUTH
-      = new Long(PKCS11Constants.CKA_SECONDARY_AUTH);
+      = Long.valueOf(PKCS11Constants.CKA_SECONDARY_AUTH);
   @SuppressWarnings("deprecation")
   public static final Long AUTH_PIN_FLAGS
-      = new Long(PKCS11Constants.CKA_AUTH_PIN_FLAGS);
+      = Long.valueOf(PKCS11Constants.CKA_AUTH_PIN_FLAGS);
   public static final Long HW_FEATURE_TYPE
-      = new Long(PKCS11Constants.CKA_HW_FEATURE_TYPE);
+      = Long.valueOf(PKCS11Constants.CKA_HW_FEATURE_TYPE);
   public static final Long RESET_ON_INIT
-      = new Long(PKCS11Constants.CKA_RESET_ON_INIT);
+      = Long.valueOf(PKCS11Constants.CKA_RESET_ON_INIT);
   public static final Long HAS_RESET
-      = new Long(PKCS11Constants.CKA_HAS_RESET);
+      = Long.valueOf(PKCS11Constants.CKA_HAS_RESET);
   public static final Long VENDOR_DEFINED
-      = new Long(PKCS11Constants.CKA_VENDOR_DEFINED);
-  public static final Long PIXEL_X = new Long(PKCS11Constants.CKA_PIXEL_X);
-  public static final Long PIXEL_Y = new Long(PKCS11Constants.CKA_PIXEL_Y);
+      = Long.valueOf(PKCS11Constants.CKA_VENDOR_DEFINED);
+  public static final Long PIXEL_X = Long.valueOf(PKCS11Constants.CKA_PIXEL_X);
+  public static final Long PIXEL_Y = Long.valueOf(PKCS11Constants.CKA_PIXEL_Y);
   public static final Long RESOLUTION
-      = new Long(PKCS11Constants.CKA_RESOLUTION);
+      = Long.valueOf(PKCS11Constants.CKA_RESOLUTION);
   public static final Long CHAR_ROWS
-      = new Long(PKCS11Constants.CKA_CHAR_ROWS);
+      = Long.valueOf(PKCS11Constants.CKA_CHAR_ROWS);
   public static final Long CHAR_COLUMNS
-      = new Long(PKCS11Constants.CKA_CHAR_COLUMNS);
-  public static final Long COLOR = new Long(PKCS11Constants.CKA_COLOR);
+      = Long.valueOf(PKCS11Constants.CKA_CHAR_COLUMNS);
+  public static final Long COLOR = Long.valueOf(PKCS11Constants.CKA_COLOR);
   public static final Long BITS_PER_PIXEL
-      = new Long(PKCS11Constants.CKA_BITS_PER_PIXEL);
+      = Long.valueOf(PKCS11Constants.CKA_BITS_PER_PIXEL);
   public static final Long CHAR_SETS
-      = new Long(PKCS11Constants.CKA_CHAR_SETS);
+      = Long.valueOf(PKCS11Constants.CKA_CHAR_SETS);
   public static final Long ENCODING_METHODS
-      = new Long(PKCS11Constants.CKA_ENCODING_METHODS);
+      = Long.valueOf(PKCS11Constants.CKA_ENCODING_METHODS);
   public static final Long MIME_TYPES
-      = new Long(PKCS11Constants.CKA_MIME_TYPES);
+      = Long.valueOf(PKCS11Constants.CKA_MIME_TYPES);
 
   protected static Hashtable<Long, String> attributeNames;
   protected static Hashtable<Long, Class<?>> attributeClasses;
@@ -632,7 +632,7 @@ public abstract class Attribute {
     StringBuilder sb = new StringBuilder(32);
 
     if (withName) {
-      String typeName = getAttributeName(new Long(ckAttribute.type));
+      String typeName = getAttributeName(Long.valueOf(ckAttribute.type));
       sb.append(typeName).append(": ");
     }
     if (present) {
@@ -669,7 +669,7 @@ public abstract class Attribute {
    * @postconditions (result <> null)
    */
   protected Long getType() {
-    return new Long(ckAttribute.type);
+    return Long.valueOf(ckAttribute.type);
   }
 
   /**

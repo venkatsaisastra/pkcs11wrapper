@@ -78,18 +78,18 @@ public class HardwareFeature extends PKCS11Object {
      * The identifier for a monotonic counter.
      */
     public static final Long MONOTONIC_COUNTER =
-        new Long(PKCS11Constants.CKH_MONOTONIC_COUNTER);
+        Long.valueOf(PKCS11Constants.CKH_MONOTONIC_COUNTER);
 
     /**
      * The identifier for a clock.
      */
-    public static final Long CLOCK = new Long(PKCS11Constants.CKH_CLOCK);
+    public static final Long CLOCK = Long.valueOf(PKCS11Constants.CKH_CLOCK);
 
     /**
      * The identifier for a user interface.
      */
     public static final Long USER_INTERFACE =
-        new Long(PKCS11Constants.CKH_USER_INTERFACE);
+        Long.valueOf(PKCS11Constants.CKH_USER_INTERFACE);
 
     /**
      * The identifier for a VENDOR_DEFINED hardware feature. Any Long object
@@ -97,7 +97,7 @@ public class HardwareFeature extends PKCS11Object {
      * hardware feature type identifier.
      */
     public static final Long VENDOR_DEFINED =
-        new Long(PKCS11Constants.CKH_VENDOR_DEFINED);
+        Long.valueOf(PKCS11Constants.CKH_VENDOR_DEFINED);
 
   }
 

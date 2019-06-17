@@ -127,7 +127,7 @@ public class AttributeArray extends Attribute {
     CK_ATTRIBUTE[] attributesArray = (CK_ATTRIBUTE[]) ckAttribute.pValue;
     GenericTemplate template = new GenericTemplate();
     for (int i = 0; i < attributesArray.length; i++) {
-      Long type = new Long(attributesArray[i].type);
+      Long type = Long.valueOf(attributesArray[i].type);
       Class<?> implementation
           = (Class<?>) Attribute.getAttributeClass(type);
       Attribute attribute;
@@ -137,7 +137,7 @@ public class AttributeArray extends Attribute {
         attribute.setCkAttribute(attributesArray[i]);
       } else {
         try {
-          attribute = (Attribute) implementation.newInstance();
+          attribute = (Attribute) implementation.getDeclaredConstructor(Attribute.class).newInstance();
           attribute.setCkAttribute(attributesArray[i]);
           attribute.setPresent(true);
           template.addAttribute(attribute);

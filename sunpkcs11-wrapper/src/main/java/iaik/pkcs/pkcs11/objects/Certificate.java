@@ -75,19 +75,18 @@ public class Certificate extends Storage {
     /**
      * The identifier for a X.509 public key certificate.
      */
-    public static final Long X_509_PUBLIC_KEY
-        = new Long(PKCS11Constants.CKC_X_509);
+    public static final Long X_509_PUBLIC_KEY = Long.valueOf(PKCS11Constants.CKC_X_509);
 
     /**
      * The identifier for a X.509 attribute certificate.
      */
     public static final Long X_509_ATTRIBUTE
-        = new Long(PKCS11Constants.CKC_X_509_ATTR_CERT);
+        = Long.valueOf(PKCS11Constants.CKC_X_509_ATTR_CERT);
 
     /**
      * The identifier for a WTL certificate.
      */
-    public static final Long WTLS = new Long(PKCS11Constants.CKC_WTLS);
+    public static final Long WTLS = Long.valueOf(PKCS11Constants.CKC_WTLS);
 
     /**
      * The identifier for a vendor-defined certificate. Any Long object with
@@ -95,7 +94,7 @@ public class Certificate extends Storage {
      * certificate type identifier.
      */
     public static final Long VENDOR_DEFINED
-        = new Long(PKCS11Constants.CKC_VENDOR_DEFINED);
+        = Long.valueOf(PKCS11Constants.CKC_VENDOR_DEFINED);
 
   }
 
