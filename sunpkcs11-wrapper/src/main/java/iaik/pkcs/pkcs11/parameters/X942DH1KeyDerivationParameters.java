@@ -40,64 +40,73 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
+package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import sun.security.pkcs11.wrapper.CK_ECDH1_DERIVE_PARAMS;
+import sun.security.pkcs11.wrapper.CK_X9_42_DH1_DERIVE_PARAMS;
 
 /**
- * This abstract class encapsulates parameters for the DH mechanisms
- * Mechanism.ECDH1_DERIVE and Mechanism.ECDH1_COFACTOR_DERIVE.
+ * This abstract class encapsulates parameters for the X9.42 DH mechanism
+ * Mechanism.X9_42_DH_DERIVE.
  *
  * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */
 @SuppressWarnings("restriction")
-public class EcDH1KeyDerivationParams extends DHKeyDerivationParams {
+public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
 
   /**
    * The data shared between the two parties.
    */
-  protected byte[] sharedData;
+  protected byte[] otherInfo;
 
   /**
-   * Create a new EcDH1KeyDerivationParameters object with the given
+   * Create a new X942DH1KeyDerivationParameters object with the given
    * attributes.
    *
-   * @param kdf
+   * @param keyDerivationFunction
    *          The key derivation function used on the shared secret value.
    *          One of the values defined in KeyDerivationFunctionType.
-   * @param sharedData
+   * @param otherInfo
    *          The data shared between the two parties.
    * @param publicData
    *          The other partie's public key value.
-   * @preconditions ((kdf == KeyDerivationFunctionType.NULL)
-   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF)
-   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1)
-   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
-   *              and (publicData <> null)
+   * @preconditions ((keyDerivationFunction == KeyDerivationFunctionType.NULL)
+   *                 or (keyDerivationFunction
+   *                      == KeyDerivationFunctionType.SHA1_KDF)
+   *                 or (keyDerivationFunction
+   *                      == KeyDerivationFunctionType.SHA1_KDF_ASN1)
+   *                 or (keyDerivationFunction
+   *                      == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
+   *                and (publicData <> null)
    * @postconditions
    */
-  public EcDH1KeyDerivationParams(long kdf, byte[] sharedData,
-      byte[] publicData) {
-    super(kdf, publicData);
-    this.sharedData = sharedData;
+  public X942DH1KeyDerivationParameters(long keyDerivationFunction,
+      byte[] otherInfo, byte[] publicData) {
+    super(keyDerivationFunction, publicData);
+    this.otherInfo = otherInfo;
   }
 
   /**
-   * Get this parameters object as an object of the CK_ECDH1_DERIVE_PARAMS
+   * Get this parameters object as an object of the CK_X9_42_DH1_DERIVE_PARAMS
    * class.
    *
-   * @return This object as a CK_ECDH1_DERIVE_PARAMS object.
+   * @return This object as a CK_X9_42_DH1_DERIVE_PARAMS object.
    * @preconditions
    * @postconditions (result <> null)
    */
   @Override
   public Object getPKCS11ParamsObject() {
-    return new CK_ECDH1_DERIVE_PARAMS(kdf, sharedData, publicData);
+    CK_X9_42_DH1_DERIVE_PARAMS params = new CK_X9_42_DH1_DERIVE_PARAMS();
+
+    params.kdf = kdf;
+    params.pOtherInfo = otherInfo;
+    params.pPublicData = publicData;
+
+    return params;
   }
 
   /**
@@ -107,20 +116,20 @@ public class EcDH1KeyDerivationParams extends DHKeyDerivationParams {
    * @preconditions
    * @postconditions
    */
-  public byte[] getSharedData() {
-    return sharedData;
+  public byte[] getOtherInfo() {
+    return otherInfo;
   }
 
   /**
    * Set the data shared between the two parties.
    *
-   * @param sharedData
+   * @param otherInfo
    *          The data shared between the two parties.
-   * @preconditions (sharedData <> null)
+   * @preconditions (otherInfo <> null)
    * @postconditions
    */
-  public void setSharedData(byte[] sharedData) {
-    this.sharedData = sharedData;
+  public void setOtherInfo(byte[] otherInfo) {
+    this.otherInfo = otherInfo;
   }
 
   /**
@@ -132,7 +141,7 @@ public class EcDH1KeyDerivationParams extends DHKeyDerivationParams {
   @Override
   public String toString() {
     return Util.concat(super.toString(),
-        "\n  Shared Data: ", Util.toHex(sharedData));
+        "\n  Other Info: ", Util.toHex(otherInfo));
   }
 
   /**
@@ -150,13 +159,14 @@ public class EcDH1KeyDerivationParams extends DHKeyDerivationParams {
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
       return true;
-    } else if (!(otherObject instanceof EcDH1KeyDerivationParams)) {
+    } else if (!(otherObject instanceof X942DH1KeyDerivationParameters)) {
       return false;
     }
 
-    EcDH1KeyDerivationParams other = (EcDH1KeyDerivationParams) otherObject;
+    X942DH1KeyDerivationParameters other =
+        (X942DH1KeyDerivationParameters) otherObject;
     return super.equals(other)
-        && Arrays.equals(this.sharedData, other.sharedData);
+        && Arrays.equals(this.otherInfo, other.otherInfo);
   }
 
   /**
@@ -169,7 +179,7 @@ public class EcDH1KeyDerivationParams extends DHKeyDerivationParams {
    */
   @Override
   public int hashCode() {
-    return super.hashCode() ^ Util.hashCode(sharedData);
+    return super.hashCode() ^ Util.hashCode(otherInfo);
   }
 
 }

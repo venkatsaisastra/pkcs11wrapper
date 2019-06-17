@@ -40,39 +40,23 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
+package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
 
 /**
- * This class encapsulates parameters for the algorithms
- * Mechanism.DH_PKCS_DERIVE.
+ * This class encapsulates parameters byte arrays.
  *
- * @author Karl Scheibelhofer
- * @version 1.0
- * @invariants (publicValue <> null)
+ * @author Lijun Liao
  */
-// CHECKSTYLE:SKIP
-public class DHPkcsDeriveParams implements Params {
+public class OpaqueParameters implements Parameters {
 
-  /**
-   * The initialization vector.
-   */
-  protected byte[] publicValue;
+  protected byte[] bytes;
 
-  /**
-   * Create a new DHPkcsDeriveParameters object with the given public value.
-   *
-   * @param publicValue
-   *          The public value of the other party in the key agreement
-   *          protocol.
-   * @preconditions (publicValue <> null)
-   * @postconditions
-   */
-  public DHPkcsDeriveParams(byte[] publicValue) {
-    this.publicValue = publicValue;
+  public OpaqueParameters(byte[] bytes) {
+    this.bytes = bytes;
   }
 
   /**
@@ -84,7 +68,7 @@ public class DHPkcsDeriveParams implements Params {
    */
   @Override
   public Object getPKCS11ParamsObject() {
-    return publicValue;
+    return bytes;
   }
 
   /**
@@ -95,68 +79,34 @@ public class DHPkcsDeriveParams implements Params {
    * @preconditions
    * @postconditions (result <> null)
    */
-  public byte[] getPublicValue() {
-    return publicValue;
+  public byte[] getBytes() {
+    return bytes;
   }
 
-  /**
-   * Set the public value of the other party in the key agreement protocol.
-   *
-   * @param publicValue
-   *          The public value of the other party in the key agreement
-   *          protocol.
-   * @preconditions (publicValue <> null)
-   * @postconditions
-   */
-  public void setPublicValue(byte[] publicValue) {
-    this.publicValue = Util.requireNonNull("publicValue", publicValue);
+  public void setBytes(byte[] bytes) {
+    this.bytes = Util.requireNonNull("bytes", bytes);
   }
 
-  /**
-   * Returns the string representation of this object. Do not parse data from
-   * this string, it is for debugging only.
-   *
-   * @return A string representation of this object.
-   */
   @Override
   public String toString() {
-    return Util.concat("  Public Value (hex): ", Util.toHex(publicValue));
+    return Util.concat("  Bytes (hex): ", Util.toHex(bytes));
   }
 
-  /**
-   * Compares all member variables of this object with the other object.
-   * Returns only true, if all are equal in both objects.
-   *
-   * @param otherObject
-   *          The other object to compare to.
-   * @return True, if other is an instance of this class and all member
-   *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
-   */
   @Override
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
       return true;
-    } else if (!(otherObject instanceof DHPkcsDeriveParams)) {
+    } else if (!(otherObject instanceof OpaqueParameters)) {
       return false;
     }
 
-    DHPkcsDeriveParams other = (DHPkcsDeriveParams) otherObject;
-    return Arrays.equals(this.publicValue, other.publicValue);
+    OpaqueParameters other = (OpaqueParameters) otherObject;
+    return Arrays.equals(this.bytes, other.bytes);
   }
 
-  /**
-   * The overriding of this method should ensure that the objects of this
-   * class work correctly in a hashtable.
-   *
-   * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
-   */
   @Override
   public int hashCode() {
-    return Util.hashCode(publicValue);
+    return Util.hashCode(bytes);
   }
 
 }

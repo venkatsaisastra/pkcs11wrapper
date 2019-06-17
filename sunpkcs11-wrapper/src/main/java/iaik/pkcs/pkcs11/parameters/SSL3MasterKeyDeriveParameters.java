@@ -40,7 +40,7 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
+package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.Util;
 import sun.security.pkcs11.wrapper.CK_SSL3_MASTER_KEY_DERIVE_PARAMS;
@@ -58,17 +58,17 @@ import sun.security.pkcs11.wrapper.CK_VERSION;
  */
 @SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
-public class SSL3MasterKeyDeriveParams implements Params {
+public class SSL3MasterKeyDeriveParameters implements Parameters {
 
   /**
    * The client's and server's random data information.
    */
-  protected SSL3RandomDataParams randomInfo;
+  protected SSL3RandomDataParameters randomInfo;
 
   /**
    * The SSL protocol version information.
    */
-  protected VersionParams version;
+  protected VersionParameters version;
 
   /**
    * Create a new SSL3MasterKeyDeriveParameters object with the given
@@ -82,8 +82,8 @@ public class SSL3MasterKeyDeriveParams implements Params {
    *                and (version <> null)
    * @postconditions
    */
-  public SSL3MasterKeyDeriveParams(SSL3RandomDataParams randomInfo,
-      VersionParams version) {
+  public SSL3MasterKeyDeriveParameters(SSL3RandomDataParameters randomInfo,
+      VersionParameters version) {
     this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
     this.version = Util.requireNonNull("version", version);
   }
@@ -112,7 +112,7 @@ public class SSL3MasterKeyDeriveParams implements Params {
    * @preconditions
    * @postconditions (result <> null)
    */
-  public SSL3RandomDataParams getRandomInfo() {
+  public SSL3RandomDataParameters getRandomInfo() {
     return randomInfo;
   }
 
@@ -123,7 +123,7 @@ public class SSL3MasterKeyDeriveParams implements Params {
    * @preconditions
    * @postconditions (result <> null)
    */
-  public VersionParams getVersion() {
+  public VersionParameters getVersion() {
     return version;
   }
 
@@ -135,7 +135,7 @@ public class SSL3MasterKeyDeriveParams implements Params {
    * @preconditions (randomInfo <> null)
    * @postconditions
    */
-  public void setRandomInfo(SSL3RandomDataParams randomInfo) {
+  public void setRandomInfo(SSL3RandomDataParameters randomInfo) {
     this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
   }
 
@@ -147,7 +147,7 @@ public class SSL3MasterKeyDeriveParams implements Params {
    * @preconditions (version <> null)
    * @postconditions
    */
-  public void setVersion(VersionParams version) {
+  public void setVersion(VersionParameters version) {
     this.version = Util.requireNonNull("version", version);
   }
 
@@ -178,12 +178,12 @@ public class SSL3MasterKeyDeriveParams implements Params {
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
       return true;
-    } else if (!(otherObject instanceof SSL3MasterKeyDeriveParams)) {
+    } else if (!(otherObject instanceof SSL3MasterKeyDeriveParameters)) {
       return false;
     }
 
-    SSL3MasterKeyDeriveParams other
-        = (SSL3MasterKeyDeriveParams) otherObject;
+    SSL3MasterKeyDeriveParameters other
+        = (SSL3MasterKeyDeriveParameters) otherObject;
     return this.randomInfo.equals(other.randomInfo)
         && this.version.equals(other.version);
   }

@@ -40,7 +40,7 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
+package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
@@ -61,7 +61,7 @@ import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
  */
 @SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
-public class SSL3KeyMaterialOutParams implements Params {
+public class SSL3KeyMaterialOutParameters implements Parameters {
 
   /**
    * The resulting Client MAC Secret key.
@@ -111,7 +111,7 @@ public class SSL3KeyMaterialOutParams implements Params {
    * @postconditions
    */
   // CHECKSTYLE:SKIP
-  public SSL3KeyMaterialOutParams(byte[] clientIV, byte[] serverIV) {
+  public SSL3KeyMaterialOutParameters(byte[] clientIV, byte[] serverIV) {
     this.clientIV = Util.requireNonNull("clientIV", clientIV);
     this.serverIV = Util.requireNonNull("serverIV", serverIV);
   }
@@ -272,11 +272,11 @@ public class SSL3KeyMaterialOutParams implements Params {
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
       return true;
-    } else if (!(otherObject instanceof SSL3KeyMaterialOutParams)) {
+    } else if (!(otherObject instanceof SSL3KeyMaterialOutParameters)) {
       return false;
     }
 
-    SSL3KeyMaterialOutParams other = (SSL3KeyMaterialOutParams) otherObject;
+    SSL3KeyMaterialOutParameters other = (SSL3KeyMaterialOutParameters) otherObject;
     return Util.objEquals(this.clientMacSecret, other.clientMacSecret)
         && Util.objEquals(this.serverMacSecret, other.serverMacSecret)
         && Util.objEquals(this.clientKey, other.clientKey)

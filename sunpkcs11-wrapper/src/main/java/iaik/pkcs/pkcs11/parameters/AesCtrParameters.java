@@ -40,76 +40,50 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
+package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
+import sun.security.pkcs11.wrapper.CK_AES_CTR_PARAMS;
 
 /**
- * This class encapsulates parameters for general block ciphers in CBC mode.
- * Those are all Mechanism.*_CBC and Mechanism.*_CBC_PAD mechanisms. This class
- * also applies to other mechanisms which require just an initialization vector
- * as parameter.
+ * This class represents the necessary parameters required by
+ * the CKM_AES_CTR mechanism as defined in CK_AES_CTR_PARAMS structure.
+ * <p/>
+ * <B>PKCS#11 structure:</B>
+ * <PRE>
+ * typedef struct CK_AES_CTR_PARAMS {
+ *   CK_ULONG ulCounterBits;
+ *   CK_BYTE cb[16];
+ * } CK_AES_CTR_PARAMS;
+ * </PRE>
  *
- * @author Karl Scheibelhofer
- * @version 1.0
- * @invariants (initializationVector <> null)
+ * @author Lijun Liao
  */
-// CHECKSTYLE:SKIP
-public class IVParams implements Params {
+@SuppressWarnings("restriction")
+public class AesCtrParameters implements Parameters {
 
-  /**
-   * The initialization vector.
-   */
-  protected byte[] iv;
+  private byte[] cb;
 
-  /**
-   * Create a new InitializationVectorParameters object with the given
-   * initialization vector.
-   *
-   * @param iv
-   *          The initialization vector.
-   * @preconditions (initializationVector <> null)
-   * @postconditions
-   */
-  public IVParams(byte[] iv) {
-    this.iv = Util.requireNonNull("iv", iv);
+  public AesCtrParameters(byte[] cb) {
+    Util.requireNonNull("cb", cb);
+    if (cb.length != 16) {
+      throw new IllegalArgumentException("cb.length must be 16");
+    }
+    this.cb = cb;
   }
 
-  /**
-   * Get this parameters object as a byte array.
-   *
-   * @return This object as a byte array.
-   * @preconditions
-   * @postconditions (result <> null)
-   */
-  @Override
-  public Object getPKCS11ParamsObject() {
-    return iv;
+  public byte[] getCb() {
+    return cb;
   }
 
-  /**
-   * Get the initialization vector.
-   *
-   * @return The initialization vector.
-   * @preconditions
-   * @postconditions (result <> null)
-   */
-  public byte[] getInitializationVector() {
-    return iv;
-  }
-
-  /**
-   * Set the initialization vector.
-   *
-   * @param iv
-   *          The initialization vector.
-   * @preconditions (initializationVector <> null)
-   * @postconditions
-   */
-  public void setInitializationVector(byte[] iv) {
-    this.iv = Util.requireNonNull("iv", iv);
+  public void setCb(byte[] cb) {
+    Util.requireNonNull("cb", cb);
+    if (cb.length != 16) {
+      throw new IllegalArgumentException("cb.length must be 16");
+    }
+    this.cb = cb;
   }
 
   /**
@@ -120,7 +94,7 @@ public class IVParams implements Params {
    */
   @Override
   public String toString() {
-    return Util.concat("  Initialization Vector (hex): ", Util.toHex(iv));
+    return Util.concat("  cb: ", Util.toHex(cb));
   }
 
   /**
@@ -138,12 +112,12 @@ public class IVParams implements Params {
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
       return true;
-    } else if (!(otherObject instanceof IVParams)) {
+    } else if (!(otherObject instanceof AesCtrParameters)) {
       return false;
     }
 
-    IVParams other = (IVParams) otherObject;
-    return Arrays.equals(this.iv, other.iv);
+    AesCtrParameters other = (AesCtrParameters) otherObject;
+    return Arrays.equals(this.cb, other.cb);
   }
 
   /**
@@ -156,7 +130,12 @@ public class IVParams implements Params {
    */
   @Override
   public int hashCode() {
-    return Util.hashCode(iv);
+    return Util.hashCode(cb);
+  }
+
+  @Override
+  public Object getPKCS11ParamsObject() {
+    return new CK_AES_CTR_PARAMS(cb);
   }
 
 }

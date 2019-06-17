@@ -44,7 +44,7 @@ package iaik.pkcs.pkcs11;
 
 import java.util.Date;
 
-import iaik.pkcs.pkcs11.constants.PKCS11Constants;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import sun.security.pkcs11.wrapper.CK_TOKEN_INFO;
 
 /**

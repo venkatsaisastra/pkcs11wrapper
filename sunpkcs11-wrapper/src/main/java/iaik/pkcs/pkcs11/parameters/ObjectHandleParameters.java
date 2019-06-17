@@ -40,96 +40,71 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
-
-import java.util.Arrays;
+package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.Util;
-import sun.security.pkcs11.wrapper.CK_X9_42_DH1_DERIVE_PARAMS;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
 
 /**
- * This abstract class encapsulates parameters for the X9.42 DH mechanism
- * Mechanism.X9_42_DH_DERIVE.
+ * This class encapsulates parameters for Mechanisms.CONCATENATE_BASE_AND_KEY.
  *
  * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */
-@SuppressWarnings("restriction")
-public class X942DH1KeyDerivationParams extends DHKeyDerivationParams {
+public class ObjectHandleParameters implements Parameters {
 
   /**
-   * The data shared between the two parties.
+   * The PKCS#11 object.
    */
-  protected byte[] otherInfo;
+  protected PKCS11Object object;
 
   /**
-   * Create a new X942DH1KeyDerivationParameters object with the given
-   * attributes.
+   * Create a new ObjectHandleParameters object using the given object.
    *
-   * @param keyDerivationFunction
-   *          The key derivation function used on the shared secret value.
-   *          One of the values defined in KeyDerivationFunctionType.
-   * @param otherInfo
-   *          The data shared between the two parties.
-   * @param publicData
-   *          The other partie's public key value.
-   * @preconditions ((keyDerivationFunction == KeyDerivationFunctionType.NULL)
-   *                 or (keyDerivationFunction
-   *                      == KeyDerivationFunctionType.SHA1_KDF)
-   *                 or (keyDerivationFunction
-   *                      == KeyDerivationFunctionType.SHA1_KDF_ASN1)
-   *                 or (keyDerivationFunction
-   *                      == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
-   *                and (publicData <> null)
+   * @param object
+   *          The PKCS#11 object which's handle to use.
+   * @preconditions
    * @postconditions
    */
-  public X942DH1KeyDerivationParams(long keyDerivationFunction,
-      byte[] otherInfo, byte[] publicData) {
-    super(keyDerivationFunction, publicData);
-    this.otherInfo = otherInfo;
+  public ObjectHandleParameters(PKCS11Object object) {
+    this.object = object;
   }
 
   /**
-   * Get this parameters object as an object of the CK_X9_42_DH1_DERIVE_PARAMS
-   * class.
+   * Get this parameters object as a Long object, which is the handle of the
+   * underlying object.
    *
-   * @return This object as a CK_X9_42_DH1_DERIVE_PARAMS object.
+   * @return This object as a Long object.
    * @preconditions
    * @postconditions (result <> null)
    */
   @Override
   public Object getPKCS11ParamsObject() {
-    CK_X9_42_DH1_DERIVE_PARAMS params = new CK_X9_42_DH1_DERIVE_PARAMS();
-
-    params.kdf = kdf;
-    params.pOtherInfo = otherInfo;
-    params.pPublicData = publicData;
-
-    return params;
+    return new Long(object.getObjectHandle());
   }
 
   /**
-   * Get the data shared between the two parties.
+   * Get the PKCS#11 object.
    *
-   * @return The data shared between the two parties.
+   * @return The PKCS#11 object.
    * @preconditions
    * @postconditions
    */
-  public byte[] getOtherInfo() {
-    return otherInfo;
+  public PKCS11Object getObject() {
+    return object;
   }
 
   /**
-   * Set the data shared between the two parties.
+   * Set the PKCS#11 object.
    *
-   * @param otherInfo
-   *          The data shared between the two parties.
-   * @preconditions (otherInfo <> null)
+   * @param object
+   *          The PKCS#11 object.
+   * @preconditions
    * @postconditions
    */
-  public void setOtherInfo(byte[] otherInfo) {
-    this.otherInfo = otherInfo;
+  public void setObjectHandle(PKCS11Object object) {
+    this.object = object;
   }
 
   /**
@@ -140,8 +115,7 @@ public class X942DH1KeyDerivationParams extends DHKeyDerivationParams {
    */
   @Override
   public String toString() {
-    return Util.concat(super.toString(),
-        "\n  Other Info: ", Util.toHex(otherInfo));
+    return Util.concatObjects("  The PKCS11Object:\n", object);
   }
 
   /**
@@ -159,14 +133,13 @@ public class X942DH1KeyDerivationParams extends DHKeyDerivationParams {
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
       return true;
-    } else if (!(otherObject instanceof X942DH1KeyDerivationParams)) {
+    } else if (!(otherObject instanceof ObjectHandleParameters)) {
       return false;
     }
 
-    X942DH1KeyDerivationParams other =
-        (X942DH1KeyDerivationParams) otherObject;
-    return super.equals(other)
-        && Arrays.equals(this.otherInfo, other.otherInfo);
+    ObjectHandleParameters other = (ObjectHandleParameters) otherObject;
+    return (this != null)
+        && this.object.equals(other.object);
   }
 
   /**
@@ -179,7 +152,7 @@ public class X942DH1KeyDerivationParams extends DHKeyDerivationParams {
    */
   @Override
   public int hashCode() {
-    return super.hashCode() ^ Util.hashCode(otherInfo);
+    return (object != null) ? object.hashCode() : 0;
   }
 
 }

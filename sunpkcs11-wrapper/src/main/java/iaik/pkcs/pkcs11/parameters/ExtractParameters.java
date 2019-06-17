@@ -40,36 +40,36 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
+package iaik.pkcs.pkcs11.parameters;
 
 import iaik.pkcs.pkcs11.Util;
 
 /**
- * This class encapsulates parameters for the MAC algorithms for the following
- * mechanisms: DES, DES3 (triple-DES), CAST, CAST3, CAST128 (CAST5), IDEA, and
- * CDMF ciphers.
+ * This class encapsulates parameters for Mechanisms.EXTRACT_KEY_FROM_KEY.
  *
  * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */
-public class MacGeneralParams implements Params {
+public class ExtractParameters implements Parameters {
 
   /**
-   * The length of the MAC produced, in bytes.
+   * The bit of the base key that should be used as the first bit of the
+   * derived key.
    */
-  protected long macLength;
+  protected long bitIndex;
 
   /**
-   * Create a new MacGeneralParameters object with the given MAC length.
+   * Create a new ExtractParameters object with the given bit index.
    *
-   * @param macLength
-   *          The length of the MAC produced, in bytes.
+   * @param bitIndex
+   *          The bit of the base key that should be used as the first bit of
+   *          the derived key.
    * @preconditions
    * @postconditions
    */
-  public MacGeneralParams(long macLength) {
-    this.macLength = macLength;
+  public ExtractParameters(long bitIndex) {
+    this.bitIndex = bitIndex;
   }
 
   /**
@@ -81,30 +81,34 @@ public class MacGeneralParams implements Params {
    */
   @Override
   public Object getPKCS11ParamsObject() {
-    return new Long(macLength);
+    return new Long(bitIndex);
   }
 
   /**
-   * Get the length of the MAC produced, in bytes.
+   * Get the bit of the base key that should be used as the first bit of the
+   * derived key.
    *
-   * @return The length of the MAC produced, in bytes.
+   * @return The bit of the base key that should be used as the first bit of
+   *         the derived key.
    * @preconditions
    * @postconditions
    */
-  public long getMacLength() {
-    return macLength;
+  public long getBitIndex() {
+    return bitIndex;
   }
 
   /**
-   * Set the length of the MAC produced, in bytes.
+   * Set the bit of the base key that should be used as the first bit of the
+   * derived key.
    *
-   * @param macLength
-   *          The length of the MAC produced, in bytes.
+   * @param bitIndex
+   *          The bit of the base key that should be used as the first bit of
+   *          the derived key.
    * @preconditions
    * @postconditions
    */
-  public void setMacLength(long macLength) {
-    this.macLength = macLength;
+  public void setBitIndex(long bitIndex) {
+    this.bitIndex = bitIndex;
   }
 
   /**
@@ -115,7 +119,7 @@ public class MacGeneralParams implements Params {
    */
   @Override
   public String toString() {
-    return Util.concat("  Mac Length (dec): ", Long.toString(macLength));
+    return Util.concat("  Bit Index (dec): ", Long.toString(bitIndex));
   }
 
   /**
@@ -133,12 +137,12 @@ public class MacGeneralParams implements Params {
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
       return true;
-    } else if (!(otherObject instanceof MacGeneralParams)) {
+    } else if (!(otherObject instanceof ExtractParameters)) {
       return false;
     }
 
-    MacGeneralParams other = (MacGeneralParams) otherObject;
-    return (this.macLength == other.macLength);
+    ExtractParameters other = (ExtractParameters) otherObject;
+    return this.bitIndex == other.bitIndex;
   }
 
   /**
@@ -151,7 +155,7 @@ public class MacGeneralParams implements Params {
    */
   @Override
   public int hashCode() {
-    return (int) macLength;
+    return (int) bitIndex;
   }
 
 }

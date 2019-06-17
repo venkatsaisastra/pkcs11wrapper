@@ -40,7 +40,7 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.constants;
+package iaik.pkcs.pkcs11.wrapper;
 
 /**
  * This interface holds constants of the PKCS#11 v2.40 errata 1 standard.

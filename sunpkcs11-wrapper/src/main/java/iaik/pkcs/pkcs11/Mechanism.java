@@ -42,9 +42,9 @@
 
 package iaik.pkcs.pkcs11;
 
-import iaik.pkcs.pkcs11.constants.Functions;
-import iaik.pkcs.pkcs11.constants.PKCS11Constants;
-import iaik.pkcs.pkcs11.params.Params;
+import iaik.pkcs.pkcs11.parameters.Parameters;
+import iaik.pkcs.pkcs11.wrapper.Functions;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
  * Objects of this class represent a mechanism as defined in PKCS#11. There are
@@ -65,7 +65,7 @@ public class Mechanism {
   /**
    * The parameters of the mechanism. Not all mechanisms use these parameters.
    */
-  protected Params params;
+  protected Parameters parameters;
 
   /**
    * Constructor taking just the mechanism code as defined in PKCS11Constants.
@@ -115,7 +115,7 @@ public class Mechanism {
       return false;
     }
 
-    return Util.objEquals(this.params, other.params);
+    return Util.objEquals(this.parameters, other.parameters);
   }
 
   /**
@@ -314,8 +314,8 @@ public class Mechanism {
    * @preconditions
    * @postconditions
    */
-  public Params getParams() {
-    return params;
+  public Parameters getParameters() {
+    return parameters;
   }
 
   /**
@@ -326,8 +326,8 @@ public class Mechanism {
    * @preconditions
    * @postconditions
    */
-  public void setParams(Params params) {
-    this.params = params;
+  public void setParameters(Parameters parameters) {
+    this.parameters = parameters;
   }
 
   /**
@@ -362,7 +362,7 @@ public class Mechanism {
   public String toString() {
     return Util.concatObjectsCap(128,
       "    Mechanism: ", Functions.mechanismCodeToString(pkcs11MechanismCode),
-      "\n    Params:\n", params);
+      "\n    Parameters:\n", parameters);
   }
 
 }

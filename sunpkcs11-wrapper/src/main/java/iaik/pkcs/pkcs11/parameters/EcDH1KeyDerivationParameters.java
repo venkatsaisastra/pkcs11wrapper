@@ -40,71 +40,87 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
+package iaik.pkcs.pkcs11.parameters;
+
+import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.objects.PKCS11Object;
+import sun.security.pkcs11.wrapper.CK_ECDH1_DERIVE_PARAMS;
 
 /**
- * This class encapsulates parameters for Mechanisms.CONCATENATE_BASE_AND_KEY.
+ * This abstract class encapsulates parameters for the DH mechanisms
+ * Mechanism.ECDH1_DERIVE and Mechanism.ECDH1_COFACTOR_DERIVE.
  *
  * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */
-public class ObjectHandleParams implements Params {
+@SuppressWarnings("restriction")
+public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
 
   /**
-   * The PKCS#11 object.
+   * The data shared between the two parties.
    */
-  protected PKCS11Object object;
+  protected byte[] sharedData;
 
   /**
-   * Create a new ObjectHandleParameters object using the given object.
+   * Create a new EcDH1KeyDerivationParameters object with the given
+   * attributes.
    *
-   * @param object
-   *          The PKCS#11 object which's handle to use.
-   * @preconditions
+   * @param kdf
+   *          The key derivation function used on the shared secret value.
+   *          One of the values defined in KeyDerivationFunctionType.
+   * @param sharedData
+   *          The data shared between the two parties.
+   * @param publicData
+   *          The other partie's public key value.
+   * @preconditions ((kdf == KeyDerivationFunctionType.NULL)
+   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF)
+   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1)
+   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
+   *              and (publicData <> null)
    * @postconditions
    */
-  public ObjectHandleParams(PKCS11Object object) {
-    this.object = object;
+  public EcDH1KeyDerivationParameters(long kdf, byte[] sharedData,
+      byte[] publicData) {
+    super(kdf, publicData);
+    this.sharedData = sharedData;
   }
 
   /**
-   * Get this parameters object as a Long object, which is the handle of the
-   * underlying object.
+   * Get this parameters object as an object of the CK_ECDH1_DERIVE_PARAMS
+   * class.
    *
-   * @return This object as a Long object.
+   * @return This object as a CK_ECDH1_DERIVE_PARAMS object.
    * @preconditions
    * @postconditions (result <> null)
    */
   @Override
   public Object getPKCS11ParamsObject() {
-    return new Long(object.getObjectHandle());
+    return new CK_ECDH1_DERIVE_PARAMS(kdf, sharedData, publicData);
   }
 
   /**
-   * Get the PKCS#11 object.
+   * Get the data shared between the two parties.
    *
-   * @return The PKCS#11 object.
+   * @return The data shared between the two parties.
    * @preconditions
    * @postconditions
    */
-  public PKCS11Object getObject() {
-    return object;
+  public byte[] getSharedData() {
+    return sharedData;
   }
 
   /**
-   * Set the PKCS#11 object.
+   * Set the data shared between the two parties.
    *
-   * @param object
-   *          The PKCS#11 object.
-   * @preconditions
+   * @param sharedData
+   *          The data shared between the two parties.
+   * @preconditions (sharedData <> null)
    * @postconditions
    */
-  public void setObjectHandle(PKCS11Object object) {
-    this.object = object;
+  public void setSharedData(byte[] sharedData) {
+    this.sharedData = sharedData;
   }
 
   /**
@@ -115,7 +131,8 @@ public class ObjectHandleParams implements Params {
    */
   @Override
   public String toString() {
-    return Util.concatObjects("  The PKCS11Object:\n", object);
+    return Util.concat(super.toString(),
+        "\n  Shared Data: ", Util.toHex(sharedData));
   }
 
   /**
@@ -133,13 +150,13 @@ public class ObjectHandleParams implements Params {
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
       return true;
-    } else if (!(otherObject instanceof ObjectHandleParams)) {
+    } else if (!(otherObject instanceof EcDH1KeyDerivationParameters)) {
       return false;
     }
 
-    ObjectHandleParams other = (ObjectHandleParams) otherObject;
-    return (this != null)
-        && this.object.equals(other.object);
+    EcDH1KeyDerivationParameters other = (EcDH1KeyDerivationParameters) otherObject;
+    return super.equals(other)
+        && Arrays.equals(this.sharedData, other.sharedData);
   }
 
   /**
@@ -152,7 +169,7 @@ public class ObjectHandleParams implements Params {
    */
   @Override
   public int hashCode() {
-    return (object != null) ? object.hashCode() : 0;
+    return super.hashCode() ^ Util.hashCode(sharedData);
   }
 
 }

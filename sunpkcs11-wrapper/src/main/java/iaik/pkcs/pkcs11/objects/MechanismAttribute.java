@@ -43,8 +43,8 @@
 package iaik.pkcs.pkcs11.objects;
 
 import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.constants.Functions;
-import iaik.pkcs.pkcs11.constants.PKCS11Constants;
+import iaik.pkcs.pkcs11.wrapper.Functions;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
  * Objects of this class represent a mechanism attribute of an PKCS#11 object

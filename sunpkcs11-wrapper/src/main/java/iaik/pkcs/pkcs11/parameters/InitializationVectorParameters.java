@@ -40,88 +40,76 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
+package iaik.pkcs.pkcs11.parameters;
 
-import iaik.pkcs.pkcs11.Mechanism;
+import java.util.Arrays;
+
 import iaik.pkcs.pkcs11.Util;
-import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
 
 /**
- * This class encapsulates parameters for the Mechanism.RSA_PKCS_PSS.
+ * This class encapsulates parameters for general block ciphers in CBC mode.
+ * Those are all Mechanism.*_CBC and Mechanism.*_CBC_PAD mechanisms. This class
+ * also applies to other mechanisms which require just an initialization vector
+ * as parameter.
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
+ * @invariants (initializationVector <> null)
  */
-@SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
-public class RSAPkcsPssParams extends RSAPkcsParams {
+public class InitializationVectorParameters implements Parameters {
 
   /**
-   * The length of the salt value in octets.
+   * The initialization vector.
    */
-  protected long saltLength;
+  protected byte[] iv;
 
   /**
-   * Create a new RSAPkcsOaepParameters object with the given attributes.
+   * Create a new InitializationVectorParameters object with the given
+   * initialization vector.
    *
-   * @param hashAlg
-   *          The message digest algorithm used to calculate the digest of the
-   *          encoding parameter.
-   * @param mgf
-   *          The mask to apply to the encoded block. One of the constants
-   *          defined in the MessageGenerationFunctionType interface.
-   * @param saltLength
-   *          The length of the salt value in octets.
-   * @preconditions (hashAlg <> null)
-   *                and (mgf == MessageGenerationFunctionType.Sha1)
+   * @param iv
+   *          The initialization vector.
+   * @preconditions (initializationVector <> null)
    * @postconditions
    */
-  public RSAPkcsPssParams(Mechanism hashAlg, long mgf, long saltLength) {
-    super(hashAlg, mgf);
-    this.saltLength = saltLength;
+  public InitializationVectorParameters(byte[] iv) {
+    this.iv = Util.requireNonNull("iv", iv);
   }
 
   /**
-   * Get this parameters object as an object of the CK_RSA_PKCS_PSS_PARAMS
-   * class.
+   * Get this parameters object as a byte array.
    *
-   * @return This object as a CK_RSA_PKCS_PSS_PARAMS object.
+   * @return This object as a byte array.
    * @preconditions
    * @postconditions (result <> null)
    */
   @Override
   public Object getPKCS11ParamsObject() {
-    CK_RSA_PKCS_PSS_PARAMS params = new CK_RSA_PKCS_PSS_PARAMS();
-
-    params.hashAlg = hashAlg.getMechanismCode();
-    params.mgf = mgf;
-    params.sLen = saltLength;
-
-    return params;
+    return iv;
   }
 
   /**
-   * Get the length of the salt value in octets.
+   * Get the initialization vector.
    *
-   * @return The length of the salt value in octets.
+   * @return The initialization vector.
    * @preconditions
-   * @postconditions
+   * @postconditions (result <> null)
    */
-  public long getSaltLength() {
-    return saltLength;
+  public byte[] getInitializationVector() {
+    return iv;
   }
 
   /**
-   * Set the length of the salt value in octets.
+   * Set the initialization vector.
    *
-   * @param saltLength
-   *          The length of the salt value in octets.
-   * @preconditions
+   * @param iv
+   *          The initialization vector.
+   * @preconditions (initializationVector <> null)
    * @postconditions
    */
-  public void setSaltLength(long saltLength) {
-    this.saltLength = saltLength;
+  public void setInitializationVector(byte[] iv) {
+    this.iv = Util.requireNonNull("iv", iv);
   }
 
   /**
@@ -132,8 +120,7 @@ public class RSAPkcsPssParams extends RSAPkcsParams {
    */
   @Override
   public String toString() {
-    return Util.concat(super.toString(),
-        "\n  Salt Length (octets, dec): ", Long.toString(saltLength));
+    return Util.concat("  Initialization Vector (hex): ", Util.toHex(iv));
   }
 
   /**
@@ -151,12 +138,12 @@ public class RSAPkcsPssParams extends RSAPkcsParams {
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
       return true;
-    } else if (!(otherObject instanceof RSAPkcsPssParams)) {
+    } else if (!(otherObject instanceof InitializationVectorParameters)) {
       return false;
     }
 
-    RSAPkcsPssParams other = (RSAPkcsPssParams) otherObject;
-    return super.equals(other) && (this.saltLength == other.saltLength);
+    InitializationVectorParameters other = (InitializationVectorParameters) otherObject;
+    return Arrays.equals(this.iv, other.iv);
   }
 
   /**
@@ -169,7 +156,7 @@ public class RSAPkcsPssParams extends RSAPkcsParams {
    */
   @Override
   public int hashCode() {
-    return super.hashCode() ^ ((int) saltLength);
+    return Util.hashCode(iv);
   }
 
 }

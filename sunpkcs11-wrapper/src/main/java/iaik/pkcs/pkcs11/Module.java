@@ -49,8 +49,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import iaik.pkcs.pkcs11.constants.PKCS11Constants;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import sun.security.pkcs11.wrapper.CK_CREATEMUTEX;
 import sun.security.pkcs11.wrapper.CK_C_INITIALIZE_ARGS;

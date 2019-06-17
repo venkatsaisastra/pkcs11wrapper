@@ -42,7 +42,7 @@
 
 package iaik.pkcs.pkcs11;
 
-import iaik.pkcs.pkcs11.constants.PKCS11Constants;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
  * Objects of this class show the state of a session. This state is only a

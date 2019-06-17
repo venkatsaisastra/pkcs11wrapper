@@ -12,11 +12,4 @@
   <packaging>bundle</packaging>
   <name>PKCS#11 wrapper</name>
   <description>PKCS#11 wrapper based on sunpkcs11</description>
-  <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>pkcs11-constants</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-  </dependencies>
 </project>

@@ -40,50 +40,76 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
+package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import sun.security.pkcs11.wrapper.CK_AES_CTR_PARAMS;
 
 /**
- * This class represents the necessary parameters required by
- * the CKM_AES_CTR mechanism as defined in CK_AES_CTR_PARAMS structure.
- * <p/>
- * <B>PKCS#11 structure:</B>
- * <PRE>
- * typedef struct CK_AES_CTR_PARAMS {
- *   CK_ULONG ulCounterBits;
- *   CK_BYTE cb[16];
- * } CK_AES_CTR_PARAMS;
- * </PRE>
+ * This class encapsulates parameters for the algorithms
+ * Mechanism.DH_PKCS_DERIVE.
  *
- * @author Lijun Liao
+ * @author Karl Scheibelhofer
+ * @version 1.0
+ * @invariants (publicValue <> null)
  */
-@SuppressWarnings("restriction")
-public class AesCtrParams implements Params {
+// CHECKSTYLE:SKIP
+public class DHPkcsDeriveParameters implements Parameters {
 
-  private byte[] cb;
+  /**
+   * The initialization vector.
+   */
+  protected byte[] publicValue;
 
-  public AesCtrParams(byte[] cb) {
-    Util.requireNonNull("cb", cb);
-    if (cb.length != 16) {
-      throw new IllegalArgumentException("cb.length must be 16");
-    }
-    this.cb = cb;
+  /**
+   * Create a new DHPkcsDeriveParameters object with the given public value.
+   *
+   * @param publicValue
+   *          The public value of the other party in the key agreement
+   *          protocol.
+   * @preconditions (publicValue <> null)
+   * @postconditions
+   */
+  public DHPkcsDeriveParameters(byte[] publicValue) {
+    this.publicValue = publicValue;
   }
 
-  public byte[] getCb() {
-    return cb;
+  /**
+   * Get this parameters object as a byte array.
+   *
+   * @return This object as a byte array.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  @Override
+  public Object getPKCS11ParamsObject() {
+    return publicValue;
   }
 
-  public void setCb(byte[] cb) {
-    Util.requireNonNull("cb", cb);
-    if (cb.length != 16) {
-      throw new IllegalArgumentException("cb.length must be 16");
-    }
-    this.cb = cb;
+  /**
+   * Get the public value of the other party in the key agreement protocol.
+   *
+   * @return The public value of the other party in the key agreement
+   *         protocol.
+   * @preconditions
+   * @postconditions (result <> null)
+   */
+  public byte[] getPublicValue() {
+    return publicValue;
+  }
+
+  /**
+   * Set the public value of the other party in the key agreement protocol.
+   *
+   * @param publicValue
+   *          The public value of the other party in the key agreement
+   *          protocol.
+   * @preconditions (publicValue <> null)
+   * @postconditions
+   */
+  public void setPublicValue(byte[] publicValue) {
+    this.publicValue = Util.requireNonNull("publicValue", publicValue);
   }
 
   /**
@@ -94,7 +120,7 @@ public class AesCtrParams implements Params {
    */
   @Override
   public String toString() {
-    return Util.concat("  cb: ", Util.toHex(cb));
+    return Util.concat("  Public Value (hex): ", Util.toHex(publicValue));
   }
 
   /**
@@ -112,12 +138,12 @@ public class AesCtrParams implements Params {
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
       return true;
-    } else if (!(otherObject instanceof AesCtrParams)) {
+    } else if (!(otherObject instanceof DHPkcsDeriveParameters)) {
       return false;
     }
 
-    AesCtrParams other = (AesCtrParams) otherObject;
-    return Arrays.equals(this.cb, other.cb);
+    DHPkcsDeriveParameters other = (DHPkcsDeriveParameters) otherObject;
+    return Arrays.equals(this.publicValue, other.publicValue);
   }
 
   /**
@@ -130,12 +156,7 @@ public class AesCtrParams implements Params {
    */
   @Override
   public int hashCode() {
-    return Util.hashCode(cb);
-  }
-
-  @Override
-  public Object getPKCS11ParamsObject() {
-    return new CK_AES_CTR_PARAMS(cb);
+    return Util.hashCode(publicValue);
   }
 
 }

@@ -45,6 +45,7 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
  * Objects of this class represent secret keys as specified by PKCS#11
@@ -65,6 +66,18 @@ public class ValuedSecretKey extends SecretKey {
    * The length of this secret key in bytes.
    */
   protected LongAttribute valueLen;
+  
+  public static ValuedSecretKey newAESSecretKey() {
+    return new ValuedSecretKey(PKCS11Constants.CKK_AES);
+  }
+
+  public static ValuedSecretKey newDES3SecretKey() {
+    return new ValuedSecretKey(PKCS11Constants.CKK_DES3);
+  }
+  
+  public static ValuedSecretKey newGenericSecretKey() {
+    return new ValuedSecretKey(PKCS11Constants.CKK_GENERIC_SECRET);
+  }
 
   /**
    * Default Constructor.

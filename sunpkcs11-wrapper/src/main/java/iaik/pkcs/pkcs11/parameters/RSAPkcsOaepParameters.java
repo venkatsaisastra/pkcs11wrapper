@@ -40,13 +40,13 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
+package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.constants.PKCS11Constants;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import sun.security.pkcs11.wrapper.CK_RSA_PKCS_OAEP_PARAMS;
 
 /**
@@ -59,7 +59,7 @@ import sun.security.pkcs11.wrapper.CK_RSA_PKCS_OAEP_PARAMS;
  */
 @SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
-public class RSAPkcsOaepParams extends RSAPkcsParams {
+public class RSAPkcsOaepParameters extends RSAPkcsParameters {
 
   /**
    * This interface defines the available source types as defined by
@@ -123,7 +123,7 @@ public class RSAPkcsOaepParams extends RSAPkcsParams {
    *                     or (source == SourceType.DataSpecified))
    * @postconditions
    */
-  public RSAPkcsOaepParams(Mechanism hashAlgorithm,
+  public RSAPkcsOaepParameters(Mechanism hashAlgorithm,
       long maskGenerationFunction, long source, byte[] sourceData) {
     super(hashAlgorithm, maskGenerationFunction);
     if ((source != SourceType.EMPTY)
@@ -247,11 +247,11 @@ public class RSAPkcsOaepParams extends RSAPkcsParams {
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
       return true;
-    } else if (!(otherObject instanceof RSAPkcsOaepParams)) {
+    } else if (!(otherObject instanceof RSAPkcsOaepParameters)) {
       return false;
     }
 
-    RSAPkcsOaepParams other = (RSAPkcsOaepParams) otherObject;
+    RSAPkcsOaepParameters other = (RSAPkcsOaepParameters) otherObject;
     return super.equals(other)
         && (this.source == other.source)
         && Arrays.equals(this.sourceData, other.sourceData);

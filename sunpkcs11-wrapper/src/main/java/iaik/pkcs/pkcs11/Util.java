@@ -51,7 +51,7 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.Vector;
 
-import iaik.pkcs.pkcs11.constants.Functions;
+import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
 import sun.security.pkcs11.wrapper.CK_DATE;
 

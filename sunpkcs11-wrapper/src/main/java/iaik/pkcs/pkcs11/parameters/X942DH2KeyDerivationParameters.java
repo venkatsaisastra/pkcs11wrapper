@@ -40,17 +40,17 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
+package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
-import sun.security.pkcs11.wrapper.CK_ECDH2_DERIVE_PARAMS;
+import sun.security.pkcs11.wrapper.CK_X9_42_DH2_DERIVE_PARAMS;
 
 /**
- * This abstract class encapsulates parameters for the DH mechanism
- * Mechanism.ECMQV_DERIVE.
+ * This abstract class encapsulates parameters for the X9.42 DH mechanisms
+ * Mechanism.X9_42_DH_HYBRID_DERIVE and Mechanism.X9_42_MQV_DERIVE.
  *
  * @author Karl Scheibelhofer
  * @version 1.0
@@ -58,7 +58,7 @@ import sun.security.pkcs11.wrapper.CK_ECDH2_DERIVE_PARAMS;
  *             and (publicData2 <> null)
  */
 @SuppressWarnings("restriction")
-public class EcDH2KeyDerivationParams extends EcDH1KeyDerivationParams {
+public class X942DH2KeyDerivationParameters extends X942DH1KeyDerivationParameters {
 
   /**
    * The length in bytes of the second EC private key.
@@ -76,10 +76,10 @@ public class EcDH2KeyDerivationParams extends EcDH1KeyDerivationParams {
   protected byte[] publicData2;
 
   /**
-   * Create a new EcDH1KeyDerivationParameters object with the given
+   * Create a new X942DH1KeyDerivationParameters object with the given
    * attributes.
    *
-   * @param kdf
+   * @param keyDerivationFunction
    *          The key derivation function used on the shared secret value.
    *          One of the values defined in KeyDerivationFunctionType.
    * @param sharedData
@@ -89,41 +89,44 @@ public class EcDH2KeyDerivationParams extends EcDH1KeyDerivationParams {
    * @param privateDataLength
    *          The length in bytes of the second EC private key.
    * @param privateData
-   *          The key for the second EC private key value.
+   *          The key for the second X9.42 private key value.
    * @param publicData2
-   *          The other party's second EC public key value.
-   * @preconditions ((kdf == KeyDerivationFunctionType.NULL)
-   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF)
-   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1)
-   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
-   *              and (publicData <> null)
-   *              and (privateData <> null)
-   *              and (publicData2 <> null)
+   *          The other party's second X9.42 public key value.
+   * @preconditions ((keyDerivationFunction == KeyDerivationFunctionType.NULL)
+   *                 or (keyDerivationFunction
+   *                      == KeyDerivationFunctionType.SHA1_KDF)
+   *                 or (keyDerivationFunction
+   *                      == KeyDerivationFunctionType.SHA1_KDF_ASN1)
+   *                 or (keyDerivationFunction
+   *                      == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
+   *                and (publicData <> null)
+   *                and (privateData <> null)
+   *                and (publicData2 <> null)
    * @postconditions
    */
-  public EcDH2KeyDerivationParams(long kdf, byte[] sharedData,
-      byte[] publicData, long privateDataLength, PKCS11Object privateData,
-      byte[] publicData2) {
-    super(kdf, sharedData, publicData);
+  public X942DH2KeyDerivationParameters(long keyDerivationFunction,
+      byte[] sharedData, byte[] publicData, long privateDataLength,
+      PKCS11Object privateData, byte[] publicData2) {
+    super(keyDerivationFunction, sharedData, publicData);
     this.privateDataLength = privateDataLength;
     this.privateData = Util.requireNonNull("privateData", privateData);
     this.publicData2 = Util.requireNonNull("publicData2", publicData2);
   }
 
   /**
-   * Get this parameters object as an object of the CK_ECDH2_DERIVE_PARAMS
+   * Get this parameters object as an object of the CK_X9_42_DH2_DERIVE_PARAMS
    * class.
    *
-   * @return This object as a CK_ECDH2_DERIVE_PARAMS object.
+   * @return This object as a CK_X9_42_DH2_DERIVE_PARAMS object.
    * @preconditions
    * @postconditions (result <> null)
    */
   @Override
   public Object getPKCS11ParamsObject() {
-    CK_ECDH2_DERIVE_PARAMS params = new CK_ECDH2_DERIVE_PARAMS();
+    CK_X9_42_DH2_DERIVE_PARAMS params = new CK_X9_42_DH2_DERIVE_PARAMS();
 
     params.kdf = kdf;
-    params.pSharedData = sharedData;
+    params.pOtherInfo = otherInfo;
     params.pPublicData = publicData;
     params.ulPrivateDataLen = privateDataLength;
     params.hPrivateData = privateData.getObjectHandle();
@@ -133,9 +136,9 @@ public class EcDH2KeyDerivationParams extends EcDH1KeyDerivationParams {
   }
 
   /**
-   * Get the key for the second EC private key value.
+   * Get the key for the second X9.42 private key value.
    *
-   * @return The key for the second EC private key value.
+   * @return The key for the second X9.42 private key value.
    * @preconditions
    * @postconditions (result <> null)
    */
@@ -144,9 +147,9 @@ public class EcDH2KeyDerivationParams extends EcDH1KeyDerivationParams {
   }
 
   /**
-   * Get the length in bytes of the second EC private key.
+   * Get the length in bytes of the second X9.42 private key.
    *
-   * @return The length in bytes of the second EC private key.
+   * @return The length in bytes of the second X9.42 private key.
    * @preconditions
    * @postconditions
    */
@@ -155,9 +158,9 @@ public class EcDH2KeyDerivationParams extends EcDH1KeyDerivationParams {
   }
 
   /**
-   * Get the other party's second EC public key value.
+   * Get the other party's second X9.42 public key value.
    *
-   * @return The other party's second EC public key value.
+   * @return The other party's second X9.42 public key value.
    * @preconditions
    * @postconditions (result <> null)
    */
@@ -166,10 +169,10 @@ public class EcDH2KeyDerivationParams extends EcDH1KeyDerivationParams {
   }
 
   /**
-   * Set the key for the second EC private key value.
+   * Set the key for the second X9.42 private key value.
    *
    * @param privateData
-   *          The key for the second EC private key value.
+   *          The key for the second X9.42 private key value.
    * @preconditions (privateData <> null)
    * @postconditions
    */
@@ -178,10 +181,10 @@ public class EcDH2KeyDerivationParams extends EcDH1KeyDerivationParams {
   }
 
   /**
-   * Set the length in bytes of the second EC private key.
+   * Set the length in bytes of the second X9.42 private key.
    *
    * @param privateDataLength
-   *          The length in bytes of the second EC private key.
+   *          The length in bytes of the second X9.42 private key.
    * @preconditions
    * @postconditions
    */
@@ -190,10 +193,10 @@ public class EcDH2KeyDerivationParams extends EcDH1KeyDerivationParams {
   }
 
   /**
-   * Set the other party's second EC public key value.
+   * Set the other party's second X9.42 public key value.
    *
    * @param publicData2
-   *          The other party's second EC public key value.
+   *          The other party's second X9.42 public key value.
    * @preconditions (publicData2 <> null)
    * @postconditions
    */
@@ -209,8 +212,7 @@ public class EcDH2KeyDerivationParams extends EcDH1KeyDerivationParams {
    */
   @Override
   public String toString() {
-    String upperStr = super.toString();
-    return Util.concatObjectsCap(upperStr.length() + 100, upperStr,
+    return Util.concatObjects(super.toString(),
         "\n  Private Data Length (dec): ", privateDataLength,
         "\n  Private Data: ", privateData,
         "\n  Public Data 2: ", Util.toHex(publicData2));
@@ -231,11 +233,12 @@ public class EcDH2KeyDerivationParams extends EcDH1KeyDerivationParams {
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
       return true;
-    } else if (!(otherObject instanceof EcDH2KeyDerivationParams)) {
+    } else if (!(otherObject instanceof X942DH2KeyDerivationParameters)) {
       return false;
     }
 
-    EcDH2KeyDerivationParams other = (EcDH2KeyDerivationParams) otherObject;
+    X942DH2KeyDerivationParameters other
+        = (X942DH2KeyDerivationParameters) otherObject;
     return super.equals(other)
         && (this.privateDataLength == other.privateDataLength)
         && this.privateData.equals(other.privateData)

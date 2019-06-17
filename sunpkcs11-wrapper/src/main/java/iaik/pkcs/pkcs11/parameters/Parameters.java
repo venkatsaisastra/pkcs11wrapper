@@ -40,7 +40,7 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
+package iaik.pkcs.pkcs11.parameters;
 
 /**
  * Every parameters class implements this interface through which the module.
@@ -49,7 +49,7 @@ package iaik.pkcs.pkcs11.params;
  * @version 1.0
  * @invariants
  */
-public interface Params {
+public interface Parameters {
 
   /**
    * Get this parameters object as an object of the corresponding *_PARAMS

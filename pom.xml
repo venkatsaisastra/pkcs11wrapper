@@ -31,7 +31,6 @@
     </repository>
   </distributionManagement>
   <modules>
-    <module>pkcs11-constants</module>
     <module>sunpkcs11-wrapper</module>
   </modules>
   <scm>

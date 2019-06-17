@@ -43,7 +43,6 @@
 package iaik.pkcs.pkcs11.wrapper;
 
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.constants.Functions;
 
 /**
  * This is the superclass of all checked exceptions used by this package. An

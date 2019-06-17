@@ -1,32 +1,32 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice,
-//    this list of conditions and the following disclaimer.
-//
+// 
+// Redistribution and use in source and binary forms, with or without modification,
+// are permitted provided that the following conditions are met:
+// 
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer.
+// 
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
 //    and/or other materials provided with the distribution.
-//
+// 
 // 3. The end-user documentation included with the redistribution, if any, must
 //    include the following acknowledgment:
-//
+// 
 //    "This product includes software developed by IAIK of Graz University of
 //     Technology."
-//
+// 
 //    Alternately, this acknowledgment may appear in the software itself, if and
 //    wherever such third-party acknowledgments normally appear.
-//
+// 
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from
-//    this software without prior written permission.
-//
+//    Technology" must not be used to endorse or promote products derived from this
+//    software without prior written permission.
+// 
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
 //    Graz University of Technology.
-//
+// 
 // THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED
 // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -40,86 +40,87 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
+package iaik.pkcs.pkcs11.parameters;
 
-import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.Version;
 import sun.security.pkcs11.wrapper.CK_VERSION;
 
 /**
  * This class is used for the Mechnism.SSL3_PRE_MASTER_KEY_GEN.
- *
+ * 
  * @author Karl Scheibelhofer
- * @author Lijun Liao
  * @version 1.0
- * @invariants
+ * 
  */
 @SuppressWarnings("restriction")
-public class VersionParams implements Params {
-
-  private Version version;
+public class VersionParameters extends Version implements Parameters {
 
   /**
-   * Create a new VersionParameters object with the given version.
-   *
-   * @param version
-   *          The version.
-   * @preconditions
-   * @postconditions
+   * Create a new VersionParameters object with the major and minor version set to zero.
+   * 
    */
-  public VersionParams(Version version) {
-    this.version = Util.requireNonNull("version", version);
+  public VersionParameters() {
+    super();
+  }
+
+  /**
+   * Create a new VersionParameters object with the given major and minor version.
+   * 
+   * @param major
+   *          The major version number.
+   * @param minor
+   *          The minor version number.
+   */
+  public VersionParameters(byte major, byte minor) {
+    super();
+    major_ = major;
+    minor_ = minor;
   }
 
   /**
    * Get this parameters object as a CK_VERSION object.
-   *
+   * 
    * @return This object as a CK_VERSION object.
-   * @preconditions
+   * 
    * @postconditions (result <> null)
    */
-  @Override
   public Object getPKCS11ParamsObject() {
-    return new CK_VERSION(version.getMajor(), version.getMinor());
+    CK_VERSION params = new CK_VERSION(major_, minor_);
+    return params;
   }
 
   /**
-   * This method allows setting the major and minor version numbers using
-   * a version object of the lower level API.
-   *
+   * This method allows setting the major and minor version numbers using a version object of the
+   * lower level API.
+   * 
    * @param input
-   *          The version object providing the major and minor version.
+   *          The version objet providing the major and minor version.
    * @preconditions (input <> null)
-   * @postconditions
+   * 
    */
-  // CHECKSTYLE:SKIP
   public void setPKCS11ParamsObject(CK_VERSION input) {
-    this.version = new Version(input);
+    major_ = input.major;
+    minor_ = input.minor;
   }
 
   /**
-   * Compares all member variables of this object with the other object.
-   * Returns only true, if all are equal in both objects.
-   *
-   * @param otherObject
-   *          The other object to compare to.
-   * @return True, if other is an instance of this class and all member
-   *         variables of both objects are equal. False, otherwise.
+   * Set the major version number.
+   * 
+   * @param major
+   *          The major version number.
    */
-  @Override
-  public boolean equals(Object otherObject) {
-    if (this == otherObject) {
-      return true;
-    } else if (!(otherObject instanceof VersionParams)) {
-      return false;
-    }
-
-    VersionParams other = (VersionParams) otherObject;
-    return this.version.equals(other.version);
+  public void setMajor(byte major) {
+    major_ = major;
   }
 
-  @Override
-  public String toString() {
-    return Util.concatObjects("Version: ", version);
+  /**
+   * Set the minor version number.
+   * 
+   * @param minor
+   *          The minor version number.
+   */
+  public void setMinor(byte minor) {
+    minor_ = minor;
   }
+
 }

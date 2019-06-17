@@ -44,17 +44,17 @@ package iaik.pkcs.pkcs11;
 
 import java.util.Vector;
 
-import iaik.pkcs.pkcs11.constants.PKCS11Constants;
 import iaik.pkcs.pkcs11.objects.Key;
 import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
 import iaik.pkcs.pkcs11.objects.SecretKey;
-import iaik.pkcs.pkcs11.params.Params;
-import iaik.pkcs.pkcs11.params.SSL3KeyMaterialParams;
-import iaik.pkcs.pkcs11.params.SSL3MasterKeyDeriveParams;
-import iaik.pkcs.pkcs11.params.VersionParams;
+import iaik.pkcs.pkcs11.parameters.Parameters;
+import iaik.pkcs.pkcs11.parameters.SSL3KeyMaterialParameters;
+import iaik.pkcs.pkcs11.parameters.SSL3MasterKeyDeriveParameters;
+import iaik.pkcs.pkcs11.parameters.VersionParameters;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
 import sun.security.pkcs11.wrapper.CK_MECHANISM;
@@ -1663,7 +1663,7 @@ public class Session {
   public Key deriveKey(Mechanism mechanism, Key baseKey, Key template)
       throws TokenException {
     CK_MECHANISM ckMechanism = toCkMechanism(mechanism);
-    Params params = mechanism.getParams();
+    Parameters params = mechanism.getParameters();
     CK_ATTRIBUTE[] ckAttributes = PKCS11Object.getSetAttributes(template);
 
     long objectHandle;
@@ -1682,14 +1682,14 @@ public class Session {
           == PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE
         || ckMechanism.mechanism
           == PKCS11Constants.CKM_TLS_MASTER_KEY_DERIVE)
-        && (params instanceof SSL3MasterKeyDeriveParams)) {
+        && (params instanceof SSL3MasterKeyDeriveParameters)) {
       /*
        * The SSL3MasterKeyDeriveParameters object need special handling
        * due to their deeper nesting of their data structure, which needs
        * to be copied back to get all the results.
        */
       // set the returned client version
-      VersionParams version = ((SSL3MasterKeyDeriveParams) params).getVersion();
+      VersionParameters version = ((SSL3MasterKeyDeriveParameters) params).getVersion();
       version.setPKCS11ParamsObject(
           ((CK_SSL3_MASTER_KEY_DERIVE_PARAMS)
               (ckMechanism.pParameter)).pVersion);
@@ -1698,14 +1698,14 @@ public class Session {
             == PKCS11Constants.CKM_SSL3_KEY_AND_MAC_DERIVE
           || ckMechanism.mechanism
             == PKCS11Constants.CKM_TLS_KEY_AND_MAC_DERIVE)
-        && (params instanceof SSL3KeyMaterialParams)) {
+        && (params instanceof SSL3KeyMaterialParameters)) {
       /*
        * The SSL3KeyMaterialParameters object need special handling due to
        * their deeper nesting of their data structure, which needs to be
        * copied back to get all the results.
        */
       // set the returned secret keys and IVs
-      ((SSL3KeyMaterialParams) params).getReturnedKeyMaterial()
+      ((SSL3KeyMaterialParameters) params).getReturnedKeyMaterial()
           .setPKCS11ParamsObject(
               ((CK_SSL3_KEY_MAT_PARAMS) ckMechanism.pParameter)
             .pReturnedKeyMaterial,
@@ -1806,7 +1806,7 @@ public class Session {
   private static CK_MECHANISM toCkMechanism(Mechanism mechanism) {
     CK_MECHANISM ckMechanism = new CK_MECHANISM();
     ckMechanism.mechanism = mechanism.getMechanismCode();
-    Params params = mechanism.getParams();
+    Parameters params = mechanism.getParameters();
     ckMechanism.pParameter = (params != null)
         ? params.getPKCS11ParamsObject() : null;
     return ckMechanism;

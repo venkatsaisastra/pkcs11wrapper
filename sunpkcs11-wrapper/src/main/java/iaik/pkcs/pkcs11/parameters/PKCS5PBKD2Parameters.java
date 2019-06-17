@@ -40,12 +40,12 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
+package iaik.pkcs.pkcs11.parameters;
 
 import java.util.Arrays;
 
 import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.constants.PKCS11Constants;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import sun.security.pkcs11.wrapper.CK_PKCS5_PBKD2_PARAMS;
 
 /**
@@ -60,7 +60,7 @@ import sun.security.pkcs11.wrapper.CK_PKCS5_PBKD2_PARAMS;
  */
 @SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
-public class PKCS5PBKD2Params implements Params {
+public class PKCS5PBKD2Parameters implements Parameters {
 
   /**
    * This interface defines the available pseudo-random function types as
@@ -149,7 +149,7 @@ public class PKCS5PBKD2Params implements Params {
    *                and (pseudoRandomFunctionData <> null)
    * @postconditions
    */
-  public PKCS5PBKD2Params(long saltSource, byte[] saltSourceData,
+  public PKCS5PBKD2Parameters(long saltSource, byte[] saltSourceData,
       long iterations, long pseudoRandomFunction,
       byte[] pseudoRandomFunctionData) {
     if (saltSource != SaltSourceType.SALT_SPECIFIED) {
@@ -364,11 +364,11 @@ public class PKCS5PBKD2Params implements Params {
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
       return true;
-    } else if (!(otherObject instanceof PKCS5PBKD2Params)) {
+    } else if (!(otherObject instanceof PKCS5PBKD2Parameters)) {
       return false;
     }
 
-    PKCS5PBKD2Params other = (PKCS5PBKD2Params) otherObject;
+    PKCS5PBKD2Parameters other = (PKCS5PBKD2Parameters) otherObject;
     return (this.saltSource == other.saltSource)
         && Arrays.equals(this.saltSourceData, other.saltSourceData)
         && (this.iterations == other.iterations)

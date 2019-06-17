@@ -40,75 +40,88 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package iaik.pkcs.pkcs11.params;
+package iaik.pkcs.pkcs11.parameters;
 
+import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Util;
+import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
 
 /**
- * This class encapsulates parameters for Mechanisms.EXTRACT_KEY_FROM_KEY.
+ * This class encapsulates parameters for the Mechanism.RSA_PKCS_PSS.
  *
  * @author Karl Scheibelhofer
  * @version 1.0
  * @invariants
  */
-public class ExtractParams implements Params {
+@SuppressWarnings("restriction")
+// CHECKSTYLE:SKIP
+public class RSAPkcsPssParameters extends RSAPkcsParameters {
 
   /**
-   * The bit of the base key that should be used as the first bit of the
-   * derived key.
+   * The length of the salt value in octets.
    */
-  protected long bitIndex;
+  protected long saltLength;
 
   /**
-   * Create a new ExtractParameters object with the given bit index.
+   * Create a new RSAPkcsOaepParameters object with the given attributes.
    *
-   * @param bitIndex
-   *          The bit of the base key that should be used as the first bit of
-   *          the derived key.
-   * @preconditions
+   * @param hashAlg
+   *          The message digest algorithm used to calculate the digest of the
+   *          encoding parameter.
+   * @param mgf
+   *          The mask to apply to the encoded block. One of the constants
+   *          defined in the MessageGenerationFunctionType interface.
+   * @param saltLength
+   *          The length of the salt value in octets.
+   * @preconditions (hashAlg <> null)
+   *                and (mgf == MessageGenerationFunctionType.Sha1)
    * @postconditions
    */
-  public ExtractParams(long bitIndex) {
-    this.bitIndex = bitIndex;
+  public RSAPkcsPssParameters(Mechanism hashAlg, long mgf, long saltLength) {
+    super(hashAlg, mgf);
+    this.saltLength = saltLength;
   }
 
   /**
-   * Get this parameters object as an Long object.
+   * Get this parameters object as an object of the CK_RSA_PKCS_PSS_PARAMS
+   * class.
    *
-   * @return This object as a Long object.
+   * @return This object as a CK_RSA_PKCS_PSS_PARAMS object.
    * @preconditions
    * @postconditions (result <> null)
    */
   @Override
   public Object getPKCS11ParamsObject() {
-    return new Long(bitIndex);
+    CK_RSA_PKCS_PSS_PARAMS params = new CK_RSA_PKCS_PSS_PARAMS();
+
+    params.hashAlg = hashAlg.getMechanismCode();
+    params.mgf = mgf;
+    params.sLen = saltLength;
+
+    return params;
   }
 
   /**
-   * Get the bit of the base key that should be used as the first bit of the
-   * derived key.
+   * Get the length of the salt value in octets.
    *
-   * @return The bit of the base key that should be used as the first bit of
-   *         the derived key.
+   * @return The length of the salt value in octets.
    * @preconditions
    * @postconditions
    */
-  public long getBitIndex() {
-    return bitIndex;
+  public long getSaltLength() {
+    return saltLength;
   }
 
   /**
-   * Set the bit of the base key that should be used as the first bit of the
-   * derived key.
+   * Set the length of the salt value in octets.
    *
-   * @param bitIndex
-   *          The bit of the base key that should be used as the first bit of
-   *          the derived key.
+   * @param saltLength
+   *          The length of the salt value in octets.
    * @preconditions
    * @postconditions
    */
-  public void setBitIndex(long bitIndex) {
-    this.bitIndex = bitIndex;
+  public void setSaltLength(long saltLength) {
+    this.saltLength = saltLength;
   }
 
   /**
@@ -119,7 +132,8 @@ public class ExtractParams implements Params {
    */
   @Override
   public String toString() {
-    return Util.concat("  Bit Index (dec): ", Long.toString(bitIndex));
+    return Util.concat(super.toString(),
+        "\n  Salt Length (octets, dec): ", Long.toString(saltLength));
   }
 
   /**
@@ -137,12 +151,12 @@ public class ExtractParams implements Params {
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
       return true;
-    } else if (!(otherObject instanceof ExtractParams)) {
+    } else if (!(otherObject instanceof RSAPkcsPssParameters)) {
       return false;
     }
 
-    ExtractParams other = (ExtractParams) otherObject;
-    return this.bitIndex == other.bitIndex;
+    RSAPkcsPssParameters other = (RSAPkcsPssParameters) otherObject;
+    return super.equals(other) && (this.saltLength == other.saltLength);
   }
 
   /**
@@ -155,7 +169,7 @@ public class ExtractParams implements Params {
    */
   @Override
   public int hashCode() {
-    return (int) bitIndex;
+    return super.hashCode() ^ ((int) saltLength);
   }
 
 }
