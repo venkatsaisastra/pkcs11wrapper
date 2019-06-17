@@ -56,7 +56,6 @@ import sun.security.pkcs11.wrapper.CK_DATE;
  * @version 1.0
  * @invariants
  */
-@SuppressWarnings("restriction")
 public class DateAttribute extends Attribute {
 
   /**

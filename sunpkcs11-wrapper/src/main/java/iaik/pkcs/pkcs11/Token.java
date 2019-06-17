@@ -95,7 +95,6 @@ import sun.security.pkcs11.wrapper.CK_TOKEN_INFO;
  * @version 1.0
  * @invariants (slot <> null)
  */
-@SuppressWarnings("restriction")
 public class Token {
 
   /**

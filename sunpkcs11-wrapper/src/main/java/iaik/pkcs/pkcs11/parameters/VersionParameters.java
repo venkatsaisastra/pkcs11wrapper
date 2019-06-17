@@ -52,7 +52,6 @@ import sun.security.pkcs11.wrapper.CK_VERSION;
  * @version 1.0
  * 
  */
-@SuppressWarnings("restriction")
 public class VersionParameters extends Version implements Parameters {
 
   /**

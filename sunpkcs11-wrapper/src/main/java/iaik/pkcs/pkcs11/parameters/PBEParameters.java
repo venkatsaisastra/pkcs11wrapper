@@ -59,7 +59,6 @@ import sun.security.pkcs11.wrapper.CK_PBE_PARAMS;
  *             and (password <> null)
  *             and (salt <> null)
  */
-@SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
 public class PBEParameters implements Parameters {
 

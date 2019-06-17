@@ -55,7 +55,6 @@ import sun.security.pkcs11.wrapper.CK_INFO;
  *             and (libraryDescription <> null)
  *             and (libraryVersion <> null)
  */
-@SuppressWarnings("restriction")
 public class Info {
 
   /**

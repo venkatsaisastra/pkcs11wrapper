@@ -55,7 +55,6 @@ import sun.security.pkcs11.wrapper.CK_X9_42_DH1_DERIVE_PARAMS;
  * @version 1.0
  * @invariants
  */
-@SuppressWarnings("restriction")
 public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
 
   /**

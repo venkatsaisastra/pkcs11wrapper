@@ -68,7 +68,6 @@ import sun.security.pkcs11.wrapper.PKCS11;
  * @invariants (attributeTable <> null)
  *             and (objectClass <> null)
  */
-@SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
 public class PKCS11Object {
 

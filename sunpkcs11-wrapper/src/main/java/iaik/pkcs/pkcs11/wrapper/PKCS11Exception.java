@@ -81,7 +81,6 @@ public class PKCS11Exception extends TokenException {
     this.errorDescription = Functions.errorCodeToString(errorCode);
   }
 
-  @SuppressWarnings("restriction")
   public PKCS11Exception(sun.security.pkcs11.wrapper.PKCS11Exception ex) {
     this(ex.getErrorCode());
   }

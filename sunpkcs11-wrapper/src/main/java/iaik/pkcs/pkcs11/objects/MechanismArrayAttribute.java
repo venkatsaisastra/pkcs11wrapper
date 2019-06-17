@@ -81,7 +81,6 @@ public class MechanismArrayAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   public void setMechanismAttributeArrayValue(Mechanism[] value) {
 
     long[] values = null;
@@ -103,7 +102,6 @@ public class MechanismArrayAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   public Mechanism[] getMechanismAttributeArrayValue() {
     Mechanism[] mechanisms = null;
     if (ckAttribute.pValue != null) {
@@ -151,7 +149,6 @@ public class MechanismArrayAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   @Override
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
@@ -181,7 +178,6 @@ public class MechanismArrayAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   @Override
   public int hashCode() {
     return (ckAttribute.pValue != null)

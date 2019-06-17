@@ -58,7 +58,6 @@ import sun.security.pkcs11.wrapper.CK_PKCS5_PBKD2_PARAMS;
  *           and (pseudoRandomFunction == PseudoRandomFunctionType.HMACSha1)
  *           and (pseudoRandomFunctionData <> null)
  */
-@SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
 public class PKCS5PBKD2Parameters implements Parameters {
 

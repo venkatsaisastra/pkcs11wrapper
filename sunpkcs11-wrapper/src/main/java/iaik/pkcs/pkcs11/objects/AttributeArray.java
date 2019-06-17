@@ -58,7 +58,6 @@ import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
  * @version 1.0
  * @invariants
  */
-@SuppressWarnings("restriction")
 public class AttributeArray extends Attribute {
 
   /**

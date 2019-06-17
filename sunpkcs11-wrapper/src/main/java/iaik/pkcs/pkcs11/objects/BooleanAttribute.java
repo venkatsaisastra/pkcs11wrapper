@@ -74,7 +74,6 @@ public class BooleanAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   public void setBooleanValue(Boolean value) {
     ckAttribute.pValue = value;
     present = true;
@@ -87,7 +86,6 @@ public class BooleanAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   public Boolean getBooleanValue() {
     return (Boolean) ckAttribute.pValue;
   }

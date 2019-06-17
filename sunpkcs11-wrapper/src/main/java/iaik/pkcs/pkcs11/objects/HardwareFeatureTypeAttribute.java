@@ -70,7 +70,6 @@ public class HardwareFeatureTypeAttribute extends LongAttribute {
    * @preconditions
    * @postconditions (result <> null)
    */
-  @SuppressWarnings("restriction")
   @Override
   protected String getValueString() {
     if ((ckAttribute != null) && (ckAttribute.pValue != null)) {

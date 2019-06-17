@@ -53,7 +53,6 @@ import sun.security.pkcs11.wrapper.PKCS11Exception;
  * @version 1.0
  * @invariants
  */
-@SuppressWarnings("restriction")
 public interface Notify {
 
   /**

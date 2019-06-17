@@ -64,7 +64,6 @@ import sun.security.pkcs11.wrapper.CK_SLOT_INFO;
  * @version 1.0
  * @invariants (module <> null)
  */
-@SuppressWarnings("restriction")
 public class Slot {
 
   /**

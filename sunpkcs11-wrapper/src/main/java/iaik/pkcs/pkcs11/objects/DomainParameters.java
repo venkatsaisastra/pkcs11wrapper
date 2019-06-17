@@ -92,7 +92,6 @@ public class DomainParameters extends Storage {
      * @preconditions (session <> null)
      * @postconditions (result <> null)
      */
-    @SuppressWarnings("restriction")
     public PKCS11Object build(Session session, long objectHandle)
         throws sun.security.pkcs11.wrapper.PKCS11Exception;
 
@@ -249,7 +248,6 @@ public class DomainParameters extends Storage {
    * @preconditions (session <> null)
    * @postconditions (result <> null)
    */
-  @SuppressWarnings("restriction")
   protected static PKCS11Object getUnknownDomainParameters(Session session,
       long objectHandle) throws TokenException {
     Util.requireNonNull("session", session);

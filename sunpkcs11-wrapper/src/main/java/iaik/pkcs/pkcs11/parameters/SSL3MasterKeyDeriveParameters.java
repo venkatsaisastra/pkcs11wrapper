@@ -56,7 +56,6 @@ import sun.security.pkcs11.wrapper.CK_VERSION;
  * @invariants (randomInfo <> null)
  *             and (version <> null)
  */
-@SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
 public class SSL3MasterKeyDeriveParameters implements Parameters {
 

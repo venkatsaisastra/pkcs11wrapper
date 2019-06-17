@@ -68,7 +68,6 @@ import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
  * @version 1.0
  * @invariants (ckAttribute <> null)
  */
-@SuppressWarnings("restriction")
 public abstract class Attribute {
 
   public static final Long CLASS = Long.valueOf(PKCS11Constants.CKA_CLASS);

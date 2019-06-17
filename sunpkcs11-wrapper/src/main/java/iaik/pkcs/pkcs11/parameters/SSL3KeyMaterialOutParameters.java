@@ -59,7 +59,6 @@ import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
  * @version 1.0
  * @invariants
  */
-@SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
 public class SSL3KeyMaterialOutParameters implements Parameters {
 

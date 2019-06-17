@@ -56,7 +56,6 @@ import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
  * @invariants (clientRandom <> null)
  *             and (serverRandom <> null)
  */
-@SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
 public class SSL3RandomDataParameters implements Parameters {
 

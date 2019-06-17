@@ -53,7 +53,6 @@ import sun.security.pkcs11.wrapper.CK_MECHANISM_INFO;
  * @version 1.0
  * @invariants
  */
-@SuppressWarnings("restriction")
 public class MechanismInfo {
 
   /**

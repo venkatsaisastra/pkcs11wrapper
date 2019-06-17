@@ -117,7 +117,6 @@ import sun.security.pkcs11.wrapper.PKCS11;
  * @invariants (pkcs11Module <> null)
  */
 
-@SuppressWarnings("restriction")
 public class Module {
 
   /**
@@ -442,14 +441,16 @@ public class Module {
    */
   // CHECKSTYLE:SKIP
   public void finalize() throws Throwable {
-    if (pkcs11Module != null) {
-      // pkcs11Module_.finalize();
-      Method method = PKCS11.class.getDeclaredMethod("finalize");
-      method.setAccessible(true);
-      method.invoke(pkcs11Module);
+    try {
+      if (pkcs11Module != null) {
+        // pkcs11Module_.finalize();
+        Method method = PKCS11.class.getDeclaredMethod("finalize");
+        method.setAccessible(true);
+        method.invoke(pkcs11Module);
+      }
+    } finally {
+      super.finalize();
     }
-
-    super.finalize();
   }
 
   /**

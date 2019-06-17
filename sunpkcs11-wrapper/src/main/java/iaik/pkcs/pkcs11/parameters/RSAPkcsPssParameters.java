@@ -53,7 +53,6 @@ import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
  * @version 1.0
  * @invariants
  */
-@SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
 public class RSAPkcsPssParameters extends RSAPkcsParameters {
 

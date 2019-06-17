@@ -82,7 +82,6 @@ public class LongAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   public void setLongValue(Long value) {
     ckAttribute.pValue = value;
     present = true;
@@ -95,7 +94,6 @@ public class LongAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   public Long getLongValue() {
     return (Long) ckAttribute.pValue;
   }
@@ -110,7 +108,6 @@ public class LongAttribute extends Attribute {
    * @preconditions
    * @postconditions (result <> null)
    */
-  @SuppressWarnings("restriction")
   protected String getValueString(int radix) {
     String valueString;
 

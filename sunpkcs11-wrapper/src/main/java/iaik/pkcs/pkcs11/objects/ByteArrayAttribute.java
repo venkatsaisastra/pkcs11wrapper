@@ -78,7 +78,6 @@ public class ByteArrayAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   public void setByteArrayValue(byte[] value) {
     ckAttribute.pValue = value;
     present = true;
@@ -91,7 +90,6 @@ public class ByteArrayAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   public byte[] getByteArrayValue() {
     return (byte[]) ckAttribute.pValue;
   }
@@ -103,7 +101,6 @@ public class ByteArrayAttribute extends Attribute {
    * @preconditions
    * @postconditions (result <> null)
    */
-  @SuppressWarnings("restriction")
   @Override
   protected String getValueString() {
     return ((ckAttribute != null) && (ckAttribute.pValue != null))
@@ -121,7 +118,6 @@ public class ByteArrayAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   @Override
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
@@ -162,7 +158,6 @@ public class ByteArrayAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   @Override
   public int hashCode() {
     return (ckAttribute.pValue != null)

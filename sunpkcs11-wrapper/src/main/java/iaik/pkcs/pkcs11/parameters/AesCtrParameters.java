@@ -61,7 +61,6 @@ import sun.security.pkcs11.wrapper.CK_AES_CTR_PARAMS;
  *
  * @author Lijun Liao
  */
-@SuppressWarnings("restriction")
 public class AesCtrParameters implements Parameters {
 
   private byte[] cb;

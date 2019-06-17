@@ -78,7 +78,6 @@ public class CharArrayAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   public void setCharArrayValue(char[] value) {
     ckAttribute.pValue = value;
     present = true;
@@ -91,7 +90,6 @@ public class CharArrayAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   public char[] getCharArrayValue() {
     return (char[]) ckAttribute.pValue;
   }
@@ -103,7 +101,6 @@ public class CharArrayAttribute extends Attribute {
    * @preconditions
    * @postconditions (result <> null)
    */
-  @SuppressWarnings("restriction")
   @Override
   protected String getValueString() {
     String valueString;
@@ -128,7 +125,6 @@ public class CharArrayAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   @Override
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
@@ -168,7 +164,6 @@ public class CharArrayAttribute extends Attribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   @Override
   public int hashCode() {
     return (ckAttribute.pValue != null) ?

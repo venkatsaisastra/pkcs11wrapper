@@ -64,7 +64,6 @@ import sun.security.pkcs11.wrapper.CK_DATE;
  * @version 1.0
  * @invariants
  */
-@SuppressWarnings("restriction")
 public class Util {
 
   public static <T> T requireNonNull(String paramName, T param) {

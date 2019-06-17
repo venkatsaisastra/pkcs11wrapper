@@ -57,7 +57,6 @@ import sun.security.pkcs11.wrapper.CK_ECDH2_DERIVE_PARAMS;
  * @invariants (privateData <> null)
  *             and (publicData2 <> null)
  */
-@SuppressWarnings("restriction")
 public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
 
   /**

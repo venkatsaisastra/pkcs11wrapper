@@ -57,7 +57,6 @@ import sun.security.pkcs11.wrapper.CK_RSA_PKCS_OAEP_PARAMS;
  * @invariants (source_ == SourceType.Empty)
  *             or (source_ == SourceType.DataSpecified)
  */
-@SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
 public class RSAPkcsOaepParameters extends RSAPkcsParameters {
 

@@ -150,7 +150,6 @@ import sun.security.pkcs11.wrapper.PKCS11;
  * @version 1.0
  * @invariants (pkcs11Module <> null)
  */
-@SuppressWarnings("restriction")
 public class Session {
 
   /**

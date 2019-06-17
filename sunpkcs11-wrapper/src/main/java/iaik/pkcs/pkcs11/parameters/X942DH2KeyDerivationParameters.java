@@ -57,7 +57,6 @@ import sun.security.pkcs11.wrapper.CK_X9_42_DH2_DERIVE_PARAMS;
  * @invariants (privateData <> null)
  *             and (publicData2 <> null)
  */
-@SuppressWarnings("restriction")
 public class X942DH2KeyDerivationParameters extends X942DH1KeyDerivationParameters {
 
   /**

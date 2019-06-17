@@ -56,7 +56,6 @@ import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
  * @invariants (randomInfo <> null)
  *             and (returnedKeyMaterial <> null)
  */
-@SuppressWarnings("restriction")
 // CHECKSTYLE:SKIP
 public class SSL3KeyMaterialParameters implements Parameters {
 

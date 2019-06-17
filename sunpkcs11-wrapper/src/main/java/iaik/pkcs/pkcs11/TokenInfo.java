@@ -62,7 +62,6 @@ import sun.security.pkcs11.wrapper.CK_TOKEN_INFO;
  *             and (firmwareVersion <> null)
  *             and (time <> null)
  */
-@SuppressWarnings("restriction")
 public class TokenInfo {
 
   /**

@@ -59,7 +59,6 @@ import sun.security.pkcs11.wrapper.CK_SLOT_INFO;
  *             and (hardwareVersion <> null)
  *             and (firmwareVersion <> null)
  */
-@SuppressWarnings("restriction")
 public class SlotInfo {
 
   /**

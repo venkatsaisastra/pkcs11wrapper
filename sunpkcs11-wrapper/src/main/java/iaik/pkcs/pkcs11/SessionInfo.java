@@ -54,7 +54,6 @@ import sun.security.pkcs11.wrapper.CK_SESSION_INFO;
  * @version 1.0
  * @invariants (state <> null)
  */
-@SuppressWarnings("restriction")
 public class SessionInfo {
 
   /**

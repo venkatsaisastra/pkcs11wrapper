@@ -55,7 +55,6 @@ import sun.security.pkcs11.wrapper.CK_ECDH1_DERIVE_PARAMS;
  * @version 1.0
  * @invariants
  */
-@SuppressWarnings("restriction")
 public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
 
   /**

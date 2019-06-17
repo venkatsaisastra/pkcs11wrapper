@@ -86,7 +86,6 @@ public class MechanismAttribute extends LongAttribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   public void setMechanism(Mechanism mechanism) {
     ckAttribute.pValue = (mechanism != null)
         ? Long.valueOf(mechanism.getMechanismCode()) : null;
@@ -100,7 +99,6 @@ public class MechanismAttribute extends LongAttribute {
    * @preconditions
    * @postconditions
    */
-  @SuppressWarnings("restriction")
   public Mechanism getMechanism() {
     return ((ckAttribute != null) && (ckAttribute.pValue != null))
         ? new Mechanism(((Long) ckAttribute.pValue).longValue())
@@ -114,7 +112,6 @@ public class MechanismAttribute extends LongAttribute {
    * @preconditions
    * @postconditions (result <> null)
    */
-  @SuppressWarnings("restriction")
   @Override
   protected String getValueString() {
     if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
