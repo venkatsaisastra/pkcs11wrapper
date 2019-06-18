@@ -380,7 +380,11 @@ public class Token {
           throws sun.security.pkcs11.wrapper.PKCS11Exception {
           boolean surrender =
               (event & PKCS11Constants.CKN_SURRENDER) != 0L;
-          notify.notify(newSession, surrender, pApplication);
+          try {
+            notify.notify(newSession, surrender, pApplication);
+          } catch (PKCS11Exception ex) {
+            throw new sun.security.pkcs11.wrapper.PKCS11Exception(ex.getErrorCode());
+          }
         }
       };
     }

@@ -43,7 +43,7 @@
 package iaik.pkcs.pkcs11;
 
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
-import sun.security.pkcs11.wrapper.PKCS11Exception;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 
 /**
  * Interface for notification callbacks. 11Object implementing this interface

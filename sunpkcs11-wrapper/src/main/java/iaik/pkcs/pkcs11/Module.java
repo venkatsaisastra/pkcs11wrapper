@@ -46,10 +46,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Map;
 
-import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import sun.security.pkcs11.wrapper.CK_CREATEMUTEX;
@@ -425,35 +423,6 @@ public class Module {
   }
 
   /**
-   * This finalize method tries to finalize the module by calling
-   * <code>finalize()</code> of the Java object of the PKCS11 module.
-   * Note that this method does not call the
-   * <code>finalize(PKCS11Object)</code>
-   * (<code>C_Finalize(PKCS11Object)</code>) method of the PKCS11 module!
-   * This method is the reserved Java method called by the garbage collector.
-   * Don't get confused by the same name.
-   *
-   * @exception Throwable
-   *              If finalization fails.
-   * @preconditions
-   * @postconditions
-   * @see #finalize(PKCS11Object)
-   */
-  // CHECKSTYLE:SKIP
-  public void finalize() throws Throwable {
-    try {
-      if (pkcs11Module != null) {
-        // pkcs11Module_.finalize();
-        Method method = PKCS11.class.getDeclaredMethod("finalize");
-        method.setAccessible(true);
-        method.invoke(pkcs11Module);
-      }
-    } finally {
-      super.finalize();
-    }
-  }
-
-  /**
    * <B>Caution:
    * Unlike the original PKCS#11 wrapper, we only call initialize() once per
    * native .so/.dll. Once finalize(Object) has been called, the module cannot
@@ -485,15 +454,17 @@ public class Module {
       throw new PKCS11Exception(ex);
     }
 
-    try {
-      Field field = PKCS11.class.getDeclaredField("moduleMap");
-      field.setAccessible(true);
-      @SuppressWarnings("unchecked")
-      Map<String,PKCS11> moduleMap = (Map<String,PKCS11>) field.get(null);
-      moduleMap.remove(pkcs11ModuleName);
-    } catch (Exception ex) {
-      throw new TokenException(
-          "could not remove module " + pkcs11ModuleName + " from the moduleMap");
+    if (Util.getJavaVersion() < 11) {
+      try {
+        Field field = PKCS11.class.getDeclaredField("moduleMap");
+        field.setAccessible(true);
+        @SuppressWarnings("unchecked")
+        Map<String,PKCS11> moduleMap = (Map<String,PKCS11>) field.get(null);
+        moduleMap.remove(pkcs11ModuleName);
+      } catch (Throwable th) {
+        throw new TokenException(
+            "could not remove module " + pkcs11ModuleName + " from the moduleMap");
+      }
     }
 
   }
