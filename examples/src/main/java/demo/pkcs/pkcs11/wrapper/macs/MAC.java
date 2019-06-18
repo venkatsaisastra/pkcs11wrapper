@@ -48,7 +48,7 @@ import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Slot;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.objects.AESSecretKey;
+import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 
@@ -121,7 +121,7 @@ public class MAC {
     // DES3SecretKey secretMACKey = (DES3SecretKey) session.generateKey(keyMechanism,
     // secretMACKeyTemplate);
 
-    AESSecretKey secretMACKeyTemplate = new AESSecretKey();
+    ValuedSecretKey secretMACKeyTemplate = ValuedSecretKey.newAESSecretKey();
     secretMACKeyTemplate.getSign().setBooleanValue(Boolean.TRUE);
     secretMACKeyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
     secretMACKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
@@ -130,13 +130,13 @@ public class MAC {
     byte[] randomData = session.generateRandom(16);
     secretMACKeyTemplate.getValue().setByteArrayValue(randomData);
 
-    AESSecretKey secretMACKey;
+    ValuedSecretKey secretMACKey;
     try {
-      secretMACKey = (AESSecretKey) session.createObject(secretMACKeyTemplate);
+      secretMACKey = (ValuedSecretKey) session.createObject(secretMACKeyTemplate);
     } catch (PKCS11Exception e) {
       if (e.getErrorCode() == PKCS11Constants.CKR_ATTRIBUTE_VALUE_INVALID) {
         secretMACKeyTemplate.getValueLen().setLongValue(new Long(randomData.length));
-        secretMACKey = (AESSecretKey) session.createObject(secretMACKeyTemplate);
+        secretMACKey = (ValuedSecretKey) session.createObject(secretMACKeyTemplate);
       } else {
         throw e;
       }
@@ -149,29 +149,29 @@ public class MAC {
         .println("################################################################################");
     output_.println("MACing data from file: " + args[2]);
 
-    InputStream dataInputStream = new FileInputStream(args[2]);
-
-    // be sure that your token can process the specified mechanism
     Mechanism signatureMechanism = Mechanism.get(PKCS11Constants.CKM_AES_MAC);
-    // initialize for signing
-    session.signInit(signatureMechanism, secretMACKey);
+    byte[] rawData;
 
-    byte[] dataBuffer = new byte[1024];
-    int bytesRead;
-    ByteArrayOutputStream streamBuffer = new ByteArrayOutputStream();
-
-    // feed in all data from the input stream
-    while ((bytesRead = dataInputStream.read(dataBuffer)) >= 0) {
-      streamBuffer.write(dataBuffer, 0, bytesRead);
+    try (InputStream dataInputStream = new FileInputStream(args[2])) {
+      // be sure that your token can process the specified mechanism
+      // initialize for signing
+      session.signInit(signatureMechanism, secretMACKey);
+  
+      byte[] dataBuffer = new byte[1024];
+      int bytesRead;
+      ByteArrayOutputStream streamBuffer = new ByteArrayOutputStream();
+  
+      // feed in all data from the input stream
+      while ((bytesRead = dataInputStream.read(dataBuffer)) >= 0) {
+        streamBuffer.write(dataBuffer, 0, bytesRead);
+      }
+      Arrays.fill(dataBuffer, (byte) 0); // ensure that no data is left in the memory
+      streamBuffer.flush();
+      streamBuffer.close();
+      rawData = streamBuffer.toByteArray();
     }
-    Arrays.fill(dataBuffer, (byte) 0); // ensure that no data is left in the memory
-    streamBuffer.flush();
-    streamBuffer.close();
-    dataInputStream.close();
-    byte[] rawData = streamBuffer.toByteArray();
 
     byte[] macValue = session.sign(rawData);
-
     output_.println("The MAC value is: " + new BigInteger(1, macValue).toString(16));
 
     output_
@@ -180,8 +180,6 @@ public class MAC {
     output_
         .println("################################################################################");
     output_.print("verification of the MAC... ");
-
-    dataInputStream = new FileInputStream(args[2]);
 
     // initialize for verification
     session.verifyInit(signatureMechanism, secretMACKey);

@@ -46,12 +46,9 @@ import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.TokenInfo;
-import iaik.pkcs.pkcs11.objects.DES3SecretKey;
-import iaik.pkcs.pkcs11.objects.Key;
 import iaik.pkcs.pkcs11.objects.SecretKey;
-import iaik.pkcs.pkcs11.parameters.DesCbcEncryptDataParameters;
+import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 import java.io.BufferedReader;
@@ -119,13 +116,13 @@ public class DeriveKeyDemo {
 
     Mechanism keyGenerationMechanism = Mechanism.get(PKCS11Constants.CKM_DES3_KEY_GEN);
 
-    List supportedMechanisms = Arrays.asList(token.getMechanismList());
+    List<Mechanism> supportedMechanisms = Arrays.asList(token.getMechanismList());
     if (!supportedMechanisms.contains(Mechanism.get(PKCS11Constants.CKM_DES3_KEY_GEN))) {
       output_.println("Mechanism not supported: DES3_KEY_GEN");
       return;
     }
 
-    DES3SecretKey baseKeyTemplate = new DES3SecretKey();
+    ValuedSecretKey baseKeyTemplate = ValuedSecretKey.newDES3SecretKey();
 
     baseKeyTemplate.getDerive().setBooleanValue(Boolean.TRUE);
     // we only have a read-only session, thus we only create a session object
@@ -138,12 +135,13 @@ public class DeriveKeyDemo {
     System.out.println("Base key: ");
     System.out.println(baseKey.toString());
 
+    /* TODO: uncomment me if supported by the underlying PKCS11Wrapper 
     output_
         .println("################################################################################");
     output_.println("derive key");
 
     // DES3 Key Template
-    DES3SecretKey derived3DESKeyTemplate = new DES3SecretKey();
+    ValuedSecretKey derived3DESKeyTemplate = ValuedSecretKey.newDES3SecretKey();
     SecretKey derivedKeyTemplate = derived3DESKeyTemplate;
 
     derivedKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
@@ -181,6 +179,7 @@ public class DeriveKeyDemo {
     output_
         .println("################################################################################");
     output_.println("finished");
+    */
 
     session.closeSession();
     pkcs11Module.finalize(null);

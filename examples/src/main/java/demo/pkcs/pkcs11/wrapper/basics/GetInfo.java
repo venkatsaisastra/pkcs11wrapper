@@ -62,7 +62,7 @@ import iaik.pkcs.pkcs11.SlotInfo;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.TokenInfo;
-import iaik.pkcs.pkcs11.objects.Object;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.objects.X509AttributeCertificate;
 import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
 
@@ -219,13 +219,13 @@ public class GetInfo {
         limit = Integer.parseInt(args[2]);
 
       session.findObjectsInit(null);
-      Object[] objects = session.findObjects(1);
+      PKCS11Object[] objects = session.findObjects(1);
       if (0 < objects.length)
         counter++;
 
       CertificateFactory x509CertificateFactory = null;
       while (objects.length > 0 && (0 == limit || counter < limit)) {
-        Object object = objects[0];
+        PKCS11Object object = objects[0];
         output_
             .println("--------------------------------------------------------------------------------");
         output_.println("Object with handle: " + objects[0].getObjectHandle());

@@ -42,10 +42,6 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
-import iaik.asn1.DerCoder;
-import iaik.asn1.INTEGER;
-import iaik.asn1.ObjectID;
-import iaik.asn1.structures.Name;
 import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
@@ -54,10 +50,9 @@ import iaik.pkcs.pkcs11.TokenInfo;
 import iaik.pkcs.pkcs11.objects.DHPrivateKey;
 import iaik.pkcs.pkcs11.objects.DSAPrivateKey;
 import iaik.pkcs.pkcs11.objects.Key;
-import iaik.pkcs.pkcs11.objects.Object;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
 import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
-import iaik.security.provider.IAIK;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -67,15 +62,19 @@ import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.Provider;
 import java.security.PublicKey;
-import java.security.Security;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.security.interfaces.DSAParams;
 import java.util.Collection;
 
 import javax.crypto.spec.DHParameterSpec;
+import javax.security.auth.x500.X500Principal;
+
+import org.bouncycastle.asn1.ASN1Integer;
+import org.bouncycastle.asn1.x500.X500Name;
 
 import demo.pkcs.pkcs11.wrapper.util.Util;
 
@@ -108,17 +107,6 @@ public class ImportCertificate {
     if (args.length < 2) {
       printUsage();
       throw new IOException("Missing argument!");
-    }
-
-    Security.addProvider(new IAIK());
-
-    // try if we have the ECC provider available, if yes, add it
-    try {
-      Class eccProviderClass = Class.forName("iaik.security.ecc.provider.ECCProvider");
-      Provider eccProvider = (Provider) eccProviderClass.newInstance();
-      Security.addProvider(eccProvider);
-    } catch (Exception ex) {
-      // ignore, we only need it for pkcs#12 files containing ECC keys
     }
 
     Module pkcs11Module = Module.getInstance(args[0]);
@@ -159,15 +147,14 @@ public class ImportCertificate {
     CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509",
         "IAIK");
     FileInputStream fileInputStream = new FileInputStream(args[1]);
-    Collection certificateChain = certificateFactory
+    Collection<? extends Certificate> certificateChain = certificateFactory
         .generateCertificates(fileInputStream);
     if (certificateChain.size() < 1) {
       output_.println("Did not find any certificate in the given input file. Finished.");
       output_.flush();
       throw new CertificateException("No certificate found!");
     }
-    iaik.x509.X509Certificate x509Certificate = (iaik.x509.X509Certificate) certificateChain
-        .iterator().next();
+    X509Certificate x509Certificate = (X509Certificate) certificateChain.iterator().next();
     certificateChain.remove(x509Certificate);
 
     output_
@@ -179,7 +166,7 @@ public class ImportCertificate {
 
     PublicKey publicKey = x509Certificate.getPublicKey();
 
-    Object searchTemplate = null;
+    PKCS11Object searchTemplate = null;
     if (publicKey.getAlgorithm().equalsIgnoreCase("RSA")) {
       java.security.interfaces.RSAPublicKey rsaPublicKey = (java.security.interfaces.RSAPublicKey) publicKey;
       RSAPrivateKey rsaPrivateKeySearchTemplate = new RSAPrivateKey();
@@ -213,7 +200,7 @@ public class ImportCertificate {
     byte[] objectID = null;
     if (searchTemplate != null) {
       session.findObjectsInit(searchTemplate);
-      Object[] foundKeyObjects = session.findObjects(1);
+      PKCS11Object[] foundKeyObjects = session.findObjects(1);
       if (foundKeyObjects.length > 0) {
         Key foundKey = (Key) foundKeyObjects[0];
         objectID = foundKey.getId().getByteArrayValue();
@@ -234,44 +221,44 @@ public class ImportCertificate {
         .println("################################################################################");
     output_.println("Create certificate object(s) on token.");
 
-    iaik.x509.X509Certificate currentCertificate = x509Certificate; // start with user cert
+    X509Certificate currentCertificate = x509Certificate; // start with user cert
     boolean importedCompleteChain = false;
     while (!importedCompleteChain) {
       // create certificate object template
       X509PublicKeyCertificate pkcs11X509PublicKeyCertificate = new X509PublicKeyCertificate();
-      Name subjectName = (Name) currentCertificate.getSubjectDN();
-      Name issuerName = (Name) currentCertificate.getIssuerDN();
-      String subjectCommonName = subjectName.getRDN(ObjectID.commonName);
-      String issuerCommonName = issuerName.getRDN(ObjectID.commonName);
+      X500Principal subjectName = currentCertificate.getSubjectX500Principal();
+      X500Principal issuerName = currentCertificate.getIssuerX500Principal();
+      byte[] encodedSubject = subjectName.getEncoded();
+      byte[] encodedIssuer = issuerName.getEncoded();
+
+      String subjectCommonName = Util.getCommontName(X500Name.getInstance(encodedSubject));
+      String issuerCommonName = Util.getCommontName(X500Name.getInstance(encodedIssuer));
       char[] label = (subjectCommonName + "'s "
           + ((issuerCommonName != null) ? issuerCommonName + " " : "") + "Certificate")
           .toCharArray();
       byte[] newObjectID;
       // if we need a new object ID, create one
       if (objectID == null) {
+        MessageDigest digest = MessageDigest.getInstance("SHA-1");
+
         if (publicKey instanceof java.security.interfaces.RSAPublicKey) {
           newObjectID = ((java.security.interfaces.RSAPublicKey) publicKey).getModulus()
               .toByteArray();
-          MessageDigest digest = MessageDigest.getInstance("SHA-1");
           newObjectID = digest.digest(newObjectID);
         } else if (publicKey instanceof java.security.interfaces.DSAPublicKey) {
           newObjectID = ((java.security.interfaces.DSAPublicKey) publicKey).getY()
               .toByteArray();
-          MessageDigest digest = MessageDigest.getInstance("SHA-1");
           newObjectID = digest.digest(newObjectID);
         } else {
-          newObjectID = currentCertificate.getFingerprint("SHA-1");
+          byte[] encodedCert = currentCertificate.getEncoded();
+          newObjectID = digest.digest(encodedCert);
         }
       } else {
         // we already got one from a corresponding private key before
         newObjectID = objectID;
       }
 
-      byte[] encodedSubject = ((Name) currentCertificate.getSubjectDN()).getEncoded();
-      byte[] encodedIssuer = ((Name) currentCertificate.getIssuerDN()).getEncoded();
-
-      byte[] serialNumber = DerCoder.encode(new INTEGER(currentCertificate
-          .getSerialNumber()));
+      byte[] serialNumber = new ASN1Integer(currentCertificate.getSerialNumber()).getEncoded();
 
       pkcs11X509PublicKeyCertificate.getToken().setBooleanValue(Boolean.TRUE);
       pkcs11X509PublicKeyCertificate.getPrivate().setBooleanValue(Boolean.FALSE);
@@ -289,8 +276,7 @@ public class ImportCertificate {
       session.createObject(pkcs11X509PublicKeyCertificate);
 
       if (certificateChain.size() > 0) {
-        currentCertificate = (iaik.x509.X509Certificate) certificateChain.iterator()
-            .next();
+        currentCertificate = (X509Certificate) certificateChain.iterator().next();
         certificateChain.remove(currentCertificate);
         objectID = null; // do not use the same ID for other certificates
       } else {

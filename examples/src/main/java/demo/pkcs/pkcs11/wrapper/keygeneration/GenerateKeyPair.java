@@ -42,21 +42,6 @@
 
 package demo.pkcs.pkcs11.wrapper.keygeneration;
 
-import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.MechanismInfo;
-import iaik.pkcs.pkcs11.Module;
-import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Slot;
-import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.TokenInfo;
-import iaik.pkcs.pkcs11.objects.KeyPair;
-import iaik.pkcs.pkcs11.objects.Object;
-import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
-import iaik.pkcs.pkcs11.objects.RSAPublicKey;
-import iaik.pkcs.pkcs11.wrapper.Functions;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
-
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -72,7 +57,22 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 
+import org.bouncycastle.util.encoders.Hex;
+
 import demo.pkcs.pkcs11.wrapper.util.Util;
+import iaik.pkcs.pkcs11.Mechanism;
+import iaik.pkcs.pkcs11.MechanismInfo;
+import iaik.pkcs.pkcs11.Module;
+import iaik.pkcs.pkcs11.Session;
+import iaik.pkcs.pkcs11.Slot;
+import iaik.pkcs.pkcs11.Token;
+import iaik.pkcs.pkcs11.TokenException;
+import iaik.pkcs.pkcs11.TokenInfo;
+import iaik.pkcs.pkcs11.objects.KeyPair;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
+import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
+import iaik.pkcs.pkcs11.objects.RSAPublicKey;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
  * This demo program generates a 2048 bit RSA key-pair on the token and writes the public key to a
@@ -145,7 +145,7 @@ public class GenerateKeyPair {
     output_.flush();
 
     // first check out what attributes of the keys we may set
-    HashSet supportedMechanisms = new HashSet(Arrays.asList(token.getMechanismList()));
+    HashSet<Mechanism> supportedMechanisms = new HashSet<>(Arrays.asList(token.getMechanismList()));
 
     MechanismInfo signatureMechanismInfo;
     if (supportedMechanisms.contains(Mechanism.get(PKCS11Constants.CKM_RSA_PKCS))) {
@@ -278,13 +278,13 @@ public class GenerateKeyPair {
         .println("################################################################################");
     output_
         .println("Trying to search for the public key of the generated key-pair by ID: "
-            + Functions.toHexString(id));
+            + Hex.toHexString(id));
     // set the search template for the public key
     RSAPublicKey exportRsaPublicKeyTemplate = new RSAPublicKey();
     exportRsaPublicKeyTemplate.getId().setByteArrayValue(id);
 
     session.findObjectsInit(exportRsaPublicKeyTemplate);
-    Object[] foundPublicKeys = session.findObjects(1);
+    PKCS11Object[] foundPublicKeys = session.findObjects(1);
     session.findObjectsFinal();
 
     if (foundPublicKeys.length != 1) {

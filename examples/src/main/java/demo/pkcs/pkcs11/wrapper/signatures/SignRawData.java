@@ -45,21 +45,23 @@ package demo.pkcs.pkcs11.wrapper.signatures;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Slot;
 import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.objects.Object;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
+
+import demo.pkcs.pkcs11.wrapper.util.Util;
 
 /**
  * Signs some raw data on the token. This means, the given data is directly input to the signature
@@ -70,14 +72,17 @@ import java.math.BigInteger;
 public class SignRawData {
 
   static PrintWriter output_;
+  static BufferedReader input_;
 
   static {
     try {
-      // output_ = new PrintWriter(new FileWriter("SignRaw_output.txt"), true);
+      // output_ = new PrintWriter(new FileWriter("Encrypt_output.txt"), true);
       output_ = new PrintWriter(System.out, true);
+      input_ = new BufferedReader(new InputStreamReader(System.in));
     } catch (Throwable thr) {
       thr.printStackTrace();
       output_ = new PrintWriter(System.out, true);
+      input_ = new BufferedReader(new InputStreamReader(System.in));
     }
   }
 
@@ -85,27 +90,16 @@ public class SignRawData {
    * Usage: SignRawData PKCS#11-module slot-index userPIN file-to-be-signed [signature-value-file]
    */
   public static void main(String[] args) throws Exception {
-    if (4 > args.length) {
+    if (2 > args.length) {
       printUsage();
       throw new IOException("Missing argument!");
     }
 
     Module pkcs11Module = Module.getInstance(args[0]);
     pkcs11Module.initialize(null);
+    Token token = Util.selectToken(pkcs11Module, output_, input_);
 
-    Slot[] slots = pkcs11Module.getSlotList(Module.SlotRequirement.TOKEN_PRESENT);
-
-    if (slots.length == 0) {
-      output_.println("No slot with present token found!");
-      throw new TokenException("No token found!");
-    }
-
-    Slot selectedSlot = slots[Integer.parseInt(args[1])];
-    Token token = selectedSlot.getToken();
-
-    Session session = token.openSession(Token.SessionType.SERIAL_SESSION,
-        Token.SessionReadWriteBehavior.RO_SESSION, null, null);
-    session.login(Session.UserType.USER, args[2].toCharArray());
+    Session session = Util.openAuthorizedSession(token, false, output_, input_);
 
     output_
         .println("################################################################################");
@@ -115,7 +109,7 @@ public class SignRawData {
 
     session.findObjectsInit(templateSignatureKey);
 
-    Object[] foundSignatureKeyObjects = session.findObjects(1); // find first
+    PKCS11Object[] foundSignatureKeyObjects = session.findObjects(1); // find first
 
     RSAPrivateKey signatureKey = null;
     if (foundSignatureKeyObjects.length > 0) {
@@ -136,9 +130,7 @@ public class SignRawData {
 
     output_
         .println("################################################################################");
-    output_.println("signing data from file: " + args[3]);
-
-    InputStream dataInputStream = new FileInputStream(args[3]);
+    output_.println("signing data from file: " + args[1]);
 
     // to buffer the data to be signed
     ByteArrayOutputStream dataToBeSignedBuffer = new ByteArrayOutputStream(128);
@@ -155,8 +147,10 @@ public class SignRawData {
      * We use the sign(byte[]) function, because some drivers do not support signing multiple data
      * pieces. To buffer the data, feed all data from the input stream to the data buffer stream.
      */
-    while ((bytesRead = dataInputStream.read(dataBuffer)) >= 0) {
-      dataToBeSignedBuffer.write(dataBuffer, 0, bytesRead);
+    try (InputStream dataInputStream = new FileInputStream(args[1])) {
+      while ((bytesRead = dataInputStream.read(dataBuffer)) >= 0) {
+        dataToBeSignedBuffer.write(dataBuffer, 0, bytesRead);
+      }
     }
     byte[] dataToBeSigned = dataToBeSignedBuffer.toByteArray();
 
@@ -166,10 +160,10 @@ public class SignRawData {
     output_.println("The signature value is: "
         + new BigInteger(1, signatureValue).toString(16));
 
-    if (4 < args.length) {
-      output_.println("Writing signature to file: " + args[4]);
+    if (2 < args.length) {
+      output_.println("Writing signature to file: " + args[2]);
 
-      OutputStream signatureOutput = new FileOutputStream(args[4]);
+      OutputStream signatureOutput = new FileOutputStream(args[2]);
       signatureOutput.write(signatureValue);
       signatureOutput.flush();
       signatureOutput.close();
@@ -184,10 +178,9 @@ public class SignRawData {
 
   public static void printUsage() {
     output_
-        .println("Usage: SignRawData <PKCS#11 module> <slot-index> <userPIN> <file to be signed> [<signature value file>]");
+        .println("Usage: SignRawData <file to be signed> [<signature value file>]");
     output_
-        .println(" e.g.: SignRawData pk2priv.dll 1 password data.dat.sha1 signature.bin");
-    output_.println("The given DLL must be in the search path of the system.");
+        .println(" e.g.: SignRawData data.dat.sha1 signature.bin");
   }
 
 }

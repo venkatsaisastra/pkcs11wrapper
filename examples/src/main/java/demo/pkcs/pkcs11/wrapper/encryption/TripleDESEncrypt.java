@@ -49,8 +49,8 @@ import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.objects.DES3SecretKey;
-import iaik.pkcs.pkcs11.objects.Object;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
+import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.parameters.InitializationVectorParameters;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
@@ -136,9 +136,8 @@ public class TripleDESEncrypt {
     output_
         .println("################################################################################");
 
-    List supportedMechanisms = Arrays.asList(token.getMechanismList());
     MechanismInfo des3CbcMechanismInfo = null;
-    if (!supportedMechanisms.contains(Mechanism.get(PKCS11Constants.CKM_DES3_CBC_PAD))) {
+    if (!Util.supports(token, PKCS11Constants.CKM_DES3_CBC_PAD)) {
       output_.print("This token does not support Tripple DES!");
       output_.flush();
       throw new Exception("This token does not support Tripple DES!");
@@ -156,14 +155,14 @@ public class TripleDESEncrypt {
         .println("################################################################################");
     output_.println("searching for Tripple DES encryption keys");
 
-    List encryptionKeyList = new Vector(4);
+    List<PKCS11Object> encryptionKeyList = new Vector<>(4);
 
     // first we search for secret keys that we can use for encryption
-    DES3SecretKey secretEncryptionKeyTemplate = new DES3SecretKey();
+    ValuedSecretKey secretEncryptionKeyTemplate = ValuedSecretKey.newDES3SecretKey();
     secretEncryptionKeyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
 
     session.findObjectsInit(secretEncryptionKeyTemplate);
-    Object[] secretEncryptionKeys = session.findObjects(1);
+    PKCS11Object[] secretEncryptionKeys = session.findObjects(1);
 
     while (secretEncryptionKeys.length > 0) {
       encryptionKeyList.add(secretEncryptionKeys[0]);
@@ -171,9 +170,9 @@ public class TripleDESEncrypt {
     }
     session.findObjectsFinal();
 
-    DES3SecretKey selectedEncryptionKey = null;
+    ValuedSecretKey selectedEncryptionKey = null;
     if (encryptionKeyList.size() == 0) {
-      if (supportedMechanisms.contains(Mechanism.get(PKCS11Constants.CKM_DES3_KEY_GEN))) {
+      if (Util.supports(token, PKCS11Constants.CKM_DES3_KEY_GEN)) {
         output_.println("Found NO Tripple DES key that can be used for encryption.");
         output_.print("Do you want to generate a temporal session key? (y/n) ");
         output_.flush();
@@ -189,13 +188,13 @@ public class TripleDESEncrypt {
           Mechanism keyGenerationMechanism = Mechanism
               .get(PKCS11Constants.CKM_DES3_KEY_GEN);
 
-          DES3SecretKey secretKeyTemplate = new DES3SecretKey();
+          ValuedSecretKey secretKeyTemplate = ValuedSecretKey.newDES3SecretKey();
           secretKeyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
           secretKeyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
           // we only have a read-only session, thus we only create a session object
           secretKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
 
-          selectedEncryptionKey = (DES3SecretKey) session.generateKey(
+          selectedEncryptionKey = (ValuedSecretKey) session.generateKey(
               keyGenerationMechanism, secretKeyTemplate);
         } else {
           output_.flush();
@@ -209,12 +208,12 @@ public class TripleDESEncrypt {
       }
     } else {
       output_.println("found these Tripple DES encryption keys:");
-      Map objectHandleToObjectMap = new HashMap(encryptionKeyList.size());
-      Iterator encryptionKeyListIterator = encryptionKeyList.iterator();
+      Map<Long, PKCS11Object> objectHandleToObjectMap = new HashMap<>(encryptionKeyList.size());
+      Iterator<PKCS11Object> encryptionKeyListIterator = encryptionKeyList.iterator();
       while (encryptionKeyListIterator.hasNext()) {
-        Object encryptionKey = (Object) encryptionKeyListIterator.next();
+        PKCS11Object encryptionKey = (PKCS11Object) encryptionKeyListIterator.next();
         long objectHandle = encryptionKey.getObjectHandle();
-        objectHandleToObjectMap.put(new Long(objectHandle), encryptionKey);
+        objectHandleToObjectMap.put(Long.valueOf(objectHandle), encryptionKey);
         output_
             .println("________________________________________________________________________________");
         output_.println("Object with handle: " + objectHandle);
@@ -241,8 +240,8 @@ public class TripleDESEncrypt {
           return;
         }
         try {
-          selectedObjectHandle = new Long(objectHandleString);
-          selectedEncryptionKey = (DES3SecretKey) objectHandleToObjectMap
+          selectedObjectHandle = Long.valueOf(objectHandleString);
+          selectedEncryptionKey = (ValuedSecretKey) objectHandleToObjectMap
               .get(selectedObjectHandle);
           if (selectedEncryptionKey != null) {
             gotObjectHandle = true;
@@ -297,7 +296,9 @@ public class TripleDESEncrypt {
     // initialize for encryption
     session.encryptInit(selectedMechanism, selectedEncryptionKey);
 
-    byte[] encryptedData = session.encrypt(rawData);
+    byte[] buffer = new byte[rawData.length + 64];
+    int len = session.encrypt(rawData, 0, rawData.length, buffer, 0, buffer.length);
+    byte[] encryptedData = Arrays.copyOf(buffer, len);
 
     output_.println("finished");
 
@@ -335,24 +336,14 @@ public class TripleDESEncrypt {
         // initialize for encryption
         session.decryptInit(selectedMechanism, selectedEncryptionKey);
 
-        byte[] decryptedData = session.decrypt(encryptedData);
+        len = session.decrypt(encryptedData, 0, encryptedData.length, buffer, 0, buffer.length);
+        byte[] decryptedData = Arrays.copyOf(buffer, len);
+        Arrays.fill(buffer, (byte) 0);
 
         output_.println("finished");
 
         // compare initial data and decrypted data
-        boolean equal = false;
-        if (rawData.length != decryptedData.length) {
-          equal = false;
-        } else {
-          equal = true;
-          for (int i = 0; i < rawData.length; i++) {
-            if (rawData[i] != decryptedData[i]) {
-              equal = false;
-              break;
-            }
-          }
-        }
-
+        boolean equal = Arrays.equals(rawData, decryptedData);
         output_.println("decryption " + ((equal) ? "successful" : "FAILED"));
 
         output_.println("finished");

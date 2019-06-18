@@ -42,49 +42,32 @@
 
 package demo.pkcs.pkcs11.wrapper.encryption;
 
-import iaik.asn1.structures.AlgorithmID;
-import iaik.pkcs.PKCSException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+
+import org.bouncycastle.util.encoders.Hex;
+
+import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.MechanismInfo;
 import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.objects.Object;
+import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
-import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
+import iaik.pkcs.pkcs11.objects.PublicKey;
+import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
+import iaik.pkcs.pkcs11.objects.RSAPublicKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
-import iaik.pkcs.pkcs7.EncryptedContentInfoStream;
-import iaik.pkcs.pkcs7.EnvelopedDataStream;
-import iaik.pkcs.pkcs7.IssuerAndSerialNumber;
-import iaik.pkcs.pkcs7.RecipientInfo;
-import iaik.security.provider.IAIK;
-import iaik.x509.X509Certificate;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.security.GeneralSecurityException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.Security;
-import java.security.cert.CertificateException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESedeKeySpec;
-import javax.crypto.spec.SecretKeySpec;
-
-import demo.pkcs.pkcs11.wrapper.util.Util;
 
 /**
  * This demo shows how to use a PKCS#11 token to decrypt a PKCS#7 encrypted object. It only supports
@@ -93,7 +76,7 @@ import demo.pkcs.pkcs11.wrapper.util.Util;
  *
  * Use util.EncryptPKCS7EnvelopedData for creating the necessary files.
  */
-public class DecryptPKCS7 {
+public class RSADecrypt {
 
   static PrintWriter output_;
 
@@ -117,22 +100,16 @@ public class DecryptPKCS7 {
    */
   public static void main(String[] args) throws IOException, TokenException,
       CertificateException, NoSuchAlgorithmException, InvalidKeySpecException,
-      InvalidKeyException, PKCSException, GeneralSecurityException {
-    if (2 > args.length) {
+      InvalidKeyException, GeneralSecurityException {
+    if (1 > args.length) {
       printUsage();
       throw new IOException("Missing argument!");
     }
 
-    Security.addProvider(new IAIK());
-
     Module pkcs11Module = Module.getInstance(args[0]);
     pkcs11Module.initialize(null);
 
-    Token token;
-    if (2 < args.length)
-      token = Util.selectToken(pkcs11Module, output_, input_, args[2]);
-    else
-      token = Util.selectToken(pkcs11Module, output_, input_);
+    Token token = Util.selectToken(pkcs11Module, output_, input_);
     if (token == null) {
       output_.println("We have no token to proceed. Finished.");
       output_.flush();
@@ -140,8 +117,7 @@ public class DecryptPKCS7 {
     }
 
     // check, if this token can do RSA decryption
-    List supportedMechanisms = Arrays.asList(token.getMechanismList());
-    if (!supportedMechanisms.contains(Mechanism.get(PKCS11Constants.CKM_RSA_PKCS))) {
+    if (!Util.supports(token, PKCS11Constants.CKM_RSA_PKCS)) {
       output_.print("This token does not support RSA!");
       output_.flush();
       throw new TokenException("RSA not supported!");
@@ -155,181 +131,50 @@ public class DecryptPKCS7 {
       }
     }
 
-    Session session;
-    if (3 < args.length)
-      session = Util.openAuthorizedSession(token,
-          Token.SessionReadWriteBehavior.RW_SESSION, output_, input_, args[3]);
-    else
-      session = Util.openAuthorizedSession(token,
+    Session session = Util.openAuthorizedSession(token,
           Token.SessionReadWriteBehavior.RW_SESSION, output_, input_, null);
 
-    // read all certificates that are on the token
-    List tokenCertificates = new Vector();
-    X509PublicKeyCertificate certificateTemplate = new X509PublicKeyCertificate();
-    session.findObjectsInit(certificateTemplate);
-    Object[] tokenCertificateObjects;
-
-    while ((tokenCertificateObjects = session.findObjects(1)).length > 0) {
-      tokenCertificates.add(tokenCertificateObjects[0]);
-    }
-    session.findObjectsFinal();
-
-    output_
-        .println("################################################################################");
-
-    output_
-        .println("################################################################################");
-    output_.println("reading encrypted data from file: " + args[1]);
-
-    FileInputStream encryptedInputStream = new FileInputStream(args[1]);
-
-    EnvelopedDataStream envelopedData = new EnvelopedDataStream(encryptedInputStream);
-
-    RecipientInfo[] recipientInfos = envelopedData.getRecipientInfos();
-
-    // search through the recipients and look, if we have one of the recipients' certificates on the
-    // token
-    boolean haveDecryptionKey = false;
-    InputStream decryptedDataInputStream = null;
-    for (int i = 0; i < recipientInfos.length; i++) {
-      IssuerAndSerialNumber issuerAndSerialNumber = recipientInfos[i]
-          .getIssuerAndSerialNumber();
-
-      // look if there is a certificate on our token with the given issuer and serial number
-      X509PublicKeyCertificate matchingTokenCertificate = null;
-      Iterator tokenCertificatesIterator = tokenCertificates.iterator();
-      while (tokenCertificatesIterator.hasNext()) {
-        X509PublicKeyCertificate tokenCertificate = (X509PublicKeyCertificate) tokenCertificatesIterator
-            .next();
-        X509Certificate parsedTokenCertificate = new X509Certificate(tokenCertificate
-            .getValue().getByteArrayValue());
-        if (issuerAndSerialNumber.isIssuerOf(parsedTokenCertificate)) {
-          output_
-              .println("________________________________________________________________________________");
-          output_.println("Found matching certificate on the token:");
-          output_.println(parsedTokenCertificate.toString(true));
-          output_
-              .println("________________________________________________________________________________");
-          matchingTokenCertificate = tokenCertificate;
-          break;
-        }
-      }
-
-      if (matchingTokenCertificate != null) {
-        // find the corresponding private key for the certificate
-        PrivateKey privateKeyTemplate = new PrivateKey();
-        privateKeyTemplate.getId().setByteArrayValue(
-            matchingTokenCertificate.getId().getByteArrayValue());
-
-        session.findObjectsInit(privateKeyTemplate);
-        Object[] correspondingPrivateKeyObjects;
-        PrivateKey correspondingPrivateKey = null;
-
-        if ((correspondingPrivateKeyObjects = session.findObjects(1)).length > 0) {
-          correspondingPrivateKey = (PrivateKey) correspondingPrivateKeyObjects[0];
-          output_
-              .println("________________________________________________________________________________");
-          output_.println("Found corresponding private key:");
-          output_.println(correspondingPrivateKey);
-          output_
-              .println("________________________________________________________________________________");
-        } else {
-          output_
-              .println("Found no private key with the same ID as the matching certificate.");
-        }
-        session.findObjectsFinal();
-
-        // check, if the private key is a decrpytion key
-        PrivateKey decryptionKey = ((correspondingPrivateKey != null) && (correspondingPrivateKey
-            .getDecrypt().getBooleanValue().booleanValue())) ? correspondingPrivateKey
-            : null;
-
-        if (decryptionKey != null) {
-          haveDecryptionKey = true;
-          output_.print("decrypting symmetric key... ");
-          byte[] encryptedSymmetricKey = recipientInfos[i].getEncryptedKey();
-          // decrypt the encrypted symmetric key using the e.g. RSA on the smart-card
-          session.decryptInit(Mechanism.get(PKCS11Constants.CKM_RSA_PKCS), decryptionKey);
-          byte[] decryptedSymmetricKey = session.decrypt(encryptedSymmetricKey);
-          output_.println("finished");
-
-          // construct the symmetric key
-          output_.print("constructing symmetric key for software decryption... ");
-          EncryptedContentInfoStream encryptedContentInfo = (EncryptedContentInfoStream) envelopedData
-              .getEncryptedContentInfo();
-          AlgorithmID contentEncryptionAlgorithm = encryptedContentInfo
-              .getContentEncryptionAlgorithm();
-          SecretKeyFactory secretKeyFactory = SecretKeyFactory
-              .getInstance(contentEncryptionAlgorithm.getRawImplementationName());
-
-          javax.crypto.SecretKey secretKey;
-          if (contentEncryptionAlgorithm.getRawImplementationName().equalsIgnoreCase(
-              "DESede")) {
-            /*
-             * we now that the content encryption algorithm is DES3 if we run our
-             * EncryptPKCS7EnvelopedData-test to generate the data. Providing the appropriate
-             * keyspec is necessary for JKDs < 1.6. For JDKs >= 1.6 the else path works as well for
-             * DES keys.
-             */
-            DESedeKeySpec secretKeySpec = new DESedeKeySpec(decryptedSymmetricKey);
-            secretKey = secretKeyFactory.generateSecret(secretKeySpec);
-          } else {
-            SecretKeySpec secretKeySpec = new SecretKeySpec(decryptedSymmetricKey,
-                contentEncryptionAlgorithm.getRawImplementationName());
-            secretKey = secretKeyFactory.generateSecret(secretKeySpec);
-          }
-          output_.println("finished");
-
-          // decrypt the data (in software)
-          encryptedContentInfo.setupCipher(secretKey);
-          decryptedDataInputStream = encryptedContentInfo.getInputStream();
-
-          // read decrypted data from decryptedDataInputStream
-        }
-      }
+    RSAPrivateKey privTemplate = new RSAPrivateKey();
+    RSAPublicKey pubTemplate = new RSAPublicKey();
+    privTemplate.getPrivate().setBooleanValue(true);
+    privTemplate.getSensitive().setBooleanValue(true);
+    privTemplate.getDecrypt().setBooleanValue(true);
+    privTemplate.getExtractable().setBooleanValue(false);
+    
+    pubTemplate.getEncrypt().setBooleanValue(true);
+    pubTemplate.getModulusBits().setLongValue(1024L);
+    
+    Mechanism keyGenMech = Mechanism.get(PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN);
+    if (!Util.supports(token, keyGenMech.getMechanismCode())) {
+      output_.println("unsupported algorithm");
+      return;
     }
 
-    if (!haveDecryptionKey) {
-      output_
-          .print("Found no decryption key that matches any recipient info in the encrypted PKCS#7 object.");
-      output_.flush();
-      throw new InvalidKeyException("No suitable decryption key found!");
-    }
+    KeyPair keypair = session.generateKeyPair(keyGenMech, pubTemplate, privTemplate);
+    
+    PrivateKey privKey = keypair.getPrivateKey();
+    PublicKey pubKey = keypair.getPublicKey();
+    
+    Mechanism encMech = Mechanism.get(PKCS11Constants.CKM_RSA_PKCS);
+    
+    byte[] sessionKey = new byte[16];
+    byte[] buffer = new byte[1024 / 8 + 32];
+    session.encryptInit(encMech, pubKey);
+    int len = session.encrypt(sessionKey, 0, sessionKey.length, buffer, 0, buffer.length);
+    byte[] encryptedSessionKey = Arrays.copyOf(buffer, len);
+    Arrays.fill(buffer, (byte) 0); 
+    System.out.println(encryptedSessionKey.length + " bytes: " + Hex.toHexString(encryptedSessionKey));
+    
+    // decrypt
+    session.decryptInit(encMech, privKey);
+    len = session.decrypt(encryptedSessionKey, 0, encryptedSessionKey.length,buffer, 0, buffer.length);
+    byte[] decryptedSessionKey = Arrays.copyOf(buffer, len);
+    Arrays.fill(buffer, (byte) 0);
+    
+    boolean equal = Arrays.equals(sessionKey, decryptedSessionKey);
+    output_.println("decryption " + ((equal) ? "successful" : "FAILED"));
 
-    if (decryptedDataInputStream == null) {
-      output_.print("Could not decrypt the PKCS#7 object.");
-      output_.flush();
-      throw new GeneralSecurityException("Decryption error!");
-    }
-    output_
-        .println("################################################################################");
-
-    output_
-        .println("################################################################################");
-    OutputStream decryptedContentStream = (args.length == 5) ? new FileOutputStream(
-        args[4]) : null;
-    byte[] buffer = new byte[1024];
-    int bytesRead;
-    output_.println("The decrypted content data is: ");
-    output_
-        .println("________________________________________________________________________________");
-    while ((bytesRead = decryptedDataInputStream.read(buffer)) > 0) {
-      char[] charbuffer = new String(buffer).toCharArray();
-      output_.write(charbuffer, 0, bytesRead);
-      if (decryptedContentStream != null) {
-        decryptedContentStream.write(buffer, 0, bytesRead);
-      }
-    }
-    output_.println();
-    output_
-        .println("________________________________________________________________________________");
-    if (decryptedContentStream != null) {
-      output_.println("Decrypted content written to: " + args[4]);
-      decryptedContentStream.flush();
-      decryptedContentStream.close();
-    }
-    output_
-        .println("################################################################################");
+    output_.println("finished");
 
     session.closeSession();
     pkcs11Module.finalize(null);

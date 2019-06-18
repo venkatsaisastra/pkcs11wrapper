@@ -47,12 +47,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
-import iaik.pkcs.pkcs11.Module;
-import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Slot;
-import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.TokenInfo;
 
 /**
  * This program sets the normal user's PIN.
@@ -78,6 +73,7 @@ public class InitPIN {
    * Usage: InitPIN PKCS#11-module SO-PIN user-PIN [slot-index]
    */
   public static void main(String[] args) throws IOException, TokenException {
+    /* TODO: uncomment me if supported by the underlying PKCS11 wrapper
     if (args.length < 3) {
       printUsage();
       throw new IOException("Missing argument!");
@@ -151,6 +147,7 @@ public class InitPIN {
     } finally {
       pkcs11Module.finalize(null);
     }
+    */
   }
 
   public static void printUsage() {

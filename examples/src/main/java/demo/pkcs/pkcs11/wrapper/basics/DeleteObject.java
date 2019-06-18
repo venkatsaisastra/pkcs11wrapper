@@ -51,7 +51,7 @@ import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.BooleanAttribute;
 import iaik.pkcs.pkcs11.objects.Certificate;
 import iaik.pkcs.pkcs11.objects.Key;
-import iaik.pkcs.pkcs11.objects.Object;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -131,8 +131,8 @@ public class DeleteObject {
 
     deleteLoop: while (true) {
       session.findObjectsInit(null);
-      Object[] objects = session.findObjects(1);
-      Hashtable objectHandleToObject = new Hashtable(10);
+      PKCS11Object[] objects = session.findObjects(1);
+      Hashtable<Long, PKCS11Object> objectHandleToObject = new Hashtable<>(10);
 
       int limit = 0, counter = 0;
       if (3 < args.length)
@@ -152,8 +152,8 @@ public class DeleteObject {
           output_
               .println("--------------------------------------------------------------------------------");
           long objectHandle = objects[0].getObjectHandle();
-          objectHandleToObject.put(new Long(objectHandle), objects[0]);
-          output_.println("Object with handle: " + objectHandle);
+          objectHandleToObject.put(objectHandle, objects[0]);
+          output_.println("PKCS11Object with handle: " + objectHandle);
           output_.println(objects[0]);
           output_
               .println("--------------------------------------------------------------------------------");
@@ -168,7 +168,7 @@ public class DeleteObject {
       output_
           .println("################################################################################");
 
-      Object selectedObject = null;
+      PKCS11Object selectedObject = null;
       Long selectedObjectHandle;
       if (objectHandleToObject.isEmpty()) {
         output_.println("There are no objects on the token.");
@@ -194,8 +194,8 @@ public class DeleteObject {
             break deleteLoop;
           }
           try {
-            selectedObjectHandle = new Long(objectHandleString);
-            selectedObject = (Object) objectHandleToObject.get(selectedObjectHandle);
+            selectedObjectHandle = Long.valueOf(objectHandleString);
+            selectedObject = (PKCS11Object) objectHandleToObject.get(selectedObjectHandle);
             if (selectedObject != null) {
               gotObjectHandle = true;
             } else {

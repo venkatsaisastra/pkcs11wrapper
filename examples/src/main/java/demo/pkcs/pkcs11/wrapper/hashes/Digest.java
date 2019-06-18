@@ -107,7 +107,6 @@ public class Digest {
     Mechanism digestMechanism = Mechanism.get(PKCS11Constants.CKM_SHA_1);
 
     byte[] dataBuffer = new byte[4096];
-    byte[] helpBuffer;
     int bytesRead;
 
     FileInputStream dataInputStream = new FileInputStream(args[1]);
@@ -119,17 +118,11 @@ public class Digest {
     session.digestInit(digestMechanism);
     // feed in all data from the input stream
     while ((bytesRead = dataInputStream.read(dataBuffer)) >= 0) {
-      if (bytesRead < dataBuffer.length) {
-        helpBuffer = new byte[bytesRead]; // we need a buffer that only holds what to send for
-                                          // digesting
-        System.arraycopy(dataBuffer, 0, helpBuffer, 0, bytesRead);
-        session.digestUpdate(helpBuffer);
-      } else {
-        session.digestUpdate(dataBuffer);
-      }
+     session.digestUpdate(dataBuffer, 0, bytesRead);
       updateCounter++;
     }
-    byte[] digestValue = session.digestFinal();
+    byte[] digestValue = new byte[20];
+    session.digestFinal(digestValue, 0, 20);
 
     long t1 = System.currentTimeMillis();
 

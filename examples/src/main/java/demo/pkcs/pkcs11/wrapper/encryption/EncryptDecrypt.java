@@ -48,8 +48,7 @@ import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Slot;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.objects.AESSecretKey;
-import iaik.pkcs.pkcs11.objects.DES3SecretKey;
+import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.parameters.InitializationVectorParameters;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
@@ -122,12 +121,12 @@ public class EncryptDecrypt {
         .println("################################################################################");
     output_.println("generate secret encryption/decryption key");
     Mechanism keyMechanism = Mechanism.get(PKCS11Constants.CKM_AES_KEY_GEN);
-    AESSecretKey secretEncryptionKeyTemplate = new AESSecretKey();
+    ValuedSecretKey secretEncryptionKeyTemplate = ValuedSecretKey.newAESSecretKey();
     secretEncryptionKeyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
     secretEncryptionKeyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
-    secretEncryptionKeyTemplate.getValueLen().setLongValue(new Long(16));
+    secretEncryptionKeyTemplate.getValueLen().setLongValue(Long.valueOf(16));
 
-    AESSecretKey encryptionKey = (AESSecretKey) session.generateKey(keyMechanism,
+    ValuedSecretKey encryptionKey = (ValuedSecretKey) session.generateKey(keyMechanism,
         secretEncryptionKeyTemplate);
 
     output_
@@ -137,15 +136,15 @@ public class EncryptDecrypt {
         .println("################################################################################");
     output_.println("encrypting data from file: " + args[1]);
 
-    InputStream dataInputStream = new FileInputStream(args[1]);
-
     byte[] dataBuffer = new byte[1024];
     int bytesRead;
     ByteArrayOutputStream streamBuffer = new ByteArrayOutputStream();
 
-    // feed in all data from the input stream
-    while ((bytesRead = dataInputStream.read(dataBuffer)) >= 0) {
-      streamBuffer.write(dataBuffer, 0, bytesRead);
+    try (InputStream dataInputStream = new FileInputStream(args[1])) {
+      // feed in all data from the input stream
+      while ((bytesRead = dataInputStream.read(dataBuffer)) >= 0) {
+        streamBuffer.write(dataBuffer, 0, bytesRead);
+      }
     }
     Arrays.fill(dataBuffer, (byte) 0); // ensure that no data is left in the
                                        // memory
@@ -163,7 +162,9 @@ public class EncryptDecrypt {
     // initialize for encryption
     session.encryptInit(encryptionMechanism, encryptionKey);
 
-    byte[] encryptedData = session.encrypt(rawData);
+    byte[] buffer = new byte[rawData.length + 32];
+    int len = session.encrypt(rawData, 0, rawData.length, buffer, 0, buffer.length);
+    byte[] encryptedData = Arrays.copyOf(buffer, len);
 
     output_
         .println("################################################################################");
@@ -183,22 +184,12 @@ public class EncryptDecrypt {
     // initialize for decryption
     session.decryptInit(decryptionMechanism, encryptionKey);
 
-    byte[] decryptedData = session.decrypt(encryptedData);
+    len = session.decrypt(encryptedData, 0, encryptedData.length, buffer, 0, buffer.length);
+    byte[] decryptedData = Arrays.copyOf(buffer, len);
+    Arrays.fill(buffer, (byte) 0);
 
     // compare initial data and decrypted data
-    boolean equal = false;
-    if (rawData.length != decryptedData.length) {
-      equal = false;
-    } else {
-      equal = true;
-      for (int i = 0; i < rawData.length; i++) {
-        if (rawData[i] != decryptedData[i]) {
-          equal = false;
-          break;
-        }
-      }
-    }
-
+    boolean equal = Arrays.equals(rawData, decryptedData);
     output_.println((equal) ? "successful" : "ERROR");
 
     output_

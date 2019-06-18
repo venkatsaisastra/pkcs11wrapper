@@ -50,7 +50,7 @@ import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.Attribute;
 import iaik.pkcs.pkcs11.objects.BooleanAttribute;
 import iaik.pkcs.pkcs11.objects.GenericTemplate;
-import iaik.pkcs.pkcs11.objects.Object;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
 
@@ -134,11 +134,11 @@ public class GenericFind {
     // this find operation will find all objects that posess a CKA_SIGN attribute with value true
     session.findObjectsInit(signatureKeyTemplate);
 
-    Object[] foundSignatureKeyObjects = session.findObjects(1); // find first
+    PKCS11Object[] foundSignatureKeyObjects = session.findObjects(1); // find first
 
-    List signatureKeys = null;
+    List<PKCS11Object> signatureKeys = null;
     if (foundSignatureKeyObjects.length > 0) {
-      signatureKeys = new Vector();
+      signatureKeys = new Vector<>();
       output_
           .println("________________________________________________________________________________");
       output_.println(foundSignatureKeyObjects[0]);
@@ -167,20 +167,21 @@ public class GenericFind {
         .println("################################################################################");
     output_.println("Find corresponding certificates for private signature keys.");
 
-    List privateSignatureKeys = new Vector();
+    List<PKCS11Object> privateSignatureKeys = new Vector<>();
 
     // sort out all signature keys that are private keys
-    Iterator signatureKeysIterator = signatureKeys.iterator();
+    Iterator<PKCS11Object> signatureKeysIterator = signatureKeys.iterator();
     while (signatureKeysIterator.hasNext()) {
-      Object signatureKey = (Object) signatureKeysIterator.next();
+      PKCS11Object signatureKey = (PKCS11Object) signatureKeysIterator.next();
       if (signatureKey instanceof PrivateKey) {
         privateSignatureKeys.add(signatureKey);
       }
     }
 
     // for each private signature key try to find a public key certificate with the same ID
-    Iterator privateSignatureKeysIterator = privateSignatureKeys.iterator();
-    Hashtable privateKeyToCertificateTable = new Hashtable(privateSignatureKeys.size());
+    Iterator<PKCS11Object> privateSignatureKeysIterator = privateSignatureKeys.iterator();
+    Hashtable<PKCS11Object, PKCS11Object> privateKeyToCertificateTable
+        = new Hashtable<>(privateSignatureKeys.size());
     while (privateSignatureKeysIterator.hasNext()) {
       PrivateKey privateSignatureKey = (PrivateKey) privateSignatureKeysIterator.next();
       byte[] keyID = privateSignatureKey.getId().getByteArrayValue();
@@ -203,7 +204,7 @@ public class GenericFind {
 
       session.findObjectsInit(certificateSearchTemplate);
 
-      Object[] foundCertificateObjects;
+      PKCS11Object[] foundCertificateObjects;
       if ((foundCertificateObjects = session.findObjects(1)).length > 0) {
         privateKeyToCertificateTable.put(privateSignatureKey, foundCertificateObjects[0]);
         output_

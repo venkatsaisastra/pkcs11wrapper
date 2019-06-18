@@ -42,26 +42,24 @@
 
 package demo.pkcs.pkcs11.wrapper.signatures;
 
-import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.Module;
-import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Slot;
-import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.TokenInfo;
-import iaik.pkcs.pkcs11.objects.KeyPair;
-import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
-import iaik.pkcs.pkcs11.objects.RSAPublicKey;
-import iaik.pkcs.pkcs11.wrapper.Functions;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Random;
 
+import org.bouncycastle.util.encoders.Hex;
+
 import demo.pkcs.pkcs11.wrapper.util.Util;
+import iaik.pkcs.pkcs11.Mechanism;
+import iaik.pkcs.pkcs11.Module;
+import iaik.pkcs.pkcs11.Session;
+import iaik.pkcs.pkcs11.Token;
+import iaik.pkcs.pkcs11.TokenException;
+import iaik.pkcs.pkcs11.objects.KeyPair;
+import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
+import iaik.pkcs.pkcs11.objects.RSAPublicKey;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
  * This demo program generates a 1024 bit RSA key-pair on the token and signs some data with it.
@@ -87,7 +85,7 @@ public class GenerateKeyAndSign {
    * Usage: GenerateKeyAndSign PKCS#11-module slot-index [pin]
    */
   public static void main(String[] args) throws TokenException, IOException {
-    if (args.length < 2) {
+    if (args.length < 1) {
       printUsage();
       throw new IOException("Missing argument!");
     }
@@ -95,31 +93,8 @@ public class GenerateKeyAndSign {
     Module pkcs11Module = Module.getInstance(args[0]);
     pkcs11Module.initialize(null);
 
-    Slot[] slots = pkcs11Module.getSlotList(Module.SlotRequirement.TOKEN_PRESENT);
-
-    if (slots.length == 0) {
-      output_.println("No slot with present token found!");
-      throw new TokenException("No token found!");
-    }
-
-    int slotIndex = Integer.parseInt(args[1]);
-    Slot selectedSlot = slots[slotIndex];
-    Token token = selectedSlot.getToken();
-    TokenInfo tokenInfo = token.getTokenInfo();
-
-    output_
-        .println("################################################################################");
-    output_.println("Information of Token:");
-    output_.println(tokenInfo);
-    output_
-        .println("################################################################################");
-
-    Session session;
-    if (2 < args.length)
-      session = Util.openAuthorizedSession(token,
-          Token.SessionReadWriteBehavior.RW_SESSION, output_, input_, args[2]);
-    else
-      session = Util.openAuthorizedSession(token,
+    Token token = Util.selectToken(pkcs11Module, output_, input_);
+    Session session = Util.openAuthorizedSession(token,
           Token.SessionReadWriteBehavior.RW_SESSION, output_, input_, null);
 
     output_
@@ -188,7 +163,7 @@ public class GenerateKeyAndSign {
     byte[] dataToBeSigned = "12345678901234567890123456789012345".getBytes("ASCII");
     byte[] signatureValue = session.sign(dataToBeSigned);
     output_.println("Finished");
-    output_.println("Signature Value: " + Functions.toHexString(signatureValue));
+    output_.println("Signature Value: " + Hex.toHexString(signatureValue));
     output_
         .println("################################################################################");
 
@@ -197,8 +172,8 @@ public class GenerateKeyAndSign {
   }
 
   public static void printUsage() {
-    output_.println("Usage: GenerateKeyAndSign <PKCS#11 module> <slot index> [<pin>]");
-    output_.println(" e.g.: GenerateKeyAndSign cs2_pkcs11.dll 3");
+    output_.println("Usage: GenerateKeyAndSign <PKCS#11 module>");
+    output_.println(" e.g.: GenerateKeyAndSign cs2_pkcs11.dll");
     output_.println("The given DLL must be in the search path of the system.");
   }
 

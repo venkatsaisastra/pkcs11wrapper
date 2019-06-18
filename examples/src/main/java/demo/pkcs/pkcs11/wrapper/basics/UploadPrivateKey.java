@@ -42,11 +42,26 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
-import iaik.asn1.DerCoder;
-import iaik.asn1.INTEGER;
-import iaik.asn1.ObjectID;
-import iaik.asn1.structures.Name;
-import iaik.pkcs.PKCSException;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.security.KeyStore;
+import java.security.MessageDigest;
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.Enumeration;
+
+import org.bouncycastle.asn1.ASN1Integer;
+import org.bouncycastle.asn1.ASN1OctetString;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.RFC4519Style;
+import org.bouncycastle.asn1.x509.Extension;
+
+import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.MechanismInfo;
 import iaik.pkcs.pkcs11.Module;
@@ -57,28 +72,6 @@ import iaik.pkcs.pkcs11.TokenInfo;
 import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
 import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
-import iaik.pkcs.pkcs12.CertificateBag;
-import iaik.pkcs.pkcs12.KeyBag;
-import iaik.pkcs.pkcs12.PKCS12;
-import iaik.security.provider.IAIK;
-import iaik.x509.X509Certificate;
-import iaik.x509.X509ExtensionInitException;
-import iaik.x509.extensions.KeyUsage;
-import iaik.x509.extensions.SubjectKeyIdentifier;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.security.NoSuchAlgorithmException;
-import java.security.Security;
-import java.security.cert.CertificateEncodingException;
-import java.util.Arrays;
-import java.util.HashSet;
-
-import demo.pkcs.pkcs11.wrapper.util.Util;
 
 /**
  * This demo program can be used to personalize a card. It uploads a private RSA key and the
@@ -87,6 +80,16 @@ import demo.pkcs.pkcs11.wrapper.util.Util;
  */
 public class UploadPrivateKey {
 
+  private static final int digitalSignature  = 0;
+  private static final int nonRepudiation    = 1;
+  private static final int keyEncipherment   = 2;
+  private static final int dataEncipherment  = 3;
+  private static final int keyAgreement      = 4;
+  private static final int keyCertSign       = 5;
+  private static final int cRLSign           = 6;
+  // private static final int encipherOnly      = 7;
+  // private static final int decipherOnly      = 8; 
+  
   static BufferedReader input_;
 
   static PrintWriter output_;
@@ -107,15 +110,11 @@ public class UploadPrivateKey {
    * Usage: UploadPrivateKey PKCS#11-module PKCS#12-encoded-private-key-and-certificate
    * PKCS#12-password [slot-id] [pin]
    */
-  public static void main(String[] args) throws IOException, TokenException,
-      PKCSException, NoSuchAlgorithmException, X509ExtensionInitException,
-      CertificateEncodingException {
+  public static void main(String[] args) throws Exception {
     if (args.length < 3) {
       printUsage();
       throw new IOException("Missing argument!");
     }
-
-    Security.addProvider(new IAIK());
 
     Module pkcs11Module = Module.getInstance(args[0]);
     pkcs11Module.initialize(null);
@@ -142,12 +141,27 @@ public class UploadPrivateKey {
     output_
         .println("################################################################################");
     output_.println("Reading private key and certifiacte from: " + args[1]);
-    InputStream dataInputStream = new FileInputStream(args[1]);
-    PKCS12 pkcs12Object = new PKCS12(dataInputStream);
     char[] filePassword = args[2].toCharArray();
-    pkcs12Object.decrypt(filePassword);
-    KeyBag keyBag = pkcs12Object.getKeyBag();
-    java.security.PrivateKey jcaPrivateKey = keyBag.getPrivateKey();
+    InputStream dataInputStream = new FileInputStream(args[1]);
+    KeyStore keystore = KeyStore.getInstance("PKCS12");
+    keystore.load(dataInputStream, filePassword);
+
+    String keyAlias = null;
+    Enumeration<String> aliases = keystore.aliases();
+    while (aliases.hasMoreElements()) {
+      String alias = aliases.nextElement();
+      if (keystore.isKeyEntry(alias)) {
+        keyAlias = alias;
+        break;
+      }
+    }
+
+    if (keyAlias == null) {
+      output_.println("Found no private Key in the PKCS#12 file.");
+      throw new IOException("Given file does not include a key!");
+    }
+
+    java.security.PrivateKey jcaPrivateKey = (PrivateKey) keystore.getKey(keyAlias, filePassword);
 
     if (!jcaPrivateKey.getAlgorithm().equals("RSA")) {
       output_.println("Private Key in the PKCS#12 file is not a RSA key.");
@@ -158,17 +172,14 @@ public class UploadPrivateKey {
 
     output_.println("got private key");
 
-    CertificateBag[] certificateBags = pkcs12Object.getCertificateBags();
-    X509Certificate[] certificateChain = CertificateBag.getCertificates(certificateBags);
-    certificateChain = iaik.utils.Util.arrangeCertificateChain(certificateChain, false);
+    Certificate[] certificateChain = keystore.getCertificateChain(keyAlias);
 
-    X509Certificate userCertificate = certificateChain[0];
-    String userCommonName = ((Name) userCertificate.getSubjectDN()).getRDN(
-        ObjectID.commonName).toString();
-    byte[] certificateFingerprint = userCertificate.getFingerprint("SHA-1");
-    KeyUsage keyUsage = (KeyUsage) userCertificate.getExtension(KeyUsage.oid);
-    SubjectKeyIdentifier subjectKeyIdentifier = (SubjectKeyIdentifier) userCertificate
-        .getExtension(SubjectKeyIdentifier.oid);
+    X509Certificate userCertificate = (X509Certificate) certificateChain[0];
+    String userCommonName = Util.getCommontName(userCertificate.getSubjectX500Principal());
+    MessageDigest sha1 = MessageDigest.getInstance("SHA1");
+    byte[] encodedCert = userCertificate.getEncoded();
+    byte[] certificateFingerprint = sha1.digest(encodedCert);
+    boolean[] keyUsage = userCertificate.getKeyUsage();
 
     output_.println("got user certifiate");
     output_
@@ -188,20 +199,17 @@ public class UploadPrivateKey {
     output_.flush();
 
     // check out what attributes of the keys we may set using the mechanism info
-    HashSet supportedMechanisms = new HashSet(Arrays.asList(token.getMechanismList()));
-
     MechanismInfo signatureMechanismInfo;
-    if (supportedMechanisms.contains(Mechanism.get(PKCS11Constants.CKM_RSA_PKCS))) {
+    if (Util.supports(token, PKCS11Constants.CKM_RSA_PKCS)) {
       signatureMechanismInfo = token.getMechanismInfo(Mechanism
           .get(PKCS11Constants.CKM_RSA_PKCS));
-    } else if (supportedMechanisms.contains(Mechanism.get(PKCS11Constants.CKM_RSA_X_509))) {
+    } else if (Util.supports(token, PKCS11Constants.CKM_RSA_X_509)) {
       signatureMechanismInfo = token.getMechanismInfo(Mechanism
           .get(PKCS11Constants.CKM_RSA_X_509));
-    } else if (supportedMechanisms.contains(Mechanism.get(PKCS11Constants.CKM_RSA_9796))) {
+    } else if (Util.supports(token, PKCS11Constants.CKM_RSA_9796)) {
       signatureMechanismInfo = token.getMechanismInfo(Mechanism
           .get(PKCS11Constants.CKM_RSA_9796));
-    } else if (supportedMechanisms.contains(Mechanism
-        .get(PKCS11Constants.CKM_RSA_PKCS_OAEP))) {
+    } else if (Util.supports(token, PKCS11Constants.CKM_RSA_PKCS_OAEP)) {
       signatureMechanismInfo = token.getMechanismInfo(Mechanism
           .get(PKCS11Constants.CKM_RSA_PKCS_OAEP));
     } else {
@@ -215,14 +223,15 @@ public class UploadPrivateKey {
     // pkcs11RsaPrivateKey.getExtractable().setBooleanValue(Boolean.FALSE);
     pkcs11RsaPrivateKey.getToken().setBooleanValue(Boolean.TRUE);
     pkcs11RsaPrivateKey.getPrivate().setBooleanValue(Boolean.TRUE);
-    String keyLabel = userCommonName + "'s "
-        + ((Name) userCertificate.getIssuerDN()).getRDN(ObjectID.organization);
+    X500Name issuerName = X500Name.getInstance(userCertificate.getIssuerX500Principal().getEncoded());
+    String keyLabel = userCommonName + "'s " + Util.getRdnValue(issuerName, RFC4519Style.o);
     pkcs11RsaPrivateKey.getLabel().setCharArrayValue(keyLabel.toCharArray());
 
+    byte[] extnValue = userCertificate.getExtensionValue(Extension.subjectKeyIdentifier.getId());
     byte[] newObjectID;
-    if (subjectKeyIdentifier != null) {
+    if (extnValue != null) {
       // we take the key identifier from the certificate
-      newObjectID = subjectKeyIdentifier.get();
+      newObjectID = ASN1OctetString.getInstance(extnValue).getOctets();
     } else {
       // then we simply take the fingerprint of the certificate
       newObjectID = certificateFingerprint;
@@ -234,77 +243,68 @@ public class UploadPrivateKey {
     // pkcs11RsaPrivateKey.getEndDate().setDateValue(userCertificate.getNotAfter());
 
     pkcs11RsaPrivateKey.getSubject().setByteArrayValue(
-        ((Name) userCertificate.getSubjectDN()).getEncoded());
+        userCertificate.getSubjectX500Principal().getEncoded());
 
     if (keyUsage != null) {
-      // set usage flags acording to key usage flags of certificate
-      int keyUsageFlags = keyUsage.get();
-
       // set the attributes in a way netscape does, this should work with most tokens
       if (signatureMechanismInfo != null) {
         pkcs11RsaPrivateKey
             .getDecrypt()
             .setBooleanValue(
-                new Boolean(
-                    (((keyUsageFlags & KeyUsage.dataEncipherment) != 0) || ((keyUsageFlags & KeyUsage.keyCertSign) != 0))
-                        && signatureMechanismInfo.isDecrypt()));
+                    (keyUsage[dataEncipherment] || keyUsage[keyCertSign])
+                        && signatureMechanismInfo.isDecrypt());
         pkcs11RsaPrivateKey
             .getSign()
             .setBooleanValue(
-                new Boolean(
-                    (((keyUsageFlags & KeyUsage.digitalSignature) != 0)
-                        || ((keyUsageFlags & KeyUsage.keyCertSign) != 0)
-                        || ((keyUsageFlags & KeyUsage.cRLSign) != 0) || ((keyUsageFlags & KeyUsage.nonRepudiation) != 0))
-                        && signatureMechanismInfo.isSign()));
+                (keyUsage[digitalSignature] || keyUsage[keyCertSign]
+                    || keyUsage[cRLSign] || keyUsage[nonRepudiation])
+                        && signatureMechanismInfo.isSign());
         pkcs11RsaPrivateKey
             .getSignRecover()
             .setBooleanValue(
-                new Boolean(
-                    (((keyUsageFlags & KeyUsage.digitalSignature) != 0)
-                        || ((keyUsageFlags & KeyUsage.keyCertSign) != 0)
-                        || ((keyUsageFlags & KeyUsage.cRLSign) != 0) || ((keyUsageFlags & KeyUsage.nonRepudiation) != 0))
-                        && signatureMechanismInfo.isSignRecover()));
+                (keyUsage[digitalSignature] || keyUsage[keyCertSign]
+                    || keyUsage[cRLSign] || keyUsage[nonRepudiation])
+                    && signatureMechanismInfo.isSignRecover());
         pkcs11RsaPrivateKey.getDerive().setBooleanValue(
-            new Boolean(((keyUsageFlags & KeyUsage.keyAgreement) != 0)
-                && signatureMechanismInfo.isDerive()));
+            keyUsage[keyAgreement]
+                && signatureMechanismInfo.isDerive());
         pkcs11RsaPrivateKey.getUnwrap().setBooleanValue(
-            new Boolean(((keyUsageFlags & KeyUsage.keyEncipherment) != 0)
-                && signatureMechanismInfo.isUnwrap()));
+            keyUsage[keyEncipherment]
+                && signatureMechanismInfo.isUnwrap());
       } else {
         // if we have no mechanism information, we try to set the flags according to the key usage
         // only
         pkcs11RsaPrivateKey.getDecrypt().setBooleanValue(
-            new Boolean(((keyUsageFlags & KeyUsage.dataEncipherment) != 0)
-                || ((keyUsageFlags & KeyUsage.keyCertSign) != 0)));
+            keyUsage[dataEncipherment] || keyUsage[keyCertSign]);
         pkcs11RsaPrivateKey.getSign().setBooleanValue(
-            new Boolean(((keyUsageFlags & KeyUsage.digitalSignature) != 0)
-                || ((keyUsageFlags & KeyUsage.keyCertSign) != 0)
-                || ((keyUsageFlags & KeyUsage.cRLSign) != 0)
-                || ((keyUsageFlags & KeyUsage.nonRepudiation) != 0)));
+            keyUsage[digitalSignature]
+                || keyUsage[keyCertSign]
+                || keyUsage[cRLSign]
+                || keyUsage[nonRepudiation]);
         pkcs11RsaPrivateKey.getSignRecover().setBooleanValue(
-            new Boolean(((keyUsageFlags & KeyUsage.digitalSignature) != 0)
-                || ((keyUsageFlags & KeyUsage.keyCertSign) != 0)
-                || ((keyUsageFlags & KeyUsage.cRLSign) != 0)
-                || ((keyUsageFlags & KeyUsage.nonRepudiation) != 0)));
+            keyUsage[digitalSignature]
+                || keyUsage[keyCertSign]
+                || keyUsage[cRLSign]
+                || keyUsage[nonRepudiation]);
         pkcs11RsaPrivateKey.getDerive().setBooleanValue(
-            new Boolean((keyUsageFlags & KeyUsage.keyAgreement) != 0));
+            keyUsage[keyAgreement]);
         pkcs11RsaPrivateKey.getUnwrap().setBooleanValue(
-            new Boolean((keyUsageFlags & KeyUsage.keyEncipherment) != 0));
+            keyUsage[keyEncipherment]);
       }
     } else {
       // if there is no keyusage extension in the certificate, try to set all flags according to the
       // mechanism info
       if (signatureMechanismInfo != null) {
         pkcs11RsaPrivateKey.getSign().setBooleanValue(
-            new Boolean(signatureMechanismInfo.isSign()));
+            Boolean.valueOf(signatureMechanismInfo.isSign()));
         pkcs11RsaPrivateKey.getSignRecover().setBooleanValue(
-            new Boolean(signatureMechanismInfo.isSignRecover()));
+            Boolean.valueOf(signatureMechanismInfo.isSignRecover()));
         pkcs11RsaPrivateKey.getDecrypt().setBooleanValue(
-            new Boolean(signatureMechanismInfo.isDecrypt()));
+            Boolean.valueOf(signatureMechanismInfo.isDecrypt()));
         pkcs11RsaPrivateKey.getDerive().setBooleanValue(
-            new Boolean(signatureMechanismInfo.isDerive()));
+            Boolean.valueOf(signatureMechanismInfo.isDerive()));
         pkcs11RsaPrivateKey.getUnwrap().setBooleanValue(
-            new Boolean(signatureMechanismInfo.isUnwrap()));
+            Boolean.valueOf(signatureMechanismInfo.isUnwrap()));
       } else {
         // if we have neither mechanism info nor key usage we just try all
         pkcs11RsaPrivateKey.getSign().setBooleanValue(Boolean.TRUE);
@@ -368,13 +368,13 @@ public class UploadPrivateKey {
     pkcs11X509PublicKeyCertificate.getPrivate().setBooleanValue(Boolean.FALSE);
     pkcs11X509PublicKeyCertificate.getLabel().setCharArrayValue(keyLabel.toCharArray());
     pkcs11X509PublicKeyCertificate.getSubject().setByteArrayValue(
-        ((Name) userCertificate.getSubjectDN()).getEncoded());
+        userCertificate.getSubjectX500Principal().getEncoded());
     pkcs11X509PublicKeyCertificate.getId().setByteArrayValue(newObjectID);
     pkcs11X509PublicKeyCertificate.getIssuer().setByteArrayValue(
-        ((Name) userCertificate.getIssuerDN()).getEncoded());
+        userCertificate.getIssuerX500Principal().getEncoded());
 
     pkcs11X509PublicKeyCertificate.getSerialNumber().setByteArrayValue(
-        DerCoder.encode(new INTEGER(userCertificate.getSerialNumber())));
+        new ASN1Integer(userCertificate.getSerialNumber()).getEncoded());
     pkcs11X509PublicKeyCertificate.getValue().setByteArrayValue(
         userCertificate.getEncoded());
 

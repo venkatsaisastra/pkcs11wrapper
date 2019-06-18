@@ -42,18 +42,12 @@
 
 package demo.pkcs.pkcs11.wrapper.maintenance;
 
-import iaik.pkcs.pkcs11.Module;
-import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.TokenInfo;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
-import demo.pkcs.pkcs11.wrapper.util.Util;
+import iaik.pkcs.pkcs11.TokenException;
 
 /**
  * This program initializes a token. Note that this erases all data on the token.
@@ -80,6 +74,7 @@ public class InitToken {
    * Usage: InitToken PKCS#11-module Card-Label [slot-id] [SO Pin] [User Pin]
    */
   public static void main(String[] args) throws TokenException, IOException {
+    /* TODO: uncomment me if supported by the underlying PKCS11 wrapper
     if (args.length < 2) {
       printUsage();
       throw new IOException("Missing argument!");
@@ -110,18 +105,6 @@ public class InitToken {
       output_
           .println("################################################################################");
 
-      /*
-       * output_.println(
-       * "################################################################################");
-       * output_.println(
-       * "ATTENTION! Initialization will start in 10 seconds. You have time to remove the token or press any key to abort. Countdown... "
-       * );
-       *
-       * InputStreamReader inputReader = new InputStreamReader(System.in); for (int i = 10; i >= 0;
-       * i--) { output_.print("\r"); output_.print(i); output_.print(' '); output_.flush();
-       * Thread.sleep(1000); if (inputReader.ready()) { output_.println("Aborted...EXIT");
-       * output_.flush(); pkcs11Module.finalize(null); } } output_.println();
-       */
       output_.print("initializing... ");
 
       String soPINString = null;
@@ -197,6 +180,7 @@ public class InitToken {
     } finally {
       pkcs11Module.finalize(null);
     }
+    */
   }
 
   public static void printUsage() {

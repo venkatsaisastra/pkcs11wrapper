@@ -42,27 +42,6 @@
 
 package demo.pkcs.pkcs11.wrapper.encryption;
 
-import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.Module;
-import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Slot;
-import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.objects.AESSecretKey;
-import iaik.pkcs.pkcs11.objects.Attribute;
-import iaik.pkcs.pkcs11.objects.CharArrayAttribute;
-import iaik.pkcs.pkcs11.objects.DES3SecretKey;
-import iaik.pkcs.pkcs11.objects.DHPrivateKey;
-import iaik.pkcs.pkcs11.objects.GenericTemplate;
-import iaik.pkcs.pkcs11.objects.Key;
-import iaik.pkcs.pkcs11.objects.PrivateKey;
-import iaik.pkcs.pkcs11.objects.PublicKey;
-import iaik.pkcs.pkcs11.objects.RSAPublicKey;
-import iaik.pkcs.pkcs11.objects.SecretKey;
-import iaik.pkcs.pkcs11.parameters.InitializationVectorParameters;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -72,8 +51,16 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
-import demo.pkcs.pkcs11.wrapper.util.CreateKeysAndCertificate;
 import demo.pkcs.pkcs11.wrapper.util.Util;
+import iaik.pkcs.pkcs11.Mechanism;
+import iaik.pkcs.pkcs11.Module;
+import iaik.pkcs.pkcs11.Session;
+import iaik.pkcs.pkcs11.Token;
+import iaik.pkcs.pkcs11.TokenException;
+import iaik.pkcs.pkcs11.objects.SecretKey;
+import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
+import iaik.pkcs.pkcs11.parameters.InitializationVectorParameters;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
  * This demo program uses a PKCS#11 module to wrap and unwrap a secret key. The key to be wrapped
@@ -131,16 +118,16 @@ public class WrapUnwrapEncrKey {
         .println("################################################################################");
     output_.println("generate secret encryption/decryption key");
     Mechanism keyMechanism = Mechanism.get(PKCS11Constants.CKM_AES_KEY_GEN);
-    AESSecretKey secretEncryptionKeyTemplate = new AESSecretKey();
-    secretEncryptionKeyTemplate.getValueLen().setLongValue(new Long(16));
+
+    ValuedSecretKey secretEncryptionKeyTemplate = ValuedSecretKey.newAESSecretKey();
+    secretEncryptionKeyTemplate.getValueLen().setLongValue(Long.valueOf(16));
     secretEncryptionKeyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
     secretEncryptionKeyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
     secretEncryptionKeyTemplate.getPrivate().setBooleanValue(Boolean.TRUE);
     secretEncryptionKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
     secretEncryptionKeyTemplate.getExtractable().setBooleanValue(Boolean.TRUE);
-    secretEncryptionKeyTemplate.getWrap().setBooleanValue(Boolean.TRUE);
 
-    AESSecretKey encryptionKey = (AESSecretKey) session.generateKey(keyMechanism,
+    ValuedSecretKey encryptionKey = (ValuedSecretKey) session.generateKey(keyMechanism,
         secretEncryptionKeyTemplate);
 
     output_
@@ -150,15 +137,15 @@ public class WrapUnwrapEncrKey {
         .println("################################################################################");
     output_.println("encrypting data from file: " + args[1]);
 
-    InputStream dataInputStream = new FileInputStream(args[1]);
-
     byte[] dataBuffer = new byte[1024];
     int bytesRead;
     ByteArrayOutputStream streamBuffer = new ByteArrayOutputStream();
 
     // feed in all data from the input stream
-    while ((bytesRead = dataInputStream.read(dataBuffer)) >= 0) {
-      streamBuffer.write(dataBuffer, 0, bytesRead);
+    try (InputStream dataInputStream = new FileInputStream(args[1])) {
+      while ((bytesRead = dataInputStream.read(dataBuffer)) >= 0) {
+        streamBuffer.write(dataBuffer, 0, bytesRead);
+      }
     }
     Arrays.fill(dataBuffer, (byte) 0); // ensure that no data is left in the
                                        // memory
@@ -168,33 +155,56 @@ public class WrapUnwrapEncrKey {
 
     // be sure that your token can process the specified mechanism
     Mechanism encryptionMechanism = Mechanism.get(PKCS11Constants.CKM_AES_CBC_PAD);
+    if (!Util.supports(token, encryptionMechanism.getMechanismCode())) {
+      System.out.println("Unsupported mechanism " + encryptionMechanism);
+      return;
+    }
+
+    Mechanism wrapMechanism = Mechanism.get(PKCS11Constants.CKM_AES_KEY_WRAP);
+    if (!Util.supports(token, wrapMechanism.getMechanismCode())) {
+      System.out.println("Unsupported mechanism " + wrapMechanism);
+      return;
+    }
+
     byte[] encryptInitializationVector = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    InitializationVectorParameters encryptInitializationVectorParameters = new InitializationVectorParameters(
-        encryptInitializationVector);
+    InitializationVectorParameters encryptInitializationVectorParameters =
+        new InitializationVectorParameters(encryptInitializationVector);
     encryptionMechanism.setParameters(encryptInitializationVectorParameters);
 
     // initialize for encryption
     session.encryptInit(encryptionMechanism, encryptionKey);
 
-    byte[] encryptedData = session.encrypt(rawData);
+    byte[] buffer = new byte[dataBuffer.length + 64];
+    int cipherLen = session.encrypt(rawData, 0, rawData.length, buffer, 0, buffer.length);
+    byte[] encryptedData = Arrays.copyOf(buffer, cipherLen);
 
     output_
         .println("################################################################################");
 
     output_.println("generate secret wrapping key");
 
-    AESSecretKey wrappingKey = (AESSecretKey) session.generateKey(keyMechanism,
-        secretEncryptionKeyTemplate);
+    Mechanism wrapKeyMechanism = Mechanism.get(PKCS11Constants.CKM_AES_KEY_GEN);
+    ValuedSecretKey wrapKeyTemplate = ValuedSecretKey.newAESSecretKey();
+    wrapKeyTemplate.getValueLen().setLongValue(Long.valueOf(16));
+    wrapKeyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
+    wrapKeyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
+    wrapKeyTemplate.getPrivate().setBooleanValue(Boolean.TRUE);
+    wrapKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
+    wrapKeyTemplate.getExtractable().setBooleanValue(Boolean.TRUE);
+    wrapKeyTemplate.getWrap().setBooleanValue(Boolean.TRUE);
+
+    ValuedSecretKey wrappingKey = (ValuedSecretKey) session.generateKey(wrapKeyMechanism,
+        wrapKeyTemplate);
 
     output_.println("wrapping key");
 
-    byte[] wrappedKey = session.wrapKey(encryptionMechanism, wrappingKey, encryptionKey);
-    AESSecretKey keyTemplate = new AESSecretKey();
+    byte[] wrappedKey = session.wrapKey(wrapMechanism, wrappingKey, encryptionKey);
+    ValuedSecretKey keyTemplate = new ValuedSecretKey(PKCS11Constants.CKK_AES);
     keyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
 
     output_.println("unwrapping key");
 
-    AESSecretKey unwrappedKey = (AESSecretKey) session.unwrapKey(encryptionMechanism,
+    SecretKey unwrappedKey = (SecretKey) session.unwrapKey(wrapMechanism,
         wrappingKey, wrappedKey, keyTemplate);
 
     output_
@@ -210,22 +220,12 @@ public class WrapUnwrapEncrKey {
     // initialize for decryption
     session.decryptInit(decryptionMechanism, unwrappedKey);
 
-    byte[] decryptedData = session.decrypt(encryptedData);
+    int decryptLen = session.decrypt(encryptedData, 0, encryptedData.length, buffer, 0, buffer.length);
+    byte[] decryptedData = Arrays.copyOf(buffer, decryptLen);
+    Arrays.fill(buffer, (byte) 0);
 
     // compare initial data and decrypted data
-    boolean equal = false;
-    if (rawData.length != decryptedData.length) {
-      equal = false;
-    } else {
-      equal = true;
-      for (int i = 0; i < rawData.length; i++) {
-        if (rawData[i] != decryptedData[i]) {
-          equal = false;
-          break;
-        }
-      }
-    }
-
+    boolean equal = Arrays.equals(rawData, decryptedData);
     output_.println((equal) ? "successful" : "ERROR");
 
     output_

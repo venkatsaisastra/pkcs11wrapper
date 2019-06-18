@@ -48,7 +48,7 @@ import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.TokenInfo;
 import iaik.pkcs.pkcs11.objects.Data;
-import iaik.pkcs.pkcs11.objects.Object;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -139,7 +139,7 @@ public class ReadDataObject {
     // start find operation
     session.findObjectsInit(dataObjectTemplate);
 
-    Object[] foundDataObjects = session.findObjects(1); // find first
+    PKCS11Object[] foundDataObjects = session.findObjects(1); // find first
 
     Data dataObject;
     if (foundDataObjects.length > 0) {

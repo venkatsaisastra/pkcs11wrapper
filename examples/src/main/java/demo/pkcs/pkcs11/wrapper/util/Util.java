@@ -42,6 +42,26 @@
 
 package demo.pkcs.pkcs11.wrapper.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import javax.security.auth.x500.X500Principal;
+
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.x500.RDN;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
+import org.bouncycastle.asn1.x500.style.RFC4519Style;
+import org.bouncycastle.cert.X509CertificateHolder;
+
+import demo.pkcs.pkcs11.wrapper.adapters.KeyAndCertificate;
+import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Slot;
@@ -49,21 +69,10 @@ import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.TokenInfo;
 import iaik.pkcs.pkcs11.objects.Key;
-import iaik.pkcs.pkcs11.objects.Object;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
 import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
-import iaik.utils.CryptoUtils;
-import iaik.x509.X509Certificate;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-
-import demo.pkcs.pkcs11.wrapper.adapters.KeyAndCertificate;
 
 /**
  * This class contains only static methods. It is the place for all functions that are used by
@@ -72,198 +81,6 @@ import demo.pkcs.pkcs11.wrapper.adapters.KeyAndCertificate;
  * @author Karl Scheibelhofer
  */
 public class Util {
-
-  /**
-   * Maps mechanism strings to their codes as Long.
-   */
-  protected static Hashtable mechansimCodes_;
-
-  /**
-   * Converts the names of mechanisms to their long value code.
-   *
-   * @param mechansimName
-   *          The name of the mechanism to get the code; e.g. "CKM_RSA_PKCS".
-   * @return The code of the mechanism or null, if this name is unknown.
-   * @preconditions (mechansimName <> null)
-   *
-   */
-  public static Long mechanismCodeToString(String mechansimName) {
-    if (mechansimName == null) {
-      throw new NullPointerException("Argument \"mechansimName\" must not be null.");
-    }
-
-    Long mechanismCode;
-
-    if (mechansimName.startsWith("0x")) {
-      // we try to parse it as hex encoded long
-      mechanismCode = new Long(Long.parseLong(mechansimName, 16));
-    } else {
-      if (mechansimCodes_ == null) {
-        mechansimCodes_ = new Hashtable(160);
-        mechansimCodes_.put("CKM_RSA_PKCS_KEY_PAIR_GEN", new Long(0x00000000));
-        mechansimCodes_.put("CKM_RSA_PKCS", new Long(0x00000001));
-        mechansimCodes_.put("CKM_RSA_9796", new Long(0x00000002));
-        mechansimCodes_.put("CKM_RSA_X_509", new Long(0x00000003));
-        mechansimCodes_.put("CKM_MD2_RSA_PKCS", new Long(0x00000004));
-        mechansimCodes_.put("CKM_MD5_RSA_PKCS", new Long(0x00000005));
-        mechansimCodes_.put("CKM_SHA1_RSA_PKCS", new Long(0x00000006));
-        mechansimCodes_.put("CKM_RIPEMD128_RSA_PKCS", new Long(0x00000007));
-        mechansimCodes_.put("CKM_RIPEMD160_RSA_PKCS", new Long(0x00000008));
-        mechansimCodes_.put("CKM_RSA_PKCS_OAEP", new Long(0x00000009));
-        mechansimCodes_.put("CKM_DSA_KEY_PAIR_GEN", new Long(0x00000010));
-        mechansimCodes_.put("CKM_DSA", new Long(0x00000011));
-        mechansimCodes_.put("CKM_DSA_SHA1", new Long(0x00000012));
-        mechansimCodes_.put("CKM_DH_PKCS_KEY_PAIR_GEN", new Long(0x00000020));
-        mechansimCodes_.put("CKM_DH_PKCS_DERIVE", new Long(0x00000021));
-        mechansimCodes_.put("CKM_RC2_KEY_GEN", new Long(0x00000100));
-        mechansimCodes_.put("CKM_RC2_ECB", new Long(0x00000101));
-        mechansimCodes_.put("CKM_RC2_CBC", new Long(0x00000102));
-        mechansimCodes_.put("CKM_RC2_MAC", new Long(0x00000103));
-        mechansimCodes_.put("CKM_RC2_MAC_GENERAL", new Long(0x00000104));
-        mechansimCodes_.put("CKM_RC2_CBC_PAD", new Long(0x00000105));
-        mechansimCodes_.put("CKM_RC4_KEY_GEN", new Long(0x00000110));
-        mechansimCodes_.put("CKM_RC4", new Long(0x00000111));
-        mechansimCodes_.put("CKM_DES_KEY_GEN", new Long(0x00000120));
-        mechansimCodes_.put("CKM_DES_ECB", new Long(0x00000121));
-        mechansimCodes_.put("CKM_DES_CBC", new Long(0x00000122));
-        mechansimCodes_.put("CKM_DES_MAC", new Long(0x00000123));
-        mechansimCodes_.put("CKM_DES_MAC_GENERAL", new Long(0x00000124));
-        mechansimCodes_.put("CKM_DES_CBC_PAD", new Long(0x00000125));
-        mechansimCodes_.put("CKM_DES2_KEY_GEN", new Long(0x00000130));
-        mechansimCodes_.put("CKM_DES3_KEY_GEN", new Long(0x00000131));
-        mechansimCodes_.put("CKM_DES3_ECB", new Long(0x00000132));
-        mechansimCodes_.put("CKM_DES3_CBC", new Long(0x00000133));
-        mechansimCodes_.put("CKM_DES3_MAC", new Long(0x00000134));
-        mechansimCodes_.put("CKM_DES3_MAC_GENERAL", new Long(0x00000135));
-        mechansimCodes_.put("CKM_DES3_CBC_PAD", new Long(0x00000136));
-        mechansimCodes_.put("CKM_CDMF_KEY_GEN", new Long(0x00000140));
-        mechansimCodes_.put("CKM_CDMF_ECB", new Long(0x00000141));
-        mechansimCodes_.put("CKM_CDMF_CBC", new Long(0x00000142));
-        mechansimCodes_.put("CKM_CDMF_MAC", new Long(0x00000143));
-        mechansimCodes_.put("CKM_CDMF_MAC_GENERAL", new Long(0x00000144));
-        mechansimCodes_.put("CKM_CDMF_CBC_PAD", new Long(0x00000145));
-        mechansimCodes_.put("CKM_MD2", new Long(0x00000200));
-        mechansimCodes_.put("CKM_MD2_HMAC", new Long(0x00000201));
-        mechansimCodes_.put("CKM_MD2_HMAC_GENERAL", new Long(0x00000202));
-        mechansimCodes_.put("CKM_MD5", new Long(0x00000210));
-        mechansimCodes_.put("CKM_MD5_HMAC", new Long(0x00000211));
-        mechansimCodes_.put("CKM_MD5_HMAC_GENERAL", new Long(0x00000212));
-        mechansimCodes_.put("CKM_SHA_1", new Long(0x00000220));
-        mechansimCodes_.put("CKM_SHA_1_HMAC", new Long(0x00000221));
-        mechansimCodes_.put("CKM_SHA_1_HMAC_GENERAL", new Long(0x00000222));
-        mechansimCodes_.put("CKM_RIPEMD128", new Long(0x00000230));
-        mechansimCodes_.put("CKM_RIPEMD128_HMAC", new Long(0x00000231));
-        mechansimCodes_.put("CKM_RIPEMD128_HMAC_GENERAL", new Long(0x00000232));
-        mechansimCodes_.put("CKM_RIPEMD160", new Long(0x00000240));
-        mechansimCodes_.put("CKM_RIPEMD160_HMAC", new Long(0x00000241));
-        mechansimCodes_.put("CKM_RIPEMD160_HMAC_GENERAL", new Long(0x00000242));
-        mechansimCodes_.put("CKM_CAST_KEY_GEN", new Long(0x00000300));
-        mechansimCodes_.put("CKM_CAST_ECB", new Long(0x00000301));
-        mechansimCodes_.put("CKM_CAST_CBC", new Long(0x00000302));
-        mechansimCodes_.put("CKM_CAST_MAC", new Long(0x00000303));
-        mechansimCodes_.put("CKM_CAST_MAC_GENERAL", new Long(0x00000304));
-        mechansimCodes_.put("CKM_CAST_CBC_PAD", new Long(0x00000305));
-        mechansimCodes_.put("CKM_CAST3_KEY_GEN", new Long(0x00000310));
-        mechansimCodes_.put("CKM_CAST3_ECB", new Long(0x00000311));
-        mechansimCodes_.put("CKM_CAST3_CBC", new Long(0x00000312));
-        mechansimCodes_.put("CKM_CAST3_MAC", new Long(0x00000313));
-        mechansimCodes_.put("CKM_CAST3_MAC_GENERAL", new Long(0x00000314));
-        mechansimCodes_.put("CKM_CAST3_CBC_PAD", new Long(0x00000315));
-        mechansimCodes_.put("CKM_CAST5_KEY_GEN", new Long(0x00000320));
-        mechansimCodes_.put("CKM_CAST128_KEY_GEN", new Long(0x00000320));
-        mechansimCodes_.put("CKM_CAST5_ECB", new Long(0x00000321));
-        mechansimCodes_.put("CKM_CAST128_ECB", new Long(0x00000321));
-        mechansimCodes_.put("CKM_CAST5_CBC", new Long(0x00000322));
-        mechansimCodes_.put("CKM_CAST128_CBC", new Long(0x00000322));
-        mechansimCodes_.put("CKM_CAST5_MAC", new Long(0x00000323));
-        mechansimCodes_.put("CKM_CAST128_MAC", new Long(0x00000323));
-        mechansimCodes_.put("CKM_CAST5_MAC_GENERAL", new Long(0x00000324));
-        mechansimCodes_.put("CKM_CAST128_MAC_GENERAL", new Long(0x00000324));
-        mechansimCodes_.put("CKM_CAST5_CBC_PAD", new Long(0x00000325));
-        mechansimCodes_.put("CKM_CAST128_CBC_PAD", new Long(0x00000325));
-        mechansimCodes_.put("CKM_RC5_KEY_GEN", new Long(0x00000330));
-        mechansimCodes_.put("CKM_RC5_ECB", new Long(0x00000331));
-        mechansimCodes_.put("CKM_RC5_CBC", new Long(0x00000332));
-        mechansimCodes_.put("CKM_RC5_MAC", new Long(0x00000333));
-        mechansimCodes_.put("CKM_RC5_MAC_GENERAL", new Long(0x00000334));
-        mechansimCodes_.put("CKM_RC5_CBC_PAD", new Long(0x00000335));
-        mechansimCodes_.put("CKM_IDEA_KEY_GEN", new Long(0x00000340));
-        mechansimCodes_.put("CKM_IDEA_ECB", new Long(0x00000341));
-        mechansimCodes_.put("CKM_IDEA_CBC", new Long(0x00000342));
-        mechansimCodes_.put("CKM_IDEA_MAC", new Long(0x00000343));
-        mechansimCodes_.put("CKM_IDEA_MAC_GENERAL", new Long(0x00000344));
-        mechansimCodes_.put("CKM_IDEA_CBC_PAD", new Long(0x00000345));
-        mechansimCodes_.put("CKM_GENERIC_SECRET_KEY_GEN", new Long(0x00000350));
-        mechansimCodes_.put("CKM_CONCATENATE_BASE_AND_KEY", new Long(0x00000360));
-        mechansimCodes_.put("CKM_CONCATENATE_BASE_AND_DATA", new Long(0x00000362));
-        mechansimCodes_.put("CKM_CONCATENATE_DATA_AND_BASE", new Long(0x00000363));
-        mechansimCodes_.put("CKM_XOR_BASE_AND_DATA", new Long(0x00000364));
-        mechansimCodes_.put("CKM_EXTRACT_KEY_FROM_KEY", new Long(0x00000365));
-        mechansimCodes_.put("CKM_SSL3_PRE_MASTER_KEY_GEN", new Long(0x00000370));
-        mechansimCodes_.put("CKM_SSL3_MASTER_KEY_DERIVE", new Long(0x00000371));
-        mechansimCodes_.put("CKM_SSL3_KEY_AND_MAC_DERIVE", new Long(0x00000372));
-        mechansimCodes_.put("CKM_SSL3_MD5_MAC", new Long(0x00000380));
-        mechansimCodes_.put("CKM_SSL3_SHA1_MAC", new Long(0x00000381));
-        mechansimCodes_.put("CKM_MD5_KEY_DERIVATION", new Long(0x00000390));
-        mechansimCodes_.put("CKM_MD2_KEY_DERIVATION", new Long(0x00000391));
-        mechansimCodes_.put("CKM_SHA1_KEY_DERIVATION", new Long(0x00000392));
-        mechansimCodes_.put("CKM_PBE_MD2_DES_CBC", new Long(0x000003A0));
-        mechansimCodes_.put("CKM_PBE_MD5_DES_CBC", new Long(0x000003A1));
-        mechansimCodes_.put("CKM_PBE_MD5_CAST_CBC", new Long(0x000003A2));
-        mechansimCodes_.put("CKM_PBE_MD5_CAST3_CBC", new Long(0x000003A3));
-        mechansimCodes_.put("CKM_PBE_MD5_CAST5_CBC", new Long(0x000003A4));
-        mechansimCodes_.put("CKM_PBE_MD5_CAST128_CBC", new Long(0x000003A4));
-        mechansimCodes_.put("CKM_PBE_SHA1_CAST5_CBC", new Long(0x000003A5));
-        mechansimCodes_.put("CKM_PBE_SHA1_CAST128_CBC", new Long(0x000003A5));
-        mechansimCodes_.put("CKM_PBE_SHA1_RC4_128", new Long(0x000003A6));
-        mechansimCodes_.put("CKM_PBE_SHA1_RC4_40", new Long(0x000003A7));
-        mechansimCodes_.put("CKM_PBE_SHA1_DES3_EDE_CBC", new Long(0x000003A8));
-        mechansimCodes_.put("CKM_PBE_SHA1_DES2_EDE_CBC", new Long(0x000003A9));
-        mechansimCodes_.put("CKM_PBE_SHA1_RC2_128_CBC", new Long(0x000003AA));
-        mechansimCodes_.put("CKM_PBE_SHA1_RC2_40_CBC", new Long(0x000003AB));
-        mechansimCodes_.put("CKM_PKCS5_PBKD2", new Long(0x000003B0));
-        mechansimCodes_.put("CKM_PBA_SHA1_WITH_SHA1_HMAC", new Long(0x000003C0));
-        mechansimCodes_.put("CKM_KEY_WRAP_LYNKS", new Long(0x00000400));
-        mechansimCodes_.put("CKM_KEY_WRAP_SET_OAEP", new Long(0x00000401));
-        mechansimCodes_.put("CKM_SKIPJACK_KEY_GEN", new Long(0x00001000));
-        mechansimCodes_.put("CKM_SKIPJACK_ECB64", new Long(0x00001001));
-        mechansimCodes_.put("CKM_SKIPJACK_CBC64", new Long(0x00001002));
-        mechansimCodes_.put("CKM_SKIPJACK_OFB64", new Long(0x00001003));
-        mechansimCodes_.put("CKM_SKIPJACK_CFB64", new Long(0x00001004));
-        mechansimCodes_.put("CKM_SKIPJACK_CFB32", new Long(0x00001005));
-        mechansimCodes_.put("CKM_SKIPJACK_CFB16", new Long(0x00001006));
-        mechansimCodes_.put("CKM_SKIPJACK_CFB8", new Long(0x00001007));
-        mechansimCodes_.put("CKM_SKIPJACK_WRAP", new Long(0x00001008));
-        mechansimCodes_.put("CKM_SKIPJACK_PRIVATE_WRAP", new Long(0x00001009));
-        mechansimCodes_.put("CKM_SKIPJACK_RELAYX", new Long(0x0000100a));
-        mechansimCodes_.put("CKM_KEA_KEY_PAIR_GEN", new Long(0x00001010));
-        mechansimCodes_.put("CKM_KEA_KEY_DERIVE", new Long(0x00001011));
-        mechansimCodes_.put("CKM_FORTEZZA_TIMESTAMP", new Long(0x00001020));
-        mechansimCodes_.put("CKM_BATON_KEY_GEN", new Long(0x00001030));
-        mechansimCodes_.put("CKM_BATON_ECB128", new Long(0x00001031));
-        mechansimCodes_.put("CKM_BATON_ECB96", new Long(0x00001032));
-        mechansimCodes_.put("CKM_BATON_CBC128", new Long(0x00001033));
-        mechansimCodes_.put("CKM_BATON_COUNTER", new Long(0x00001034));
-        mechansimCodes_.put("CKM_BATON_SHUFFLE", new Long(0x00001035));
-        mechansimCodes_.put("CKM_BATON_WRAP", new Long(0x00001036));
-        mechansimCodes_.put("CKM_ECDSA_KEY_PAIR_GEN", new Long(0x00001040));
-        mechansimCodes_.put("CKM_ECDSA", new Long(0x00001041));
-        mechansimCodes_.put("CKM_ECDSA_SHA1", new Long(0x00001042));
-        mechansimCodes_.put("CKM_JUNIPER_KEY_GEN", new Long(0x00001060));
-        mechansimCodes_.put("CKM_JUNIPER_ECB128", new Long(0x00001061));
-        mechansimCodes_.put("CKM_JUNIPER_CBC128", new Long(0x00001062));
-        mechansimCodes_.put("CKM_JUNIPER_COUNTER", new Long(0x00001063));
-        mechansimCodes_.put("CKM_JUNIPER_SHUFFLE", new Long(0x00001064));
-        mechansimCodes_.put("CKM_JUNIPER_WRAP", new Long(0x00001065));
-        mechansimCodes_.put("CKM_FASTHASH", new Long(0x00001070));
-        mechansimCodes_.put("CKM_VENDOR_DEFINED", new Long(0x80000000));
-      }
-
-      mechanismCode = (Long) mechansimCodes_.get(mechansimName);
-    }
-
-    return mechanismCode;
-  }
 
   /**
    * Lists all available tokens of the given module and lets the user select one, if there is more
@@ -323,16 +140,18 @@ public class Util {
     output.println("getting list of all tokens");
     Slot[] slotsWithToken = pkcs11Module
         .getSlotList(Module.SlotRequirement.TOKEN_PRESENT);
-    Token[] tokens = new Token[slotsWithToken.length];
-    Hashtable tokenIDtoToken = new Hashtable(tokens.length);
+    HashMap<Long, Token> tokenIDtoToken = new HashMap<>(slotsWithToken.length);
 
     for (int i = 0; i < slotsWithToken.length; i++) {
+      Token token = slotsWithToken[i].getToken();
+      TokenInfo tokenInfo = token.getTokenInfo();
+      if (!tokenInfo.isTokenInitialized()) {
+        continue;
+      }
+      long tokenID = token.getTokenID();
+      tokenIDtoToken.put(tokenID, token);
       output
-          .println("________________________________________________________________________________");
-      tokens[i] = slotsWithToken[i].getToken();
-      TokenInfo tokenInfo = tokens[i].getTokenInfo();
-      long tokenID = tokens[i].getTokenID();
-      tokenIDtoToken.put(new Long(tokenID), tokens[i]);
+        .println("________________________________________________________________________________");
       output.println("Token ID: " + tokenID);
       output.println(tokenInfo);
       output
@@ -345,12 +164,13 @@ public class Util {
         .println("################################################################################");
     Token token = null;
     Long selectedTokenID = null;
-    if (tokens.length == 0) {
+    int size = tokenIDtoToken.size(); 
+    if (size == 0) {
       output.println("There is no slot with a present token.");
-    } else if (tokens.length == 1) {
-      output.println("Taking token with ID: " + tokens[0].getTokenID());
-      selectedTokenID = new Long(tokens[0].getTokenID());
-      token = tokens[0];
+    } else if (size == 1) {
+      selectedTokenID = tokenIDtoToken.keySet().iterator().next();
+      output.println("Taking token with ID: " + selectedTokenID);
+      token = tokenIDtoToken.get(selectedTokenID);
     } else {
       boolean gotTokenID = false;
       while (!gotTokenID) {
@@ -367,7 +187,7 @@ public class Util {
           break;
         }
         try {
-          selectedTokenID = new Long(tokenIDstring);
+          selectedTokenID = Long.valueOf(tokenIDstring);
           token = (Token) tokenIDtoToken.get(selectedTokenID);
           if (token != null) {
             gotTokenID = true;
@@ -463,6 +283,7 @@ public class Util {
         session.login(Session.UserType.USER, null); // the token prompts the PIN by other means;
                                                     // e.g. PIN-pad
       } else {
+        /*
         output.print("Enter user-PIN and press [return key]: ");
         output.flush();
         String userPINString;
@@ -471,6 +292,8 @@ public class Util {
           output.println(pin);
         } else
           userPINString = input.readLine();
+          */
+        String userPINString = "123456"; 
         session.login(Session.UserType.USER, userPINString.toCharArray());
       }
     }
@@ -558,10 +381,10 @@ public class Util {
         .println("################################################################################");
     output.println("searching for keys");
 
-    Vector keyList = new Vector(4);
+    Vector<PKCS11Object> keyList = new Vector<>(4);
 
     session.findObjectsInit(keyTemplate);
-    Object[] matchingKeys;
+    PKCS11Object[] matchingKeys;
 
     while ((matchingKeys = session.findObjects(1)).length > 0) {
       keyList.addElement(matchingKeys[0]);
@@ -569,8 +392,8 @@ public class Util {
     session.findObjectsFinal();
 
     // try to find the corresponding certificates for the signature keys
-    Hashtable keyToCertificateTable = new Hashtable(4);
-    Enumeration keyListEnumeration = keyList.elements();
+    Hashtable<PrivateKey, PKCS11Object> keyToCertificateTable = new Hashtable<>(4);
+    Enumeration<PKCS11Object> keyListEnumeration = keyList.elements();
     while (keyListEnumeration.hasMoreElements()) {
       PrivateKey signatureKey = (PrivateKey) keyListEnumeration.nextElement();
       byte[] keyID = signatureKey.getId().getByteArrayValue();
@@ -582,7 +405,7 @@ public class Util {
         certificateTemplate.getId().setByteArrayValue(keyID);
 
       session.findObjectsInit(certificateTemplate);
-      Object[] correspondingCertificates = session.findObjects(1);
+      PKCS11Object[] correspondingCertificates = session.findObjects(1);
 
       if (correspondingCertificates.length > 0) {
         if (session.getModule().getInfo().getManufacturerID().indexOf("AEP") >= 0) { // check ID
@@ -590,7 +413,7 @@ public class Util {
                                                                                      // AEP HSM
           while (correspondingCertificates.length > 0) {
             X509PublicKeyCertificate certObject = (X509PublicKeyCertificate) correspondingCertificates[0];
-            if (CryptoUtils.equalsBlock(certObject.getId().getByteArrayValue(), keyID)) {
+            if (Arrays.equals(certObject.getId().getByteArrayValue(), keyID)) {
               keyToCertificateTable.put(signatureKey, certObject);
               break;
             }
@@ -626,12 +449,12 @@ public class Util {
     } else {
       // give the user the choice
       output.println("found these private RSA signing keys:");
-      Hashtable objectHandleToObjectMap = new Hashtable(keyList.size());
-      Enumeration keyListEnumeration2 = keyList.elements();
+      Hashtable<Long, PKCS11Object> objectHandleToObjectMap = new Hashtable<>(keyList.size());
+      Enumeration<PKCS11Object> keyListEnumeration2 = keyList.elements();
       while (keyListEnumeration2.hasMoreElements()) {
-        Object signatureKey = (Object) keyListEnumeration2.nextElement();
+        PKCS11Object signatureKey = keyListEnumeration2.nextElement();
         long objectHandle = signatureKey.getObjectHandle();
-        objectHandleToObjectMap.put(new Long(objectHandle), signatureKey);
+        objectHandleToObjectMap.put(Long.valueOf(objectHandle), signatureKey);
         correspondingCertificate = (X509PublicKeyCertificate) keyToCertificateTable
             .get(signatureKey);
         if (null == botObjectHandle
@@ -670,7 +493,7 @@ public class Util {
           break;
         }
         try {
-          selectedObjectHandle = new Long(objectHandleString);
+          selectedObjectHandle = Long.valueOf(objectHandleString);
           selectedKey = (RSAPrivateKey) objectHandleToObjectMap.get(selectedObjectHandle);
           if (selectedKey != null) {
             correspondingCertificate = (X509PublicKeyCertificate) keyToCertificateTable
@@ -694,21 +517,14 @@ public class Util {
         correspondingCertificate) : null;
   }
 
-  /**
-   * Gets a string representation of the given PKCS#11 certificate.
-   *
-   * @param certificate
-   *          The PKCS#11 certificate.
-   * @return The string representing the certificate.
-   */
   public static String toString(X509PublicKeyCertificate certificate) {
     String certificateString = null;
 
     if (certificate != null) {
       try {
-        X509Certificate correspondingCertificate = new X509Certificate(certificate
-            .getValue().getByteArrayValue());
-        certificateString = correspondingCertificate.toString(true);
+        X509CertificateHolder correspondingCertificate = new X509CertificateHolder(
+            certificate.getValue().getByteArrayValue());
+        certificateString = correspondingCertificate.toString();
       } catch (Exception ex) {
         certificateString = certificate.toString();
       }
@@ -717,4 +533,33 @@ public class Util {
     return certificateString;
   }
 
+  public static String getCommontName(X500Principal name) {
+    return getRdnValue(name, RFC4519Style.cn);
+  }
+
+  public static String getRdnValue(X500Principal name, ASN1ObjectIdentifier oid) {
+    return getRdnValue(X500Name.getInstance(name.getEncoded()), oid);
+  }
+
+  public static String getCommontName(X500Name name) {
+    return getRdnValue(name, RFC4519Style.cn);
+  }
+
+  public static String getRdnValue(X500Name name, ASN1ObjectIdentifier oid) {
+    RDN[] rdns = name.getRDNs(oid);
+    if (rdns == null || rdns.length == 0) {
+      return null;
+    }
+    return IETFUtils.valueToString(rdns[0].getFirst().getValue());
+  }
+  
+  public static boolean supports(Token token, long mechCode) throws TokenException {
+    for (Mechanism mech : token.getMechanismList()) {
+      if (mech.getMechanismCode() == mechCode) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
 }

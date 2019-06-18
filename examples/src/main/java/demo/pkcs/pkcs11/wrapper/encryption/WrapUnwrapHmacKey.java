@@ -45,13 +45,10 @@ package demo.pkcs.pkcs11.wrapper.encryption;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Slot;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.objects.AESSecretKey;
-import iaik.pkcs.pkcs11.objects.GenericSecretKey;
 import iaik.pkcs.pkcs11.objects.SecretKey;
-import iaik.pkcs.pkcs11.parameters.InitializationVectorParameters;
+import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 import java.io.BufferedReader;
@@ -62,6 +59,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Arrays;
 
 import demo.pkcs.pkcs11.wrapper.util.Util;
@@ -120,24 +118,28 @@ public class WrapUnwrapHmacKey {
 
     output_
         .println("################################################################################");
-    output_.println("generate secret MAC key");
-
-    // GenericSecretKey secretMACKeyTemplate = new GenericSecretKey();
-    AESSecretKey secretMACKeyTemplate = new AESSecretKey();
+    Mechanism keyMechanism = Mechanism.get(PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN);
+    
+    ValuedSecretKey secretMACKeyTemplate = ValuedSecretKey.newGenericSecretKey();
     secretMACKeyTemplate.getSign().setBooleanValue(Boolean.TRUE);
     secretMACKeyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
-    secretMACKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
     secretMACKeyTemplate.getPrivate().setBooleanValue(Boolean.TRUE);
     secretMACKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
     secretMACKeyTemplate.getExtractable().setBooleanValue(Boolean.TRUE);
-    secretMACKeyTemplate.getValueLen().setLongValue(new Long(16));
 
-    // Mechanism keyMechanism = Mechanism
-    // .get(PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN);
-    Mechanism keyMechanism = Mechanism.get(PKCS11Constants.CKM_AES_KEY_GEN);
+    ValuedSecretKey hmacKey;
+    if (Util.supports(token, keyMechanism.getMechanismCode())) {
+      output_.println("generate secret MAC key");
+      secretMACKeyTemplate.getValueLen().setLongValue(Long.valueOf(32));
+      hmacKey = (ValuedSecretKey) session.generateKey(keyMechanism, secretMACKeyTemplate);
+    } else {
+      output_.println("import secret MAC key (generation not supported)");
+      byte[] keyValue = new byte[16];
+      new SecureRandom().nextBytes(keyValue);
+      secretMACKeyTemplate.getValue().setByteArrayValue(keyValue);
 
-    AESSecretKey hmacKey = (AESSecretKey) session.generateKey(keyMechanism,
-        secretMACKeyTemplate);
+      hmacKey = (ValuedSecretKey) session.createObject(secretMACKeyTemplate);
+    }
 
     output_
         .println("################################################################################");
@@ -146,7 +148,7 @@ public class WrapUnwrapHmacKey {
     InputStream dataInputStream = new FileInputStream(args[1]);
 
     // be sure that your token can process the specified mechanism
-    Mechanism signatureMechanism = Mechanism.get(PKCS11Constants.CKM_AES_MAC);
+    Mechanism signatureMechanism = Mechanism.get(PKCS11Constants.CKM_SHA256_HMAC);
     // initialize for signing
     session.signInit(signatureMechanism, hmacKey);
 
@@ -173,35 +175,31 @@ public class WrapUnwrapHmacKey {
         .println("################################################################################");
 
     output_.println("generate secret wrapping key");
+    Mechanism wrapKeyMechanism = Mechanism.get(PKCS11Constants.CKM_AES_KEY_GEN);
+    ValuedSecretKey wrapKeyTemplate = ValuedSecretKey.newAESSecretKey();
+    wrapKeyTemplate.getValueLen().setLongValue(Long.valueOf(16));
+    wrapKeyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
+    wrapKeyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
+    wrapKeyTemplate.getPrivate().setBooleanValue(Boolean.TRUE);
+    wrapKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
+    wrapKeyTemplate.getExtractable().setBooleanValue(Boolean.TRUE);
+    wrapKeyTemplate.getWrap().setBooleanValue(Boolean.TRUE);
 
-    Mechanism encrKeygenMechanism = Mechanism.get(PKCS11Constants.CKM_AES_KEY_GEN);
-    AESSecretKey secretEncryptionKeyTemplate = new AESSecretKey();
-    // secretEncryptionKeyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
-    // secretEncryptionKeyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
-    secretEncryptionKeyTemplate.getWrap().setBooleanValue(Boolean.TRUE);
-    secretEncryptionKeyTemplate.getValueLen().setLongValue(new Long(16));
-
-    AESSecretKey wrappingKey = (AESSecretKey) session.generateKey(encrKeygenMechanism,
-        secretEncryptionKeyTemplate);
+    ValuedSecretKey wrappingKey = (ValuedSecretKey) session.generateKey(wrapKeyMechanism,
+        wrapKeyTemplate);
 
     output_.println("wrapping key");
 
-    Mechanism encryptionMechanism = Mechanism.get(PKCS11Constants.CKM_AES_CBC_PAD);
-    byte[] encryptInitializationVector = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    InitializationVectorParameters encryptInitializationVectorParameters = new InitializationVectorParameters(
-        encryptInitializationVector);
-    encryptionMechanism.setParameters(encryptInitializationVectorParameters);
+    Mechanism wrapMechanism = Mechanism.get(PKCS11Constants.CKM_AES_KEY_WRAP);
 
-    byte[] wrappedKey = session.wrapKey(encryptionMechanism, wrappingKey, hmacKey);
+    byte[] wrappedKey = session.wrapKey(wrapMechanism, wrappingKey, hmacKey);
 
     output_.println("unwrapping key");
 
-    final long CKK_SHA256_HMAC = 0x0000001FL;
-    SecretKey keyTemplate = new SecretKey();
-    keyTemplate.getKeyType().setLongValue(new Long(CKK_SHA256_HMAC));
+    ValuedSecretKey keyTemplate = ValuedSecretKey.newGenericSecretKey();
     keyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
 
-    SecretKey unwrappedKey = (SecretKey) session.unwrapKey(encryptionMechanism,
+    SecretKey unwrappedKey = (SecretKey) session.unwrapKey(wrapMechanism,
         wrappingKey, wrappedKey, keyTemplate);
 
     output_

@@ -99,8 +99,6 @@ public class ConcurrentHash {
       throw new TokenException("No token found!");
     }
 
-    int t1 = 0, t2 = 0;
-
     Slot selectedSlot;
     if (3 < args.length)
       selectedSlot = slotsWithToken1[Integer.parseInt(args[3])];
@@ -151,8 +149,6 @@ public class ConcurrentHash {
     }
 
     System.out.println("opening data file: " + args[2]);
-    InputStream dataInputStream = new FileInputStream(args[2]);
-
     // be sure that your token can process the specified mechanism
     Mechanism digestMechanism = Mechanism.get(PKCS11Constants.CKM_SHA_1);
     // initialize for digesting
@@ -164,19 +160,23 @@ public class ConcurrentHash {
     byte[] helpBuffer;
     int bytesRead;
 
-    // feed in all data from the input stream
-    while ((bytesRead = dataInputStream.read(dataBuffer)) >= 0) {
-      helpBuffer = new byte[bytesRead]; // we need a buffer that only holds what to send for
-                                        // digesting
-      System.arraycopy(dataBuffer, 0, helpBuffer, 0, bytesRead);
-      session1.digestUpdate(helpBuffer);
-      session2.digestUpdate(helpBuffer);
-      Arrays.fill(helpBuffer, (byte) 0); // ensure that no data is left in the memory
+    try (InputStream dataInputStream = new FileInputStream(args[2])) {
+      // feed in all data from the input stream
+      while ((bytesRead = dataInputStream.read(dataBuffer)) >= 0) {
+        helpBuffer = new byte[bytesRead]; // we need a buffer that only holds what to send for
+                                          // digesting
+        System.arraycopy(dataBuffer, 0, helpBuffer, 0, bytesRead);
+        session1.digestUpdate(helpBuffer, 0, helpBuffer.length);
+        session2.digestUpdate(helpBuffer, 0, helpBuffer.length);
+        Arrays.fill(helpBuffer, (byte) 0); // ensure that no data is left in the memory
+      }
+      Arrays.fill(dataBuffer, (byte) 0); // ensure that no data is left in the memory
     }
-    Arrays.fill(dataBuffer, (byte) 0); // ensure that no data is left in the memory
 
-    byte[] digestValue1 = session1.digestFinal();
-    byte[] digestValue2 = session2.digestFinal();
+    byte[] digestValue1 = new byte[20];
+    byte[] digestValue2 = new byte[20];
+    session1.digestFinal(digestValue1, 0, 20);
+    session2.digestFinal(digestValue2, 0, 20);
 
     System.out.println("The SHA-1 hash value #1 is: "
         + new BigInteger(1, digestValue1).toString(16));
@@ -201,13 +201,13 @@ public class ConcurrentHash {
 
     MessageDigest softwareDigestEngine = MessageDigest.getInstance("SHA-1");
 
-    dataInputStream = new FileInputStream(args[2]);
-
-    // feed in all data from the input stream
-    while ((bytesRead = dataInputStream.read(dataBuffer)) >= 0) {
-      softwareDigestEngine.update(dataBuffer, 0, bytesRead);
+    try (InputStream dis = new FileInputStream(args[2])) {
+      // feed in all data from the input stream
+      while ((bytesRead = dis.read(dataBuffer)) >= 0) {
+        softwareDigestEngine.update(dataBuffer, 0, bytesRead);
+      }
     }
-    dataInputStream.close();
+
     byte[] softwareDigestValue = softwareDigestEngine.digest();
 
     Arrays.fill(dataBuffer, (byte) 0); // ensure that no data is left in the memory

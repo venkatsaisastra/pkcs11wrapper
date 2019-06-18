@@ -49,7 +49,7 @@ import iaik.pkcs.pkcs11.Slot;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.TokenInfo;
-import iaik.pkcs.pkcs11.objects.GenericSecretKey;
+import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 import java.io.BufferedReader;
@@ -115,7 +115,7 @@ public class GenerateKey {
     output_
         .println("################################################################################");
 
-    List supportedMechanisms = Arrays.asList(token.getMechanismList());
+    List<Mechanism> supportedMechanisms = Arrays.asList(token.getMechanismList());
 
     Session session = token.openSession(Token.SessionType.SERIAL_SESSION,
         Token.SessionReadWriteBehavior.RW_SESSION, null, null);
@@ -134,10 +134,10 @@ public class GenerateKey {
       Mechanism keyGenerationMechanism = Mechanism
           .get(PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN);
 
-      GenericSecretKey secretKeyTemplate = new GenericSecretKey();
+      ValuedSecretKey secretKeyTemplate = ValuedSecretKey.newGenericSecretKey();
       secretKeyTemplate.getValueLen().setLongValue(new Long(16));
 
-      GenericSecretKey secretKey = (GenericSecretKey) session.generateKey(
+      ValuedSecretKey secretKey = (ValuedSecretKey) session.generateKey(
           keyGenerationMechanism, secretKeyTemplate);
 
       output_.println("the secret key is");

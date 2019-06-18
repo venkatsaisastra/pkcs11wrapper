@@ -49,7 +49,7 @@ import iaik.pkcs.pkcs11.Slot;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.TokenInfo;
-import iaik.pkcs.pkcs11.objects.GenericSecretKey;
+import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.parameters.SSL3KeyMaterialOutParameters;
 import iaik.pkcs.pkcs11.parameters.SSL3KeyMaterialParameters;
 import iaik.pkcs.pkcs11.parameters.SSL3MasterKeyDeriveParameters;
@@ -123,7 +123,7 @@ public class SSLMechanisms {
     output_
         .println("################################################################################");
 
-    List supportedMechanisms = Arrays.asList(token.getMechanismList());
+    List<Mechanism> supportedMechanisms = Arrays.asList(token.getMechanismList());
 
     Session session = token.openSession(Token.SessionType.SERIAL_SESSION,
         Token.SessionReadWriteBehavior.RW_SESSION, null, null);
@@ -133,7 +133,7 @@ public class SSLMechanisms {
       session.login(Session.UserType.USER, args[2].toCharArray());
     }
 
-    GenericSecretKey premasterSecret = null;
+    ValuedSecretKey premasterSecret = null;
     if (supportedMechanisms.contains(Mechanism
         .get(PKCS11Constants.CKM_SSL3_PRE_MASTER_KEY_GEN))) {
       output_
@@ -146,10 +146,10 @@ public class SSLMechanisms {
           .get(PKCS11Constants.CKM_SSL3_PRE_MASTER_KEY_GEN);
       sslPremasterKeyGenerationMechanism.setParameters(versionParameters);
 
-      GenericSecretKey premasterSecretTemplate = new GenericSecretKey();
+      ValuedSecretKey premasterSecretTemplate = ValuedSecretKey.newGenericSecretKey();
       premasterSecretTemplate.getDerive().setBooleanValue(Boolean.TRUE);
 
-      premasterSecret = (GenericSecretKey) session.generateKey(
+      premasterSecret = (ValuedSecretKey) session.generateKey(
           sslPremasterKeyGenerationMechanism, premasterSecretTemplate);
 
       output_.println("the premaster secret is");
@@ -159,7 +159,7 @@ public class SSLMechanisms {
           .println("################################################################################");
     }
 
-    GenericSecretKey masterSecret = null;
+    ValuedSecretKey masterSecret = null;
     SecureRandom randomSource = SecureRandom.getInstance("SHA1PRNG");
     if (supportedMechanisms.contains(Mechanism
         .get(PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE)) && (premasterSecret != null)) {
@@ -189,10 +189,10 @@ public class SSLMechanisms {
           .get(PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE);
       sslMasterKeyDerivationMechanism.setParameters(masterKeyDeriveParameters);
 
-      GenericSecretKey masterSecretTemplate = new GenericSecretKey();
+      ValuedSecretKey masterSecretTemplate = ValuedSecretKey.newGenericSecretKey();
       masterSecretTemplate.getDerive().setBooleanValue(Boolean.TRUE);
 
-      masterSecret = (GenericSecretKey) session.deriveKey(
+      masterSecret = (ValuedSecretKey) session.deriveKey(
           sslMasterKeyDerivationMechanism, premasterSecret, masterSecretTemplate);
 
       output_.println("the client version is");
