@@ -58,11 +58,30 @@ import java.util.StringTokenizer;
  */
 public class Functions implements PKCS11Constants {
 
-  /**
-   * For converting numbers to their hex presentation.
-   */
-  private static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5',
-    '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+  private static class Hex {
+
+    private static final char[] DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        'a', 'b', 'c', 'd', 'e', 'f'};
+
+    public static String encode(byte[] bytes) {
+      return new String(encodeToChars(bytes));
+    }
+
+    public static char[] encodeToChars(byte[] data) {
+      int len = data.length;
+
+      char[] out = new char[len << 1];
+
+      // two characters form the hex value.
+      for (int i = 0, j = 0; i < len; i++) {
+        out[j++] = DIGITS[(0xF0 & data[i]) >>> 4];
+        out[j++] = DIGITS[0x0F & data[i]];
+      }
+
+      return out;
+    }
+
+  }
 
   /**
    * The name of the properties file that holds the names of the PKCS#11
@@ -966,11 +985,23 @@ public class Functions implements PKCS11Constants {
     StringBuilder stringBuffer = new StringBuilder(16);
     for (int j = 0; j < 16; j++) {
       int currentDigit = (int) currentValue & 0xf;
-      stringBuffer.append(HEX_DIGITS[currentDigit]);
+      stringBuffer.append(Hex.DIGITS[currentDigit]);
       currentValue >>>= 4;
     }
 
     return stringBuffer.reverse().toString();
+  }
+
+  /**
+   * Converts a byte array to a hexadecimal String. Each byte is presented by its two digit
+   * hex-code; 0x0A -> "0a", 0x00 -> "00". No leading "0x" is included in the result.
+   *
+   * @param value
+   *          the byte array to be converted
+   * @return the hexadecimal string representation of the byte array
+   */
+  public static String toHexString(byte[] value) {
+    return Hex.encode(value);
   }
 
 }
