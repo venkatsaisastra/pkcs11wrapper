@@ -9,11 +9,11 @@
     <version>7</version>
   </parent>
   <groupId>org.xipki.iaik</groupId>
-  <artifactId>pkcs11wrapper-parent</artifactId>
-  <packaging>pom</packaging>
+  <artifactId>sunpkcs11-wrapper</artifactId>
   <version>1.4.5-SNAPSHOT</version>
-  <name>PKCS#11 wrapper parent</name>
-  <description>PKCS#11 wrapper parent</description>
+  <packaging>bundle</packaging>
+  <name>PKCS#11 wrapper</name>
+  <description>PKCS#11 wrapper based on sunpkcs11</description>
   <licenses>
     <license>
       <name>IAIK of Graz University of Technology License</name>
@@ -30,15 +30,24 @@
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
-  <modules>
-    <module>sunpkcs11-wrapper</module>
-  </modules>
   <scm>
     <connection>scm:git:git@github.com:xipki/pkcs11wrapper.git</connection>
     <developerConnection>scm:git:git@github.com:xipki/pkcs11wrapper.git</developerConnection>
     <url>git@github.com:xipki/pkcs11wrapper.git</url>
   </scm>
   <build>
+    <sourceDirectory>src/java/src</sourceDirectory>
+    <testSourceDirectory>examples/src</testSourceDirectory>
+    <resources>
+      <resource>
+        <directory>src/java/resources</directory>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <directory>examples/data</directory>
+      </testResource>
+    </testResources>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -274,3 +283,4 @@
     </profile>
   </profiles>
 </project>
+
