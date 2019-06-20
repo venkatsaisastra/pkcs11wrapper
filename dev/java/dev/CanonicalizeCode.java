@@ -56,7 +56,8 @@ public class CanonicalizeCode {
 
   public static void main(final String[] args) {
     try {
-      String baseDir = args[0];
+      //String baseDir = args[0];
+      String baseDir = "/home/lliao/source/pkcs11wrapper";
       CanonicalizeCode canonicalizer = new CanonicalizeCode(baseDir);
       canonicalizer.canonicalize();
       canonicalizer.checkWarnings();
@@ -80,8 +81,7 @@ public class CanonicalizeCode {
       if (file.isDirectory()) {
         if (!"target".equals(filename)
             && !"tbd".equals(filename)
-            && !"dev".equals(filename)
-            && !"examples".equals(filename)) {
+            && !"dev".equals(filename)) {
           canonicalizeDir(file);
         }
       } else {
@@ -385,8 +385,7 @@ public class CanonicalizeCode {
       if (file.isDirectory()) {
         if (!file.getName().equals("target")
             && !file.getName().equals("tbd")
-            && !file.getName().equals("dev")
-            && !file.getName().equals("examples")) {
+            && !file.getName().equals("dev")) {
           checkWarningsInDir(file);
         }
 
