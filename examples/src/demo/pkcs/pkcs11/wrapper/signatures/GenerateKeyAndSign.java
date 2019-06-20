@@ -42,6 +42,8 @@
 
 package demo.pkcs.pkcs11.wrapper.signatures;
 
+import org.junit.Test;
+
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Session;
@@ -58,6 +60,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  */
 public class GenerateKeyAndSign extends TestBase {
 
+  @Test
   public void main() throws TokenException {
     Token token = getNonNullToken();
     Session session = openReadWriteSession(token);

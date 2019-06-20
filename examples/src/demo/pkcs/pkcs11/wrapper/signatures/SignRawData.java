@@ -44,6 +44,8 @@ package demo.pkcs.pkcs11.wrapper.signatures;
 
 import java.math.BigInteger;
 
+import org.junit.Test;
+
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Session;
@@ -61,6 +63,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  */
 public class SignRawData extends TestBase {
 
+  @Test
   public void main() throws TokenException {
     Token token = getNonNullToken();
     Session session = openReadOnlySession(token);
@@ -80,7 +83,7 @@ public class SignRawData extends TestBase {
     
     println("################################################################################");
     println("signing data");
-    byte[] dataToBeSigned = randomBytes(1057);
+    byte[] dataToBeSigned = randomBytes(32); // hash value
 
     // be sure that your token can process the specified mechanism
     Mechanism signatureMechanism = getSupportedMechanism(token, PKCS11Constants.CKM_RSA_PKCS);
