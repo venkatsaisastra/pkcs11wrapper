@@ -153,7 +153,8 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
       return false;
     }
 
-    EcDH1KeyDerivationParameters other = (EcDH1KeyDerivationParameters) otherObject;
+    EcDH1KeyDerivationParameters other =
+        (EcDH1KeyDerivationParameters) otherObject;
     return super.equals(other)
         && Arrays.equals(this.sharedData, other.sharedData);
   }

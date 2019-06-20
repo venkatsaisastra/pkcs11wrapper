@@ -97,7 +97,8 @@ public abstract class Attribute {
   public static final Long ATTR_TYPES
       = Long.valueOf(PKCS11Constants.CKA_ATTR_TYPES);
   public static final Long TRUSTED = Long.valueOf(PKCS11Constants.CKA_TRUSTED);
-  public static final Long KEY_TYPE = Long.valueOf(PKCS11Constants.CKA_KEY_TYPE);
+  public static final Long KEY_TYPE
+      = Long.valueOf(PKCS11Constants.CKA_KEY_TYPE);
   public static final Long SUBJECT = Long.valueOf(PKCS11Constants.CKA_SUBJECT);
   public static final Long ID = Long.valueOf(PKCS11Constants.CKA_ID);
   public static final Long CHECK_VALUE
@@ -123,7 +124,8 @@ public abstract class Attribute {
   public static final Long DERIVE = Long.valueOf(PKCS11Constants.CKA_DERIVE);
   public static final Long START_DATE
       = Long.valueOf(PKCS11Constants.CKA_START_DATE);
-  public static final Long END_DATE = Long.valueOf(PKCS11Constants.CKA_END_DATE);
+  public static final Long END_DATE
+      = Long.valueOf(PKCS11Constants.CKA_END_DATE);
   public static final Long MECHANISM_TYPE
       = Long.valueOf(PKCS11Constants.CKA_MECHANISM_TYPE);
   public static final Long MODULUS = Long.valueOf(PKCS11Constants.CKA_MODULUS);
@@ -142,7 +144,8 @@ public abstract class Attribute {
   public static final Long COEFFICIENT
       = Long.valueOf(PKCS11Constants.CKA_COEFFICIENT);
   public static final Long PRIME = Long.valueOf(PKCS11Constants.CKA_PRIME);
-  public static final Long SUBPRIME = Long.valueOf(PKCS11Constants.CKA_SUBPRIME);
+  public static final Long SUBPRIME
+      = Long.valueOf(PKCS11Constants.CKA_SUBPRIME);
   public static final Long BASE = Long.valueOf(PKCS11Constants.CKA_BASE);
   public static final Long PRIME_BITS
       = Long.valueOf(PKCS11Constants.CKA_PRIME_BITS);
@@ -171,7 +174,8 @@ public abstract class Attribute {
       = Long.valueOf(PKCS11Constants.CKA_MODIFIABLE);
   public static final Long EC_PARAMS
       = Long.valueOf(PKCS11Constants.CKA_EC_PARAMS);
-  public static final Long EC_POINT = Long.valueOf(PKCS11Constants.CKA_EC_POINT);
+  public static final Long EC_POINT
+      = Long.valueOf(PKCS11Constants.CKA_EC_POINT);
   @SuppressWarnings("deprecation")
   public static final Long SECONDARY_AUTH
       = Long.valueOf(PKCS11Constants.CKA_SECONDARY_AUTH);

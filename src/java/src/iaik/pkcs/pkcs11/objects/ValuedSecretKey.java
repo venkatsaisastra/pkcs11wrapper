@@ -66,7 +66,7 @@ public class ValuedSecretKey extends SecretKey {
    * The length of this secret key in bytes.
    */
   protected LongAttribute valueLen;
-  
+
   public static ValuedSecretKey newAESSecretKey() {
     return new ValuedSecretKey(PKCS11Constants.CKK_AES);
   }
@@ -74,7 +74,7 @@ public class ValuedSecretKey extends SecretKey {
   public static ValuedSecretKey newDES3SecretKey() {
     return new ValuedSecretKey(PKCS11Constants.CKK_DES3);
   }
-  
+
   public static ValuedSecretKey newGenericSecretKey() {
     return new ValuedSecretKey(PKCS11Constants.CKK_GENERIC_SECRET);
   }

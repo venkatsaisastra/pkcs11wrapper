@@ -275,7 +275,8 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
       return false;
     }
 
-    SSL3KeyMaterialOutParameters other = (SSL3KeyMaterialOutParameters) otherObject;
+    SSL3KeyMaterialOutParameters other =
+        (SSL3KeyMaterialOutParameters) otherObject;
     return Util.objEquals(this.clientMacSecret, other.clientMacSecret)
         && Util.objEquals(this.serverMacSecret, other.serverMacSecret)
         && Util.objEquals(this.clientKey, other.clientKey)

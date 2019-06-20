@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -63,8 +63,8 @@ import iaik.pkcs.pkcs11.parameters.VersionParameters;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
- * This demo program shows how to use the SSL mechanisms. Ensure that your token supports these
- * features.
+ * This demo program shows how to use the SSL mechanisms. Ensure that your token
+ * supports these features.
  */
 public class SSLMechanisms extends TestBase {
 
@@ -79,21 +79,24 @@ public class SSLMechanisms extends TestBase {
     }
   }
 
-  private void main0(Token token, Session session) throws TokenException, NoSuchAlgorithmException {
+  private void main0(Token token, Session session)
+      throws TokenException, NoSuchAlgorithmException {
     ValuedSecretKey premasterSecret = null;
     ValuedSecretKey masterSecret = null;
 
     if (Util.supports(token, PKCS11Constants.CKM_SSL3_PRE_MASTER_KEY_GEN)) {
-      println("################################################################################");
+      println("##################################################");
       println("Generating premaster secret");
 
-      VersionParameters versionParameters = new VersionParameters((byte) 3, (byte) 0);
+      VersionParameters versionParameters =
+          new VersionParameters((byte) 3, (byte) 0);
 
       Mechanism sslPremasterKeyGenerationMechanism = Mechanism
           .get(PKCS11Constants.CKM_SSL3_PRE_MASTER_KEY_GEN);
       sslPremasterKeyGenerationMechanism.setParameters(versionParameters);
 
-      ValuedSecretKey premasterSecretTemplate = ValuedSecretKey.newGenericSecretKey();
+      ValuedSecretKey premasterSecretTemplate =
+          ValuedSecretKey.newGenericSecretKey();
       premasterSecretTemplate.getDerive().setBooleanValue(Boolean.TRUE);
 
       premasterSecret = (ValuedSecretKey) session.generateKey(
@@ -102,13 +105,13 @@ public class SSLMechanisms extends TestBase {
       println("the premaster secret is");
       println(premasterSecret.toString());
 
-      println("################################################################################");
+      println("##################################################");
     }
 
     SecureRandom randomSource = SecureRandom.getInstance("SHA1PRNG");
     if (Util.supports(token, PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE)
         && (premasterSecret != null)) {
-      println("################################################################################");
+      println("##################################################");
       println("Deriving master secret");
 
       byte[] clientRandom = new byte[28];
@@ -122,32 +125,34 @@ public class SSLMechanisms extends TestBase {
       println("finished");
 
       VersionParameters clientVersion = new VersionParameters();
-      SSL3RandomDataParameters randomInfo = new SSL3RandomDataParameters(clientRandom,
-          serverRandom);
-      SSL3MasterKeyDeriveParameters masterKeyDeriveParameters = new SSL3MasterKeyDeriveParameters(
-          randomInfo, clientVersion);
+      SSL3RandomDataParameters randomInfo =
+          new SSL3RandomDataParameters(clientRandom, serverRandom);
+      SSL3MasterKeyDeriveParameters masterKeyDeriveParameters =
+          new SSL3MasterKeyDeriveParameters(randomInfo, clientVersion);
 
       Mechanism sslMasterKeyDerivationMechanism = Mechanism
           .get(PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE);
       sslMasterKeyDerivationMechanism.setParameters(masterKeyDeriveParameters);
 
-      ValuedSecretKey masterSecretTemplate = ValuedSecretKey.newGenericSecretKey();
+      ValuedSecretKey masterSecretTemplate =
+          ValuedSecretKey.newGenericSecretKey();
       masterSecretTemplate.getDerive().setBooleanValue(Boolean.TRUE);
 
       masterSecret = (ValuedSecretKey) session.deriveKey(
-          sslMasterKeyDerivationMechanism, premasterSecret, masterSecretTemplate);
+          sslMasterKeyDerivationMechanism, premasterSecret,
+          masterSecretTemplate);
 
       println("the client version is");
       println(masterKeyDeriveParameters.getVersion().toString());
       println("the master secret is");
       println(masterSecret.toString());
 
-      println("################################################################################");
+      println("##################################################");
     }
 
     if (Util.supports(token, PKCS11Constants.CKM_SSL3_KEY_AND_MAC_DERIVE)
         && (masterSecret != null)) {
-      println("################################################################################");
+      println("##################################################");
       println("Deriving key material");
 
       byte[] clientRandom = new byte[28];
@@ -160,15 +165,16 @@ public class SSLMechanisms extends TestBase {
       randomSource.nextBytes(serverRandom);
       println("finished");
 
-      SSL3RandomDataParameters randomInfo = new SSL3RandomDataParameters(clientRandom,
-          serverRandom);
+      SSL3RandomDataParameters randomInfo =
+          new SSL3RandomDataParameters(clientRandom, serverRandom);
 
       byte[] clientIVBuffer = new byte[16];
       byte[] serverIVBuffer = new byte[16];
-      SSL3KeyMaterialOutParameters returedKeyMaterial = new SSL3KeyMaterialOutParameters(
-          clientIVBuffer, serverIVBuffer);
-      SSL3KeyMaterialParameters keyAndMACDeriveParameters = new SSL3KeyMaterialParameters(
-          80, 128, 128, false, randomInfo, returedKeyMaterial);
+      SSL3KeyMaterialOutParameters returedKeyMaterial =
+          new SSL3KeyMaterialOutParameters(clientIVBuffer, serverIVBuffer);
+      SSL3KeyMaterialParameters keyAndMACDeriveParameters =
+          new SSL3KeyMaterialParameters(
+              80, 128, 128, false, randomInfo, returedKeyMaterial);
 
       Mechanism sslKeyAndMACDerivationMechanism = Mechanism
           .get(PKCS11Constants.CKM_SSL3_KEY_AND_MAC_DERIVE);
@@ -183,8 +189,7 @@ public class SSLMechanisms extends TestBase {
       println("the derivedSecret is");
       println(derivedSecret);
 
-
-      println("################################################################################");
+      println("##################################################");
     }
   }
 

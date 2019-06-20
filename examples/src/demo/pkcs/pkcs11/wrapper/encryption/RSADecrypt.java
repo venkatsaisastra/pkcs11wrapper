@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -58,8 +58,8 @@ import iaik.pkcs.pkcs11.objects.PublicKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
- * This demo shows how to use a PKCS#11 token to decrypt a session key encrypted by RSA.
- *
+ * This demo shows how to use a PKCS#11 token to decrypt a session key
+ * encrypted by RSA.
  */
 public class RSADecrypt extends TestBase {
 
@@ -74,10 +74,11 @@ public class RSADecrypt extends TestBase {
       session.closeSession();
     }
   }
-  
+
   private void main0(Token token, Session session) throws TokenException {
     // check, if this token can do RSA decryption
-    Mechanism encMech = getSupportedMechanism(token, PKCS11Constants.CKM_RSA_PKCS);
+    Mechanism encMech = getSupportedMechanism(token,
+        PKCS11Constants.CKM_RSA_PKCS);
     if (!token.getMechanismInfo(encMech).isDecrypt()) {
       print("This token does not support RSA decryption according to PKCS!");
       throw new TokenException("RSA decryption not supported!");
@@ -87,20 +88,22 @@ public class RSADecrypt extends TestBase {
     KeyPair keypair = generateRSAKeypair(token, session, 2048, inToken);
     PrivateKey privKey = keypair.getPrivateKey();
     PublicKey pubKey = keypair.getPublicKey();
-    
+
     byte[] sessionKey = new byte[16];
     byte[] buffer = new byte[1024 / 8 + 32];
     session.encryptInit(encMech, pubKey);
-    int len = session.encrypt(sessionKey, 0, sessionKey.length, buffer, 0, buffer.length);
+    int len = session.encrypt(sessionKey, 0, sessionKey.length,
+        buffer, 0, buffer.length);
     byte[] encryptedSessionKey = Arrays.copyOf(buffer, len);
-    Arrays.fill(buffer, (byte) 0); 
-    
+    Arrays.fill(buffer, (byte) 0);
+
     // decrypt
     session.decryptInit(encMech, privKey);
-    len = session.decrypt(encryptedSessionKey, 0, encryptedSessionKey.length,buffer, 0, buffer.length);
+    len = session.decrypt(encryptedSessionKey, 0, encryptedSessionKey.length,
+        buffer, 0, buffer.length);
     byte[] decryptedSessionKey = Arrays.copyOf(buffer, len);
     Arrays.fill(buffer, (byte) 0);
-    
+
     Assert.assertArrayEquals(sessionKey, decryptedSessionKey);
     println("finished");
   }

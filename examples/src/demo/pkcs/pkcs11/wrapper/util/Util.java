@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -65,55 +65,63 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 
 /**
- * This class contains only static methods. It is the place for all functions that are used by
- * several classes in this package.
+ * This class contains only static methods. It is the place for all functions
+ * that are used by several classes in this package.
  *
  * @author Karl Scheibelhofer
  */
 public class Util {
 
   /**
-   * Lists all available tokens of the given module and lets the user select one, if there is more
-   * than one available.
+   * Lists all available tokens of the given module and lets the user select
+   * one, if there is more than one available.
    *
    * @param pkcs11Module
    *          The PKCS#11 module to use.
-   * @return The selected token or null, if no token is available or the user canceled the action.
+   * @return The selected token or null, if no token is available or the user
+   *         canceled the action.
    * @exception TokenException
    *              If listing the tokens failed.
    * @exception IOException
-   *              If writing a user prompt faild or if reading user input failed.
-   * @preconditions (pkcs11Module <> null) and (output <> null) and (input <> null)
+   *              If writing a user prompt failed or if reading user input
+   *              failed.
+   * @preconditions (pkcs11Module <> null)
+   *                 and (output <> null) and (input <> null)
    *
    */
-  public static Token selectToken(Module pkcs11Module) throws TokenException, IOException {
+  public static Token selectToken(Module pkcs11Module)
+      throws TokenException, IOException {
     return selectToken(pkcs11Module, null);
   }
 
   /**
-   * Lists all available tokens of the given module and lets the user select one, if there is more
-   * than one available. Supports token preselection.
+   * Lists all available tokens of the given module and lets the user select
+   * one, if there is more than one available. Supports token preselection.
    *
    * @param pkcs11Module
    *          The PKCS#11 module to use.
    * @param slotIndex
-   * @return The selected token or null, if no token is available or the user canceled the action.
+   * @return The selected token or null, if no token is available or the user
+   *         canceled the action.
    * @exception TokenException
    *              If listing the tokens failed.
    * @exception IOException
-   *              If writing a user prompt faild or if reading user input failed.
-   * @preconditions (pkcs11Module <> null) and (output <> null) and (input <> null)
+   *              If writing a user prompt failed or if reading user input
+   *              failed.
+   * @preconditions (pkcs11Module <> null)
+   *                 and (output <> null) and (input <> null)
    *
    */
   public static Token selectToken(Module pkcs11Module, Integer slotIndex)
       throws TokenException {
     if (pkcs11Module == null) {
-      throw new NullPointerException("Argument \"pkcs11Module\" must not be null.");
+      throw new NullPointerException("Argument pkcs11Module must not be null.");
     }
 
-    System.out.println("################################################################################");
+    System.out.println("##################################################");
     System.out.println("getting list of all tokens");
-    Slot[] slots = pkcs11Module.getSlotList(Module.SlotRequirement.TOKEN_PRESENT);
+    Slot[] slots = pkcs11Module.getSlotList(
+        Module.SlotRequirement.TOKEN_PRESENT);
     if (slots == null || slots.length == 0) {
       return null;
     } else if (slotIndex != null) {
@@ -134,14 +142,14 @@ public class Util {
           return slot.getToken();
         }
       }
-      
+
       throw new IllegalArgumentException("found no initialized token");
     }
   }
 
   /**
-   * Opens an authorized session for the given token. If the token requires the user to login for
-   * private operations, the method loggs in the user.
+   * Opens an authorized session for the given token. If the token requires the
+   * user to login for private operations, the method loggs in the user.
    *
    * @param token
    *          The token to open a session for.
@@ -151,33 +159,37 @@ public class Util {
    *          Token.SessionReadWriteBehavior.RW_SESSION.
    * @param pin
    *          PIN.
-   * @return The selected token or null, if no token is available or the user canceled the action.
+   * @return The selected token or null, if no token is available or the user
+   *         canceled the action.
    * @exception TokenException
    *              If listing the tokens failed.
    * @exception IOException
-   *              If writing a user prompt faild or if reading user input failed.
+   *              If writing a user prompt failed or if reading user input
+   *              failed.
    * @preconditions (token <> null) and (output <> null) and (input <> null)
    * @postconditions (result <> null)
    */
-  public static Session openAuthorizedSession(Token token, boolean rwSession, char[] pin)
+  public static Session openAuthorizedSession(
+      Token token, boolean rwSession, char[] pin)
       throws TokenException {
     if (token == null) {
       throw new NullPointerException("Argument \"token\" must not be null.");
     }
 
     System.out.println(
-        "################################################################################");
+        "##################################################");
     System.out.println("opening session");
-    Session session = token.openSession(Token.SessionType.SERIAL_SESSION, rwSession,
-        null, null);
+    Session session = token.openSession(Token.SessionType.SERIAL_SESSION,
+        rwSession, null, null);
 
     TokenInfo tokenInfo = token.getTokenInfo();
     if (tokenInfo.isLoginRequired()) {
       if (tokenInfo.isProtectedAuthenticationPath()) {
-        System.out.print("Please enter the user-PIN at the PIN-pad of your reader.");
+        System.out.print(
+            "Please enter the user-PIN at the PIN-pad of your reader.");
         System.out.flush();
-        session.login(Session.UserType.USER, null); // the token prompts the PIN by other means;
-                                                    // e.g. PIN-pad
+        // the token prompts the PIN by other means; e.g. PIN-pad
+        session.login(Session.UserType.USER, null);
       } else {
         try {
           session.login(Session.UserType.USER, pin);
@@ -191,7 +203,7 @@ public class Util {
       }
     }
     System.out
-        .println("################################################################################");
+        .println("##################################################");
 
     return session;
   }
@@ -200,10 +212,12 @@ public class Util {
     if (certificate == null) {
       return null;
     }
-    
+
     try {
-      Certificate cert = CertificateFactory.getInstance("X509").generateCertificate(
-          new ByteArrayInputStream(certificate.getValue().getByteArrayValue()));
+      Certificate cert =
+          CertificateFactory.getInstance("X509").generateCertificate(
+              new ByteArrayInputStream(
+                  certificate.getValue().getByteArrayValue()));
       return cert.toString();
     } catch (Exception ex) {
       return certificate.toString();
@@ -232,10 +246,10 @@ public class Util {
         }
       }
     }
-    
+
     return null;
   }
-  
+
   public static byte[] encodedAsn1Integer(BigInteger bn) {
     byte[] encodedBn = bn.toByteArray();
     int len = encodedBn.length;
@@ -262,7 +276,8 @@ public class Util {
     return encoded;
   }
 
-  public static boolean supports(Token token, long mechCode) throws TokenException {
+  public static boolean supports(Token token, long mechCode)
+      throws TokenException {
     for (Mechanism mech : token.getMechanismList()) {
       if (mech.getMechanismCode() == mechCode) {
         return true;

@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -56,9 +56,10 @@ import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
- * Signs some raw data on the token. This means, the given data is directly input to the signature
- * creation mechanism without any prior hashing. For instance, the user can provide the encoding of
- * an already calculated DigestInfo object. See file data.dat.sh1, which is the DigestInfo encoding
+ * Signs some raw data on the token. This means, the given data is directly
+ * input to the signature creation mechanism without any prior hashing. For
+ * instance, the user can provide the encoding of an already calculated
+ * DigestInfo object. See file data.dat.sh1, which is the DigestInfo encoding
  * of the SHA-1 hash of data.dat.
  */
 public class SignRawData extends TestBase {
@@ -75,18 +76,21 @@ public class SignRawData extends TestBase {
   }
 
   private void main0(Token token, Session session) throws TokenException {
-    println("################################################################################");
+    println("##################################################");
     println("generate signature key pair");
     final boolean inToken = false;
-    KeyPair generatedKeyPair = generateRSAKeypair(token, session, 2048, inToken);
-    RSAPrivateKey generatedRSAPrivateKey = (RSAPrivateKey) generatedKeyPair.getPrivateKey();
-    
-    println("################################################################################");
+    KeyPair generatedKeyPair =
+        generateRSAKeypair(token, session, 2048, inToken);
+    RSAPrivateKey generatedRSAPrivateKey = (RSAPrivateKey)
+        generatedKeyPair.getPrivateKey();
+
+    println("##################################################");
     println("signing data");
     byte[] dataToBeSigned = randomBytes(32); // hash value
 
     // be sure that your token can process the specified mechanism
-    Mechanism signatureMechanism = getSupportedMechanism(token, PKCS11Constants.CKM_RSA_PKCS);
+    Mechanism signatureMechanism = getSupportedMechanism(token,
+        PKCS11Constants.CKM_RSA_PKCS);
     // initialize for signing
     session.signInit(signatureMechanism, generatedRSAPrivateKey);
 
@@ -96,7 +100,7 @@ public class SignRawData extends TestBase {
     println("The signature value is: "
         + new BigInteger(1, signatureValue).toString(16));
 
-    println("################################################################################");
+    println("##################################################");
   }
 
 }

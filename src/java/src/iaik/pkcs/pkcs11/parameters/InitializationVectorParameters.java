@@ -142,7 +142,8 @@ public class InitializationVectorParameters implements Parameters {
       return false;
     }
 
-    InitializationVectorParameters other = (InitializationVectorParameters) otherObject;
+    InitializationVectorParameters other =
+        (InitializationVectorParameters) otherObject;
     return Arrays.equals(this.iv, other.iv);
   }
 

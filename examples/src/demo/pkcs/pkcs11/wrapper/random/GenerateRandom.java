@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -51,8 +51,7 @@ import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
- * This demo program uses a PKCS#11 module to produce random data. Optionally the random data can be
- * written to file.
+ * This demo program uses a PKCS#11 module to produce random data.
  */
 public class GenerateRandom extends TestBase {
 
@@ -68,13 +67,13 @@ public class GenerateRandom extends TestBase {
   }
 
   private void main0(Token token, Session session) throws TokenException {
-    println("################################################################################");
+    println("##################################################");
     print("generating 1057 bytes of random data... ");
     byte[] dataBuffer = session.generateRandom(1057);
     println("random is");
     println(Functions.toHexString(dataBuffer));
     println("finished");
-    println("################################################################################");
+    println("##################################################");
   }
 
 }

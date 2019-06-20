@@ -82,7 +82,8 @@ public class ECPrivateKey extends PrivateKey {
   /**
    * Default Constructor with the specification of keyType
    *
-   * @param keyType key type
+   * @param keyType
+   *        key type
    * @preconditions
    * @postconditions
    */

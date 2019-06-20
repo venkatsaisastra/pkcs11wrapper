@@ -106,12 +106,14 @@ public class Key extends Storage {
     /**
      * The identifier for a EC EDWARDS key.
      */
-    public static final Long EC_EDWARDS = Long.valueOf(PKCS11Constants.CKK_EC_EDWARDS);
+    public static final Long EC_EDWARDS
+        = Long.valueOf(PKCS11Constants.CKK_EC_EDWARDS);
 
     /**
      * The identifier for a EC MONTGOMERY key.
      */
-    public static final Long EC_MONTGOMERY = Long.valueOf(PKCS11Constants.CKK_EC_MONTGOMERY);
+    public static final Long EC_MONTGOMERY
+        = Long.valueOf(PKCS11Constants.CKK_EC_MONTGOMERY);
 
     /**
      * The identifier for a HKDF key.
@@ -121,7 +123,8 @@ public class Key extends Storage {
     /**
      * The identifier for a EC key.
      */
-    public static final Long X9_42_DH = Long.valueOf(PKCS11Constants.CKK_X9_42_DH);
+    public static final Long X9_42_DH
+        = Long.valueOf(PKCS11Constants.CKK_X9_42_DH);
 
     /**
      * The identifier for a KEA key.
@@ -172,7 +175,8 @@ public class Key extends Storage {
     /**
      * The identifier for a CAST128 key.
      */
-    public static final Long CAST128 = Long.valueOf(PKCS11Constants.CKK_CAST128);
+    public static final Long CAST128
+        = Long.valueOf(PKCS11Constants.CKK_CAST128);
 
     /**
      * The identifier for a RC5 key.
@@ -187,7 +191,8 @@ public class Key extends Storage {
     /**
      * The identifier for a SKIPJACK key.
      */
-    public static final Long SKIPJACK = Long.valueOf(PKCS11Constants.CKK_SKIPJACK);
+    public static final Long SKIPJACK
+        = Long.valueOf(PKCS11Constants.CKK_SKIPJACK);
 
     /**
      * The identifier for a BATON key.
@@ -197,7 +202,8 @@ public class Key extends Storage {
     /**
      * The identifier for a JUNIPER key.
      */
-    public static final Long JUNIPER = Long.valueOf(PKCS11Constants.CKK_JUNIPER);
+    public static final Long JUNIPER
+        = Long.valueOf(PKCS11Constants.CKK_JUNIPER);
 
     /**
      * The identifier for a CDMF key.
@@ -212,12 +218,14 @@ public class Key extends Storage {
     /**
      * The identifier for a Blowfish key.
      */
-    public static final Long BLOWFISH = Long.valueOf(PKCS11Constants.CKK_BLOWFISH);
+    public static final Long BLOWFISH
+        = Long.valueOf(PKCS11Constants.CKK_BLOWFISH);
 
     /**
      * The identifier for a Twofish key.
      */
-    public static final Long TWOFISH = Long.valueOf(PKCS11Constants.CKK_TWOFISH);
+    public static final Long TWOFISH
+        = Long.valueOf(PKCS11Constants.CKK_TWOFISH);
 
     /**
      * The identifier for a SM2 key.

@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -55,7 +55,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
  * This demo program tries to set a callback Notify handler.
  */
 public class NotifyDemo extends TestBase {
-  
+
   private static class MyNotify implements Notify {
 
     public void notify(Session session, boolean surrender, Object application)
@@ -69,7 +69,7 @@ public class NotifyDemo extends TestBase {
   @Test
   public void main() throws TokenException {
     Token token = getNonNullToken();
-    println("################################################################################");
+    println("##################################################");
     print("trying to set Notify callback handler... ");
 
     Notify callback = new MyNotify();
@@ -78,7 +78,7 @@ public class NotifyDemo extends TestBase {
         Token.SessionReadWriteBehavior.RO_SESSION, applicationData, callback);
 
     println("finished");
-    println("################################################################################");
+    println("##################################################");
   }
 
 }

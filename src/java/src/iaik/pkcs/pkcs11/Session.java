@@ -1688,7 +1688,8 @@ public class Session {
        * to be copied back to get all the results.
        */
       // set the returned client version
-      VersionParameters version = ((SSL3MasterKeyDeriveParameters) params).getVersion();
+      VersionParameters version =
+          ((SSL3MasterKeyDeriveParameters) params).getVersion();
       version.setPKCS11ParamsObject(
           ((CK_SSL3_MASTER_KEY_DERIVE_PARAMS)
               (ckMechanism.pParameter)).pVersion);

@@ -383,7 +383,8 @@ public class Token {
           try {
             notify.notify(newSession, surrender, pApplication);
           } catch (PKCS11Exception ex) {
-            throw new sun.security.pkcs11.wrapper.PKCS11Exception(ex.getErrorCode());
+            throw new sun.security.pkcs11.wrapper.PKCS11Exception(
+                ex.getErrorCode());
           }
         }
       };

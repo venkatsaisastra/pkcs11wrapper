@@ -100,7 +100,8 @@ public class PBEParameters implements Parameters {
    *                and (salt <> null)
    * @postconditions
    */
-  public PBEParameters(char[] iv, char[] password, char[] salt, long iterations) {
+  public PBEParameters(char[] iv, char[] password, char[] salt,
+      long iterations) {
     if ((iv != null) && (iv.length != 8)) {
       throw new IllegalArgumentException(
         "Argument \"iv\" must be null or must have"

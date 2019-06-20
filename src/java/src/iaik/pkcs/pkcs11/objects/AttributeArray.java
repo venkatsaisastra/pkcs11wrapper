@@ -136,7 +136,9 @@ public class AttributeArray extends Attribute {
         attribute.setCkAttribute(attributesArray[i]);
       } else {
         try {
-          attribute = (Attribute) implementation.getDeclaredConstructor(Attribute.class).newInstance();
+          attribute = (Attribute)
+              implementation.getDeclaredConstructor(Attribute.class)
+                  .newInstance();
           attribute.setCkAttribute(attributesArray[i]);
           attribute.setPresent(true);
           template.addAttribute(attribute);

@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -56,7 +56,8 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
- * This demo program generates a 1024 bit RSA key-pair on the token and signs some data with it.
+ * This demo program generates a 1024 bit RSA key-pair on the token and signs
+ * some data with it.
  */
 public class GenerateKeyAndSign extends TestBase {
 
@@ -72,27 +73,30 @@ public class GenerateKeyAndSign extends TestBase {
   }
 
   private void main0(Token token, Session session) throws TokenException {
-    println("################################################################################");
+    println("##################################################");
     int keySize = 1024;
     print("Generating new " + keySize + " bit RSA key-pair... ");
 
     final boolean inToken = false;
-    KeyPair generatedKeyPair = generateRSAKeypair(token, session, keySize, inToken);
-    RSAPublicKey generatedRSAPublicKey = (RSAPublicKey) generatedKeyPair.getPublicKey();
-    RSAPrivateKey generatedRSAPrivateKey = (RSAPrivateKey) generatedKeyPair.getPrivateKey();
+    KeyPair generatedKeyPair =
+        generateRSAKeypair(token, session, keySize, inToken);
+    RSAPublicKey generatedRSAPublicKey =
+        (RSAPublicKey) generatedKeyPair.getPublicKey();
+    RSAPrivateKey generatedRSAPrivateKey =
+        (RSAPrivateKey) generatedKeyPair.getPrivateKey();
     // no we may work with the keys...
 
     println("Success");
     println("The public key is");
-    println("_______________________________________________________________________________");
+    println("__________________________________________________");
     println(generatedRSAPublicKey);
-    println("_______________________________________________________________________________");
+    println("__________________________________________________");
     println("The private key is");
-    println("_______________________________________________________________________________");
+    println("__________________________________________________");
     println(generatedRSAPrivateKey);
-    println("_______________________________________________________________________________");
+    println("__________________________________________________");
 
-    println("################################################################################");
+    println("##################################################");
     print("Signing Data... ");
 
     Mechanism signatureMechanism = Mechanism.get(PKCS11Constants.CKM_RSA_PKCS);
@@ -101,7 +105,7 @@ public class GenerateKeyAndSign extends TestBase {
     byte[] signatureValue = session.sign(dataToBeSigned);
     println("Finished");
     println("Signature Value: " + Functions.toHexString(signatureValue));
-    println("################################################################################");
+    println("##################################################");
   }
 
 }

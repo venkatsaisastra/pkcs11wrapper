@@ -75,7 +75,8 @@ public class Certificate extends Storage {
     /**
      * The identifier for a X.509 public key certificate.
      */
-    public static final Long X_509_PUBLIC_KEY = Long.valueOf(PKCS11Constants.CKC_X_509);
+    public static final Long X_509_PUBLIC_KEY
+        = Long.valueOf(PKCS11Constants.CKC_X_509);
 
     /**
      * The identifier for a X.509 attribute certificate.

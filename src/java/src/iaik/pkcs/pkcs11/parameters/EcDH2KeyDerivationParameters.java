@@ -234,7 +234,8 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
       return false;
     }
 
-    EcDH2KeyDerivationParameters other = (EcDH2KeyDerivationParameters) otherObject;
+    EcDH2KeyDerivationParameters other =
+        (EcDH2KeyDerivationParameters) otherObject;
     return super.equals(other)
         && (this.privateDataLength == other.privateDataLength)
         && this.privateData.equals(other.privateData)

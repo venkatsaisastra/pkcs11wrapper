@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -58,8 +58,8 @@ import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
- * This demo program uses a PKCS#11 module to wrap and unwrap a MAC secret key. The key to be
- * wrapped must be extractable otherwise it can't be wrapped.
+ * This demo program uses a PKCS#11 module to wrap and unwrap a MAC secret key.
+ * The key to be wrapped must be extractable otherwise it can't be wrapped.
  */
 public class WrapUnwrapHmacKey extends TestBase {
 
@@ -75,8 +75,9 @@ public class WrapUnwrapHmacKey extends TestBase {
   }
 
   private void main0(Token token, Session session) throws TokenException {
-    println("################################################################################");
-    ValuedSecretKey secretMACKeyTemplate = ValuedSecretKey.newGenericSecretKey();
+    println("##################################################");
+    ValuedSecretKey secretMACKeyTemplate =
+        ValuedSecretKey.newGenericSecretKey();
     secretMACKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
     secretMACKeyTemplate.getSign().setBooleanValue(Boolean.TRUE);
     secretMACKeyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
@@ -86,11 +87,14 @@ public class WrapUnwrapHmacKey extends TestBase {
 
     ValuedSecretKey hmacKey;
     int keyBytesLen = 32;
-    Mechanism keyMechanism = Mechanism.get(PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN);
+    Mechanism keyMechanism =
+        Mechanism.get(PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN);
     if (Util.supports(token, keyMechanism.getMechanismCode())) {
       println("generate secret MAC key");
-      secretMACKeyTemplate.getValueLen().setLongValue(Long.valueOf(keyBytesLen));
-      hmacKey = (ValuedSecretKey) session.generateKey(keyMechanism, secretMACKeyTemplate);
+      secretMACKeyTemplate.getValueLen().setLongValue(
+          Long.valueOf(keyBytesLen));
+      hmacKey = (ValuedSecretKey) session.generateKey(keyMechanism,
+          secretMACKeyTemplate);
     } else {
       println("import secret MAC key (generation not supported)");
       byte[] keyValue = new byte[keyBytesLen];
@@ -100,10 +104,11 @@ public class WrapUnwrapHmacKey extends TestBase {
       hmacKey = (ValuedSecretKey) session.createObject(secretMACKeyTemplate);
     }
 
-    println("################################################################################");
+    println("##################################################");
 
     // be sure that your token can process the specified mechanism
-    Mechanism signatureMechanism = Mechanism.get(PKCS11Constants.CKM_SHA256_HMAC);
+    Mechanism signatureMechanism = getSupportedMechanism(token,
+        PKCS11Constants.CKM_SHA256_HMAC);
     // initialize for signing
     session.signInit(signatureMechanism, hmacKey);
 
@@ -113,7 +118,7 @@ public class WrapUnwrapHmacKey extends TestBase {
 
     println("The MAC value is: " + new BigInteger(1, macValue).toString(16));
 
-    println("################################################################################");
+    println("##################################################");
 
     println("generate secret wrapping key");
     Mechanism wrapKeyMechanism = Mechanism.get(PKCS11Constants.CKM_AES_KEY_GEN);
@@ -127,8 +132,8 @@ public class WrapUnwrapHmacKey extends TestBase {
     wrapKeyTemplate.getWrap().setBooleanValue(Boolean.TRUE);
     wrapKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
 
-    ValuedSecretKey wrappingKey = (ValuedSecretKey) session.generateKey(wrapKeyMechanism,
-        wrapKeyTemplate);
+    ValuedSecretKey wrappingKey = (ValuedSecretKey) session.generateKey(
+        wrapKeyMechanism, wrapKeyTemplate);
 
     println("wrapping key");
 
@@ -145,7 +150,7 @@ public class WrapUnwrapHmacKey extends TestBase {
     SecretKey unwrappedKey = (SecretKey) session.unwrapKey(wrapMechanism,
         wrappingKey, wrappedKey, keyTemplate);
 
-    println("################################################################################");
+    println("##################################################");
     print("verification of the MAC... ");
 
     // initialize for verification
@@ -154,7 +159,7 @@ public class WrapUnwrapHmacKey extends TestBase {
     session.verify(rawData, macValue); // throws an exception upon
     // unsuccessful verification
 
-    println("################################################################################");
+    println("##################################################");
   }
 
 }

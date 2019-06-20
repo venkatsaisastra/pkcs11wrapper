@@ -81,7 +81,8 @@ public class ECPublicKey extends PublicKey {
   /**
    * Default Constructor with the specification of keyType
    *
-   * @param keyType key type. Valid Values are EC, VENDOR_SM2, EC_EDWARDS and
+   * @param keyType
+   *        key type. Valid Values are EC, VENDOR_SM2, EC_EDWARDS and
    *        EC_MONTGOMERY defined in {@link KeyType}.
    * @preconditions
    * @postconditions

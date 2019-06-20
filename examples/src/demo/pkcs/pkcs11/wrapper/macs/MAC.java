@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -57,7 +57,8 @@ import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
- * This demo program uses a PKCS#11 module to MAC a given file and test if the MAC can be verified.
+ * This demo program uses a PKCS#11 module to MAC a given file and test if the
+ * MAC can be verified.
  */
 public class MAC extends TestBase {
 
@@ -73,46 +74,50 @@ public class MAC extends TestBase {
   }
 
   private void main0(Token token, Session session) throws TokenException {
-    println("################################################################################");
+    println("##################################################");
     println("generate secret MAC key");
 
-    ValuedSecretKey secretMACKeyTemplate = ValuedSecretKey.newGenericSecretKey();
-    secretMACKeyTemplate.getSign().setBooleanValue(Boolean.TRUE);
-    secretMACKeyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
-    secretMACKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
+    ValuedSecretKey macKeyTemplate = ValuedSecretKey.newGenericSecretKey();
+    macKeyTemplate.getSign().setBooleanValue(Boolean.TRUE);
+    macKeyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
+    macKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
 
     ValuedSecretKey secretMACKey;
     int keyBytesLen = 32;
-    Mechanism keyMechanism = Mechanism.get(PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN);
+    Mechanism keyMechanism =
+        Mechanism.get(PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN);
     if (Util.supports(token, keyMechanism.getMechanismCode())) {
       println("generate secret MAC key");
-      secretMACKeyTemplate.getValueLen().setLongValue(Long.valueOf(keyBytesLen));
-      secretMACKey = (ValuedSecretKey) session.generateKey(keyMechanism, secretMACKeyTemplate);
+      macKeyTemplate.getValueLen().setLongValue(Long.valueOf(keyBytesLen));
+      secretMACKey = (ValuedSecretKey)
+          session.generateKey(keyMechanism, macKeyTemplate);
     } else {
       println("import secret MAC key (generation not supported)");
       byte[] keyValue = new byte[keyBytesLen];
       new SecureRandom().nextBytes(keyValue);
-      secretMACKeyTemplate.getValue().setByteArrayValue(keyValue);
+      macKeyTemplate.getValue().setByteArrayValue(keyValue);
 
-      secretMACKey = (ValuedSecretKey) session.createObject(secretMACKeyTemplate);
+      secretMACKey = (ValuedSecretKey) session.createObject(macKeyTemplate);
     }
 
-    println("################################################################################");
-    Mechanism signatureMechanism = getSupportedMechanism(token, PKCS11Constants.CKM_SHA256_HMAC);
+    println("##################################################");
+    Mechanism signatureMechanism = getSupportedMechanism(token,
+        PKCS11Constants.CKM_SHA256_HMAC);
     byte[] rawData = randomBytes(1057);
 
     session.signInit(signatureMechanism, secretMACKey);
     byte[] macValue = session.sign(rawData);
     println("The MAC value is: " + new BigInteger(1, macValue).toString(16));
 
-    println("################################################################################");
+    println("##################################################");
     print("verification of the MAC... ");
 
     // initialize for verification
     session.verifyInit(signatureMechanism, secretMACKey);
-    session.verify(rawData, macValue); // throws an exception upon unsuccessful verification
+    // throws an exception upon unsuccessful verification
+    session.verify(rawData, macValue);
 
-    println("################################################################################");
+    println("##################################################");
   }
 
 }

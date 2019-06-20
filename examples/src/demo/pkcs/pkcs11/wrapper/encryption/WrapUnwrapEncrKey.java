@@ -1,10 +1,10 @@
 // Copyright (c) 2002 Graz University of Technology. All rights reserved.
 //
-// Redistribution and use in source and binary forms, with or without modification,
-// are permitted provided that the following conditions are met:
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// 1. Redistributions of source code must retain the above copyright notice, this
-//    list of conditions and the following disclaimer.
+// 1. Redistributions of source code must retain the above copyright notice,
+//    this list of conditions and the following disclaimer.
 //
 // 2. Redistributions in binary form must reproduce the above copyright notice,
 //    this list of conditions and the following disclaimer in the documentation
@@ -20,8 +20,8 @@
 //    wherever such third-party acknowledgments normally appear.
 //
 // 4. The names "Graz University of Technology" and "IAIK of Graz University of
-//    Technology" must not be used to endorse or promote products derived from this
-//    software without prior written permission.
+//    Technology" must not be used to endorse or promote products derived from
+//    this software without prior written permission.
 //
 // 5. Products derived from this software may not be called "IAIK PKCS Wrapper",
 //    nor may "IAIK" appear in their name, without prior written permission of
@@ -58,12 +58,13 @@ import iaik.pkcs.pkcs11.parameters.InitializationVectorParameters;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
- * This demo program uses a PKCS#11 module to wrap and unwrap a secret key. The key to be wrapped
- * must be extractable otherwise it can't be wrapped.
+ * This demo program uses a PKCS#11 module to wrap and unwrap a secret key.
+ * The key to be wrapped must be extractable otherwise it can't be wrapped.
  */
 public abstract class WrapUnwrapEncrKey extends TestBase {
-  
-  protected abstract Mechanism getSecretKeyMech(Token token) throws TokenException;
+
+  protected abstract Mechanism getSecretKeyMech(Token token)
+      throws TokenException;
 
   @Test
   public void main() throws TokenException {
@@ -77,11 +78,13 @@ public abstract class WrapUnwrapEncrKey extends TestBase {
   }
 
   private void main0(Token token, Session session) throws TokenException {
-    println("################################################################################");
+    println("##################################################");
     println("generate secret encryption/decryption key");
-    Mechanism keyMechanism = getSupportedMechanism(token, PKCS11Constants.CKM_AES_KEY_GEN);
+    Mechanism keyMechanism = getSupportedMechanism(token,
+        PKCS11Constants.CKM_AES_KEY_GEN);
 
-    ValuedSecretKey secretEncryptionKeyTemplate = ValuedSecretKey.newAESSecretKey();
+    ValuedSecretKey secretEncryptionKeyTemplate =
+        ValuedSecretKey.newAESSecretKey();
     secretEncryptionKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
     secretEncryptionKeyTemplate.getValueLen().setLongValue(Long.valueOf(16));
     secretEncryptionKeyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
@@ -90,31 +93,35 @@ public abstract class WrapUnwrapEncrKey extends TestBase {
     secretEncryptionKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
     secretEncryptionKeyTemplate.getExtractable().setBooleanValue(Boolean.TRUE);
 
-    ValuedSecretKey encryptionKey = (ValuedSecretKey) session.generateKey(keyMechanism,
-        secretEncryptionKeyTemplate);
+    ValuedSecretKey encryptionKey = (ValuedSecretKey)
+        session.generateKey(keyMechanism, secretEncryptionKeyTemplate);
 
     byte[] rawData = randomBytes(1517);
 
     // be sure that your token can process the specified mechanism
-    Mechanism encryptionMechanism = getSupportedMechanism(token, PKCS11Constants.CKM_AES_CBC_PAD);
-    Mechanism wrapMechanism = getSupportedMechanism(token, PKCS11Constants.CKM_AES_KEY_WRAP);
+    Mechanism encryptionMechanism = getSupportedMechanism(token,
+        PKCS11Constants.CKM_AES_CBC_PAD);
+    Mechanism wrapMechanism = getSupportedMechanism(token,
+        PKCS11Constants.CKM_AES_KEY_WRAP);
 
-    byte[] encryptInitializationVector = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    InitializationVectorParameters encryptInitializationVectorParameters =
-        new InitializationVectorParameters(encryptInitializationVector);
-    encryptionMechanism.setParameters(encryptInitializationVectorParameters);
+    byte[] encryptIV = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    InitializationVectorParameters encryptIVParameters =
+        new InitializationVectorParameters(encryptIV);
+    encryptionMechanism.setParameters(encryptIVParameters);
 
     // initialize for encryption
     session.encryptInit(encryptionMechanism, encryptionKey);
 
     byte[] buffer = new byte[rawData.length + 64];
-    int cipherLen = session.encrypt(rawData, 0, rawData.length, buffer, 0, buffer.length);
+    int cipherLen = session.encrypt(rawData, 0, rawData.length,
+        buffer, 0, buffer.length);
     byte[] encryptedData = Arrays.copyOf(buffer, cipherLen);
 
-    println("################################################################################");
+    println("##################################################");
     println("generate secret wrapping key");
 
-    Mechanism wrapKeyMechanism = getSupportedMechanism(token, PKCS11Constants.CKM_AES_KEY_GEN);
+    Mechanism wrapKeyMechanism = getSupportedMechanism(token,
+        PKCS11Constants.CKM_AES_KEY_GEN);
     ValuedSecretKey wrapKeyTemplate = ValuedSecretKey.newAESSecretKey();
     wrapKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
     wrapKeyTemplate.getValueLen().setLongValue(Long.valueOf(16));
@@ -125,12 +132,13 @@ public abstract class WrapUnwrapEncrKey extends TestBase {
     wrapKeyTemplate.getExtractable().setBooleanValue(Boolean.TRUE);
     wrapKeyTemplate.getWrap().setBooleanValue(Boolean.TRUE);
 
-    ValuedSecretKey wrappingKey = (ValuedSecretKey) session.generateKey(wrapKeyMechanism,
-        wrapKeyTemplate);
+    ValuedSecretKey wrappingKey = (ValuedSecretKey)
+        session.generateKey(wrapKeyMechanism, wrapKeyTemplate);
 
     println("wrapping key");
 
-    byte[] wrappedKey = session.wrapKey(wrapMechanism, wrappingKey, encryptionKey);
+    byte[] wrappedKey =
+        session.wrapKey(wrapMechanism, wrappingKey, encryptionKey);
     ValuedSecretKey keyTemplate = new ValuedSecretKey(PKCS11Constants.CKK_AES);
     keyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
     keyTemplate.getToken().setBooleanValue(Boolean.FALSE);
@@ -140,25 +148,27 @@ public abstract class WrapUnwrapEncrKey extends TestBase {
     SecretKey unwrappedKey = (SecretKey) session.unwrapKey(wrapMechanism,
         wrappingKey, wrappedKey, keyTemplate);
 
-    println("################################################################################");
+    println("##################################################");
     println("trying to decrypt");
 
-    Mechanism decryptionMechanism = getSupportedMechanism(token, PKCS11Constants.CKM_AES_CBC_PAD);
-    byte[] decryptInitializationVector = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    InitializationVectorParameters decryptInitializationVectorParameters = new InitializationVectorParameters(
-        decryptInitializationVector);
-    decryptionMechanism.setParameters(decryptInitializationVectorParameters);
+    Mechanism decryptionMechanism =
+        getSupportedMechanism(token, PKCS11Constants.CKM_AES_CBC_PAD);
+    byte[] decryptIV = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    InitializationVectorParameters decryptIVParameters =
+        new InitializationVectorParameters(decryptIV);
+    decryptionMechanism.setParameters(decryptIVParameters);
 
     // initialize for decryption
     session.decryptInit(decryptionMechanism, unwrappedKey);
 
-    int decryptLen = session.decrypt(encryptedData, 0, encryptedData.length, buffer, 0, buffer.length);
+    int decryptLen = session.decrypt(encryptedData, 0, encryptedData.length,
+        buffer, 0, buffer.length);
     byte[] decryptedData = Arrays.copyOf(buffer, decryptLen);
     Arrays.fill(buffer, (byte) 0);
 
     Assert.assertArrayEquals(rawData, decryptedData);
 
-    println("################################################################################");
+    println("##################################################");
   }
 
 }

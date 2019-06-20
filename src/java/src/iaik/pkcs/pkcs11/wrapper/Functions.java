@@ -60,8 +60,8 @@ public class Functions implements PKCS11Constants {
 
   private static class Hex {
 
-    private static final char[] DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-        'a', 'b', 'c', 'd', 'e', 'f'};
+    private static final char[] DIGITS = {'0', '1', '2', '3', '4', '5', '6',
+        '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     public static String encode(byte[] bytes) {
       return new String(encodeToChars(bytes));
@@ -993,8 +993,9 @@ public class Functions implements PKCS11Constants {
   }
 
   /**
-   * Converts a byte array to a hexadecimal String. Each byte is presented by its two digit
-   * hex-code; 0x0A -> "0a", 0x00 -> "00". No leading "0x" is included in the result.
+   * Converts a byte array to a hexadecimal String. Each byte is presented by
+   * its two digit hex-code; 0x0A -> "0a", 0x00 -> "00". No leading "0x" is
+   * included in the result.
    *
    * @param value
    *          the byte array to be converted

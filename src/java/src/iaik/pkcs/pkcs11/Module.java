@@ -462,8 +462,8 @@ public class Module {
         Map<String,PKCS11> moduleMap = (Map<String,PKCS11>) field.get(null);
         moduleMap.remove(pkcs11ModuleName);
       } catch (Throwable th) {
-        throw new TokenException(
-            "could not remove module " + pkcs11ModuleName + " from the moduleMap");
+        throw new TokenException("could not remove module " + pkcs11ModuleName
+            + " from the moduleMap");
       }
     }
 
