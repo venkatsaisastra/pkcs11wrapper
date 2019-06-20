@@ -57,8 +57,14 @@ import sun.security.pkcs11.wrapper.CK_INFO;
 import sun.security.pkcs11.wrapper.CK_LOCKMUTEX;
 import sun.security.pkcs11.wrapper.CK_UNLOCKMUTEX;
 import sun.security.pkcs11.wrapper.PKCS11;
-//FIXME: check if pkcs11module is not null.
+
 /**
+ * <B>Caution:
+ * Unlike the original PKCS#11 wrapper, we only call initialize() once per
+ * native .so/.dll. Once finalize(Object) has been called, the module cannot
+ * be initialized anymore.
+ * </B>
+ * <p/>
  * Objects of this class represent a PKCS#11 module. The application should
  * create an instance by calling getInstance and passing the name of the
  * PKCS#11 module of the desired token; e.g. "slbck.dll". The application
@@ -453,20 +459,6 @@ public class Module {
     } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
       throw new PKCS11Exception(ex);
     }
-
-    if (Util.getJavaVersion() < 11) {
-      try {
-        Field field = PKCS11.class.getDeclaredField("moduleMap");
-        field.setAccessible(true);
-        @SuppressWarnings("unchecked")
-        Map<String,PKCS11> moduleMap = (Map<String,PKCS11>) field.get(null);
-        moduleMap.remove(pkcs11ModuleName);
-      } catch (Throwable th) {
-        throw new TokenException("could not remove module " + pkcs11ModuleName
-            + " from the moduleMap");
-      }
-    }
-
   }
 
   /**
