@@ -45,8 +45,6 @@ package iaik.pkcs.pkcs11;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Map;
 
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;

@@ -57,7 +57,12 @@ import sun.security.pkcs11.wrapper.CK_ECDH2_DERIVE_PARAMS;
  * @invariants (privateData <> null)
  *             and (publicData2 <> null)
  */
-public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
+public class EcDH2KeyDerivationParameters extends DHKeyDerivationParameters {
+
+  /**
+   * The data shared between the two parties.
+   */
+  protected byte[] sharedData;
 
   /**
    * The length in bytes of the second EC private key.
@@ -103,7 +108,8 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
   public EcDH2KeyDerivationParameters(long kdf, byte[] sharedData,
       byte[] publicData, long privateDataLength, PKCS11Object privateData,
       byte[] publicData2) {
-    super(kdf, sharedData, publicData);
+    super(kdf, publicData);
+    this.sharedData = sharedData;
     this.privateDataLength = privateDataLength;
     this.privateData = Util.requireNonNull("privateData", privateData);
     this.publicData2 = Util.requireNonNull("publicData2", publicData2);
@@ -129,6 +135,29 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
     params.pPublicData2 = publicData2;
 
     return params;
+  }
+
+  /**
+   * Get the data shared between the two parties.
+   *
+   * @return The data shared between the two parties.
+   * @preconditions
+   * @postconditions
+   */
+  public byte[] getSharedData() {
+    return sharedData;
+  }
+
+  /**
+   * Set the data shared between the two parties.
+   *
+   * @param sharedData
+   *          The data shared between the two parties.
+   * @preconditions (sharedData <> null)
+   * @postconditions
+   */
+  public void setSharedData(byte[] sharedData) {
+    this.sharedData = sharedData;
   }
 
   /**
@@ -210,6 +239,7 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
   public String toString() {
     String upperStr = super.toString();
     return Util.concatObjectsCap(upperStr.length() + 100, upperStr,
+        "\n  Shared Data: ", Util.toHex(sharedData),
         "\n  Private Data Length (dec): ", privateDataLength,
         "\n  Private Data: ", privateData,
         "\n  Public Data 2: ", Util.toHex(publicData2));
@@ -237,6 +267,7 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
     EcDH2KeyDerivationParameters other =
         (EcDH2KeyDerivationParameters) otherObject;
     return super.equals(other)
+        && Arrays.equals(this.sharedData, other.sharedData)
         && (this.privateDataLength == other.privateDataLength)
         && this.privateData.equals(other.privateData)
         && Arrays.equals(this.publicData2, other.publicData2);
@@ -252,8 +283,9 @@ public class EcDH2KeyDerivationParameters extends EcDH1KeyDerivationParameters {
    */
   @Override
   public int hashCode() {
-    return super.hashCode() ^ ((int) privateDataLength)
-        ^ privateData.hashCode() ^ Util.hashCode(publicData2);
+    return super.hashCode() ^ Util.hashCode(sharedData)
+        ^ ((int) privateDataLength) ^ privateData.hashCode()
+        ^ Util.hashCode(publicData2);
   }
 
 }

@@ -58,7 +58,12 @@ import sun.security.pkcs11.wrapper.CK_X9_42_DH2_DERIVE_PARAMS;
  *             and (publicData2 <> null)
  */
 public class X942DH2KeyDerivationParameters
-extends X942DH1KeyDerivationParameters {
+extends DHKeyDerivationParameters {
+
+  /**
+   * The data shared between the two parties.
+   */
+  protected byte[] otherInfo;
 
   /**
    * The length in bytes of the second EC private key.
@@ -107,7 +112,8 @@ extends X942DH1KeyDerivationParameters {
   public X942DH2KeyDerivationParameters(long keyDerivationFunction,
       byte[] sharedData, byte[] publicData, long privateDataLength,
       PKCS11Object privateData, byte[] publicData2) {
-    super(keyDerivationFunction, sharedData, publicData);
+    super(keyDerivationFunction, publicData);
+    this.otherInfo = sharedData;
     this.privateDataLength = privateDataLength;
     this.privateData = Util.requireNonNull("privateData", privateData);
     this.publicData2 = Util.requireNonNull("publicData2", publicData2);
@@ -133,6 +139,29 @@ extends X942DH1KeyDerivationParameters {
     params.pPublicData2 = publicData2;
 
     return params;
+  }
+
+  /**
+   * Get the data shared between the two parties.
+   *
+   * @return The data shared between the two parties.
+   * @preconditions
+   * @postconditions
+   */
+  public byte[] getOtherInfo() {
+    return otherInfo;
+  }
+
+  /**
+   * Set the data shared between the two parties.
+   *
+   * @param otherInfo
+   *          The data shared between the two parties.
+   * @preconditions (otherInfo <> null)
+   * @postconditions
+   */
+  public void setOtherInfo(byte[] otherInfo) {
+    this.otherInfo = otherInfo;
   }
 
   /**
@@ -213,6 +242,7 @@ extends X942DH1KeyDerivationParameters {
   @Override
   public String toString() {
     return Util.concatObjects(super.toString(),
+        "\n  Other Info: ", Util.toHex(otherInfo),
         "\n  Private Data Length (dec): ", privateDataLength,
         "\n  Private Data: ", privateData,
         "\n  Public Data 2: ", Util.toHex(publicData2));
@@ -240,6 +270,7 @@ extends X942DH1KeyDerivationParameters {
     X942DH2KeyDerivationParameters other
         = (X942DH2KeyDerivationParameters) otherObject;
     return super.equals(other)
+        && Arrays.equals(this.otherInfo, other.otherInfo)
         && (this.privateDataLength == other.privateDataLength)
         && this.privateData.equals(other.privateData)
         && Arrays.equals(this.publicData2, other.publicData2);
@@ -255,8 +286,9 @@ extends X942DH1KeyDerivationParameters {
    */
   @Override
   public int hashCode() {
-    return super.hashCode() ^ ((int) privateDataLength)
-        ^ privateData.hashCode() ^ Util.hashCode(publicData2);
+    return super.hashCode() ^ Util.hashCode(otherInfo)
+        ^ ((int) privateDataLength) ^ privateData.hashCode()
+        ^ Util.hashCode(publicData2);
   }
 
 }
