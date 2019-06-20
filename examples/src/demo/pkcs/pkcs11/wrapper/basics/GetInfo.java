@@ -42,15 +42,13 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 
-import iaik.pkcs.pkcs11.DefaultInitializeArgs;
+import org.junit.Test;
+
+import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Info;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.MechanismInfo;
@@ -73,234 +71,138 @@ import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
  * the program will list only public objects but no private objects; i.e. as defined in PKCS#11 for
  * public read-only sessions.
  */
-public class GetInfo {
+public class GetInfo extends TestBase {
 
-  static PrintWriter output_;
-
-  static BufferedReader input_;
-
-  static {
-    try {
-      // output_ = new PrintWriter(new FileWriter("GetInfo_output.txt"), true);
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
-    } catch (Throwable thr) {
-      thr.printStackTrace();
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
-    }
-  }
-
-  public static void main(String[] args) throws IOException, TokenException {
-    if ((args.length < 1)) {
-      printUsage();
-      throw new IOException("Missing argument!");
-    }
-
-    output_
-        .println("################################################################################");
-    output_.println("load and initialize module: " + args[0]);
-    output_.flush();
-
-    Module pkcs11Module = Module.getInstance(args[0]);
-
-    if (3 < args.length) {
-      DefaultInitializeArgs arguments = new DefaultInitializeArgs();
-      byte[] stringBytes = args[3].getBytes();
-      byte[] reservedBytes = new byte[stringBytes.length + 5];
-      System.arraycopy(stringBytes, 0, reservedBytes, 0, stringBytes.length);
-      arguments.setReserved(reservedBytes);
-      pkcs11Module.initialize(arguments);
-    } else {
-      pkcs11Module.initialize(null);
-    }
-
+  @Test
+  public void main() throws TokenException {
+    println("################################################################################");
+    Module pkcs11Module = getModule();
     Info info = pkcs11Module.getInfo();
-    output_.println(info);
-    output_
-        .println("################################################################################");
-
-    output_
-        .println("################################################################################");
-    output_.println("getting list of all slots");
+    println(info);
+    println("################################################################################");
+    println("getting list of all slots");
     Slot[] slots = pkcs11Module.getSlotList(Module.SlotRequirement.ALL_SLOTS);
 
     for (int i = 0; i < slots.length; i++) {
-      output_
-          .println("________________________________________________________________________________");
+      println("________________________________________________________________________________");
       SlotInfo slotInfo = slots[i].getSlotInfo();
-      output_.print("Slot with ID: ");
-      output_.println(slots[i].getSlotID());
-      output_
-          .println("--------------------------------------------------------------------------------");
-      output_.println(slotInfo);
-      output_
-          .println("________________________________________________________________________________");
+      print("Slot with ID: ");
+      println(slots[i].getSlotID());
+      println("--------------------------------------------------------------------------------");
+      println(slotInfo);
+      println("________________________________________________________________________________");
     }
-    output_
-        .println("################################################################################");
-
-    output_
-        .println("################################################################################");
-    output_.println("getting list of all tokens");
+    
+    println("################################################################################");
+    println("getting list of all tokens");
     Slot[] slotsWithToken = pkcs11Module
         .getSlotList(Module.SlotRequirement.TOKEN_PRESENT);
     Token[] tokens = new Token[slotsWithToken.length];
 
     for (int i = 0; i < slotsWithToken.length; i++) {
-      output_
-          .println("________________________________________________________________________________");
+      println("________________________________________________________________________________");
       tokens[i] = slotsWithToken[i].getToken();
       TokenInfo tokenInfo = tokens[i].getTokenInfo();
-      output_.print("Token in slot with ID: ");
-      output_.println(tokens[i].getSlot().getSlotID());
-      output_
-          .println("--------------------------------------------------------------------------------");
-      output_.println(tokenInfo);
+      print("Token in slot with ID: ");
+      println(tokens[i].getSlot().getSlotID());
+      println("--------------------------------------------------------------------------------");
+      println(tokenInfo);
 
-      output_.println("supported Mechanisms:");
+      println("supported Mechanisms:");
       Mechanism[] supportedMechanisms = tokens[i].getMechanismList();
       for (int j = 0; j < supportedMechanisms.length; j++) {
-        output_
-            .println("--------------------------------------------------------------------------------");
-        output_.println("Mechanism Name: " + supportedMechanisms[j].getName());
+        println("--------------------------------------------------------------------------------");
+        println("Mechanism Name: " + supportedMechanisms[j].getName());
         MechanismInfo mechanismInfo = tokens[i].getMechanismInfo(supportedMechanisms[j]);
-        output_.println(mechanismInfo);
-        output_
-            .println("--------------------------------------------------------------------------------");
+        println(mechanismInfo);
+        println("--------------------------------------------------------------------------------");
       }
-      output_
-          .println("________________________________________________________________________________");
+      println("________________________________________________________________________________");
     }
-    output_
-        .println("################################################################################");
+    println("################################################################################");
 
-    output_
-        .println("################################################################################");
-    output_.println("listing objects on tokens");
+    println("################################################################################");
+    println("listing objects on tokens");
     for (int i = 0; i < tokens.length; i++) {
-      output_
-          .println("________________________________________________________________________________");
-      output_.println("listing objects for token: ");
+      println("________________________________________________________________________________");
+      println("listing objects for token: ");
       TokenInfo tokenInfo = tokens[i].getTokenInfo();
-      output_.println(tokenInfo);
-      Session session = tokens[i].openSession(Token.SessionType.SERIAL_SESSION,
-          Token.SessionReadWriteBehavior.RO_SESSION, null, null);
-
-      if (tokenInfo.isLoginRequired()) {
-        if (tokenInfo.isProtectedAuthenticationPath()) {
-          session.login(Session.UserType.USER, null); // the token prompts the PIN by other means;
-                                                      // e.g. PIN-pad
-        } else {
-          output_.print("Enter user-PIN or press [return] to list just public objects: ");
-          output_.flush();
-          String userPINString;
-          if (1 < args.length) {
-            userPINString = args[1];
-            output_.println(args[1]);
-          } else
-            userPINString = input_.readLine();
-
-          output_.println();
-          output_.print("listing all" + ((userPINString.length() > 0) ? "" : " public")
-              + " objects on token");
-          if (userPINString.length() > 0) {
-            // login user
-            session.login(Session.UserType.USER, userPINString.toCharArray());
-          }
-        }
+      println(tokenInfo);
+      if (!tokenInfo.isTokenInitialized()) {
+        println("token not initialized yet");
+        continue;
       }
-      SessionInfo sessionInfo = session.getSessionInfo();
-      output_.println(" using session:");
-      output_.println(sessionInfo);
 
-      int limit = 0, counter = 0;
-      if (2 < args.length)
-        limit = Integer.parseInt(args[2]);
-
-      session.findObjectsInit(null);
-      PKCS11Object[] objects = session.findObjects(1);
-      if (0 < objects.length)
-        counter++;
-
-      CertificateFactory x509CertificateFactory = null;
-      while (objects.length > 0 && (0 == limit || counter < limit)) {
-        PKCS11Object object = objects[0];
-        output_
-            .println("--------------------------------------------------------------------------------");
-        output_.println("Object with handle: " + objects[0].getObjectHandle());
-        output_.println(object);
-        if (object instanceof X509PublicKeyCertificate) {
-          try {
-            byte[] encodedCertificate = ((X509PublicKeyCertificate) object).getValue()
-                .getByteArrayValue();
-            if (x509CertificateFactory == null) {
-              x509CertificateFactory = CertificateFactory.getInstance("X.509");
-            }
-            Certificate certificate = x509CertificateFactory
-                .generateCertificate(new ByteArrayInputStream(encodedCertificate));
-            output_
-                .println("................................................................................");
-            output_.println("The decoded X509PublicKeyCertificate is:");
-            output_.println(certificate.toString());
-            output_
-                .println("................................................................................");
-          } catch (Exception ex) {
-            output_
-                .println("Could not decode this X509PublicKeyCertificate. Exception is: "
-                    + ex.toString());
-          }
-        } else if (object instanceof X509AttributeCertificate) {
-          try {
-            byte[] encodedCertificate = ((X509AttributeCertificate) object).getValue()
-                .getByteArrayValue();
-            if (x509CertificateFactory == null) {
-              x509CertificateFactory = CertificateFactory.getInstance("X.509");
-            }
-            Certificate certificate = x509CertificateFactory
-                .generateCertificate(new ByteArrayInputStream(encodedCertificate));
-            output_
-                .println("................................................................................");
-            output_.println("The decoded X509AttributeCertificate is:");
-            output_.println(certificate.toString());
-            output_
-                .println("................................................................................");
-          } catch (Exception ex) {
-            output_
-                .println("Could not decode this X509AttributeCertificate. Exception is: "
-                    + ex.toString());
-          }
-        }
-        output_
-            .println("--------------------------------------------------------------------------------");
-        objects = session.findObjects(1);
-        counter++;
+      Session session = openReadOnlySession(tokens[i]);
+      try {
+        main0(session);
+      } finally {
+        session.closeSession();
       }
-      session.findObjectsFinal();
-      session.closeSession();
-
-      output_
-          .println("________________________________________________________________________________");
-      if (2 < args.length && !"0".equals(args[2]))
-        output_.println("output limited to list a maximum of " + args[2]
-            + " objects. There might be more!");
-      else
-        output_.println("found " + counter + " objects on this token");
-      output_
-          .println("________________________________________________________________________________");
     }
-
-    output_
-        .println("################################################################################");
-    pkcs11Module.finalize(null);
   }
 
-  protected static void printUsage() {
-    output_
-        .println("GetInfo <PKCS#11 module name> [<pin>] [<0...all, >0 limit>] [<initialization parameters>]");
-    output_.println("e.g.: GetInfo aetpkss1.dll");
-    output_
-        .println("      GetInfo aetpkss1.dll C:\\provider\\lib\\win32\\pkcs11wrapper.dll");
-  }
+  private void main0(Session session) throws TokenException {
+    SessionInfo sessionInfo = session.getSessionInfo();
+    println(" using session:");
+    println(sessionInfo);
 
+    int limit = 0, counter = 0;
+
+    session.findObjectsInit(null);
+    PKCS11Object[] objects = session.findObjects(1);
+    if (0 < objects.length)
+      counter++;
+
+    CertificateFactory x509CertificateFactory = null;
+    while (objects.length > 0 && (0 == limit || counter < limit)) {
+      PKCS11Object object = objects[0];
+      println("--------------------------------------------------------------------------------");
+      println("Object with handle: " + objects[0].getObjectHandle());
+      println(object);
+      if (object instanceof X509PublicKeyCertificate) {
+        try {
+          byte[] encodedCertificate = ((X509PublicKeyCertificate) object).getValue()
+              .getByteArrayValue();
+          if (x509CertificateFactory == null) {
+            x509CertificateFactory = CertificateFactory.getInstance("X.509");
+          }
+          Certificate certificate = x509CertificateFactory
+              .generateCertificate(new ByteArrayInputStream(encodedCertificate));
+          println("................................................................................");
+          println("The decoded X509PublicKeyCertificate is:");
+          println(certificate.toString());
+          println("................................................................................");
+        } catch (Exception ex) {
+          println("Could not decode this X509PublicKeyCertificate. Exception is: "
+                  + ex.toString());
+        }
+      } else if (object instanceof X509AttributeCertificate) {
+        try {
+          byte[] encodedCertificate = ((X509AttributeCertificate) object).getValue()
+              .getByteArrayValue();
+          if (x509CertificateFactory == null) {
+            x509CertificateFactory = CertificateFactory.getInstance("X.509");
+          }
+          Certificate certificate = x509CertificateFactory
+              .generateCertificate(new ByteArrayInputStream(encodedCertificate));
+          println("................................................................................");
+          println("The decoded X509AttributeCertificate is:");
+          println(certificate.toString());
+          println("................................................................................");
+        } catch (Exception ex) {
+          println("Could not decode this X509AttributeCertificate. Exception is: "
+                  + ex.toString());
+        }
+      }
+      println("--------------------------------------------------------------------------------");
+      objects = session.findObjects(1);
+      counter++;
+    }
+    session.findObjectsFinal();
+    
+    println("________________________________________________________________________________");
+    println("found " + counter + " objects on this token");
+    println("________________________________________________________________________________");
+  }
 }

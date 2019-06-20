@@ -42,19 +42,13 @@
 
 package demo.pkcs.pkcs11.wrapper.keygeneration;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.List;
+import org.junit.Test;
 
-import demo.pkcs.pkcs11.wrapper.util.Util;
+import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenInfo;
+import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.SecretKey;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
@@ -62,87 +56,46 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 /**
  * This demo program shows how to derive a DES3 key.
  */
-public class DeriveKeyDemo {
+public class DeriveKeyDemo extends TestBase {
 
-  static BufferedReader input_;
-  static PrintWriter output_;
-
-  static {
+  @Test
+  public void main() throws Exception {
+    Token token = getNonNullToken();
+    Session session = openReadWriteSession(token);
     try {
-      // output_ = new PrintWriter(new FileWriter("SignAndVerify_output.txt"), true);
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
-    } catch (Throwable thr) {
-      thr.printStackTrace();
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
+      main0(token, session);
+    } finally {
+      session.closeSession();
     }
   }
 
-  /**
-   * Usage: DeriveKeyDemo PKCS#11-module [slot-id] [pin]
-   */
-  public static void main(String[] args) throws Exception {
-    if (args.length < 1) {
-      printUsage();
-      throw new IOException("Missing argument!");
-    }
-
-    Module pkcs11Module = Module.getInstance(args[0]);
-    pkcs11Module.initialize(null);
-
-    Token token;
-    if (1 < args.length)
-      token = Util.selectToken(pkcs11Module, output_, input_, args[1]);
-    else
-      token = Util.selectToken(pkcs11Module, output_, input_);
-    TokenInfo tokenInfo = token.getTokenInfo();
-
-    output_
-        .println("################################################################################");
-    output_.println("Using token:");
-    output_.println(tokenInfo);
-    output_
-        .println("################################################################################");
-
-    Session session;
-    if (2 < args.length)
-      session = Util.openAuthorizedSession(token,
-          Token.SessionReadWriteBehavior.RW_SESSION, output_, input_, args[2]);
-    else
-      session = Util.openAuthorizedSession(token,
-          Token.SessionReadWriteBehavior.RW_SESSION, output_, input_, null);
-
-    Mechanism keyGenerationMechanism = Mechanism.get(PKCS11Constants.CKM_DES3_KEY_GEN);
-
-    List<Mechanism> supportedMechanisms = Arrays.asList(token.getMechanismList());
-    if (!supportedMechanisms.contains(Mechanism.get(PKCS11Constants.CKM_DES3_KEY_GEN))) {
-      output_.println("Mechanism not supported: DES3_KEY_GEN");
-      return;
-    }
+  private void main0(Token token, Session session) throws TokenException {
+    Mechanism keyGenerationMechanism = getSupportedMechanism(token, PKCS11Constants.CKM_DES3_KEY_GEN);
 
     ValuedSecretKey baseKeyTemplate = ValuedSecretKey.newDES3SecretKey();
 
+    baseKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
     baseKeyTemplate.getDerive().setBooleanValue(Boolean.TRUE);
     // we only have a read-only session, thus we only create a session object
     baseKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
     baseKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
     baseKeyTemplate.getExtractable().setBooleanValue(Boolean.TRUE);
+
     SecretKey baseKey = (SecretKey) session.generateKey(keyGenerationMechanism,
         baseKeyTemplate);
 
     System.out.println("Base key: ");
     System.out.println(baseKey.toString());
 
-    /* TODO: uncomment me if supported by the underlying PKCS11Wrapper 
-    output_
-        .println("################################################################################");
-    output_.println("derive key");
+    /* TODO: uncomment me if supported by the underlying Sun's PKCS11Wrapper
+    println("################################################################################");
+    println("derive key");
 
     // DES3 Key Template
     ValuedSecretKey derived3DESKeyTemplate = ValuedSecretKey.newDES3SecretKey();
     SecretKey derivedKeyTemplate = derived3DESKeyTemplate;
 
+    derivedKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
     derivedKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
     derivedKeyTemplate.getExtractable().setBooleanValue(Boolean.TRUE);
 
@@ -150,44 +103,22 @@ public class DeriveKeyDemo {
     byte[] data = new byte[24];
 
     DesCbcEncryptDataParameters param = new DesCbcEncryptDataParameters(iv, data);
-    Mechanism mechanism = Mechanism.get(PKCS11Constants.CKM_DES3_CBC_ENCRYPT_DATA);
-
-    if (!supportedMechanisms.contains(Mechanism
-        .get(PKCS11Constants.CKM_DES3_CBC_ENCRYPT_DATA))) {
-      output_.println("Mechanism not supported: DES3_CBC_ENCRYPT_DATA");
-      return;
-    }
-
+    Mechanism mechanism = getSupportedMechanism(token, PKCS11Constants.CKM_DES3_CBC_ENCRYPT_DATA);
     mechanism.setParameters(param);
 
     System.out.println("Derivation Mechanism: ");
-    output_.println(mechanism.toString());
-    output_
-        .println("--------------------------------------------------------------------------------");
+    println(mechanism.toString());
+    println("--------------------------------------------------------------------------------");
 
-    Key derivedKey = session.deriveKey(mechanism, baseKey, derivedKeyTemplate);
+    iaik.pkcs.pkcs11.objects.Key derivedKey = session.deriveKey(mechanism, baseKey, derivedKeyTemplate);
 
     if (derivedKey == null) {
-      output_.println("Found NO key that can be used for encryption.");
-      output_.flush();
+      println("Found NO key that can be used for encryption.");
       throw new TokenException("Found no encryption key!");
     }
     System.out.println("Derived key: ");
-    output_.println(derivedKey.toString());
-
-    output_
-        .println("################################################################################");
-    output_.println("finished");
+    println(derivedKey.toString());
     */
-
-    session.closeSession();
-    pkcs11Module.finalize(null);
-  }
-
-  public static void printUsage() {
-    output_.println("Usage: DeriveKeyDemo <PKCS#11 module> [<slot-id>] [<pin>]");
-    output_.println(" e.g.: DeriveKeyDemo cryptoki.dll");
-    output_.println("The given DLL must be in the search path of the system.");
   }
 
 }

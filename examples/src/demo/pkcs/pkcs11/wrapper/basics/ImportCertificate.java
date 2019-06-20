@@ -42,27 +42,26 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.DSAParams;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.crypto.spec.DHParameterSpec;
 import javax.security.auth.x500.X500Principal;
 
+import org.junit.Test;
+
+import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
-import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
@@ -77,88 +76,46 @@ import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
 /**
  * This demo program imports a given X.509 certificate onto a PKCS#11 token.
  */
-public class ImportCertificate {
+public class ImportCertificate extends TestBase {
 
-  static BufferedReader input_;
+  private static final String resourceFile = "/demo_cert.der";
 
-  static PrintWriter output_;
-
-  static {
-    try {
-      // output_ = new PrintWriter(new FileWriter("SignAndVerify_output.txt"), true);
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
-    } catch (Throwable thr) {
-      thr.printStackTrace();
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
-    }
-  }
-
-  /**
-   * Usage: ImportCertificate PKCS#11-module DER-encoded-X.509-certificate [slot-id] [pin]
-   */
-  public static void main(String[] args) throws IOException, TokenException,
-      CertificateException, NoSuchProviderException, NoSuchAlgorithmException {
-    if (args.length < 2) {
-      printUsage();
-      throw new IOException("Missing argument!");
-    }
-
-    Module pkcs11Module = Module.getInstance(args[0]);
-    pkcs11Module.initialize(null);
-
-    Token token;
-    if (2 < args.length)
-      token = Util.selectToken(pkcs11Module, output_, input_, args[2]);
-    else
-      token = Util.selectToken(pkcs11Module, output_, input_);
-    if (token == null) {
-      output_.println("We have no token to proceed. Finished.");
-      output_.flush();
-      throw new TokenException("No token found!");
-    }
+  @Test
+  public void main() throws TokenException, CertificateException, NoSuchAlgorithmException {
+    Token token = getNonNullToken();
     TokenInfo tokenInfo = token.getTokenInfo();
 
-    output_
-        .println("################################################################################");
-    output_.println("Information of Token:");
-    output_.println(tokenInfo);
-    output_
-        .println("################################################################################");
-
-    output_
-        .println("################################################################################");
-    output_.println("Reading certificate from file: " + args[1]);
-
-    Session session;
-    if (3 < args.length)
-      session = Util.openAuthorizedSession(token,
-          Token.SessionReadWriteBehavior.RW_SESSION, output_, input_, args[3]);
-    else
-      session = Util.openAuthorizedSession(token,
-          Token.SessionReadWriteBehavior.RW_SESSION, output_, input_, null);
+    println("################################################################################");
+    println("Information of Token:");
+    println(tokenInfo);
+    println("################################################################################");
+    
+    Session session = openReadWriteSession(token);
+    try {
+      main0(session);
+    } finally {
+      session.closeSession();
+    }
+  }
+  
+  private void main0(Session session)
+      throws TokenException, CertificateException, NoSuchAlgorithmException {
+    println("Reading certificate from resource file: " + resourceFile);
 
     // parse certificate
-    CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509",
-        "IAIK");
-    FileInputStream fileInputStream = new FileInputStream(args[1]);
+    CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+    InputStream inputStream = getResourceAsStream(resourceFile);
     Collection<? extends Certificate> certificateChain = certificateFactory
-        .generateCertificates(fileInputStream);
+        .generateCertificates(inputStream);
     if (certificateChain.size() < 1) {
-      output_.println("Did not find any certificate in the given input file. Finished.");
-      output_.flush();
+      println("Did not find any certificate in the given input file. Finished.");
       throw new CertificateException("No certificate found!");
     }
     X509Certificate x509Certificate = (X509Certificate) certificateChain.iterator().next();
     certificateChain.remove(x509Certificate);
 
-    output_
-        .println("################################################################################");
-
-    output_
-        .println("################################################################################");
-    output_.println("Searching for corresponding private key on token.");
+    println("################################################################################");
+    println("Searching for corresponding private key on token.");
 
     PublicKey publicKey = x509Certificate.getPublicKey();
 
@@ -200,99 +157,92 @@ public class ImportCertificate {
       if (foundKeyObjects.length > 0) {
         Key foundKey = (Key) foundKeyObjects[0];
         objectID = foundKey.getId().getByteArrayValue();
-        output_.println("found a correponding key on the token: ");
-        output_.println(foundKey);
+        println("found a correponding key on the token: ");
+        println(foundKey);
       } else {
-        output_.println("found no correponding key on the token.");
+        println("found no correponding key on the token.");
       }
       session.findObjectsFinal();
     } else {
-      output_.println("public key is neither RSA, DSA nor DH.");
+      println("public key is neither RSA, DSA nor DH.");
     }
 
-    output_
-        .println("################################################################################");
-
-    output_
-        .println("################################################################################");
-    output_.println("Create certificate object(s) on token.");
+    println("################################################################################");
+    println("Create certificate object(s) on token.");
 
     X509Certificate currentCertificate = x509Certificate; // start with user cert
     boolean importedCompleteChain = false;
-    while (!importedCompleteChain) {
-      // create certificate object template
-      X509PublicKeyCertificate pkcs11X509PublicKeyCertificate = new X509PublicKeyCertificate();
-      X500Principal subjectName = currentCertificate.getSubjectX500Principal();
-      X500Principal issuerName = currentCertificate.getIssuerX500Principal();
-      byte[] encodedSubject = subjectName.getEncoded();
-      byte[] encodedIssuer = issuerName.getEncoded();
-
-      String subjectCommonName = Util.getCommontName(subjectName);
-      String issuerCommonName = Util.getCommontName(issuerName);
-      char[] label = (subjectCommonName + "'s "
-          + ((issuerCommonName != null) ? issuerCommonName + " " : "") + "Certificate")
-          .toCharArray();
-      byte[] newObjectID;
-      // if we need a new object ID, create one
-      if (objectID == null) {
-        MessageDigest digest = MessageDigest.getInstance("SHA-1");
-
-        if (publicKey instanceof java.security.interfaces.RSAPublicKey) {
-          newObjectID = ((java.security.interfaces.RSAPublicKey) publicKey).getModulus()
-              .toByteArray();
-          newObjectID = digest.digest(newObjectID);
-        } else if (publicKey instanceof java.security.interfaces.DSAPublicKey) {
-          newObjectID = ((java.security.interfaces.DSAPublicKey) publicKey).getY()
-              .toByteArray();
-          newObjectID = digest.digest(newObjectID);
+    
+    List<PKCS11Object> importedObjects = new ArrayList<>();
+    
+    try {
+      while (!importedCompleteChain) {
+        // create certificate object template
+        X509PublicKeyCertificate pkcs11X509PublicKeyCertificate = new X509PublicKeyCertificate();
+        X500Principal subjectName = currentCertificate.getSubjectX500Principal();
+        X500Principal issuerName = currentCertificate.getIssuerX500Principal();
+        byte[] encodedSubject = subjectName.getEncoded();
+        byte[] encodedIssuer = issuerName.getEncoded();
+  
+        String subjectCommonName = Util.getCommontName(subjectName);
+        String issuerCommonName = Util.getCommontName(issuerName);
+        char[] label = (subjectCommonName + "'s "
+            + ((issuerCommonName != null) ? issuerCommonName + " " : "") + "Certificate")
+            .toCharArray();
+        byte[] newObjectID;
+        // if we need a new object ID, create one
+        if (objectID == null) {
+          MessageDigest digest = MessageDigest.getInstance("SHA-1");
+  
+          if (publicKey instanceof java.security.interfaces.RSAPublicKey) {
+            newObjectID = ((java.security.interfaces.RSAPublicKey) publicKey).getModulus()
+                .toByteArray();
+            newObjectID = digest.digest(newObjectID);
+          } else if (publicKey instanceof java.security.interfaces.DSAPublicKey) {
+            newObjectID = ((java.security.interfaces.DSAPublicKey) publicKey).getY()
+                .toByteArray();
+            newObjectID = digest.digest(newObjectID);
+          } else {
+            byte[] encodedCert = currentCertificate.getEncoded();
+            newObjectID = digest.digest(encodedCert);
+          }
         } else {
-          byte[] encodedCert = currentCertificate.getEncoded();
-          newObjectID = digest.digest(encodedCert);
+          // we already got one from a corresponding private key before
+          newObjectID = objectID;
         }
-      } else {
-        // we already got one from a corresponding private key before
-        newObjectID = objectID;
+  
+        byte[] encodedAsn1serialNumber = Util.encodedAsn1Integer(currentCertificate.getSerialNumber());
+  
+        pkcs11X509PublicKeyCertificate.getToken().setBooleanValue(Boolean.TRUE);
+        pkcs11X509PublicKeyCertificate.getPrivate().setBooleanValue(Boolean.FALSE);
+        pkcs11X509PublicKeyCertificate.getLabel().setCharArrayValue(label);
+        pkcs11X509PublicKeyCertificate.getId().setByteArrayValue(newObjectID);
+        pkcs11X509PublicKeyCertificate.getSubject().setByteArrayValue(encodedSubject);
+        pkcs11X509PublicKeyCertificate.getIssuer().setByteArrayValue(encodedIssuer);
+        pkcs11X509PublicKeyCertificate.getSerialNumber().setByteArrayValue(encodedAsn1serialNumber);
+        pkcs11X509PublicKeyCertificate.getValue().setByteArrayValue(
+            currentCertificate.getEncoded());
+  
+        println(pkcs11X509PublicKeyCertificate);
+        println("________________________________________________________________________________");
+        importedObjects.add(session.createObject(pkcs11X509PublicKeyCertificate));
+        
+        if (certificateChain.size() > 0) {
+          currentCertificate = (X509Certificate) certificateChain.iterator().next();
+          certificateChain.remove(currentCertificate);
+          objectID = null; // do not use the same ID for other certificates
+        } else {
+          importedCompleteChain = true;
+        }
       }
-
-      byte[] encodedAsn1serialNumber = Util.encodedAsn1Integer(currentCertificate.getSerialNumber());
-
-      pkcs11X509PublicKeyCertificate.getToken().setBooleanValue(Boolean.TRUE);
-      pkcs11X509PublicKeyCertificate.getPrivate().setBooleanValue(Boolean.FALSE);
-      pkcs11X509PublicKeyCertificate.getLabel().setCharArrayValue(label);
-      pkcs11X509PublicKeyCertificate.getId().setByteArrayValue(newObjectID);
-      pkcs11X509PublicKeyCertificate.getSubject().setByteArrayValue(encodedSubject);
-      pkcs11X509PublicKeyCertificate.getIssuer().setByteArrayValue(encodedIssuer);
-      pkcs11X509PublicKeyCertificate.getSerialNumber().setByteArrayValue(encodedAsn1serialNumber);
-      pkcs11X509PublicKeyCertificate.getValue().setByteArrayValue(
-          currentCertificate.getEncoded());
-
-      output_.println(pkcs11X509PublicKeyCertificate);
-      output_
-          .println("________________________________________________________________________________");
-      session.createObject(pkcs11X509PublicKeyCertificate);
-
-      if (certificateChain.size() > 0) {
-        currentCertificate = (X509Certificate) certificateChain.iterator().next();
-        certificateChain.remove(currentCertificate);
-        objectID = null; // do not use the same ID for other certificates
-      } else {
-        importedCompleteChain = true;
+    } finally {
+      // delete the objects just created
+      for (PKCS11Object obj : importedObjects) {
+        session.destroyObject(obj);
       }
     }
 
-    output_
-        .println("################################################################################");
-
-    session.closeSession();
-    pkcs11Module.finalize(null);
-  }
-
-  public static void printUsage() {
-    output_
-        .println("Usage: ImportCertificate <PKCS#11 module> "
-            + "<DER encoded X.509 certificate, certificate chain, or PKCS#7 certificate chain> [<slot-id>] [<pin>]");
-    output_.println(" e.g.: ImportCertificate pk2priv.dll myCertificate.der");
-    output_.println("The given DLL must be in the search path of the system.");
+    println("################################################################################");
   }
 
 }

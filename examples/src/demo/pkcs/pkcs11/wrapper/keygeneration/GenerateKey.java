@@ -42,119 +42,48 @@
 
 package demo.pkcs.pkcs11.wrapper.keygeneration;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.List;
+import org.junit.Test;
 
+import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Slot;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.TokenInfo;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
  * This demo program shows how to generate secret keys.
  */
-public class GenerateKey {
+public class GenerateKey extends TestBase {
 
-  static PrintWriter output_;
-
-  static BufferedReader input_;
-
-  static {
+  @Test
+  public void main() throws TokenException {
+    Token token = getNonNullToken();
+    Session session = openReadWriteSession(token);
     try {
-      // output_ = new PrintWriter(new FileWriter("GetInfo_output.txt"), true);
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
-    } catch (Throwable thr) {
-      thr.printStackTrace();
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
+      main0(token, session);
+    } finally {
+      session.closeSession();
     }
   }
 
-  /**
-   * GenerateKey PKCS#11-module [slot-index] [user-PIN]
-   */
-  public static void main(String[] args) throws IOException, TokenException {
-    if ((args.length < 1)) {
-      printUsage();
-      throw new IOException("Missing argument!");
-    }
+  private void main0(Token token, Session session) throws TokenException {
+    Mechanism mech = getSupportedMechanism(token, PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN);
+    println("################################################################################");
+    println("Generating generic secret key");
 
-    Module pkcs11Module = Module.getInstance(args[0]);
-    pkcs11Module.initialize(null);
+    ValuedSecretKey secretKeyTemplate = ValuedSecretKey.newGenericSecretKey();
+    secretKeyTemplate.getValueLen().setLongValue(new Long(16));
+    secretKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
 
-    Slot[] slots = pkcs11Module.getSlotList(Module.SlotRequirement.TOKEN_PRESENT);
+    ValuedSecretKey secretKey = (ValuedSecretKey) session.generateKey(
+        mech, secretKeyTemplate);
 
-    if (slots.length == 0) {
-      output_.println("No slot with present token found!");
-      throw new TokenException("No token found!");
-    }
+    println("the secret key is");
+    println(secretKey.toString());
 
-    Slot selectedSlot;
-    if (1 < args.length)
-      selectedSlot = slots[Integer.parseInt(args[1])];
-    else
-      selectedSlot = slots[0];
-
-    Token token = selectedSlot.getToken();
-    TokenInfo tokenInfo = token.getTokenInfo();
-
-    output_
-        .println("################################################################################");
-    output_.println("Information of Token:");
-    output_.println(tokenInfo);
-    output_
-        .println("################################################################################");
-
-    List<Mechanism> supportedMechanisms = Arrays.asList(token.getMechanismList());
-
-    Session session = token.openSession(Token.SessionType.SERIAL_SESSION,
-        Token.SessionReadWriteBehavior.RW_SESSION, null, null);
-
-    // if we have to user PIN login user
-    if (2 < args.length) {
-      session.login(Session.UserType.USER, args[2].toCharArray());
-    }
-
-    if (supportedMechanisms.contains(Mechanism
-        .get(PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN))) {
-      output_
-          .println("################################################################################");
-      output_.println("Generating generic secret key");
-
-      Mechanism keyGenerationMechanism = Mechanism
-          .get(PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN);
-
-      ValuedSecretKey secretKeyTemplate = ValuedSecretKey.newGenericSecretKey();
-      secretKeyTemplate.getValueLen().setLongValue(new Long(16));
-
-      ValuedSecretKey secretKey = (ValuedSecretKey) session.generateKey(
-          keyGenerationMechanism, secretKeyTemplate);
-
-      output_.println("the secret key is");
-      output_.println(secretKey.toString());
-
-      output_
-          .println("################################################################################");
-    } else
-      output_.println("Mechanism not supported: GENERIC_SECRET_KEY_GEN");
-    session.closeSession();
-    pkcs11Module.finalize(null);
-  }
-
-  public static void printUsage() {
-    output_.println("Usage: GenerateKey <PKCS#11 module> [<slot-index>] [<user-PIN>]");
-    output_.println(" e.g.: GenerateKey cryptoki.dll");
-    output_.println("The given DLL must be in the search path of the system.");
+    println("################################################################################");
   }
 
 }

@@ -42,101 +42,36 @@
 
 package demo.pkcs.pkcs11.wrapper.random;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
-import iaik.pkcs.pkcs11.Module;
+import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Slot;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
+import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
  * This demo program uses a PKCS#11 module to produce random data. Optionally the random data can be
  * written to file.
  */
-public class GenerateRandom {
+public class GenerateRandom extends TestBase {
 
-  /**
-   * Usage: GenerateRandom PKCS#11-module number-of-bytes [output-file slot-index user-PIN]
-   */
-  public static void main(String[] args) throws IOException, TokenException {
-    if (args.length < 2) {
-      printUsage();
-      throw new IOException("Missing argument!");
-    }
-    int numberOfBytes = -1;
+  public void main() throws TokenException {
+    Token token = getNonNullToken();
+    Session session = openReadOnlySession(token);
     try {
-      numberOfBytes = Integer.parseInt(args[1]);
-    } catch (Exception ex) {
-      printUsage();
-      throw new IOException("Incorrect argument!");
+      main0(token, session);
+    } finally {
+      session.closeSession();
     }
-
-    Module pkcs11Module = Module.getInstance(args[0]);
-    pkcs11Module.initialize(null);
-
-    Slot[] slots = pkcs11Module.getSlotList(Module.SlotRequirement.TOKEN_PRESENT);
-
-    if (slots.length == 0) {
-      System.out.println("No slot with present token found!");
-      throw new TokenException("No token found!");
-    }
-
-    Slot selectedSlot;
-    if (3 < args.length)
-      selectedSlot = slots[Integer.parseInt(args[3])];
-    else
-      selectedSlot = slots[0];
-    Token token = selectedSlot.getToken();
-
-    Session session = token.openSession(Token.SessionType.SERIAL_SESSION,
-        Token.SessionReadWriteBehavior.RO_SESSION, null, null);
-
-    // some token require login
-    if (args.length > 4) {
-      session.login(Session.UserType.USER, args[4].toCharArray());
-    }
-
-    System.out
-        .println("################################################################################");
-    System.out.print("generating " + numberOfBytes + " bytes of random data... ");
-
-    byte[] dataBuffer = session.generateRandom(numberOfBytes);
-
-    System.out.println("finished");
-    System.out
-        .println("################################################################################");
-
-    OutputStream dataOutput;
-    if (args.length > 2) {
-      System.out
-          .println("################################################################################");
-      System.out.println("writing random data to file : " + args[2]);
-
-      dataOutput = new FileOutputStream(args[2]);
-    } else {
-      System.out.println("random is:");
-      dataOutput = System.out;
-    }
-
-    dataOutput.write(dataBuffer);
-    dataOutput.flush();
-    if (dataOutput instanceof FileOutputStream)
-      dataOutput.close();
-    System.out
-        .println("################################################################################");
-
-    session.closeSession();
-    pkcs11Module.finalize(null);
   }
 
-  public static void printUsage() {
-    System.out
-        .println("Usage: GenerateRandom <PKCS#11 module> <number of bytes> [<output file> <slot-index> <user-PIN> ]");
-    System.out.println(" e.g.: GenerateRandom pk2priv.dll 128 random.dat");
-    System.out.println("The given DLL must be in the search path of the system.");
+  private void main0(Token token, Session session) throws TokenException {
+    println("################################################################################");
+    print("generating 1057 bytes of random data... ");
+    byte[] dataBuffer = session.generateRandom(1057);
+    println("random is");
+    println(Functions.toHexString(dataBuffer));
+    println("finished");
+    println("################################################################################");
   }
 
 }

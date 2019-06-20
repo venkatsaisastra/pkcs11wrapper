@@ -42,22 +42,18 @@
 
 package demo.pkcs.pkcs11.wrapper.SSL;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Arrays;
-import java.util.List;
 
+import org.junit.Test;
+
+import demo.pkcs.pkcs11.wrapper.TestBase;
+import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Slot;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.TokenInfo;
+import iaik.pkcs.pkcs11.objects.SecretKey;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.parameters.SSL3KeyMaterialOutParameters;
 import iaik.pkcs.pkcs11.parameters.SSL3KeyMaterialParameters;
@@ -70,75 +66,26 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  * This demo program shows how to use the SSL mechanisms. Ensure that your token supports these
  * features.
  */
-public class SSLMechanisms {
+public class SSLMechanisms extends TestBase {
 
-  static PrintWriter output_;
-
-  static BufferedReader input_;
-
-  static {
+  @Test
+  public void main() throws TokenException, NoSuchAlgorithmException {
+    Token token = getNonNullToken();
+    Session session = openReadWriteSession(token);
     try {
-      // output_ = new PrintWriter(new FileWriter("GetInfo_output.txt"), true);
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
-    } catch (Throwable thr) {
-      thr.printStackTrace();
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
+      main0(token, session);
+    } finally {
+      session.closeSession();
     }
   }
 
-  /**
-   * Usage: SSLMechanisms PKCS#11-module [slot-index user-PIN]
-   */
-  public static void main(String[] args) throws IOException, TokenException,
-      NoSuchAlgorithmException {
-    if (args.length < 1) {
-      printUsage();
-      throw new IOException("Missing argument!");
-    }
-
-    Module pkcs11Module = Module.getInstance(args[0]);
-    pkcs11Module.initialize(null);
-
-    Slot[] slots = pkcs11Module.getSlotList(Module.SlotRequirement.TOKEN_PRESENT);
-
-    if (slots.length == 0) {
-      output_.println("No slot with present token found!");
-      throw new TokenException("No token found!");
-    }
-
-    Slot selectedSlot;
-    if (1 < args.length)
-      selectedSlot = slots[Integer.parseInt(args[1])];
-    else
-      selectedSlot = slots[0];
-    Token token = selectedSlot.getToken();
-    TokenInfo tokenInfo = token.getTokenInfo();
-
-    output_
-        .println("################################################################################");
-    output_.println("Information of Token:");
-    output_.println(tokenInfo);
-    output_
-        .println("################################################################################");
-
-    List<Mechanism> supportedMechanisms = Arrays.asList(token.getMechanismList());
-
-    Session session = token.openSession(Token.SessionType.SERIAL_SESSION,
-        Token.SessionReadWriteBehavior.RW_SESSION, null, null);
-
-    // if we have to user PIN login user
-    if (args.length > 2) {
-      session.login(Session.UserType.USER, args[2].toCharArray());
-    }
-
+  private void main0(Token token, Session session) throws TokenException, NoSuchAlgorithmException {
     ValuedSecretKey premasterSecret = null;
-    if (supportedMechanisms.contains(Mechanism
-        .get(PKCS11Constants.CKM_SSL3_PRE_MASTER_KEY_GEN))) {
-      output_
-          .println("################################################################################");
-      output_.println("Generating premaster secret");
+    ValuedSecretKey masterSecret = null;
+
+    if (Util.supports(token, PKCS11Constants.CKM_SSL3_PRE_MASTER_KEY_GEN)) {
+      println("################################################################################");
+      println("Generating premaster secret");
 
       VersionParameters versionParameters = new VersionParameters((byte) 3, (byte) 0);
 
@@ -152,32 +99,27 @@ public class SSLMechanisms {
       premasterSecret = (ValuedSecretKey) session.generateKey(
           sslPremasterKeyGenerationMechanism, premasterSecretTemplate);
 
-      output_.println("the premaster secret is");
-      output_.println(premasterSecret.toString());
+      println("the premaster secret is");
+      println(premasterSecret.toString());
 
-      output_
-          .println("################################################################################");
+      println("################################################################################");
     }
 
-    ValuedSecretKey masterSecret = null;
     SecureRandom randomSource = SecureRandom.getInstance("SHA1PRNG");
-    if (supportedMechanisms.contains(Mechanism
-        .get(PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE)) && (premasterSecret != null)) {
-      output_
-          .println("################################################################################");
-      output_.println("Deriving master secret");
+    if (Util.supports(token, PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE)
+        && (premasterSecret != null)) {
+      println("################################################################################");
+      println("Deriving master secret");
 
       byte[] clientRandom = new byte[28];
       byte[] serverRandom = new byte[28];
 
-      output_.print("generating client random... ");
-      output_.flush();
+      print("generating client random... ");
       randomSource.nextBytes(clientRandom);
-      output_.println("finished");
-      output_.print("generating server random... ");
-      output_.flush();
+      println("finished");
+      print("generating server random... ");
       randomSource.nextBytes(serverRandom);
-      output_.println("finished");
+      println("finished");
 
       VersionParameters clientVersion = new VersionParameters();
       SSL3RandomDataParameters randomInfo = new SSL3RandomDataParameters(clientRandom,
@@ -195,32 +137,28 @@ public class SSLMechanisms {
       masterSecret = (ValuedSecretKey) session.deriveKey(
           sslMasterKeyDerivationMechanism, premasterSecret, masterSecretTemplate);
 
-      output_.println("the client version is");
-      output_.println(masterKeyDeriveParameters.getVersion().toString());
-      output_.println("the master secret is");
-      output_.println(masterSecret.toString());
+      println("the client version is");
+      println(masterKeyDeriveParameters.getVersion().toString());
+      println("the master secret is");
+      println(masterSecret.toString());
 
-      output_
-          .println("################################################################################");
+      println("################################################################################");
     }
 
-    if (supportedMechanisms.contains(Mechanism
-        .get(PKCS11Constants.CKM_SSL3_KEY_AND_MAC_DERIVE)) && (masterSecret != null)) {
-      output_
-          .println("################################################################################");
-      output_.println("Deriving key material");
+    if (Util.supports(token, PKCS11Constants.CKM_SSL3_KEY_AND_MAC_DERIVE)
+        && (masterSecret != null)) {
+      println("################################################################################");
+      println("Deriving key material");
 
       byte[] clientRandom = new byte[28];
       byte[] serverRandom = new byte[28];
 
-      output_.print("generating client random... ");
-      output_.flush();
+      print("generating client random... ");
       randomSource.nextBytes(clientRandom);
-      output_.println("finished");
-      output_.print("generating server random... ");
-      output_.flush();
+      println("finished");
+      print("generating server random... ");
       randomSource.nextBytes(serverRandom);
-      output_.println("finished");
+      println("finished");
 
       SSL3RandomDataParameters randomInfo = new SSL3RandomDataParameters(clientRandom,
           serverRandom);
@@ -236,23 +174,18 @@ public class SSLMechanisms {
           .get(PKCS11Constants.CKM_SSL3_KEY_AND_MAC_DERIVE);
       sslKeyAndMACDerivationMechanism.setParameters(keyAndMACDeriveParameters);
 
-      session.deriveKey(sslKeyAndMACDerivationMechanism, masterSecret, null);
+      SecretKey derivedSecret = (SecretKey) session.deriveKey(
+          sslKeyAndMACDerivationMechanism, masterSecret, null);
 
-      output_.println("the key material is");
-      output_.println(returedKeyMaterial.toString());
+      println("the key material is");
+      println(returedKeyMaterial);
 
-      output_
-          .println("################################################################################");
+      println("the derivedSecret is");
+      println(derivedSecret);
+
+
+      println("################################################################################");
     }
-
-    session.closeSession();
-    pkcs11Module.finalize(null);
-  }
-
-  public static void printUsage() {
-    output_.println("Usage: SSLMechanisms <PKCS#11 module> [<slot-index> <user-PIN>]");
-    output_.println(" e.g.: SSLMechanisms cryptoki.dll");
-    output_.println("The given DLL must be in the search path of the system.");
   }
 
 }

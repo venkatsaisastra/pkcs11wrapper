@@ -42,18 +42,15 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import iaik.pkcs.pkcs11.Module;
+import org.junit.Test;
+
+import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Slot;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.Attribute;
@@ -66,66 +63,25 @@ import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
 /**
  * This class demonstrates how to use the GenericSearchTemplate class.
  */
-public class GenericFind {
+public class GenericFind extends TestBase {
 
-  static PrintWriter output_;
-
-  static BufferedReader input_;
-
-  static {
+  @Test
+  public void main() throws TokenException {
+    Token token = getNonNullToken();
+    Session session = openReadOnlySession(token);
     try {
-      // output_ = new PrintWriter(new FileWriter("GetInfo_output.txt"), true);
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
-    } catch (Throwable thr) {
-      thr.printStackTrace();
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
+      main0(session);
+    } finally {
+      session.closeSession();
     }
   }
-
-  /**
-   * usage: GenericFind PKCS#11-module [userPIN] [slot-index] [limit]
-   */
-  public static void main(String[] args) throws Exception {
-    if (2 > args.length) {
-      printUsage();
-      throw new IOException("Missing argument!");
-    }
-
-    Module pkcs11Module = Module.getInstance(args[0]);
-    pkcs11Module.initialize(null);
-
-    Slot[] slots = pkcs11Module.getSlotList(Module.SlotRequirement.TOKEN_PRESENT);
-
-    if (slots.length == 0) {
-      output_.println("No slot with present token found!");
-      throw new TokenException("No token found!");
-    }
-
-    Slot selectedSlot;
-    if (2 < args.length)
-      selectedSlot = slots[Integer.parseInt(args[2])];
-    else
-      selectedSlot = slots[0];
-    Token token = selectedSlot.getToken();
-
-    Session session = token.openSession(Token.SessionType.SERIAL_SESSION,
-        Token.SessionReadWriteBehavior.RO_SESSION, null, null);
-
-    // if we have the user PIN, we login the session, this enables us to find private objects too
-    if (1 < args.length) {
-      session.login(Session.UserType.USER, args[1].toCharArray());
-    }
-
+  
+  private void main0(Session session) throws TokenException {
     // limit output if required
     int limit = 0, counter = 1;
-    if (3 < args.length)
-      limit = Integer.parseInt(args[3]);
-
-    output_
-        .println("################################################################################");
-    output_.println("Find all signature keys.");
+    
+    println("################################################################################");
+    println("Find all signature keys.");
     GenericTemplate signatureKeyTemplate = new GenericTemplate();
     BooleanAttribute signAttribute = new BooleanAttribute(Attribute.SIGN);
     signAttribute.setBooleanValue(Boolean.TRUE);
@@ -139,33 +95,25 @@ public class GenericFind {
     List<PKCS11Object> signatureKeys = null;
     if (foundSignatureKeyObjects.length > 0) {
       signatureKeys = new Vector<>();
-      output_
-          .println("________________________________________________________________________________");
-      output_.println(foundSignatureKeyObjects[0]);
+      println("________________________________________________________________________________");
+      println(foundSignatureKeyObjects[0]);
       signatureKeys.add(foundSignatureKeyObjects[0]);
       while ((foundSignatureKeyObjects = session.findObjects(1)).length > 0
           && (0 == limit || counter < limit)) {
-        output_
-            .println("________________________________________________________________________________");
-        output_.println(foundSignatureKeyObjects[0]);
+        println("________________________________________________________________________________");
+        println(foundSignatureKeyObjects[0]);
         signatureKeys.add(foundSignatureKeyObjects[0]);
         counter++;
       }
-      output_
-          .println("________________________________________________________________________________");
+      
+      println("________________________________________________________________________________");
     } else {
-      output_.println("There is no object with a CKA_SIGN attribute set to true.");
-      output_.flush();
-      throw new Exception("There is no object with a CKA_SIGN attribute set to true.");
+      println("There is no object with a CKA_SIGN attribute set to true.");
+      throw new TokenException("There is no object with a CKA_SIGN attribute set to true.");
     }
     session.findObjectsFinal();
-
-    output_
-        .println("################################################################################");
-
-    output_
-        .println("################################################################################");
-    output_.println("Find corresponding certificates for private signature keys.");
+    println("################################################################################");
+    println("Find corresponding certificates for private signature keys.");
 
     List<PKCS11Object> privateSignatureKeys = new Vector<>();
 
@@ -205,50 +153,26 @@ public class GenericFind {
       session.findObjectsInit(certificateSearchTemplate);
 
       PKCS11Object[] foundCertificateObjects;
+      println("________________________________________________________________________________");
       if ((foundCertificateObjects = session.findObjects(1)).length > 0) {
         privateKeyToCertificateTable.put(privateSignatureKey, foundCertificateObjects[0]);
-        output_
-            .println("________________________________________________________________________________");
-        output_.println("The certificate for this private signature key");
-        output_.println(privateSignatureKey);
-        output_
-            .println("--------------------------------------------------------------------------------");
-        output_.println("is");
-        output_.println(foundCertificateObjects[0]);
-        output_
-            .println("________________________________________________________________________________");
+        println("The certificate for this private signature key");
+        println(privateSignatureKey);
+        
+        println("--------------------------------------------------------------------------------");
+        println("is");
+        println(foundCertificateObjects[0]);
+        
       } else {
-        output_
-            .println("________________________________________________________________________________");
-        output_.println("There is no certificate for this private signature key");
-        output_.println(privateSignatureKey);
-        output_
-            .println("________________________________________________________________________________");
+        println("There is no certificate for this private signature key");
+        println(privateSignatureKey);
       }
+      println("________________________________________________________________________________");
 
       session.findObjectsFinal();
     }
 
-    output_
-        .println("################################################################################");
-    if (3 < args.length && !"0".equals(args[3]))
-      output_.println("output limited to list a maximum of " + args[3]
-          + " objects. There might be more!");
-    else
-      output_.println("found " + counter + " objects on this token");
-
-    output_
-        .println("################################################################################");
-
-    session.closeSession();
-    pkcs11Module.finalize(null);
-  }
-
-  public static void printUsage() {
-    output_
-        .println("Usage: GenericFind <PKCS#11 module> [<userPIN>] [<slot-index>] [<0...all, >0 limit>]");
-    output_.println(" e.g.: GenericFind pk2priv.dll password 0");
-    output_.println("The given DLL must be in the search path of the system.");
+    println("found " + counter + " objects on this token");
   }
 
 }

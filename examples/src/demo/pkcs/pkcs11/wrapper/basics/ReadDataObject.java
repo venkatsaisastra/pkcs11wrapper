@@ -42,13 +42,9 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import org.junit.Test;
 
-import demo.pkcs.pkcs11.wrapper.util.Util;
-import iaik.pkcs.pkcs11.Module;
+import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
@@ -59,114 +55,76 @@ import iaik.pkcs.pkcs11.objects.PKCS11Object;
 /**
  * This demo program read a data object with a specific label from the token.
  */
-public class ReadDataObject {
+public class ReadDataObject extends TestBase {
 
-  static PrintWriter output_;
-
-  static BufferedReader input_;
-
-  static {
-    try {
-      // output_ = new PrintWriter(new FileWriter("GetInfo_output.txt"), true);
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
-    } catch (Throwable thr) {
-      thr.printStackTrace();
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
-    }
-  }
-
-  /**
-   * Usage: ReadDataObject PKCS#11- module data-object-label [slot-id] [pin]
-   */
-  public static void main(String[] args) throws TokenException, IOException {
-    if (args.length < 2) {
-      printUsage();
-      throw new IOException("Missing argument!");
-    }
-
-    Module pkcs11Module = Module.getInstance(args[0]);
-    pkcs11Module.initialize(null);
-
-    Token token;
-    if (2 < args.length)
-      token = Util.selectToken(pkcs11Module, output_, input_, args[2]);
-    else
-      token = Util.selectToken(pkcs11Module, output_, input_);
-    if (token == null) {
-      output_.println("We have no token to proceed. Finished.");
-      output_.flush();
-      throw new TokenException("No token found!");
-    }
+  @Test
+  public void main() throws TokenException {
+    Token token = getNonNullToken();
     TokenInfo tokenInfo = token.getTokenInfo();
 
-    output_
-        .println("################################################################################");
-    output_.println("Information of Token:");
-    output_.println(tokenInfo);
-    output_
-        .println("################################################################################");
+    println("################################################################################");
+    println("Information of Token:");
+    println(tokenInfo);
+    println("################################################################################");
 
-    // open an read-write user session
-    Session session;
-    if (3 < args.length)
-      session = Util.openAuthorizedSession(token,
-          Token.SessionReadWriteBehavior.RW_SESSION, output_, input_, args[3]);
-    else
-      session = Util.openAuthorizedSession(token,
-          Token.SessionReadWriteBehavior.RW_SESSION, output_, input_, null);
-
-    output_
-        .println("################################################################################");
-    output_
-        .println("searching for data object on the card using this search template... ");
-    output_.flush();
-
-    // create certificate object template
-    Data dataObjectTemplate = new Data();
-
-    // we could also set the name that manages this data object
-    // dataObjectTemplate.getApplication().setCharArrayValue("Application Name");
-
-    // set the data object's label
-    dataObjectTemplate.getLabel().setCharArrayValue(args[1].toCharArray());
-
-    // print template
-    output_.println(dataObjectTemplate);
-
-    // start find operation
-    session.findObjectsInit(dataObjectTemplate);
-
-    PKCS11Object[] foundDataObjects = session.findObjects(1); // find first
-
-    Data dataObject;
-    if (foundDataObjects.length > 0) {
-      dataObject = (Data) foundDataObjects[0];
-      output_
-          .println("________________________________________________________________________________");
-      output_.print("found this data object with handle: ");
-      output_.println(dataObject.getObjectHandle());
-      output_.println(dataObject);
-      output_
-          .println("________________________________________________________________________________");
-      // FIXME, there may be more than one that matches the given template, the label is not unique
-      // in general
-      // foundDataObjects = session.findObjects(1); //find next
-    } else {
-      dataObject = null;
+    // open a read-write user session
+    Session session = openReadWriteSession(token);
+    try {
+      main0(session);
+    } finally {
+      session.closeSession();
     }
-
-    session.findObjectsFinal();
-
-    session.closeSession();
-    pkcs11Module.finalize(null);
   }
+  
+  private void main0(Session session) throws TokenException {
+    println("################################################################################");
+    println("searching for data object on the card using this search template... ");
 
-  protected static void printUsage() {
-    output_
-        .println("ReadDataObject <PKCS#11 module name> <data object label> [<slot-id>] [<pin>]");
-    output_.println("e.g.: ReadDataObject gclib.dll \"Student Data\" data.dat");
+    String label = "pkcs11demo-data-" + System.currentTimeMillis();
+
+    // Create a new PKCS#11 object first
+    Data newDataTemplate = new Data();
+    newDataTemplate.getLabel().setCharArrayValue(label.toCharArray());
+    newDataTemplate.getValue().setByteArrayValue("hello world".getBytes());
+    PKCS11Object newData = session.createObject(newDataTemplate);
+
+    try {
+      // create certificate object template
+      Data dataObjectTemplate = new Data();
+  
+      // we could also set the name that manages this data object
+      // dataObjectTemplate.getApplication().setCharArrayValue("Application Name");
+  
+      // set the data object's label
+      dataObjectTemplate.getLabel().setCharArrayValue(label.toCharArray());
+  
+      // print template
+      println(dataObjectTemplate);
+  
+      // start find operation
+      session.findObjectsInit(dataObjectTemplate);
+  
+      PKCS11Object[] foundDataObjects = session.findObjects(1); // find first
+  
+      Data dataObject;
+      if (foundDataObjects.length > 0) {
+        dataObject = (Data) foundDataObjects[0];
+        println("________________________________________________________________________________");
+        print("found this data object with handle: ");
+        println(dataObject.getObjectHandle());
+        println(dataObject);
+        println("________________________________________________________________________________");
+        // FIXME, there may be more than one that matches the given template, the label is not unique
+        // in general
+        // foundDataObjects = session.findObjects(1); //find next
+      } else {
+        dataObject = null;
+      }
+
+      session.findObjectsFinal();
+    } finally {
+      session.destroyObject(newData);
+    }
   }
 
 }

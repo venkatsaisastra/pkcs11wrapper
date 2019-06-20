@@ -42,15 +42,8 @@
 
 package demo.pkcs.pkcs11.wrapper.signatures;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.Random;
-
-import demo.pkcs.pkcs11.wrapper.util.Util;
+import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
@@ -63,117 +56,49 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 /**
  * This demo program generates a 1024 bit RSA key-pair on the token and signs some data with it.
  */
-public class GenerateKeyAndSign {
+public class GenerateKeyAndSign extends TestBase {
 
-  static BufferedReader input_;
-
-  static PrintWriter output_;
-
-  static {
+  public void main() throws TokenException {
+    Token token = getNonNullToken();
+    Session session = openReadWriteSession(token);
     try {
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
-    } catch (Throwable thr) {
-      thr.printStackTrace();
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
+      main0(token, session);
+    } finally {
+      session.closeSession();
     }
   }
 
-  /**
-   * Usage: GenerateKeyAndSign PKCS#11-module slot-index [pin]
-   */
-  public static void main(String[] args) throws TokenException, IOException {
-    if (args.length < 1) {
-      printUsage();
-      throw new IOException("Missing argument!");
-    }
-
-    Module pkcs11Module = Module.getInstance(args[0]);
-    pkcs11Module.initialize(null);
-
-    Token token = Util.selectToken(pkcs11Module, output_, input_);
-    Session session = Util.openAuthorizedSession(token,
-          Token.SessionReadWriteBehavior.RW_SESSION, output_, input_, null);
-
-    output_
-        .println("################################################################################");
+  private void main0(Token token, Session session) throws TokenException {
+    println("################################################################################");
     int keySize = 1024;
-    output_.print("Generating new " + keySize + " bit RSA key-pair... ");
-    output_.flush();
+    print("Generating new " + keySize + " bit RSA key-pair... ");
 
-    Mechanism keyPairGenerationMechanism = Mechanism
-        .get(PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN);
-    RSAPublicKey rsaPublicKeyTemplate = new RSAPublicKey();
-    RSAPrivateKey rsaPrivateKeyTemplate = new RSAPrivateKey();
-
-    // set the general attributes for the public key
-    rsaPublicKeyTemplate.getModulusBits().setLongValue(new Long(keySize));
-    byte[] publicExponentBytes = { 0x01, 0x00, 0x01 }; // 2^16 + 1
-    rsaPublicKeyTemplate.getPublicExponent().setByteArrayValue(publicExponentBytes);
-    rsaPublicKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
-    byte[] id = new byte[20];
-    new Random().nextBytes(id);
-    rsaPublicKeyTemplate.getId().setByteArrayValue(id);
-    // rsaPublicKeyTemplate.getLabel().setCharArrayValue(args[2].toCharArray());
-
-    rsaPrivateKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
-    rsaPrivateKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
-    rsaPrivateKeyTemplate.getPrivate().setBooleanValue(Boolean.TRUE);
-    rsaPrivateKeyTemplate.getId().setByteArrayValue(id);
-    // rsaPrivateKeyTemplate.getLabel().setCharArrayValue(args[2].toCharArray());
-
-    rsaPrivateKeyTemplate.getSign().setBooleanValue(Boolean.TRUE);
-    rsaPublicKeyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
-
-    // netscape does not set these attribute, so we do no either
-    rsaPublicKeyTemplate.getKeyType().setPresent(false);
-    rsaPublicKeyTemplate.getObjectClass().setPresent(false);
-    rsaPrivateKeyTemplate.getKeyType().setPresent(false);
-    rsaPrivateKeyTemplate.getObjectClass().setPresent(false);
-
-    KeyPair generatedKeyPair = session.generateKeyPair(keyPairGenerationMechanism,
-        rsaPublicKeyTemplate, rsaPrivateKeyTemplate);
+    final boolean inToken = false;
+    KeyPair generatedKeyPair = generateRSAKeypair(token, session, keySize, inToken);
     RSAPublicKey generatedRSAPublicKey = (RSAPublicKey) generatedKeyPair.getPublicKey();
-    RSAPrivateKey generatedRSAPrivateKey = (RSAPrivateKey) generatedKeyPair
-        .getPrivateKey();
+    RSAPrivateKey generatedRSAPrivateKey = (RSAPrivateKey) generatedKeyPair.getPrivateKey();
     // no we may work with the keys...
 
-    output_.println("Success");
-    output_.println("The public key is");
-    output_
-        .println("_______________________________________________________________________________");
-    output_.println(generatedRSAPublicKey);
-    output_
-        .println("_______________________________________________________________________________");
-    output_.println("The private key is");
-    output_
-        .println("_______________________________________________________________________________");
-    output_.println(generatedRSAPrivateKey);
-    output_
-        .println("_______________________________________________________________________________");
+    println("Success");
+    println("The public key is");
+    println("_______________________________________________________________________________");
+    println(generatedRSAPublicKey);
+    println("_______________________________________________________________________________");
+    println("The private key is");
+    println("_______________________________________________________________________________");
+    println(generatedRSAPrivateKey);
+    println("_______________________________________________________________________________");
 
-    output_
-        .println("################################################################################");
-    output_.print("Signing Data... ");
+    println("################################################################################");
+    print("Signing Data... ");
 
     Mechanism signatureMechanism = Mechanism.get(PKCS11Constants.CKM_RSA_PKCS);
     session.signInit(signatureMechanism, generatedRSAPrivateKey);
-    byte[] dataToBeSigned = "12345678901234567890123456789012345".getBytes("ASCII");
+    byte[] dataToBeSigned = "12345678901234567890123456789012345".getBytes();
     byte[] signatureValue = session.sign(dataToBeSigned);
-    output_.println("Finished");
-    output_.println("Signature Value: " + Functions.toHexString(signatureValue));
-    output_
-        .println("################################################################################");
-
-    session.closeSession();
-    pkcs11Module.finalize(null);
-  }
-
-  public static void printUsage() {
-    output_.println("Usage: GenerateKeyAndSign <PKCS#11 module>");
-    output_.println(" e.g.: GenerateKeyAndSign cs2_pkcs11.dll");
-    output_.println("The given DLL must be in the search path of the system.");
+    println("Finished");
+    println("Signature Value: " + Functions.toHexString(signatureValue));
+    println("################################################################################");
   }
 
 }

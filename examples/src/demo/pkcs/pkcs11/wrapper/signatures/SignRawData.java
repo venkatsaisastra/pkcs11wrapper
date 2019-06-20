@@ -42,23 +42,14 @@
 
 package demo.pkcs.pkcs11.wrapper.signatures;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.math.BigInteger;
 
-import demo.pkcs.pkcs11.wrapper.util.Util;
+import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.objects.PKCS11Object;
+import iaik.pkcs.pkcs11.TokenException;
+import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
@@ -68,118 +59,41 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  * an already calculated DigestInfo object. See file data.dat.sh1, which is the DigestInfo encoding
  * of the SHA-1 hash of data.dat.
  */
-public class SignRawData {
+public class SignRawData extends TestBase {
 
-  static PrintWriter output_;
-  static BufferedReader input_;
-
-  static {
+  public void main() throws TokenException {
+    Token token = getNonNullToken();
+    Session session = openReadOnlySession(token);
     try {
-      // output_ = new PrintWriter(new FileWriter("Encrypt_output.txt"), true);
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
-    } catch (Throwable thr) {
-      thr.printStackTrace();
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
+      main0(token, session);
+    } finally {
+      session.closeSession();
     }
   }
 
-  /**
-   * Usage: SignRawData PKCS#11-module slot-index userPIN file-to-be-signed [signature-value-file]
-   */
-  public static void main(String[] args) throws Exception {
-    if (2 > args.length) {
-      printUsage();
-      throw new IOException("Missing argument!");
-    }
-
-    Module pkcs11Module = Module.getInstance(args[0]);
-    pkcs11Module.initialize(null);
-    Token token = Util.selectToken(pkcs11Module, output_, input_);
-
-    Session session = Util.openAuthorizedSession(token, false, output_, input_);
-
-    output_
-        .println("################################################################################");
-    output_.println("find private signature key");
-    RSAPrivateKey templateSignatureKey = new RSAPrivateKey();
-    templateSignatureKey.getSign().setBooleanValue(Boolean.TRUE);
-
-    session.findObjectsInit(templateSignatureKey);
-
-    PKCS11Object[] foundSignatureKeyObjects = session.findObjects(1); // find first
-
-    RSAPrivateKey signatureKey = null;
-    if (foundSignatureKeyObjects.length > 0) {
-      signatureKey = (RSAPrivateKey) foundSignatureKeyObjects[0];
-      output_
-          .println("________________________________________________________________________________");
-      output_.println(signatureKey);
-      output_
-          .println("________________________________________________________________________________");
-    } else {
-      output_.println("No RSA private key found that can sign!");
-      throw new Exception("No RSA private key found that can sign!");
-    }
-    session.findObjectsFinal();
-
-    output_
-        .println("################################################################################");
-
-    output_
-        .println("################################################################################");
-    output_.println("signing data from file: " + args[1]);
-
-    // to buffer the data to be signed
-    ByteArrayOutputStream dataToBeSignedBuffer = new ByteArrayOutputStream(128);
+  private void main0(Token token, Session session) throws TokenException {
+    println("################################################################################");
+    println("generate signature key pair");
+    final boolean inToken = false;
+    KeyPair generatedKeyPair = generateRSAKeypair(token, session, 2048, inToken);
+    RSAPrivateKey generatedRSAPrivateKey = (RSAPrivateKey) generatedKeyPair.getPrivateKey();
+    
+    println("################################################################################");
+    println("signing data");
+    byte[] dataToBeSigned = randomBytes(1057);
 
     // be sure that your token can process the specified mechanism
-    Mechanism signatureMechanism = Mechanism.get(PKCS11Constants.CKM_RSA_PKCS);
+    Mechanism signatureMechanism = getSupportedMechanism(token, PKCS11Constants.CKM_RSA_PKCS);
     // initialize for signing
-    session.signInit(signatureMechanism, signatureKey);
-
-    byte[] dataBuffer = new byte[1024];
-    int bytesRead;
-
-    /*
-     * We use the sign(byte[]) function, because some drivers do not support signing multiple data
-     * pieces. To buffer the data, feed all data from the input stream to the data buffer stream.
-     */
-    try (InputStream dataInputStream = new FileInputStream(args[1])) {
-      while ((bytesRead = dataInputStream.read(dataBuffer)) >= 0) {
-        dataToBeSignedBuffer.write(dataBuffer, 0, bytesRead);
-      }
-    }
-    byte[] dataToBeSigned = dataToBeSignedBuffer.toByteArray();
+    session.signInit(signatureMechanism, generatedRSAPrivateKey);
 
     // This signing operation is implemented in most of the drivers
     byte[] signatureValue = session.sign(dataToBeSigned);
 
-    output_.println("The signature value is: "
+    println("The signature value is: "
         + new BigInteger(1, signatureValue).toString(16));
 
-    if (2 < args.length) {
-      output_.println("Writing signature to file: " + args[2]);
-
-      OutputStream signatureOutput = new FileOutputStream(args[2]);
-      signatureOutput.write(signatureValue);
-      signatureOutput.flush();
-      signatureOutput.close();
-    }
-
-    output_
-        .println("################################################################################");
-
-    session.closeSession();
-    pkcs11Module.finalize(null);
-  }
-
-  public static void printUsage() {
-    output_
-        .println("Usage: SignRawData <file to be signed> [<signature value file>]");
-    output_
-        .println(" e.g.: SignRawData data.dat.sha1 signature.bin");
+    println("################################################################################");
   }
 
 }

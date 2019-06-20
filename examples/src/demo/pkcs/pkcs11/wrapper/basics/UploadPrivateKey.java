@@ -42,28 +42,32 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 
+import org.junit.Test;
+
+import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.MechanismInfo;
-import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.TokenInfo;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
 import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
@@ -73,8 +77,11 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  * corresponding certificate. The key and the certificate are given as a file in PKCS#12 format. The
  * usage flags of the key object are taken from the key usage flags of the certificate.
  */
-public class UploadPrivateKey {
+public class UploadPrivateKey extends TestBase {
 
+  private static final String p12ResourcePath = "/demo_cert.p12";
+  private static final String p12Password = "1234";
+  
   private static final int digitalSignature  = 0;
   private static final int nonRepudiation    = 1;
   private static final int keyEncipherment   = 2;
@@ -85,59 +92,25 @@ public class UploadPrivateKey {
   // private static final int encipherOnly      = 7;
   // private static final int decipherOnly      = 8; 
   
-  static BufferedReader input_;
-
-  static PrintWriter output_;
-
-  static {
+  @Test
+  public void main() throws TokenException, UnrecoverableKeyException, KeyStoreException,
+      NoSuchAlgorithmException, CertificateException, IOException {
+    Token token = getNonNullToken();
+    Session session = openReadWriteSession(token);
     try {
-      // output_ = new PrintWriter(new FileWriter("SignAndVerify_output.txt"), true);
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
-    } catch (Throwable thr) {
-      thr.printStackTrace();
-      output_ = new PrintWriter(System.out, true);
-      input_ = new BufferedReader(new InputStreamReader(System.in));
+      main0(token, session);
+    } finally {
+      session.closeSession();
     }
   }
-
-  /**
-   * Usage: UploadPrivateKey PKCS#11-module PKCS#12-encoded-private-key-and-certificate
-   * PKCS#12-password [slot-id] [pin]
-   */
-  public static void main(String[] args) throws Exception {
-    if (args.length < 3) {
-      printUsage();
-      throw new IOException("Missing argument!");
-    }
-
-    Module pkcs11Module = Module.getInstance(args[0]);
-    pkcs11Module.initialize(null);
-
-    Token token;
-    if (3 < args.length)
-      token = Util.selectToken(pkcs11Module, output_, input_, args[3]);
-    else
-      token = Util.selectToken(pkcs11Module, output_, input_);
-    if (token == null) {
-      output_.println("We have no token to proceed. Finished.");
-      output_.flush();
-      throw new TokenException("No token found!");
-    }
-    TokenInfo tokenInfo = token.getTokenInfo();
-
-    output_
-        .println("################################################################################");
-    output_.println("Information of Token:");
-    output_.println(tokenInfo);
-    output_
-        .println("################################################################################");
-
-    output_
-        .println("################################################################################");
-    output_.println("Reading private key and certifiacte from: " + args[1]);
-    char[] filePassword = args[2].toCharArray();
-    InputStream dataInputStream = new FileInputStream(args[1]);
+  
+  private void main0(Token token, Session session)
+      throws TokenException, IOException, KeyStoreException, NoSuchAlgorithmException,
+        CertificateException, UnrecoverableKeyException {
+    println("################################################################################");
+    println("Reading private key and certifiacte from: " + p12ResourcePath);
+    char[] filePassword = p12Password.toCharArray();
+    InputStream dataInputStream = getResourceAsStream(p12ResourcePath);
     KeyStore keystore = KeyStore.getInstance("PKCS12");
     keystore.load(dataInputStream, filePassword);
 
@@ -152,20 +125,20 @@ public class UploadPrivateKey {
     }
 
     if (keyAlias == null) {
-      output_.println("Found no private Key in the PKCS#12 file.");
+      println("Found no private Key in the PKCS#12 file.");
       throw new IOException("Given file does not include a key!");
     }
 
     java.security.PrivateKey jcaPrivateKey = (PrivateKey) keystore.getKey(keyAlias, filePassword);
 
     if (!jcaPrivateKey.getAlgorithm().equals("RSA")) {
-      output_.println("Private Key in the PKCS#12 file is not a RSA key.");
+      println("Private Key in the PKCS#12 file is not a RSA key.");
       throw new IOException("Given file does not include a RSA key!");
     }
 
     java.security.interfaces.RSAPrivateKey jcaRsaPrivateKey = (java.security.interfaces.RSAPrivateKey) jcaPrivateKey;
 
-    output_.println("got private key");
+    println("got private key");
 
     Certificate[] certificateChain = keystore.getCertificateChain(keyAlias);
 
@@ -176,22 +149,11 @@ public class UploadPrivateKey {
     byte[] certificateFingerprint = sha1.digest(encodedCert);
     boolean[] keyUsage = userCertificate.getKeyUsage();
 
-    output_.println("got user certifiate");
-    output_
-        .println("################################################################################");
+    println("got user certifiate");
+    println("################################################################################");
 
-    Session session;
-    if (4 < args.length)
-      session = Util.openAuthorizedSession(token,
-          Token.SessionReadWriteBehavior.RW_SESSION, output_, input_, args[4]);
-    else
-      session = Util.openAuthorizedSession(token,
-          Token.SessionReadWriteBehavior.RW_SESSION, output_, input_, null);
-
-    output_
-        .println("################################################################################");
-    output_.println("creating private key object on the card... ");
-    output_.flush();
+    println("################################################################################");
+    println("creating private key object on the card... ");
 
     // check out what attributes of the keys we may set using the mechanism info
     MechanismInfo signatureMechanismInfo;
@@ -225,7 +187,7 @@ public class UploadPrivateKey {
     byte[] extnValue = userCertificate.getExtensionValue("2.5.29.14");
     byte[] newObjectID;
     if (extnValue != null) {
-      newObjectID = Arrays.copyOfRange(extnValue, 2, extnValue.length);
+      newObjectID = Arrays.copyOfRange(extnValue, 4, extnValue.length);
       if (newObjectID.length != 20) {
         throw new IllegalStateException("invalid extension SubjectKeyIdentifier");
       }
@@ -347,50 +309,41 @@ public class UploadPrivateKey {
                   .getCrtCoefficient()));
     }
 
-    output_.println(pkcs11RsaPrivateKey);
-    session.createObject(pkcs11RsaPrivateKey);
+    println(pkcs11RsaPrivateKey);
+    
+    List<PKCS11Object> newP1kcs11Objects = new ArrayList<>();
+    try {
+      newP1kcs11Objects.add(session.createObject(pkcs11RsaPrivateKey));
+  
+      println("################################################################################");
+      println("creating certificate object on the card... ");
+  
+      // create certificate object template
+      X509PublicKeyCertificate pkcs11X509PublicKeyCertificate = new X509PublicKeyCertificate();
+  
+      pkcs11X509PublicKeyCertificate.getToken().setBooleanValue(Boolean.TRUE);
+      pkcs11X509PublicKeyCertificate.getPrivate().setBooleanValue(Boolean.FALSE);
+      pkcs11X509PublicKeyCertificate.getLabel().setCharArrayValue(keyLabel.toCharArray());
+      pkcs11X509PublicKeyCertificate.getSubject().setByteArrayValue(
+          userCertificate.getSubjectX500Principal().getEncoded());
+      pkcs11X509PublicKeyCertificate.getId().setByteArrayValue(newObjectID);
+      pkcs11X509PublicKeyCertificate.getIssuer().setByteArrayValue(
+          userCertificate.getIssuerX500Principal().getEncoded());
+  
+      pkcs11X509PublicKeyCertificate.getSerialNumber().setByteArrayValue(
+          Util.encodedAsn1Integer(userCertificate.getSerialNumber()));
+      pkcs11X509PublicKeyCertificate.getValue().setByteArrayValue(
+          userCertificate.getEncoded());
+  
+      println(pkcs11X509PublicKeyCertificate);
+      newP1kcs11Objects.add(session.createObject(pkcs11X509PublicKeyCertificate));
+    } finally {
+      for (PKCS11Object m : newP1kcs11Objects) {
+        session.destroyObject(m);
+      }
+    }
 
-    output_
-        .println("################################################################################");
-
-    output_
-        .println("################################################################################");
-    output_.println("creating certificate object on the card... ");
-    output_.flush();
-
-    // create certificate object template
-    X509PublicKeyCertificate pkcs11X509PublicKeyCertificate = new X509PublicKeyCertificate();
-
-    pkcs11X509PublicKeyCertificate.getToken().setBooleanValue(Boolean.TRUE);
-    pkcs11X509PublicKeyCertificate.getPrivate().setBooleanValue(Boolean.FALSE);
-    pkcs11X509PublicKeyCertificate.getLabel().setCharArrayValue(keyLabel.toCharArray());
-    pkcs11X509PublicKeyCertificate.getSubject().setByteArrayValue(
-        userCertificate.getSubjectX500Principal().getEncoded());
-    pkcs11X509PublicKeyCertificate.getId().setByteArrayValue(newObjectID);
-    pkcs11X509PublicKeyCertificate.getIssuer().setByteArrayValue(
-        userCertificate.getIssuerX500Principal().getEncoded());
-
-    pkcs11X509PublicKeyCertificate.getSerialNumber().setByteArrayValue(
-        Util.encodedAsn1Integer(userCertificate.getSerialNumber()));
-    pkcs11X509PublicKeyCertificate.getValue().setByteArrayValue(
-        userCertificate.getEncoded());
-
-    output_.println(pkcs11X509PublicKeyCertificate);
-    session.createObject(pkcs11X509PublicKeyCertificate);
-
-    output_
-        .println("################################################################################");
-
-    session.closeSession();
-    pkcs11Module.finalize(null);
-  }
-
-  public static void printUsage() {
-    output_
-        .println("Usage: UploadPrivateKey <PKCS#11 module> <PKCS#12 encoded private key and certificate> <PKCS#12 password> [<slot-id>] [<pin>]");
-    output_
-        .println(" e.g.: UploadPrivateKey pk2priv.dll privatekeyAndCert.p12 filepassword");
-    output_.println("The given DLL must be in the search path of the system.");
+    println("################################################################################");
   }
 
 }

@@ -35,6 +35,14 @@
     <developerConnection>scm:git:git@github.com:xipki/pkcs11wrapper.git</developerConnection>
     <url>git@github.com:xipki/pkcs11wrapper.git</url>
   </scm>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
   <build>
     <sourceDirectory>src/java/src</sourceDirectory>
     <testSourceDirectory>examples/src</testSourceDirectory>
@@ -107,6 +115,9 @@
           <configuration>
             <!-- as workaround of bug https://issues.apache.org/jira/browse/SUREFIRE-1588 -->
             <useSystemClassLoader>false</useSystemClassLoader>
+            <includes>
+              <include>**/*.java</include>
+            </includes>
           </configuration>
         </plugin>
         <plugin>
