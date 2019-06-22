@@ -131,23 +131,8 @@ public class CanonicalizeCode {
     try {
       String line;
       boolean lastLineEmpty = false;
-      boolean licenseTextAdded = false;
-      boolean skip = true;
 
       while ((line = reader.readLine()) != null) {
-        if (line.trim().startsWith("package ")
-            || line.trim().startsWith("import ")) {
-          if (!licenseTextAdded) {
-            writeLicenseHeader(writer, newLine);
-            licenseTextAdded = true;
-          }
-          skip = false;
-        }
-
-        if (skip) {
-          continue;
-        }
-
         String canonicalizedLine = canonicalizeLine(line, newLine);
         boolean addThisLine = true;
         if (canonicalizedLine.isEmpty()) {
@@ -291,108 +276,6 @@ public class CanonicalizeCode {
         // Do nothing
       }
     }
-  }
-
-  private static void writeLicenseHeader(OutputStream out, byte[] newLine)
-      throws IOException {
-    writeLine(out, newLine,
-        "// Copyright (c) 2002 Graz University of Technology. "
-        + "All rights reserved.");
-    writeLine(out, newLine,
-        "//");
-    writeLine(out, newLine,
-        "// Redistribution and use in source and binary forms, "
-        + "with or without");
-    writeLine(out, newLine,
-        "// modification, are permitted provided that the following "
-        + "conditions are met:");
-    writeLine(out, newLine,
-        "//");
-    writeLine(out, newLine,
-        "// 1. Redistributions of source code must retain the above"
-        + " copyright notice,");
-    writeLine(out, newLine,
-        "//    this list of conditions and the following disclaimer.");
-    writeLine(out, newLine,
-        "//");
-    writeLine(out, newLine,
-        "// 2. Redistributions in binary form must reproduce the above "
-        + "copyright notice,");
-    writeLine(out, newLine,
-        "//    this list of conditions and the following disclaimer in "
-        + "the documentation");
-    writeLine(out, newLine,
-        "//    and/or other materials provided with the distribution.");
-    writeLine(out, newLine,
-        "//");
-    writeLine(out, newLine,
-        "// 3. The end-user documentation included with the "
-        + "redistribution, if any, must");
-    writeLine(out, newLine,
-        "//    include the following acknowledgment:");
-    writeLine(out, newLine,
-        "//");
-    writeLine(out, newLine,
-        "//    \"This product includes software developed by IAIK of Graz "
-        + "University of");
-    writeLine(out, newLine,
-        "//     Technology.\"");
-    writeLine(out, newLine,
-        "//");
-    writeLine(out, newLine,
-        "//    Alternately, this acknowledgment may appear in the software "
-        + "itself, if and");
-    writeLine(out, newLine,
-        "//    wherever such third-party acknowledgments normally appear.");
-    writeLine(out, newLine,
-        "//");
-    writeLine(out, newLine,
-        "// 4. The names \"Graz University of Technology\" and \"IAIK of "
-        + "Graz University of");
-    writeLine(out, newLine,
-        "//    Technology\" must not be used to endorse or promote "
-        + "products derived from");
-    writeLine(out, newLine,
-        "//    this software without prior written permission.");
-    writeLine(out, newLine,
-        "//");
-    writeLine(out, newLine,
-        "// 5. Products derived from this software may not be called "
-        + "\"IAIK PKCS Wrapper\",");
-    writeLine(out, newLine,
-        "//    nor may \"IAIK\" appear in their name, without prior "
-        + "written permission of");
-    writeLine(out, newLine,
-        "//    Graz University of Technology.");
-    writeLine(out, newLine,
-        "//");
-    writeLine(out, newLine,
-        "// THIS SOFTWARE IS PROVIDED \"AS IS\" AND ANY EXPRESSED OR IMPLIED");
-    writeLine(out, newLine,
-        "// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED");
-    writeLine(out, newLine,
-        "// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR");
-    writeLine(out, newLine,
-        "// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE LICENSOR BE");
-    writeLine(out, newLine,
-        "// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,");
-    writeLine(out, newLine,
-        "// OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,");
-    writeLine(out, newLine,
-        "// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,");
-    writeLine(out, newLine,
-        "// OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON");
-    writeLine(out, newLine,
-        "// ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,");
-    writeLine(out, newLine,
-        "// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY");
-    writeLine(out, newLine,
-        "// OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE");
-    writeLine(out, newLine,
-        "// POSSIBILITY OF SUCH DAMAGE.");
-
-    writeLine(out, newLine,
-        "");
   }
 
   private void checkWarnings() throws Exception {
