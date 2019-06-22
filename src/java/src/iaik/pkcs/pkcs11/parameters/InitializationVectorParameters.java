@@ -85,7 +85,7 @@ public class InitializationVectorParameters implements Parameters {
    * @postconditions (result <> null)
    */
   @Override
-  public Object getPKCS11ParamsObject() {
+  public byte[] getPKCS11ParamsObject() {
     return iv;
   }
 

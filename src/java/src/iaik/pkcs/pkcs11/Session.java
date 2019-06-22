@@ -42,6 +42,10 @@
 
 package iaik.pkcs.pkcs11;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Vector;
 
 import iaik.pkcs.pkcs11.objects.Key;
@@ -50,14 +54,37 @@ import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
 import iaik.pkcs.pkcs11.objects.SecretKey;
+import iaik.pkcs.pkcs11.parameters.AesCtrParameters;
+import iaik.pkcs.pkcs11.parameters.CCMParameters;
+import iaik.pkcs.pkcs11.parameters.DHPkcsDeriveParameters;
+import iaik.pkcs.pkcs11.parameters.EcDH1KeyDerivationParameters;
+import iaik.pkcs.pkcs11.parameters.EcDH2KeyDerivationParameters;
+import iaik.pkcs.pkcs11.parameters.ExtractParameters;
+import iaik.pkcs.pkcs11.parameters.GCMParameters;
+import iaik.pkcs.pkcs11.parameters.InitializationVectorParameters;
+import iaik.pkcs.pkcs11.parameters.MacGeneralParameters;
+import iaik.pkcs.pkcs11.parameters.ObjectHandleParameters;
+import iaik.pkcs.pkcs11.parameters.OpaqueParameters;
+import iaik.pkcs.pkcs11.parameters.PBEParameters;
+import iaik.pkcs.pkcs11.parameters.PKCS5PBKD2Parameters;
 import iaik.pkcs.pkcs11.parameters.Parameters;
+import iaik.pkcs.pkcs11.parameters.RSAPkcsOaepParameters;
+import iaik.pkcs.pkcs11.parameters.RSAPkcsPssParameters;
 import iaik.pkcs.pkcs11.parameters.SSL3KeyMaterialParameters;
 import iaik.pkcs.pkcs11.parameters.SSL3MasterKeyDeriveParameters;
+import iaik.pkcs.pkcs11.parameters.SSL3RandomDataParameters;
+import iaik.pkcs.pkcs11.parameters.TLS12KeyMaterialParameters;
+import iaik.pkcs.pkcs11.parameters.TLS12MasterKeyDeriveParameters;
+import iaik.pkcs.pkcs11.parameters.TLSMacParameters;
+import iaik.pkcs.pkcs11.parameters.TLSPRFParameters;
 import iaik.pkcs.pkcs11.parameters.VersionParameters;
+import iaik.pkcs.pkcs11.parameters.X942DH1KeyDerivationParameters;
+import iaik.pkcs.pkcs11.parameters.X942DH2KeyDerivationParameters;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
 import sun.security.pkcs11.wrapper.CK_MECHANISM;
+import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
 import sun.security.pkcs11.wrapper.CK_SESSION_INFO;
 import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_PARAMS;
 import sun.security.pkcs11.wrapper.CK_SSL3_MASTER_KEY_DERIVE_PARAMS;
@@ -173,6 +200,29 @@ public class Session {
 
   }
 
+  private static final Method encrypt0;
+
+  private static final Method encrypt1;
+
+  private static final Method decrypt0;
+
+  private static final Method decrypt1;
+
+  private static final Field field_CK_MECHANISM_pParameter;
+
+  private static final Method method_CK_MECHANISM_setParameter;
+
+  private static final Constructor<?> constructor_CK_MECHANISM_CCM;
+
+  private static final Constructor<?> constructor_CK_MECHANISM_GCM;
+
+  private static final Constructor<?> constructor_CK_MECHANISM_TLS12KeyMat;
+
+  private static final Constructor<?>
+      constructor_CK_MECHANISM_TLS12MasterKeyDerive;
+
+  private static final Constructor<?> constructor_CK_MECHANISM_TLSMac;
+
   /**
    * A reference to the underlying PKCS#11 module to perform the operations.
    */
@@ -192,6 +242,67 @@ public class Session {
    * The token to perform the operations on.
    */
   private Token token;
+
+  static {
+    Class<?> clazz = PKCS11.class;
+    decrypt0 = Util.getMethod(clazz, "C_Decrypt",
+        long.class, byte[].class, int.class, int.class,
+        byte[].class, int.class, int.class);
+
+    encrypt0 = Util.getMethod(clazz, "C_Encrypt",
+        long.class, byte[].class, int.class, int.class,
+        byte[].class, int.class, int.class);
+
+    if (decrypt0 == null) {
+      decrypt1 = Util.getMethod(clazz, "C_Decrypt",
+          long.class, long.class, byte[].class, int.class, int.class,
+          long.class, byte[].class, int.class, int.class);
+    } else {
+      decrypt1 = null;
+    }
+
+    if (encrypt0 == null) {
+      encrypt1 = Util.getMethod(clazz, "C_Encrypt",
+          long.class, long.class, byte[].class, int.class, int.class,
+          long.class, byte[].class, int.class, int.class);
+    } else {
+      encrypt1 = null;
+    }
+
+    clazz = CK_MECHANISM.class;
+    field_CK_MECHANISM_pParameter = Util.getField(clazz, "pParameter");
+    method_CK_MECHANISM_setParameter = Util.getMethod(clazz, "setParameter",
+        CK_RSA_PKCS_PSS_PARAMS.class);
+
+    constructor_CK_MECHANISM_CCM =
+        getConstructofOfCK_MECHANISM(CCMParameters.CLASS_CK_PARAMS);
+
+    constructor_CK_MECHANISM_GCM =
+        getConstructofOfCK_MECHANISM(GCMParameters.CLASS_CK_PARAMS);
+
+    constructor_CK_MECHANISM_TLS12KeyMat =
+        getConstructofOfCK_MECHANISM(
+            TLS12KeyMaterialParameters.CLASS_CK_PARAMS);
+
+    constructor_CK_MECHANISM_TLS12MasterKeyDerive =
+        getConstructofOfCK_MECHANISM(
+            TLS12MasterKeyDeriveParameters.CLASS_CK_PARAMS);
+
+    constructor_CK_MECHANISM_TLSMac =
+        getConstructofOfCK_MECHANISM(TLSMacParameters.CLASS_CK_PARAMS);
+  }
+
+  private static Constructor<?> getConstructofOfCK_MECHANISM(
+      String paramsClassName) {
+    Class<?> paramsClass;
+    try {
+      paramsClass = Class.forName(paramsClassName);
+    } catch (ClassNotFoundException ex) {
+      return null;
+    }
+
+    return Util.getConstructor(CK_MECHANISM.class, long.class, paramsClass);
+  }
 
   /**
    * Constructor taking the token and the session handle.
@@ -780,12 +891,29 @@ public class Session {
       byte[] out, int outOfs, int outLen) throws TokenException {
     Util.requireNonNull("in", in);
     Util.requireNonNull("out", out);
-
     try {
-      return pkcs11Module.C_Encrypt(sessionHandle, in, inOfs, inLen,
-          out, outOfs, outLen);
-    } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
-      throw new PKCS11Exception(ex);
+      if (encrypt0 != null) {
+        return (int) encrypt0.invoke(pkcs11Module,
+            sessionHandle, in, inOfs, inLen, out, outOfs, outLen);
+      } else if (encrypt1 != null) {
+        return (int) encrypt1.invoke(pkcs11Module,
+            sessionHandle, 0, in, inOfs, inLen, 0, out, outOfs, outLen);
+      } else {
+        throw new IllegalStateException("could not find C_ENCRYPT method");
+      }
+    } catch (IllegalAccessException ex) {
+      throw new TokenException("", ex);
+    } catch (InvocationTargetException ex) {
+      Throwable cause = ex.getCause();
+      if (cause instanceof sun.security.pkcs11.wrapper.PKCS11Exception) {
+        throw new PKCS11Exception(
+            ((sun.security.pkcs11.wrapper.PKCS11Exception) cause)
+                .getErrorCode());
+      } else if (cause instanceof RuntimeException) {
+        throw (RuntimeException) cause;
+      } else {
+        throw new TokenException("Error " + ex.getMessage(), ex);
+      }
     }
   }
 
@@ -892,10 +1020,28 @@ public class Session {
     Util.requireNonNull("out", out);
 
     try {
-      return pkcs11Module.C_Decrypt(sessionHandle, in, inOfs, inLen,
-          out, outOfs, outLen);
-    } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
-      throw new PKCS11Exception(ex);
+      if (decrypt0 != null) {
+        return (int) decrypt0.invoke(pkcs11Module,
+            sessionHandle, in, inOfs, inLen, out, outOfs, outLen);
+      } else if (decrypt1 != null) {
+        return (int) decrypt1.invoke(pkcs11Module,
+            sessionHandle, 0, in, inOfs, inLen, 0, out, outOfs, outLen);
+      } else {
+        throw new IllegalStateException("could not find C_DECRYPT method");
+      }
+    } catch (IllegalAccessException ex) {
+      throw new TokenException("", ex);
+    } catch (InvocationTargetException ex) {
+      Throwable cause = ex.getCause();
+      if (cause instanceof sun.security.pkcs11.wrapper.PKCS11Exception) {
+        throw new PKCS11Exception(
+            ((sun.security.pkcs11.wrapper.PKCS11Exception) cause)
+                .getErrorCode());
+      } else if (cause instanceof RuntimeException) {
+        throw (RuntimeException) cause;
+      } else {
+        throw new TokenException("Error " + ex.getMessage(), ex);
+      }
     }
   }
 
@@ -1804,12 +1950,119 @@ public class Session {
   }
 
   private static CK_MECHANISM toCkMechanism(Mechanism mechanism) {
-    CK_MECHANISM ckMechanism = new CK_MECHANISM();
-    ckMechanism.mechanism = mechanism.getMechanismCode();
+    long code = mechanism.getMechanismCode();
     Parameters params = mechanism.getParameters();
-    ckMechanism.pParameter = (params != null)
-        ? params.getPKCS11ParamsObject() : null;
-    return ckMechanism;
+    if (params == null) {
+      return new CK_MECHANISM(code);
+    } else if (params instanceof AesCtrParameters) {
+      return new CK_MECHANISM(code,
+          ((AesCtrParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof DHPkcsDeriveParameters) {
+      return new CK_MECHANISM(code,
+          ((DHPkcsDeriveParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof EcDH1KeyDerivationParameters) {
+      return new CK_MECHANISM(code,
+          ((EcDH1KeyDerivationParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof EcDH2KeyDerivationParameters) {
+//      return new CK_MECHANISM(code,
+//          ((EcDH2KeyDerivationParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof ExtractParameters) {
+      return new CK_MECHANISM(code,
+          ((ExtractParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof InitializationVectorParameters) {
+      return new CK_MECHANISM(code,
+          ((InitializationVectorParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof MacGeneralParameters) {
+      return new CK_MECHANISM(code,
+          ((MacGeneralParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof ObjectHandleParameters) {
+      return new CK_MECHANISM(code,
+          ((ObjectHandleParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof OpaqueParameters) {
+      return new CK_MECHANISM(code,
+          ((OpaqueParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof PBEParameters) {
+//      return new CK_MECHANISM(code,
+//          ((PBEParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof PKCS5PBKD2Parameters) {
+//      return new CK_MECHANISM(code,
+//          ((PKCS5PBKD2Parameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof RSAPkcsOaepParameters) {
+//      return new CK_MECHANISM(code,
+//          ((RSAPkcsOaepParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof RSAPkcsPssParameters) {
+      CK_MECHANISM mech = new CK_MECHANISM(code);
+      CK_RSA_PKCS_PSS_PARAMS pParams =
+          ((RSAPkcsPssParameters) params).getPKCS11ParamsObject();
+      try {
+        if (field_CK_MECHANISM_pParameter != null) {
+          field_CK_MECHANISM_pParameter.set(mech, pParams);
+        } else if (method_CK_MECHANISM_setParameter != null) {
+          method_CK_MECHANISM_setParameter.invoke(mech, pParams);
+        } else {
+          throw new IllegalStateException(
+              "could not construct CK_MECHANISM for RSAPkcsPssParams");
+        }
+      } catch (IllegalAccessException | InvocationTargetException ex) {
+        throw new IllegalStateException(
+            "could not construct CK_MECHANISM for RSAPkcsPssParams", ex);
+      }
+      return mech;
+    } else if (params instanceof SSL3KeyMaterialParameters) {
+      return new CK_MECHANISM(code,
+          ((SSL3KeyMaterialParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof SSL3KeyMaterialParameters) {
+      return new CK_MECHANISM(code,
+          ((SSL3KeyMaterialParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof SSL3MasterKeyDeriveParameters) {
+      return new CK_MECHANISM(code,
+          ((SSL3MasterKeyDeriveParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof SSL3RandomDataParameters) {
+//      return new CK_MECHANISM(code,
+//          ((SSL3RandomDataParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof TLSPRFParameters) {
+      return new CK_MECHANISM(code,
+          ((TLSPRFParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof VersionParameters) {
+      return new CK_MECHANISM(code,
+          ((VersionParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof X942DH1KeyDerivationParameters) {
+//      return new CK_MECHANISM(code,
+//          ((X942DH1KeyDerivationParameters) params).getPKCS11ParamsObject());
+    } else if (params instanceof X942DH2KeyDerivationParameters) {
+//      return new CK_MECHANISM(code,
+//          ((X942DH2KeyDerivationParameters) params).getPKCS11ParamsObject());
+    } else {
+      Constructor<?> constructor;
+      if (params instanceof CCMParameters) {
+        constructor = constructor_CK_MECHANISM_CCM;
+      } else if (params instanceof GCMParameters) {
+        constructor = constructor_CK_MECHANISM_GCM;
+      } else if (params instanceof TLS12KeyMaterialParameters) {
+        constructor = constructor_CK_MECHANISM_TLS12KeyMat;
+      } else if (params instanceof TLS12MasterKeyDeriveParameters) {
+        constructor = constructor_CK_MECHANISM_TLS12MasterKeyDerive;
+      } else if (params instanceof TLSMacParameters) {
+        constructor = constructor_CK_MECHANISM_TLSMac;
+      } else {
+        constructor = null;
+      }
+
+      if (constructor == null) {
+        throw new IllegalArgumentException("could not find constructor");
+      }
+      try {
+        return (CK_MECHANISM) constructor.newInstance(
+                  params.getPKCS11ParamsObject());
+      } catch (InstantiationException | IllegalAccessException
+          | IllegalArgumentException | InvocationTargetException ex) {
+        throw new IllegalArgumentException(
+            "could not construct CK_MECHANISM", ex);
+      }
+    }
+
+    throw new IllegalArgumentException(
+        "Unsupported Parameters " + params.getClass().getName());
   }
 
 }

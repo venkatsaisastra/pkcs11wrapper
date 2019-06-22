@@ -67,7 +67,7 @@ public class OpaqueParameters implements Parameters {
    * @postconditions (result <> null)
    */
   @Override
-  public Object getPKCS11ParamsObject() {
+  public byte[] getPKCS11ParamsObject() {
     return bytes;
   }
 

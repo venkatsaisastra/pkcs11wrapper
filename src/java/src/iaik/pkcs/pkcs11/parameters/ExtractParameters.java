@@ -80,7 +80,7 @@ public class ExtractParameters implements Parameters {
    * @postconditions (result <> null)
    */
   @Override
-  public Object getPKCS11ParamsObject() {
+  public Long getPKCS11ParamsObject() {
     return Long.valueOf(bitIndex);
   }
 

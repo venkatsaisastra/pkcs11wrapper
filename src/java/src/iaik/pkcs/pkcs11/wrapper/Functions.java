@@ -49,6 +49,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import iaik.pkcs.pkcs11.Mechanism;
+
 /**
  * This class contains only static methods. It is the place for all functions
  * that are used by several classes in this package.
@@ -113,6 +115,8 @@ public class Functions implements PKCS11Constants {
    */
   private static Map<String, Long> mechNameToCodes;
 
+  private static Map<Long, String> hashMechCodeToHashNames;
+
   /**
    * True, if the mapping of error codes to PKCS#11 error names is available.
    */
@@ -123,6 +127,9 @@ public class Functions implements PKCS11Constants {
    * of the PKCS#11 error.
    */
   private static Map<Long, String> errorCodeNames;
+
+  // MGFs (CKG_*)
+  private static final Map<Long, String> mgfNames = new HashMap<Long, String>();
 
   /**
    * This set contains the mechanisms that are full encrypt/decrypt
@@ -185,6 +192,31 @@ public class Functions implements PKCS11Constants {
    */
   private static Set<Long> keyDerivationMechs;
 
+  static {
+    hashMechCodeToHashNames = new HashMap<>();
+    hashMechCodeToHashNames.put(CKM_SHA_1,      "SHA1");
+    hashMechCodeToHashNames.put(CKM_SHA224,     "SHA224");
+    hashMechCodeToHashNames.put(CKM_SHA256,     "SHA256");
+    hashMechCodeToHashNames.put(CKM_SHA384,     "SHA384");
+    hashMechCodeToHashNames.put(CKM_SHA512,     "SHA512");
+    hashMechCodeToHashNames.put(CKM_SHA512_224, "SHA512/224");
+    hashMechCodeToHashNames.put(CKM_SHA512_256, "SHA512/256");
+    hashMechCodeToHashNames.put(CKM_SHA3_224,   "SHA3-224");
+    hashMechCodeToHashNames.put(CKM_SHA3_256,   "SHA3-256");
+    hashMechCodeToHashNames.put(CKM_SHA3_384,   "SHA3-384");
+    hashMechCodeToHashNames.put(CKM_SHA3_512,   "SHA3-512");
+
+    mgfNames.put(CKG_MGF1_SHA1,     "CKG_MGF1_SHA1");
+    mgfNames.put(CKG_MGF1_SHA256,   "CKG_MGF1_SHA256");
+    mgfNames.put(CKG_MGF1_SHA384,   "CKG_MGF1_SHA384");
+    mgfNames.put(CKG_MGF1_SHA512,   "CKG_MGF1_SHA512");
+    mgfNames.put(CKG_MGF1_SHA224,   "CKG_MGF1_SHA224");
+    mgfNames.put(CKG_MGF1_SHA3_224, "CKG_MGF1_SHA3-224");
+    mgfNames.put(CKG_MGF1_SHA3_256, "CKG_MGF1_SHA3-256");
+    mgfNames.put(CKG_MGF1_SHA3_384, "CKG_MGF1_SHA3-384");
+    mgfNames.put(CKG_MGF1_SHA3_512, "CKG_MGF1_SHA3-512");
+  }
+
   /**
    * Converts the long value code of a mechanism to a name.
    *
@@ -233,6 +265,10 @@ public class Functions implements PKCS11Constants {
     Long code = mechCodeNamesAvailable
         ? mechNameToCodes.get(mechName) : null;
     return (code != null) ? code : -1;
+  }
+
+  public static String getMGFName(long id) {
+    return mgfNames.get(id);
   }
 
   private static synchronized void initMechanismMap() {
@@ -1003,6 +1039,10 @@ public class Functions implements PKCS11Constants {
    */
   public static String toHexString(byte[] value) {
     return Hex.encode(value);
+  }
+
+  public static String getHashAlgName(Mechanism hashMechanism) {
+    return hashMechCodeToHashNames.get(hashMechanism.getMechanismCode());
   }
 
 }

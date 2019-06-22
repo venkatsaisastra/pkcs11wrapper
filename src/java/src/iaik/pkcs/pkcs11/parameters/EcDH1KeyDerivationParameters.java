@@ -95,7 +95,7 @@ public class EcDH1KeyDerivationParameters extends DHKeyDerivationParameters {
    * @postconditions (result <> null)
    */
   @Override
-  public Object getPKCS11ParamsObject() {
+  public CK_ECDH1_DERIVE_PARAMS getPKCS11ParamsObject() {
     return new CK_ECDH1_DERIVE_PARAMS(kdf, sharedData, publicData);
   }
 

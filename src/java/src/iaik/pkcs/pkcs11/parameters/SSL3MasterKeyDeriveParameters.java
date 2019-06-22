@@ -42,7 +42,6 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import iaik.pkcs.pkcs11.Util;
 import sun.security.pkcs11.wrapper.CK_SSL3_MASTER_KEY_DERIVE_PARAMS;
 import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
 import sun.security.pkcs11.wrapper.CK_VERSION;
@@ -57,17 +56,8 @@ import sun.security.pkcs11.wrapper.CK_VERSION;
  *             and (version <> null)
  */
 // CHECKSTYLE:SKIP
-public class SSL3MasterKeyDeriveParameters implements Parameters {
-
-  /**
-   * The client's and server's random data information.
-   */
-  protected SSL3RandomDataParameters randomInfo;
-
-  /**
-   * The SSL protocol version information.
-   */
-  protected VersionParameters version;
+public class SSL3MasterKeyDeriveParameters
+extends TLSMasterKeyDeriveParameters {
 
   /**
    * Create a new SSL3MasterKeyDeriveParameters object with the given
@@ -83,8 +73,7 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
    */
   public SSL3MasterKeyDeriveParameters(SSL3RandomDataParameters randomInfo,
       VersionParameters version) {
-    this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
-    this.version = Util.requireNonNull("version", version);
+    super(randomInfo, version);
   }
 
   /**
@@ -95,109 +84,13 @@ public class SSL3MasterKeyDeriveParameters implements Parameters {
    * @postconditions (result <> null)
    */
   @Override
-  public Object getPKCS11ParamsObject() {
+  public CK_SSL3_MASTER_KEY_DERIVE_PARAMS getPKCS11ParamsObject() {
     CK_SSL3_MASTER_KEY_DERIVE_PARAMS params =
         new CK_SSL3_MASTER_KEY_DERIVE_PARAMS(
             (CK_SSL3_RANDOM_DATA) randomInfo.getPKCS11ParamsObject(),
             (CK_VERSION) version.getPKCS11ParamsObject());
 
     return params;
-  }
-
-  /**
-   * Get the client's and server's random data information.
-   *
-   * @return The client's and server's random data information.
-   * @preconditions
-   * @postconditions (result <> null)
-   */
-  public SSL3RandomDataParameters getRandomInfo() {
-    return randomInfo;
-  }
-
-  /**
-   * Get the SSL protocol version information.
-   *
-   * @return The SSL protocol version information.
-   * @preconditions
-   * @postconditions (result <> null)
-   */
-  public VersionParameters getVersion() {
-    return version;
-  }
-
-  /**
-   * Set the client's and server's random data information.
-   *
-   * @param randomInfo
-   *          The client's and server's random data information.
-   * @preconditions (randomInfo <> null)
-   * @postconditions
-   */
-  public void setRandomInfo(SSL3RandomDataParameters randomInfo) {
-    this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
-  }
-
-  /**
-   * Set the SSL protocol version information.
-   *
-   * @param version
-   *          The SSL protocol version information.
-   * @preconditions (version <> null)
-   * @postconditions
-   */
-  public void setVersion(VersionParameters version) {
-    this.version = Util.requireNonNull("version", version);
-  }
-
-  /**
-   * Returns the string representation of this object. Do not parse data from
-   * this string, it is for debugging only.
-   *
-   * @return A string representation of this object.
-   */
-  @Override
-  public String toString() {
-    return Util.concatObjects("  Random Information:\n", randomInfo,
-        "\n  Version: ", version);
-  }
-
-  /**
-   * Compares all member variables of this object with the other object.
-   * Returns only true, if all are equal in both objects.
-   *
-   * @param otherObject
-   *          The other object to compare to.
-   * @return True, if other is an instance of this class and all member
-   *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
-   */
-  @Override
-  public boolean equals(Object otherObject) {
-    if (this == otherObject) {
-      return true;
-    } else if (!(otherObject instanceof SSL3MasterKeyDeriveParameters)) {
-      return false;
-    }
-
-    SSL3MasterKeyDeriveParameters other
-        = (SSL3MasterKeyDeriveParameters) otherObject;
-    return this.randomInfo.equals(other.randomInfo)
-        && this.version.equals(other.version);
-  }
-
-  /**
-   * The overriding of this method should ensure that the objects of this
-   * class work correctly in a hashtable.
-   *
-   * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
-   */
-  @Override
-  public int hashCode() {
-    return randomInfo.hashCode() ^ version.hashCode();
   }
 
 }

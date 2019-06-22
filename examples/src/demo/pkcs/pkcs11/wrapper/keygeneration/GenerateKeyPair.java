@@ -120,7 +120,7 @@ public class GenerateKeyPair extends TestBase {
     RSAPrivateKey rsaPrivateKeyTemplate = new RSAPrivateKey();
 
     // set the general attributes for the public key
-    rsaPublicKeyTemplate.getModulusBits().setLongValue(new Long(2048));
+    rsaPublicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(2048));
     byte[] publicExponentBytes = { 0x01, 0x00, 0x01 }; // 2^16 + 1
     rsaPublicKeyTemplate.getPublicExponent().setByteArrayValue(
         publicExponentBytes);

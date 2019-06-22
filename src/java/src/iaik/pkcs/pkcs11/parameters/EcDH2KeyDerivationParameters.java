@@ -124,7 +124,7 @@ public class EcDH2KeyDerivationParameters extends DHKeyDerivationParameters {
    * @postconditions (result <> null)
    */
   @Override
-  public Object getPKCS11ParamsObject() {
+  public CK_ECDH2_DERIVE_PARAMS getPKCS11ParamsObject() {
     CK_ECDH2_DERIVE_PARAMS params = new CK_ECDH2_DERIVE_PARAMS();
 
     params.kdf = kdf;

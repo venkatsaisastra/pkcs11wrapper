@@ -42,6 +42,9 @@
 
 package iaik.pkcs.pkcs11;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,6 +54,7 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.Vector;
 
+import iaik.pkcs.pkcs11.parameters.CCMParameters;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
 import sun.security.pkcs11.wrapper.CK_DATE;
@@ -327,20 +331,7 @@ public class Util {
       return null;
     }
 
-    StringBuilder buffer = new StringBuilder(2 * value.length);
-    int single;
-
-    for (int i = 0; i < value.length; i++) {
-      single = value[i] & 0xFF;
-
-      if (single < 0x10) {
-        buffer.append('0');
-      }
-
-      buffer.append(Integer.toString(single, 16));
-    }
-
-    return buffer.toString();
+    return Functions.toHexString(value);
   }
 
   public static String concat(String s1, String... strs) {
@@ -437,4 +428,42 @@ public class Util {
 
     return hash;
   }
+
+  public static Field getField(Class<?> clazz, String fieldName) {
+    try {
+      return clazz.getField(fieldName);
+    } catch (Throwable th) {
+      return null;
+    }
+  }
+
+  public static Method getMethod(Class<?> clazz, String name,
+      Class<?>... parameterTypes) {
+    try {
+      return clazz.getMethod(name, parameterTypes);
+    } catch (Throwable th) {
+      return null;
+    }
+  }
+
+  public static Constructor<?> getConstructor(
+      String className, Class<?>... parameterTypes) {
+    try {
+      Class<?> clazz = Class.forName(className, false,
+                CCMParameters.class.getClassLoader());
+      return getConstructor(clazz, parameterTypes);
+    } catch (Throwable th) {
+      return null;
+    }
+  }
+
+  public static Constructor<?> getConstructor(
+      Class<?> clazz, Class<?>... parameterTypes) {
+    try {
+      return clazz.getConstructor(parameterTypes);
+    } catch (Throwable th) {
+      return null;
+    }
+  }
+
 }

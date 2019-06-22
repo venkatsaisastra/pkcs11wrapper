@@ -42,45 +42,53 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
-import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_PARAMS;
-import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
+import java.util.Arrays;
 
-/**
- * This class encapsulates parameters for the Mechanism.SSL3_KEY_AND_MAC_DERIVE
- * mechanism.
- *
- * @author Karl Scheibelhofer
- * @version 1.0
- * @invariants (randomInfo <> null)
- *             and (returnedKeyMaterial <> null)
- */
-// CHECKSTYLE:SKIP
-public class SSL3KeyMaterialParameters extends TLSKeyMaterialParameters {
+import iaik.pkcs.pkcs11.Util;
+import sun.security.pkcs11.wrapper.CK_TLS_PRF_PARAMS;
 
-  public SSL3KeyMaterialParameters(long macSizeInBits, long keySizeInBits,
-      long ivSizeInBits, boolean export, SSL3RandomDataParameters randomInfo,
-      SSL3KeyMaterialOutParameters returnedKeyMaterial) {
-    super(macSizeInBits, keySizeInBits, ivSizeInBits, export, randomInfo,
-        returnedKeyMaterial);
+public class TLSPRFParameters implements Parameters {
+
+  public byte[] seed;
+  public byte[] label;
+  public byte[] output;
+
+  public TLSPRFParameters(byte[] seed, byte[] label, byte[] output) {
+      this.seed = seed;
+      this.label = label;
+      this.output = output;
   }
 
-  /**
-   * Get this parameters object as a CK_SSL3_KEY_MAT_PARAMS object.
-   *
-   * @return This object as a CK_SSL3_KEY_MAT_PARAMS object.
-   * @preconditions
-   * @postconditions (result <> null)
-   */
   @Override
-  public CK_SSL3_KEY_MAT_PARAMS getPKCS11ParamsObject() {
-    CK_SSL3_KEY_MAT_PARAMS params = new CK_SSL3_KEY_MAT_PARAMS(
-        (int) macSizeInBits,(int) keySizeInBits, (int) ivSizeInBits,
-        export, (CK_SSL3_RANDOM_DATA) randomInfo.getPKCS11ParamsObject());
-    params.pReturnedKeyMaterial = (CK_SSL3_KEY_MAT_OUT)
-        returnedKeyMaterial.getPKCS11ParamsObject();
+  public CK_TLS_PRF_PARAMS getPKCS11ParamsObject() {
+    return new CK_TLS_PRF_PARAMS(seed, label, output);
+  }
 
-    return params;
+  @Override
+  public String toString() {
+    return Util.concatObjects(
+        "seed", seed == null ? null : Util.toHex(seed),
+        "\nlabel", label == null ? null : Util.toHex(label),
+        "\noutput", output == null ? null : Util.toHex(output));
+  }
+
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof TLSMacParameters)) {
+      return false;
+    }
+
+    TLSPRFParameters other = (TLSPRFParameters) otherObject;
+    return Arrays.equals(seed, other.seed)
+        && Arrays.equals(label, other.label)
+        && Arrays.equals(output, other.output);
+  }
+
+  @Override
+  public int hashCode() {
+    return Util.hashCode(seed) ^ Util.hashCode(label) ^ Util.hashCode(output);
   }
 
 }

@@ -42,45 +42,84 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
-import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_PARAMS;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
+import sun.security.pkcs11.wrapper.CK_VERSION;
+
+import iaik.pkcs.pkcs11.Util;
 
 /**
- * This class encapsulates parameters for the Mechanism.SSL3_KEY_AND_MAC_DERIVE
- * mechanism.
- *
- * @author Karl Scheibelhofer
- * @version 1.0
- * @invariants (randomInfo <> null)
- *             and (returnedKeyMaterial <> null)
+ * CK_TLS12_MASTER_KEY_DERIVE_PARAMS from PKCS#11 v2.40.
  */
-// CHECKSTYLE:SKIP
-public class SSL3KeyMaterialParameters extends TLSKeyMaterialParameters {
+public class TLS12MasterKeyDeriveParameters
+extends TLSMasterKeyDeriveParameters {
 
-  public SSL3KeyMaterialParameters(long macSizeInBits, long keySizeInBits,
-      long ivSizeInBits, boolean export, SSL3RandomDataParameters randomInfo,
-      SSL3KeyMaterialOutParameters returnedKeyMaterial) {
-    super(macSizeInBits, keySizeInBits, ivSizeInBits, export, randomInfo,
-        returnedKeyMaterial);
-  }
+  public static final String CLASS_CK_PARAMS =
+      "sun.security.pkcs11.wrapper.CK_TLS12_MASTER_KEY_DERIVE_PARAMS";
+
+  private static final Constructor<?> constructor;
 
   /**
-   * Get this parameters object as a CK_SSL3_KEY_MAT_PARAMS object.
-   *
-   * @return This object as a CK_SSL3_KEY_MAT_PARAMS object.
-   * @preconditions
-   * @postconditions (result <> null)
+   * <B>PKCS#11:</B>
+   * <PRE>
+   *   CK_MECHANISM_TYPE prfHashMechanism;
+   * </PRE>
    */
-  @Override
-  public CK_SSL3_KEY_MAT_PARAMS getPKCS11ParamsObject() {
-    CK_SSL3_KEY_MAT_PARAMS params = new CK_SSL3_KEY_MAT_PARAMS(
-        (int) macSizeInBits,(int) keySizeInBits, (int) ivSizeInBits,
-        export, (CK_SSL3_RANDOM_DATA) randomInfo.getPKCS11ParamsObject());
-    params.pReturnedKeyMaterial = (CK_SSL3_KEY_MAT_OUT)
-        returnedKeyMaterial.getPKCS11ParamsObject();
+  public long prfHashMechanism;
 
-    return params;
+  static {
+    constructor = Util.getConstructor(CLASS_CK_PARAMS,
+        CK_SSL3_RANDOM_DATA.class, CK_VERSION.class, long.class);
+  }
+
+  public TLS12MasterKeyDeriveParameters(SSL3RandomDataParameters random,
+      VersionParameters version, long prfHashMechanism) {
+    super(random, version);
+
+    if (constructor == null) {
+      throw new IllegalStateException(
+          CLASS_CK_PARAMS + " is not available in the JDK");
+    }
+
+    this.prfHashMechanism = prfHashMechanism;
+  }
+
+  public String toString() {
+    return Util.concatObjects(super.toString(),
+        "\nprfHashMechanism: ", prfHashMechanism);
+  }
+
+  @Override
+  public boolean equals(Object otherObject) {
+    if (this == otherObject) {
+      return true;
+    } else if (!(otherObject instanceof TLS12KeyMaterialParameters)) {
+      return false;
+    }
+
+    TLS12KeyMaterialParameters other = (TLS12KeyMaterialParameters) otherObject;
+    return prfHashMechanism == other.prfHashMechanism;
+  }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode() ^ (int) prfHashMechanism;
+  }
+
+  @Override
+  public Object getPKCS11ParamsObject() {
+    try {
+      return constructor.newInstance(
+          randomInfo == null ? null : randomInfo.getPKCS11ParamsObject(),
+          version == null ? null : version.getPKCS11ParamsObject(),
+          prfHashMechanism);
+    } catch (SecurityException | InstantiationException | IllegalAccessException
+        | IllegalArgumentException | InvocationTargetException ex) {
+      throw new IllegalStateException(
+          "Could not create new instance of " + CLASS_CK_PARAMS, ex);
+    }
   }
 
 }

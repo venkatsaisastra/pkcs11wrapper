@@ -98,7 +98,7 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
    * @postconditions (result <> null)
    */
   @Override
-  public Object getPKCS11ParamsObject() {
+  public CK_X9_42_DH1_DERIVE_PARAMS getPKCS11ParamsObject() {
     CK_X9_42_DH1_DERIVE_PARAMS params = new CK_X9_42_DH1_DERIVE_PARAMS();
 
     params.kdf = kdf;

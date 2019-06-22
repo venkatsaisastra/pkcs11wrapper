@@ -143,7 +143,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
    * @postconditions (result <> null)
    */
   @Override
-  public Object getPKCS11ParamsObject() {
+  public CK_RSA_PKCS_OAEP_PARAMS getPKCS11ParamsObject() {
     CK_RSA_PKCS_OAEP_PARAMS params = new CK_RSA_PKCS_OAEP_PARAMS();
 
     params.hashAlg = hashAlg.getMechanismCode();

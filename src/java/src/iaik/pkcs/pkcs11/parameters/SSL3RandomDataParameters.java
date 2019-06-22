@@ -94,7 +94,7 @@ public class SSL3RandomDataParameters implements Parameters {
    * @postconditions (result <> null)
    */
   @Override
-  public Object getPKCS11ParamsObject() {
+  public CK_SSL3_RANDOM_DATA getPKCS11ParamsObject() {
     return new CK_SSL3_RANDOM_DATA(clientRandom, serverRandom);
   }
 

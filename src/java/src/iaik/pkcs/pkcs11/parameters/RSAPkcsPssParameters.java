@@ -42,8 +42,14 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Functions;
+
 import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
 
 /**
@@ -56,10 +62,46 @@ import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
 // CHECKSTYLE:SKIP
 public class RSAPkcsPssParameters extends RSAPkcsParameters {
 
+  private static final String CLASS_CK_PARAMS =
+      "sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS";
+
+  private static final Constructor<?> constructor;
+
+  private static final Constructor<?> constructorNoArgs;
+
+  private static final Field hashAlgField;
+
+  private static final Field mgfField;
+
+  private static final Field sLenField;
+
   /**
    * The length of the salt value in octets.
    */
   protected long saltLength;
+
+  static {
+    Class<?> clazz = CK_RSA_PKCS_PSS_PARAMS.class;
+
+    constructor = Util.getConstructor(clazz,
+          String.class, String.class, String.class, int.class);
+
+    if (constructor != null) {
+      constructorNoArgs = null;
+    } else {
+      constructorNoArgs = Util.getConstructor(clazz);
+    }
+
+    if (constructorNoArgs != null) {
+      hashAlgField = Util.getField(clazz, "hashAlg");
+      mgfField = Util.getField(clazz, "mgf");
+      sLenField = Util.getField(clazz, "sLen");
+    } else {
+      hashAlgField = null;
+      mgfField = null;
+      sLenField = null;
+    }
+  }
 
   /**
    * Create a new RSAPkcsOaepParameters object with the given attributes.
@@ -78,6 +120,10 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
    */
   public RSAPkcsPssParameters(Mechanism hashAlg, long mgf, long saltLength) {
     super(hashAlg, mgf);
+    if (constructor == null && constructorNoArgs == null) {
+      throw new IllegalStateException(
+          "could not find constructor for class " + CLASS_CK_PARAMS);
+    }
     this.saltLength = saltLength;
   }
 
@@ -90,14 +136,32 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
    * @postconditions (result <> null)
    */
   @Override
-  public Object getPKCS11ParamsObject() {
-    CK_RSA_PKCS_PSS_PARAMS params = new CK_RSA_PKCS_PSS_PARAMS();
-
-    params.hashAlg = hashAlg.getMechanismCode();
-    params.mgf = mgf;
-    params.sLen = saltLength;
-
-    return params;
+  public CK_RSA_PKCS_PSS_PARAMS getPKCS11ParamsObject() {
+    if (constructorNoArgs != null) {
+      try {
+        CK_RSA_PKCS_PSS_PARAMS ret =
+            (CK_RSA_PKCS_PSS_PARAMS) constructor.newInstance();
+        hashAlgField.set(ret, hashAlg.getMechanismCode());
+        mgfField.set(ret, mgf);
+        sLenField.set(ret, saltLength);
+        return ret;
+      } catch (InstantiationException | IllegalAccessException
+          | IllegalArgumentException | InvocationTargetException ex) {
+        throw new IllegalStateException(
+            "Could not create new instance of " + CLASS_CK_PARAMS, ex);
+      }
+    } else {
+      String hashAlgName = Functions.getHashAlgName(hashAlg);
+      String mgfAlgName = Functions.getMGFName(mgf);
+      try {
+        return (CK_RSA_PKCS_PSS_PARAMS) constructor.newInstance(
+            hashAlgName, mgfAlgName, null, (int) saltLength);
+      } catch (InstantiationException | IllegalAccessException
+          | IllegalArgumentException | InvocationTargetException ex) {
+        throw new IllegalStateException(
+            "Could not create new instance of " + CLASS_CK_PARAMS, ex);
+      }
+    }
   }
 
   /**

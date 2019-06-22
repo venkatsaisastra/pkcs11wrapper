@@ -121,7 +121,7 @@ public class PBEParameters implements Parameters {
    * @postconditions (result <> null)
    */
   @Override
-  public Object getPKCS11ParamsObject() {
+  public CK_PBE_PARAMS getPKCS11ParamsObject() {
     CK_PBE_PARAMS params = new CK_PBE_PARAMS();
 
     params.pInitVector = iv;

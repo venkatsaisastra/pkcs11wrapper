@@ -75,7 +75,7 @@ public class GenerateKey extends TestBase {
     println("Generating generic secret key");
 
     ValuedSecretKey secretKeyTemplate = ValuedSecretKey.newGenericSecretKey();
-    secretKeyTemplate.getValueLen().setLongValue(new Long(16));
+    secretKeyTemplate.getValueLen().setLongValue(Long.valueOf(16));
     secretKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
 
     ValuedSecretKey secretKey = (ValuedSecretKey) session.generateKey(

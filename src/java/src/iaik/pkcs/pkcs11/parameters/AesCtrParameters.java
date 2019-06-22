@@ -133,7 +133,7 @@ public class AesCtrParameters implements Parameters {
   }
 
   @Override
-  public Object getPKCS11ParamsObject() {
+  public CK_AES_CTR_PARAMS getPKCS11ParamsObject() {
     return new CK_AES_CTR_PARAMS(cb);
   }
 

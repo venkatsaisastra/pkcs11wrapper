@@ -179,7 +179,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
    * @postconditions (result <> null)
    */
   @Override
-  public Object getPKCS11ParamsObject() {
+  public CK_PKCS5_PBKD2_PARAMS getPKCS11ParamsObject() {
     CK_PKCS5_PBKD2_PARAMS params = new CK_PKCS5_PBKD2_PARAMS();
 
     params.saltSource = saltSource;

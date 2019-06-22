@@ -124,7 +124,7 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
    * @postconditions (result <> null)
    */
   @Override
-  public Object getPKCS11ParamsObject() {
+  public CK_SSL3_KEY_MAT_OUT getPKCS11ParamsObject() {
     CK_SSL3_KEY_MAT_OUT params = new CK_SSL3_KEY_MAT_OUT();
 
     params.hClientMacSecret = (clientMacSecret != null)
