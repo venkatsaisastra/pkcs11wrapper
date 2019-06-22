@@ -22,7 +22,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 import iaik.pkcs.pkcs11.Util;
-import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
 import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
 
 /**

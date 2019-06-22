@@ -49,7 +49,6 @@ import java.lang.reflect.InvocationTargetException;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
-
 import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
 
 /**
