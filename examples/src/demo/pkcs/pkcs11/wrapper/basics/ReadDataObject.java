@@ -62,10 +62,9 @@ public class ReadDataObject extends TestBase {
     Token token = getNonNullToken();
     TokenInfo tokenInfo = token.getTokenInfo();
 
-    println("##################################################");
-    println("Information of Token:");
-    println(tokenInfo);
-    println("##################################################");
+    LOG.info("##################################################");
+    LOG.info("Information of Token:\n{}", tokenInfo);
+    LOG.info("##################################################");
 
     // open a read-write user session
     Session session = openReadWriteSession(token);
@@ -77,8 +76,8 @@ public class ReadDataObject extends TestBase {
   }
 
   private void main0(Session session) throws TokenException {
-    println("##################################################");
-    println(
+    LOG.info("##################################################");
+    LOG.info(
         "searching for data object on the card using this search template... ");
 
     String label = "pkcs11demo-data-" + System.currentTimeMillis();
@@ -101,7 +100,7 @@ public class ReadDataObject extends TestBase {
       dataObjectTemplate.getLabel().setCharArrayValue(label.toCharArray());
 
       // print template
-      println(dataObjectTemplate);
+      LOG.info("{}", dataObjectTemplate);
 
       // start find operation
       session.findObjectsInit(dataObjectTemplate);
@@ -111,11 +110,11 @@ public class ReadDataObject extends TestBase {
       Data dataObject;
       if (foundDataObjects.length > 0) {
         dataObject = (Data) foundDataObjects[0];
-        println("___________________________________________________");
-        print("found this data object with handle: ");
-        println(dataObject.getObjectHandle());
-        println(dataObject);
-        println("___________________________________________________");
+        LOG.info("___________________________________________________");
+        LOG.info("found this data object with handle: {}",
+            dataObject.getObjectHandle());
+        LOG.info("{}", dataObject);
+        LOG.info("___________________________________________________");
         // FIXME, there may be more than one that matches the given template,
         // the label is not unique in general
         // foundDataObjects = session.findObjects(1); //find next

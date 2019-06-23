@@ -62,7 +62,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  * DigestInfo object. See file data.dat.sh1, which is the DigestInfo encoding
  * of the SHA-1 hash of data.dat.
  */
-public class SignRawData extends TestBase {
+public class RSAPKCSSignRawData extends TestBase {
 
   @Test
   public void main() throws TokenException {
@@ -76,16 +76,16 @@ public class SignRawData extends TestBase {
   }
 
   private void main0(Token token, Session session) throws TokenException {
-    println("##################################################");
-    println("generate signature key pair");
+    LOG.info("##################################################");
+    LOG.info("generate signature key pair");
     final boolean inToken = false;
     KeyPair generatedKeyPair =
         generateRSAKeypair(token, session, 2048, inToken);
     RSAPrivateKey generatedRSAPrivateKey = (RSAPrivateKey)
         generatedKeyPair.getPrivateKey();
 
-    println("##################################################");
-    println("signing data");
+    LOG.info("##################################################");
+    LOG.info("signing data");
     byte[] dataToBeSigned = randomBytes(32); // hash value
 
     // be sure that your token can process the specified mechanism
@@ -97,10 +97,10 @@ public class SignRawData extends TestBase {
     // This signing operation is implemented in most of the drivers
     byte[] signatureValue = session.sign(dataToBeSigned);
 
-    println("The signature value is: "
-        + new BigInteger(1, signatureValue).toString(16));
+    LOG.info("The signature value is: {}",
+        new BigInteger(1, signatureValue).toString(16));
 
-    println("##################################################");
+    LOG.info("##################################################");
   }
 
 }

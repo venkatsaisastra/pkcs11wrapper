@@ -101,8 +101,8 @@ public class UploadPrivateKey extends TestBase {
   }
 
   private void main0(Token token, Session session) throws Exception {
-    println("##################################################");
-    println("Reading private key and certifiacte from: " + p12ResourcePath);
+    LOG.info("##################################################");
+    LOG.info("Reading private key and certifiacte from: {}", p12ResourcePath);
     char[] filePassword = p12Password.toCharArray();
     InputStream dataInputStream = getResourceAsStream(p12ResourcePath);
     KeyStore keystore = KeyStore.getInstance("PKCS12");
@@ -119,7 +119,7 @@ public class UploadPrivateKey extends TestBase {
     }
 
     if (keyAlias == null) {
-      println("Found no private Key in the PKCS#12 file.");
+      LOG.error("Found no private Key in the PKCS#12 file.");
       throw new IOException("Given file does not include a key!");
     }
 
@@ -127,14 +127,14 @@ public class UploadPrivateKey extends TestBase {
         (PrivateKey) keystore.getKey(keyAlias, filePassword);
 
     if (!jcaPrivateKey.getAlgorithm().equals("RSA")) {
-      println("Private Key in the PKCS#12 file is not a RSA key.");
+      LOG.error("Private Key in the PKCS#12 file is not a RSA key.");
       throw new IOException("Given file does not include a RSA key!");
     }
 
     java.security.interfaces.RSAPrivateKey jcaRsaPrivateKey =
         (java.security.interfaces.RSAPrivateKey) jcaPrivateKey;
 
-    println("got private key");
+    LOG.info("got private key");
 
     Certificate[] certificateChain = keystore.getCertificateChain(keyAlias);
 
@@ -146,11 +146,9 @@ public class UploadPrivateKey extends TestBase {
     byte[] certificateFingerprint = sha1.digest(encodedCert);
     boolean[] keyUsage = userCertificate.getKeyUsage();
 
-    println("got user certifiate");
-    println("##################################################");
-
-    println("##################################################");
-    println("creating private key object on the card... ");
+    LOG.info("got user certifiate");
+    LOG.info("##################################################");
+    LOG.info("creating private key object on the card... ");
 
     // check out what attributes of the keys we may set using the mechanism info
     MechanismInfo signatureMechanismInfo;
@@ -301,14 +299,14 @@ public class UploadPrivateKey extends TestBase {
           unsignedBigIntergerToByteArray(crtKey.getCrtCoefficient()));
     }
 
-    println(pkcs11RsaPrivateKey);
+    LOG.info("{}", pkcs11RsaPrivateKey);
 
     List<PKCS11Object> newP1kcs11Objects = new ArrayList<>();
     try {
       newP1kcs11Objects.add(session.createObject(pkcs11RsaPrivateKey));
 
-      println("##################################################");
-      println("creating certificate object on the card... ");
+      LOG.info("##################################################");
+      LOG.info("creating certificate object on the card... ");
 
       // create certificate object template
       X509PublicKeyCertificate pkcs11X509PublicKeyCertificate =
@@ -330,7 +328,7 @@ public class UploadPrivateKey extends TestBase {
       pkcs11X509PublicKeyCertificate.getValue().setByteArrayValue(
           userCertificate.getEncoded());
 
-      println(pkcs11X509PublicKeyCertificate);
+      LOG.info("{}", pkcs11X509PublicKeyCertificate);
       newP1kcs11Objects.add(
           session.createObject(pkcs11X509PublicKeyCertificate));
     } finally {
@@ -339,7 +337,7 @@ public class UploadPrivateKey extends TestBase {
       }
     }
 
-    println("##################################################");
+    LOG.info("##################################################");
   }
 
   private static byte[] unsignedBigIntergerToByteArray(BigInteger bigInteger) {

@@ -71,8 +71,8 @@ public class GenerateKey extends TestBase {
   private void main0(Token token, Session session) throws TokenException {
     Mechanism mech = getSupportedMechanism(token,
         PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN);
-    println("##################################################");
-    println("Generating generic secret key");
+    LOG.info("##################################################");
+    LOG.info("Generating generic secret key");
 
     ValuedSecretKey secretKeyTemplate = ValuedSecretKey.newGenericSecretKey();
     secretKeyTemplate.getValueLen().setLongValue(Long.valueOf(16));
@@ -81,10 +81,8 @@ public class GenerateKey extends TestBase {
     ValuedSecretKey secretKey = (ValuedSecretKey) session.generateKey(
         mech, secretKeyTemplate);
 
-    println("the secret key is");
-    println(secretKey.toString());
-
-    println("##################################################");
+    LOG.info("the secret key is\n{}", secretKey);
+    LOG.info("##################################################");
   }
 
 }

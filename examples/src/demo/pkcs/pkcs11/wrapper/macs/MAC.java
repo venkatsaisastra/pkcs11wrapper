@@ -74,8 +74,8 @@ public class MAC extends TestBase {
   }
 
   private void main0(Token token, Session session) throws TokenException {
-    println("##################################################");
-    println("generate secret MAC key");
+    LOG.info("##################################################");
+    LOG.info("generate secret MAC key");
 
     ValuedSecretKey macKeyTemplate = ValuedSecretKey.newGenericSecretKey();
     macKeyTemplate.getSign().setBooleanValue(Boolean.TRUE);
@@ -87,12 +87,12 @@ public class MAC extends TestBase {
     Mechanism keyMechanism =
         Mechanism.get(PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN);
     if (Util.supports(token, keyMechanism.getMechanismCode())) {
-      println("generate secret MAC key");
+      LOG.info("generate secret MAC key");
       macKeyTemplate.getValueLen().setLongValue(Long.valueOf(keyBytesLen));
       secretMACKey = (ValuedSecretKey)
           session.generateKey(keyMechanism, macKeyTemplate);
     } else {
-      println("import secret MAC key (generation not supported)");
+      LOG.info("import secret MAC key (generation not supported)");
       byte[] keyValue = new byte[keyBytesLen];
       new SecureRandom().nextBytes(keyValue);
       macKeyTemplate.getValue().setByteArrayValue(keyValue);
@@ -100,24 +100,24 @@ public class MAC extends TestBase {
       secretMACKey = (ValuedSecretKey) session.createObject(macKeyTemplate);
     }
 
-    println("##################################################");
+    LOG.info("##################################################");
     Mechanism signatureMechanism = getSupportedMechanism(token,
         PKCS11Constants.CKM_SHA256_HMAC);
     byte[] rawData = randomBytes(1057);
 
     session.signInit(signatureMechanism, secretMACKey);
     byte[] macValue = session.sign(rawData);
-    println("The MAC value is: " + new BigInteger(1, macValue).toString(16));
+    LOG.info("The MAC value is: {}", new BigInteger(1, macValue).toString(16));
 
-    println("##################################################");
-    print("verification of the MAC... ");
+    LOG.info("##################################################");
+    LOG.info("verification of the MAC... ");
 
     // initialize for verification
     session.verifyInit(signatureMechanism, secretMACKey);
     // throws an exception upon unsuccessful verification
     session.verify(rawData, macValue);
 
-    println("##################################################");
+    LOG.info("##################################################");
   }
 
 }

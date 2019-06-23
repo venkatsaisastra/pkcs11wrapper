@@ -70,6 +70,7 @@ public abstract class SymmEncryptDecrypt extends TestBase {
   @Test
   public void main() throws TokenException {
     Token token = getNonNullToken();
+
     Session session = openReadWriteSession(token);
     try {
       main0(token, session);
@@ -79,8 +80,8 @@ public abstract class SymmEncryptDecrypt extends TestBase {
   }
 
   private void main0(Token token, Session session) throws TokenException {
-    println("##################################################");
-    println("generate secret encryption/decryption key");
+    LOG.info("##################################################");
+    LOG.info("generate secret encryption/decryption key");
     Mechanism keyMechanism = getKeyGenMech(token);
 
     ValuedSecretKey keyTemplate = getKeyTemplate();
@@ -88,8 +89,8 @@ public abstract class SymmEncryptDecrypt extends TestBase {
 
     ValuedSecretKey encryptionKey = (ValuedSecretKey)
         session.generateKey(keyMechanism, keyTemplate);
-    println("##################################################");
-    println("encrypting data");
+    LOG.info("##################################################");
+    LOG.info("encrypting data");
 
     byte[] rawData = randomBytes(1024);
 
@@ -104,8 +105,8 @@ public abstract class SymmEncryptDecrypt extends TestBase {
         buffer, 0, buffer.length);
     byte[] encryptedData = Arrays.copyOf(buffer, len);
 
-    println("##################################################");
-    println("trying to decrypt");
+    LOG.info("##################################################");
+    LOG.info("trying to decrypt");
 
     Mechanism decryptionMechanism = getEncryptionMech(token);
 

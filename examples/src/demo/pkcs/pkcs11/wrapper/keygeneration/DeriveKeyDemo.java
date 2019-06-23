@@ -85,8 +85,7 @@ public class DeriveKeyDemo extends TestBase {
     SecretKey baseKey = (SecretKey) session.generateKey(keyGenerationMechanism,
         baseKeyTemplate);
 
-    System.out.println("Base key: ");
-    System.out.println(baseKey.toString());
+    LOG.info("Base key\n{}", baseKey);
 
     /* TODO: uncomment me if supported by the underlying Sun's PKCS11Wrapper
     println("##################################################");

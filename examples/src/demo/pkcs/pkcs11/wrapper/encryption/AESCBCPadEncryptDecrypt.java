@@ -40,41 +40,48 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package demo.pkcs.pkcs11.wrapper.random;
+package demo.pkcs.pkcs11.wrapper.encryption;
 
-import org.junit.Test;
-
-import demo.pkcs.pkcs11.wrapper.TestBase;
-import iaik.pkcs.pkcs11.Session;
+import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.wrapper.Functions;
+import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
+import iaik.pkcs.pkcs11.parameters.InitializationVectorParameters;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
- * This demo program uses a PKCS#11 module to produce random data.
+ * This demo program uses a PKCS#11 module to encrypt and decrypt via AES.
  */
-public class GenerateRandom extends TestBase {
+public class AESCBCPadEncryptDecrypt extends SymmEncryptDecrypt {
 
-  @Test
-  public void main() throws TokenException {
-    Token token = getNonNullToken();
-    Session session = openReadOnlySession(token);
-    try {
-      main0(token, session);
-    } finally {
-      session.closeSession();
-    }
+  private final byte[] iv;
+
+  public AESCBCPadEncryptDecrypt() {
+    iv = randomBytes(16);
   }
 
-  private void main0(Token token, Session session) throws TokenException {
-    final int n = 1057;
-    LOG.info("##################################################");
-    LOG.info("generating {} bytes of random data... ", n);
-    byte[] dataBuffer = session.generateRandom(n);
-    LOG.info("random is");
-    LOG.info(Functions.toHexString(dataBuffer));
-    LOG.info("finished");
-    LOG.info("##################################################");
+  @Override
+  protected Mechanism getKeyGenMech(Token token) throws TokenException {
+    return getSupportedMechanism(token, PKCS11Constants.CKM_AES_KEY_GEN);
+  }
+
+  @Override
+  protected Mechanism getEncryptionMech(Token token) throws TokenException {
+    Mechanism mech = getSupportedMechanism(token,
+        PKCS11Constants.CKM_AES_CBC_PAD);
+    InitializationVectorParameters encryptIVParameters =
+        new InitializationVectorParameters(iv);
+    mech.setParameters(encryptIVParameters);
+    return mech;
+  }
+
+  @Override
+  protected ValuedSecretKey getKeyTemplate() {
+    ValuedSecretKey keyTemplate = ValuedSecretKey.newAESSecretKey();
+    keyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
+    keyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
+    keyTemplate.getValueLen().setLongValue(Long.valueOf(16));
+    return keyTemplate;
   }
 
 }

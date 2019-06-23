@@ -80,8 +80,8 @@ public class GenericFind extends TestBase {
     // limit output if required
     int limit = 0, counter = 1;
 
-    println("##################################################");
-    println("Find all signature keys.");
+    LOG.info("##################################################");
+    LOG.info("Find all signature keys.");
     GenericTemplate signatureKeyTemplate = new GenericTemplate();
     BooleanAttribute signAttribute = new BooleanAttribute(Attribute.SIGN);
     signAttribute.setBooleanValue(Boolean.TRUE);
@@ -97,26 +97,26 @@ public class GenericFind extends TestBase {
     List<PKCS11Object> signatureKeys = null;
     if (foundSignatureKeyObjects.length > 0) {
       signatureKeys = new Vector<>();
-      println("__________________________________________________");
-      println(foundSignatureKeyObjects[0]);
+      LOG.info("__________________________________________________\n{}",
+          foundSignatureKeyObjects[0]);
       signatureKeys.add(foundSignatureKeyObjects[0]);
       while ((foundSignatureKeyObjects = session.findObjects(1)).length > 0
           && (0 == limit || counter < limit)) {
-        println("__________________________________________________");
-        println(foundSignatureKeyObjects[0]);
+        LOG.info("__________________________________________________\n{}",
+            foundSignatureKeyObjects[0]);
         signatureKeys.add(foundSignatureKeyObjects[0]);
         counter++;
       }
 
-      println("__________________________________________________");
+      LOG.info("__________________________________________________");
     } else {
       String msg = "There is no object with a CKA_SIGN attribute set to true.";
-      println(msg);
+      LOG.info(msg);
       throw new TokenException(msg);
     }
     session.findObjectsFinal();
-    println("##################################################");
-    println("Find corresponding certificates for private signature keys.");
+    LOG.info("##################################################\n{}",
+        "Find corresponding certificates for private signature keys.");
 
     List<PKCS11Object> privateSignatureKeys = new Vector<>();
 
@@ -148,27 +148,24 @@ public class GenericFind extends TestBase {
       session.findObjectsInit(certificateSearchTemplate);
 
       PKCS11Object[] foundCertificateObjects;
-      println("__________________________________________________");
       if ((foundCertificateObjects = session.findObjects(1)).length > 0) {
         privateKeyToCertificateTable.put(
             privateSignatureKey, foundCertificateObjects[0]);
-        println("The certificate for this private signature key");
-        println(privateSignatureKey);
+        LOG.info("The certificate for this private signature key\n {}",
+            privateSignatureKey);
 
-        println("--------------------------------------------------");
-        println("is");
-        println(foundCertificateObjects[0]);
-
+        LOG.info("is\n--------------------------------------------------\n{}",
+            foundCertificateObjects[0]);
       } else {
-        println("There is no certificate for this private signature key");
-        println(privateSignatureKey);
+        LOG.info("There is no certificate for this private signature key\n{}",
+            privateSignatureKey);
       }
-      println("__________________________________________________");
+      LOG.info("__________________________________________________");
 
       session.findObjectsFinal();
     }
 
-    println("found " + counter + " objects on this token");
+    LOG.info("found {} objects on this token", counter);
   }
 
 }

@@ -70,8 +70,7 @@ public class DeleteObject extends TestBase {
 
   private void main0(Session session) throws TokenException {
     SessionInfo sessionInfo = session.getSessionInfo();
-    println("using session:");
-    println(sessionInfo);
+    LOG.info("using session: {}", sessionInfo);
 
     // create a new object to be deleted later
     ValuedSecretKey secKeyTemplate = ValuedSecretKey.newGenericSecretKey();
@@ -80,7 +79,7 @@ public class DeleteObject extends TestBase {
 
     PKCS11Object secKey = session.createObject(secKeyTemplate);
     session.destroyObject(secKey);
-    println("deleted object");
+    LOG.info("deleted object");
   }
 
 }

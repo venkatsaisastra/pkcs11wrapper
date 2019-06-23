@@ -47,6 +47,9 @@ import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Module;
@@ -72,6 +75,8 @@ public class TestBase {
 
   private static SecureRandom random = new SecureRandom();
 
+  protected Logger LOG = LoggerFactory.getLogger(getClass());
+
   static {
     Properties props = new Properties();
     try {
@@ -90,7 +95,7 @@ public class TestBase {
   protected Token getNonNullToken() throws TokenException {
     Token token = getToken();
     if (token == null) {
-      println("We have no token to proceed. Finished.");
+      LOG.error("We have no token to proceed. Finished.");
       throw new TokenException("No token found!");
     }
     return token;
@@ -130,18 +135,6 @@ public class TestBase {
     return openReadWriteSession(getToken());
   }
 
-  protected void print(Object obj) {
-    System.out.print(obj);
-  }
-
-  protected void println(Object obj) {
-    System.out.println(obj);
-  }
-
-  protected void println() {
-    System.out.println();
-  }
-
   protected InputStream getResourceAsStream(String path) {
     return getClass().getResourceAsStream(path);
   }
@@ -158,7 +151,7 @@ public class TestBase {
       return;
     } else {
       String msg = "Mechanism " + mech.getName() + " is not supported";
-      println(msg);
+      LOG.error(msg);
       throw new TokenException(msg);
     }
   }

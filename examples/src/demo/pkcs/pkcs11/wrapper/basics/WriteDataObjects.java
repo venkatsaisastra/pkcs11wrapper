@@ -68,11 +68,11 @@ public class WriteDataObjects extends TestBase {
   }
 
   private void main0(Session session) throws TokenException {
-    println("##################################################");
+    LOG.info("##################################################");
     // read the data from the file
     byte[] data = "hello world".getBytes();
-    println("##################################################");
-    println("creating data object on the card... ");
+    LOG.info("##################################################");
+    LOG.info("creating data object on the card... ");
 
     // create certificate object template
     Data dataObjectTemplate = new Data();
@@ -92,14 +92,14 @@ public class WriteDataObjects extends TestBase {
     dataObjectTemplate.getToken().setBooleanValue(Boolean.TRUE);
 
     // print template
-    println(dataObjectTemplate);
+    LOG.info("{}", dataObjectTemplate);
 
     // create object
     PKCS11Object newObject = session.createObject(dataObjectTemplate);
     // destroy after the creation
     session.destroyObject(newObject);
 
-    println("##################################################");
+    LOG.info("##################################################");
   }
 
 }

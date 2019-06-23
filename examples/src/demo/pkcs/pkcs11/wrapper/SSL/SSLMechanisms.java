@@ -85,8 +85,8 @@ public class SSLMechanisms extends TestBase {
     ValuedSecretKey masterSecret = null;
 
     if (Util.supports(token, PKCS11Constants.CKM_SSL3_PRE_MASTER_KEY_GEN)) {
-      println("##################################################");
-      println("Generating premaster secret");
+      LOG.info("##################################################");
+      LOG.info("Generating premaster secret");
 
       VersionParameters versionParameters =
           new VersionParameters((byte) 3, (byte) 0);
@@ -102,27 +102,25 @@ public class SSLMechanisms extends TestBase {
       premasterSecret = (ValuedSecretKey) session.generateKey(
           sslPremasterKeyGenerationMechanism, premasterSecretTemplate);
 
-      println("the premaster secret is");
-      println(premasterSecret.toString());
-
-      println("##################################################");
+      LOG.info("the premaster secret is\n{}", premasterSecret.toString());
+      LOG.info("##################################################");
     }
 
     SecureRandom randomSource = SecureRandom.getInstance("SHA1PRNG");
     if (Util.supports(token, PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE)
         && (premasterSecret != null)) {
-      println("##################################################");
-      println("Deriving master secret");
+      LOG.info("##################################################");
+      LOG.info("Deriving master secret");
 
       byte[] clientRandom = new byte[28];
       byte[] serverRandom = new byte[28];
 
-      print("generating client random... ");
+      LOG.info("generating client random... ");
       randomSource.nextBytes(clientRandom);
-      println("finished");
-      print("generating server random... ");
+      LOG.info("finished");
+      LOG.info("generating server random... ");
       randomSource.nextBytes(serverRandom);
-      println("finished");
+      LOG.info("finished");
 
       VersionParameters clientVersion = new VersionParameters();
       SSL3RandomDataParameters randomInfo =
@@ -142,28 +140,26 @@ public class SSLMechanisms extends TestBase {
           sslMasterKeyDerivationMechanism, premasterSecret,
           masterSecretTemplate);
 
-      println("the client version is");
-      println(masterKeyDeriveParameters.getVersion().toString());
-      println("the master secret is");
-      println(masterSecret.toString());
-
-      println("##################################################");
+      LOG.info("the client version is\n{}",
+          masterKeyDeriveParameters.getVersion());
+      LOG.info("the master secret is\n{}", masterSecret);
+      LOG.info("##################################################");
     }
 
     if (Util.supports(token, PKCS11Constants.CKM_SSL3_KEY_AND_MAC_DERIVE)
         && (masterSecret != null)) {
-      println("##################################################");
-      println("Deriving key material");
+      LOG.info("##################################################");
+      LOG.info("Deriving key material");
 
       byte[] clientRandom = new byte[28];
       byte[] serverRandom = new byte[28];
 
-      print("generating client random... ");
+      LOG.info("generating client random... ");
       randomSource.nextBytes(clientRandom);
-      println("finished");
-      print("generating server random... ");
+      LOG.info("finished");
+      LOG.info("generating server random... ");
       randomSource.nextBytes(serverRandom);
-      println("finished");
+      LOG.info("finished");
 
       SSL3RandomDataParameters randomInfo =
           new SSL3RandomDataParameters(clientRandom, serverRandom);
@@ -183,13 +179,9 @@ public class SSLMechanisms extends TestBase {
       SecretKey derivedSecret = (SecretKey) session.deriveKey(
           sslKeyAndMACDerivationMechanism, masterSecret, null);
 
-      println("the key material is");
-      println(returedKeyMaterial);
-
-      println("the derivedSecret is");
-      println(derivedSecret);
-
-      println("##################################################");
+      LOG.info("the key material is\n{}", returedKeyMaterial);
+      LOG.info("the derivedSecret is\n{}", derivedSecret);
+      LOG.info("##################################################");
     }
   }
 

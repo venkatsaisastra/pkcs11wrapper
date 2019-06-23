@@ -76,62 +76,58 @@ public class GetInfo extends TestBase {
 
   @Test
   public void main() throws TokenException {
-    println("##################################################");
     Module pkcs11Module = getModule();
     Info info = pkcs11Module.getInfo();
-    println(info);
-    println("##################################################");
-    println("getting list of all slots");
+    LOG.info("##################################################");
+    LOG.info("{}", info);
+    LOG.info("##################################################");
+    LOG.info("getting list of all slots");
     Slot[] slots = pkcs11Module.getSlotList(Module.SlotRequirement.ALL_SLOTS);
 
     for (int i = 0; i < slots.length; i++) {
-      println("___________________________________________________");
+      LOG.info("___________________________________________________");
       SlotInfo slotInfo = slots[i].getSlotInfo();
-      print("Slot with ID: ");
-      println(slots[i].getSlotID());
-      println("--------------------------------------------------");
-      println(slotInfo);
-      println("___________________________________________________");
+      LOG.info("Slot with ID: {}", slots[i].getSlotID());
+      LOG.info("--------------------------------------------------");
+      LOG.info("{}", slotInfo);
+      LOG.info("___________________________________________________");
     }
 
-    println("##################################################");
-    println("getting list of all tokens");
+    LOG.info("##################################################");
+    LOG.info("getting list of all tokens");
     Slot[] slotsWithToken = pkcs11Module
         .getSlotList(Module.SlotRequirement.TOKEN_PRESENT);
     Token[] tokens = new Token[slotsWithToken.length];
 
     for (int i = 0; i < slotsWithToken.length; i++) {
-      println("___________________________________________________");
+      LOG.info("___________________________________________________");
       tokens[i] = slotsWithToken[i].getToken();
       TokenInfo tokenInfo = tokens[i].getTokenInfo();
-      print("Token in slot with ID: ");
-      println(tokens[i].getSlot().getSlotID());
-      println("--------------------------------------------------");
-      println(tokenInfo);
+      LOG.info("Token in slot with ID: {}", tokens[i].getSlot().getSlotID());
+      LOG.info("--------------------------------------------------");
+      LOG.info("{}", tokenInfo);
 
-      println("supported Mechanisms:");
+      LOG.info("supported Mechanisms:");
       Mechanism[] supportedMechanisms = tokens[i].getMechanismList();
       for (int j = 0; j < supportedMechanisms.length; j++) {
-        println("--------------------------------------------------");
-        println("Mechanism Name: " + supportedMechanisms[j].getName());
+        LOG.info("--------------------------------------------------");
+        LOG.info("Mechanism Name: {}", supportedMechanisms[j].getName());
         MechanismInfo mechanismInfo =
             tokens[i].getMechanismInfo(supportedMechanisms[j]);
-        println(mechanismInfo);
-        println("--------------------------------------------------");
+        LOG.info("{}", mechanismInfo);
+        LOG.info("--------------------------------------------------");
       }
-      println("___________________________________________________");
+      LOG.info("___________________________________________________");
     }
-    println("##################################################");
 
-    println("##################################################");
-    println("listing objects on tokens");
+    LOG.info("##################################################");
+    LOG.info("listing objects on tokens");
     for (int i = 0; i < tokens.length; i++) {
-      println("___________________________________________________");
-      println("listing objects for token: ");
+      LOG.info("___________________________________________________");
       TokenInfo tokenInfo = tokens[i].getTokenInfo();
-      println(tokenInfo);
+      LOG.info("listing objects for token: {}", tokenInfo);
       if (!tokenInfo.isTokenInitialized()) {
-        println("token not initialized yet");
+        LOG.info("token not initialized yet");
         continue;
       }
 
@@ -146,8 +142,7 @@ public class GetInfo extends TestBase {
 
   private void main0(Session session) throws TokenException {
     SessionInfo sessionInfo = session.getSessionInfo();
-    println(" using session:");
-    println(sessionInfo);
+    LOG.info("using session: {}", sessionInfo);
 
     int limit = 0, counter = 0;
 
@@ -159,9 +154,9 @@ public class GetInfo extends TestBase {
     CertificateFactory x509CertificateFactory = null;
     while (objects.length > 0 && (0 == limit || counter < limit)) {
       PKCS11Object object = objects[0];
-      println("--------------------------------------------------");
-      println("Object with handle: " + objects[0].getObjectHandle());
-      println(object);
+      LOG.info("--------------------------------------------------");
+      LOG.info("Object with handle: {}", objects[0].getObjectHandle());
+      LOG.info("{}", object);
       if (object instanceof X509PublicKeyCertificate) {
         try {
           byte[] encodedCertificate = ((X509PublicKeyCertificate) object)
@@ -171,13 +166,11 @@ public class GetInfo extends TestBase {
           }
           Certificate certificate = x509CertificateFactory.generateCertificate(
               new ByteArrayInputStream(encodedCertificate));
-          println("..................................................");
-          println("The decoded X509PublicKeyCertificate is:");
-          println(certificate.toString());
-          println("..................................................");
+          LOG.info("..................................................");
+          LOG.info("The decoded X509PublicKeyCertificate is:\n{}", certificate);
+          LOG.info("..................................................");
         } catch (Exception ex) {
-          println("Could not decode this X509PublicKeyCertificate: "
-                  + ex.toString());
+          LOG.info("Could not decode this X509PublicKeyCertificate: {}", ex);
         }
       } else if (object instanceof X509AttributeCertificate) {
         try {
@@ -188,23 +181,21 @@ public class GetInfo extends TestBase {
           }
           Certificate certificate = x509CertificateFactory.generateCertificate(
               new ByteArrayInputStream(encodedCertificate));
-          println("..................................................");
-          println("The decoded X509AttributeCertificate is:");
-          println(certificate.toString());
-          println("..................................................");
+          LOG.info("..................................................");
+          LOG.info("The decoded X509AttributeCertificate is:\n{}", certificate);
+          LOG.info("..................................................");
         } catch (Exception ex) {
-          println("Could not decode this X509AttributeCertificate: "
-                  + ex.toString());
+          LOG.info("Could not decode this X509AttributeCertificate: {}", ex);
         }
       }
-      println("--------------------------------------------------");
+      LOG.info("--------------------------------------------------");
       objects = session.findObjects(1);
       counter++;
     }
     session.findObjectsFinal();
 
-    println("___________________________________________________");
-    println("found " + counter + " objects on this token");
-    println("___________________________________________________");
+    LOG.info("___________________________________________________");
+    LOG.info("found {} objects on this token", counter);
+    LOG.info("___________________________________________________");
   }
 }

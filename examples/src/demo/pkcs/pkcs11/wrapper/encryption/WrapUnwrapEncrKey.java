@@ -78,8 +78,8 @@ public abstract class WrapUnwrapEncrKey extends TestBase {
   }
 
   private void main0(Token token, Session session) throws TokenException {
-    println("##################################################");
-    println("generate secret encryption/decryption key");
+    LOG.info("##################################################");
+    LOG.info("generate secret encryption/decryption key");
     Mechanism keyMechanism = getSupportedMechanism(token,
         PKCS11Constants.CKM_AES_KEY_GEN);
 
@@ -117,8 +117,8 @@ public abstract class WrapUnwrapEncrKey extends TestBase {
         buffer, 0, buffer.length);
     byte[] encryptedData = Arrays.copyOf(buffer, cipherLen);
 
-    println("##################################################");
-    println("generate secret wrapping key");
+    LOG.info("##################################################");
+    LOG.info("generate secret wrapping key");
 
     Mechanism wrapKeyMechanism = getSupportedMechanism(token,
         PKCS11Constants.CKM_AES_KEY_GEN);
@@ -135,7 +135,7 @@ public abstract class WrapUnwrapEncrKey extends TestBase {
     ValuedSecretKey wrappingKey = (ValuedSecretKey)
         session.generateKey(wrapKeyMechanism, wrapKeyTemplate);
 
-    println("wrapping key");
+    LOG.info("wrapping key");
 
     byte[] wrappedKey =
         session.wrapKey(wrapMechanism, wrappingKey, encryptionKey);
@@ -143,13 +143,13 @@ public abstract class WrapUnwrapEncrKey extends TestBase {
     keyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
     keyTemplate.getToken().setBooleanValue(Boolean.FALSE);
 
-    println("unwrapping key");
+    LOG.info("unwrapping key");
 
     SecretKey unwrappedKey = (SecretKey) session.unwrapKey(wrapMechanism,
         wrappingKey, wrappedKey, keyTemplate);
 
-    println("##################################################");
-    println("trying to decrypt");
+    LOG.info("##################################################");
+    LOG.info("trying to decrypt");
 
     Mechanism decryptionMechanism =
         getSupportedMechanism(token, PKCS11Constants.CKM_AES_CBC_PAD);
@@ -168,7 +168,7 @@ public abstract class WrapUnwrapEncrKey extends TestBase {
 
     Assert.assertArrayEquals(rawData, decryptedData);
 
-    println("##################################################");
+    LOG.info("##################################################");
   }
 
 }

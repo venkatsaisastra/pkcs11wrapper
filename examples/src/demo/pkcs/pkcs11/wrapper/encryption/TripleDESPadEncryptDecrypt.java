@@ -52,11 +52,11 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 /**
  * This demo program uses a PKCS#11 module to encrypt and decrypt via AES.
  */
-public class TripleDESEncryptDecrypt extends SymmEncryptDecrypt {
+public class TripleDESPadEncryptDecrypt extends SymmEncryptDecrypt {
 
   private final byte[] iv;
 
-  public TripleDESEncryptDecrypt() {
+  public TripleDESPadEncryptDecrypt() {
     iv = randomBytes(8);
   }
 

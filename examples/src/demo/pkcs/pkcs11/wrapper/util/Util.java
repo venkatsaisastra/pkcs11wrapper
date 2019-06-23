@@ -118,8 +118,6 @@ public class Util {
       throw new NullPointerException("Argument pkcs11Module must not be null.");
     }
 
-    System.out.println("##################################################");
-    System.out.println("getting list of all tokens");
     Slot[] slots = pkcs11Module.getSlotList(
         Module.SlotRequirement.TOKEN_PRESENT);
     if (slots == null || slots.length == 0) {
@@ -176,9 +174,6 @@ public class Util {
       throw new NullPointerException("Argument \"token\" must not be null.");
     }
 
-    System.out.println(
-        "##################################################");
-    System.out.println("opening session");
     Session session = token.openSession(Token.SessionType.SERIAL_SESSION,
         rwSession, null, null);
 
@@ -202,8 +197,6 @@ public class Util {
         }
       }
     }
-    System.out
-        .println("##################################################");
 
     return session;
   }

@@ -86,8 +86,8 @@ public class GenerateKeyPair extends TestBase {
 
   private void main0(Token token, Session session)
       throws TokenException, NoSuchAlgorithmException, InvalidKeySpecException {
-    println("##################################################");
-    print("Generating new 2048 bit RSA key-pair... ");
+    LOG.info("##################################################");
+    LOG.info("Generating new 2048 bit RSA key-pair... ");
 
     // first check out what attributes of the keys we may set
     HashSet<Mechanism> supportedMechanisms = new HashSet<>(
@@ -182,17 +182,17 @@ public class GenerateKeyPair extends TestBase {
         (RSAPrivateKey) generatedKeyPair.getPrivateKey();
     // no we may work with the keys...
 
-    println("Success");
-    println("The public key is");
-    println("__________________________________________________");
-    println(generatedRSAPublicKey);
-    println("__________________________________________________");
-    println("The private key is");
-    println("__________________________________________________");
-    println(generatedRSAPrivateKey);
-    println("__________________________________________________");
+    LOG.info("Success");
+    LOG.info("The public key is");
+    LOG.info("__________________________________________________");
+    LOG.info("{}", generatedRSAPublicKey);
+    LOG.info("__________________________________________________");
+    LOG.info("The private key is");
+    LOG.info("__________________________________________________");
+    LOG.info("{}", generatedRSAPrivateKey);
+    LOG.info("__________________________________________________");
 
-    println("##################################################");
+    LOG.info("##################################################");
     RSAPublicKey exportableRsaPublicKey = generatedRSAPublicKey;
     BigInteger modulus = new BigInteger(1, exportableRsaPublicKey.getModulus()
         .getByteArrayValue());
@@ -209,9 +209,9 @@ public class GenerateKeyPair extends TestBase {
     x509EncodedPublicKey.getEncoded();
 
     // now we try to search for the generated keys
-    println("##################################################");
-    println("Trying to search for the public key of the generated key-pair by"
-        + " ID: " + Functions.toHexString(id));
+    LOG.info("##################################################");
+    LOG.info("Trying to search for the public key of the generated key-pair by"
+        + " ID: {}", Functions.toHexString(id));
     // set the search template for the public key
     RSAPublicKey exportRsaPublicKeyTemplate = new RSAPublicKey();
     exportRsaPublicKeyTemplate.getId().setByteArrayValue(id);
@@ -221,15 +221,15 @@ public class GenerateKeyPair extends TestBase {
     session.findObjectsFinal();
 
     if (foundPublicKeys.length != 1) {
-      println("Error: Cannot find the public key under the given ID!");
+      LOG.error("Error: Cannot find the public key under the given ID!");
     } else {
-      println("Found public key!");
-      println("__________________________________________________");
-      println(foundPublicKeys[0]);
-      println("__________________________________________________");
+      LOG.info("Found public key!");
+      LOG.info("__________________________________________________");
+      LOG.info("{}", foundPublicKeys[0]);
+      LOG.info("__________________________________________________");
     }
 
-    println("##################################################");
+    LOG.info("##################################################");
   }
 
 }

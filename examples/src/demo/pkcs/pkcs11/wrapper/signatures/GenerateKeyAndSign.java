@@ -73,9 +73,9 @@ public class GenerateKeyAndSign extends TestBase {
   }
 
   private void main0(Token token, Session session) throws TokenException {
-    println("##################################################");
+    LOG.info("##################################################");
     int keySize = 1024;
-    print("Generating new " + keySize + " bit RSA key-pair... ");
+    LOG.info("Generating new {} bit RSA key-pair...", keySize);
 
     final boolean inToken = false;
     KeyPair generatedKeyPair =
@@ -86,26 +86,26 @@ public class GenerateKeyAndSign extends TestBase {
         (RSAPrivateKey) generatedKeyPair.getPrivateKey();
     // no we may work with the keys...
 
-    println("Success");
-    println("The public key is");
-    println("__________________________________________________");
-    println(generatedRSAPublicKey);
-    println("__________________________________________________");
-    println("The private key is");
-    println("__________________________________________________");
-    println(generatedRSAPrivateKey);
-    println("__________________________________________________");
+    LOG.info("Success");
+    LOG.info("The public key is");
+    LOG.info("__________________________________________________");
+    LOG.info("{}", generatedRSAPublicKey);
+    LOG.info("__________________________________________________");
+    LOG.info("The private key is");
+    LOG.info("__________________________________________________");
+    LOG.info("{}", generatedRSAPrivateKey);
+    LOG.info("__________________________________________________");
 
-    println("##################################################");
-    print("Signing Data... ");
+    LOG.info("##################################################");
+    LOG.info("Signing Data... ");
 
     Mechanism signatureMechanism = Mechanism.get(PKCS11Constants.CKM_RSA_PKCS);
     session.signInit(signatureMechanism, generatedRSAPrivateKey);
     byte[] dataToBeSigned = "12345678901234567890123456789012345".getBytes();
     byte[] signatureValue = session.sign(dataToBeSigned);
-    println("Finished");
-    println("Signature Value: " + Functions.toHexString(signatureValue));
-    println("##################################################");
+    LOG.info("Finished");
+    LOG.info("Signature Value: {}", Functions.toHexString(signatureValue));
+    LOG.info("##################################################");
   }
 
 }

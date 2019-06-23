@@ -87,10 +87,9 @@ public class ImportCertificate extends TestBase {
     Token token = getNonNullToken();
     TokenInfo tokenInfo = token.getTokenInfo();
 
-    println("##################################################");
-    println("Information of Token:");
-    println(tokenInfo);
-    println("##################################################");
+    LOG.info("##################################################");
+    LOG.info("Information of Token:\n{}", tokenInfo);
+    LOG.info("##################################################");
 
     Session session = openReadWriteSession(token);
     try {
@@ -102,7 +101,7 @@ public class ImportCertificate extends TestBase {
 
   private void main0(Session session)
       throws TokenException, CertificateException, NoSuchAlgorithmException {
-    println("Reading certificate from resource file: " + resourceFile);
+    LOG.info("Reading certificate from resource file: {}", resourceFile);
 
     // parse certificate
     CertificateFactory certificateFactory =
@@ -111,15 +110,15 @@ public class ImportCertificate extends TestBase {
     Collection<? extends Certificate> certChain = certificateFactory
         .generateCertificates(inputStream);
     if (certChain.size() < 1) {
-      println("Did not find any certificate in the given input file.");
+      LOG.error("Did not find any certificate in the given input file.");
       throw new CertificateException("No certificate found!");
     }
     X509Certificate x509Certificate =
         (X509Certificate) certChain.iterator().next();
     certChain.remove(x509Certificate);
 
-    println("##################################################");
-    println("Searching for corresponding private key on token.");
+    LOG.info("##################################################");
+    LOG.info("Searching for corresponding private key on token.");
 
     PublicKey publicKey = x509Certificate.getPublicKey();
 
@@ -164,18 +163,17 @@ public class ImportCertificate extends TestBase {
       if (foundKeyObjects.length > 0) {
         Key foundKey = (Key) foundKeyObjects[0];
         objectID = foundKey.getId().getByteArrayValue();
-        println("found a correponding key on the token: ");
-        println(foundKey);
+        LOG.info("found a correponding key on the token:\n{}", foundKey);
       } else {
-        println("found no correponding key on the token.");
+        LOG.info("found no correponding key on the token.");
       }
       session.findObjectsFinal();
     } else {
-      println("public key is neither RSA, DSA nor DH.");
+      LOG.info("public key is neither RSA, DSA nor DH.");
     }
 
-    println("##################################################");
-    println("Create certificate object(s) on token.");
+    LOG.info("##################################################");
+    LOG.info("Create certificate object(s) on token.");
 
     // start with user cert
     X509Certificate currentCertificate = x509Certificate;
@@ -240,8 +238,8 @@ public class ImportCertificate extends TestBase {
         pkcs11X509PublicKeyCertificate.getValue().setByteArrayValue(
             currentCertificate.getEncoded());
 
-        println(pkcs11X509PublicKeyCertificate);
-        println("___________________________________________________");
+        LOG.info("{}", pkcs11X509PublicKeyCertificate);
+        LOG.info("___________________________________________________");
         importedObjects.add(
             session.createObject(pkcs11X509PublicKeyCertificate));
 
@@ -260,7 +258,7 @@ public class ImportCertificate extends TestBase {
       }
     }
 
-    println("##################################################");
+    LOG.info("##################################################");
   }
 
   private static byte[] unsignedBigIntergerToByteArray(BigInteger bigInteger) {

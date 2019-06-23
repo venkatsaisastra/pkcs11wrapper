@@ -40,48 +40,73 @@
 // OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package demo.pkcs.pkcs11.wrapper.encryption;
+package demo.pkcs.pkcs11.wrapper.signatures;
 
+import java.math.BigInteger;
+
+import org.junit.Test;
+
+import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Mechanism;
+import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
-import iaik.pkcs.pkcs11.parameters.InitializationVectorParameters;
+import iaik.pkcs.pkcs11.objects.KeyPair;
+import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
+import iaik.pkcs.pkcs11.parameters.RSAPkcsPssParameters;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
- * This demo program uses a PKCS#11 module to encrypt and decrypt via AES.
+ * Signs some raw data on the token. This means, the given data is directly
+ * input to the signature creation mechanism without any prior hashing. For
+ * instance, the user can provide the encoding of an already calculated
+ * DigestInfo object. See file data.dat.sh1, which is the DigestInfo encoding
+ * of the SHA-1 hash of data.dat.
  */
-public class AESEncryptDecrypt extends SymmEncryptDecrypt {
+public class RSAPKCSPSSSignRawData extends TestBase {
 
-  private final byte[] iv;
-
-  public AESEncryptDecrypt() {
-    iv = randomBytes(16);
+  @Test
+  public void main() throws TokenException {
+    Token token = getNonNullToken();
+    Session session = openReadOnlySession(token);
+    try {
+      main0(token, session);
+    } finally {
+      session.closeSession();
+    }
   }
 
-  @Override
-  protected Mechanism getKeyGenMech(Token token) throws TokenException {
-    return getSupportedMechanism(token, PKCS11Constants.CKM_AES_KEY_GEN);
-  }
+  private void main0(Token token, Session session) throws TokenException {
+    LOG.info("##################################################");
+    LOG.info("generate signature key pair");
+    final boolean inToken = false;
+    KeyPair generatedKeyPair =
+        generateRSAKeypair(token, session, 2048, inToken);
+    RSAPrivateKey generatedRSAPrivateKey = (RSAPrivateKey)
+        generatedKeyPair.getPrivateKey();
 
-  @Override
-  protected Mechanism getEncryptionMech(Token token) throws TokenException {
-    Mechanism mech = getSupportedMechanism(token,
-        PKCS11Constants.CKM_AES_CBC_PAD);
-    InitializationVectorParameters encryptIVParameters =
-        new InitializationVectorParameters(iv);
-    mech.setParameters(encryptIVParameters);
-    return mech;
-  }
+    LOG.info("##################################################");
+    LOG.info("signing data");
+    byte[] dataToBeSigned = randomBytes(32); // hash value
 
-  @Override
-  protected ValuedSecretKey getKeyTemplate() {
-    ValuedSecretKey keyTemplate = ValuedSecretKey.newAESSecretKey();
-    keyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
-    keyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
-    keyTemplate.getValueLen().setLongValue(Long.valueOf(16));
-    return keyTemplate;
+    // be sure that your token can process the specified mechanism
+    Mechanism signatureMechanism = getSupportedMechanism(token,
+        PKCS11Constants.CKM_RSA_PKCS_PSS);
+
+    RSAPkcsPssParameters pssParams = new RSAPkcsPssParameters(
+        PKCS11Constants.CKM_SHA256, PKCS11Constants.CKG_MGF1_SHA256, 32);
+    signatureMechanism.setParameters(pssParams);
+
+    // initialize for signing
+    session.signInit(signatureMechanism, generatedRSAPrivateKey);
+
+    // This signing operation is implemented in most of the drivers
+    byte[] signatureValue = session.sign(dataToBeSigned);
+
+    LOG.info("The signature value is: {}",
+        new BigInteger(1, signatureValue).toString(16));
+
+    LOG.info("##################################################");
   }
 
 }

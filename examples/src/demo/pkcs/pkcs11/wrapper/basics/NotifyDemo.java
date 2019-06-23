@@ -69,16 +69,16 @@ public class NotifyDemo extends TestBase {
   @Test
   public void main() throws TokenException {
     Token token = getNonNullToken();
-    println("##################################################");
-    print("trying to set Notify callback handler... ");
+    LOG.info("##################################################");
+    LOG.info("trying to set Notify callback handler... ");
 
     Notify callback = new MyNotify();
     String applicationData = "Hello Application!";
     token.openSession(Token.SessionType.SERIAL_SESSION,
         Token.SessionReadWriteBehavior.RO_SESSION, applicationData, callback);
 
-    println("finished");
-    println("##################################################");
+    LOG.info("finished");
+    LOG.info("##################################################");
   }
 
 }
