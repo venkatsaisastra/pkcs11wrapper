@@ -18,6 +18,7 @@
 package iaik.pkcs.pkcs11.parameters;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 import iaik.pkcs.pkcs11.Util;
@@ -38,6 +39,8 @@ extends TLSMasterKeyDeriveParameters {
 
   private static final Constructor<?> constructor;
 
+  private static final Field field_pVersion;
+
   /**
    * <B>PKCS#11:</B>
    * <PRE>
@@ -47,8 +50,34 @@ extends TLSMasterKeyDeriveParameters {
   public long prfHashMechanism;
 
   static {
-    constructor = Util.getConstructor(CLASS_CK_PARAMS,
-        CK_SSL3_RANDOM_DATA.class, CK_VERSION.class, long.class);
+    Class<?> clazz;
+    try {
+      clazz = Class.forName(TLS12MasterKeyDeriveParameters.CLASS_CK_PARAMS,
+          false, Parameters.class.getClassLoader());
+    } catch (ClassNotFoundException ex) {
+      clazz = null;
+    }
+
+    if (clazz != null) {
+      constructor = Util.getConstructor(clazz,
+          CK_SSL3_RANDOM_DATA.class, CK_VERSION.class, long.class);
+      field_pVersion = Util.getField(clazz, "pVersion");
+    } else {
+      constructor = null;
+      field_pVersion = null;
+    }
+  }
+
+  public static CK_VERSION getPVersion(Object object) {
+    if (field_pVersion == null) {
+      throw new IllegalStateException("field pVersion does not exist");
+    }
+
+    try {
+      return (CK_VERSION) field_pVersion.get(object);
+    } catch (IllegalArgumentException | IllegalAccessException ex) {
+      throw new IllegalStateException("could not get pVersion", ex);
+    }
   }
 
   public TLS12MasterKeyDeriveParameters(SSL3RandomDataParameters random,

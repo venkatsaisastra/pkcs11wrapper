@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 import iaik.pkcs.pkcs11.Util;
+import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
 import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
 
 /**
@@ -37,7 +38,7 @@ public class TLS12KeyMaterialParameters extends TLSKeyMaterialParameters {
 
   private static final Constructor<?> constructor;
 
-  private static final Field pReturnedKeyMaterialField;
+  private static final Field field_pReturnedKeyMaterial;
 
   /**
    * <B>PKCS#11:</B>
@@ -60,7 +61,21 @@ public class TLS12KeyMaterialParameters extends TLSKeyMaterialParameters {
     } catch (Throwable th) {
       field = null;
     }
-    pReturnedKeyMaterialField = field;
+    field_pReturnedKeyMaterial = field;
+  }
+
+  public static CK_SSL3_KEY_MAT_OUT getPReturnedKeyMaterial(Object object) {
+    if (field_pReturnedKeyMaterial == null) {
+      throw new IllegalStateException(
+          "field field_pReturnedKeyMaterial does not exist");
+    }
+
+    try {
+      return (CK_SSL3_KEY_MAT_OUT) field_pReturnedKeyMaterial.get(object);
+    } catch (IllegalArgumentException | IllegalAccessException ex) {
+      throw new IllegalStateException(
+          "could not get field_pReturnedKeyMaterial", ex);
+    }
   }
 
   public TLS12KeyMaterialParameters(int macSize, int keySize, int ivSize,
@@ -71,7 +86,7 @@ public class TLS12KeyMaterialParameters extends TLSKeyMaterialParameters {
       throw new IllegalStateException(
           CLASS_CK_PARAMS + " is not available in the JDK");
     }
-    if (pReturnedKeyMaterialField == null) {
+    if (field_pReturnedKeyMaterial == null) {
       throw new IllegalStateException(CLASS_CK_PARAMS
           + ".pReturnedKeyMaterialField is not available in the JDK");
     }
@@ -116,7 +131,7 @@ public class TLS12KeyMaterialParameters extends TLSKeyMaterialParameters {
           export, (CK_SSL3_RANDOM_DATA) randomInfo.getPKCS11ParamsObject(),
           prfHashMechanism);
 
-      pReturnedKeyMaterialField.set(params,
+      field_pReturnedKeyMaterial.set(params,
           returnedKeyMaterial.getPKCS11ParamsObject());
       return params;
     } catch (SecurityException | InstantiationException | IllegalAccessException

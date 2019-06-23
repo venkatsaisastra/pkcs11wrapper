@@ -86,8 +86,10 @@ import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
 import sun.security.pkcs11.wrapper.CK_MECHANISM;
 import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
 import sun.security.pkcs11.wrapper.CK_SESSION_INFO;
+import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
 import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_PARAMS;
 import sun.security.pkcs11.wrapper.CK_SSL3_MASTER_KEY_DERIVE_PARAMS;
+import sun.security.pkcs11.wrapper.CK_VERSION;
 import sun.security.pkcs11.wrapper.PKCS11;
 
 /**
@@ -584,19 +586,21 @@ public class Session {
    * template. The application must set all attributes of this new object
    * which are required for the creation of such an object on the token. Then
    * it passes this DESSecretKey object to this method to create the object on
-   * the token. Example: <code>
-   *   DESSecretKey desKeyTemplate = new DESSecretKey();
-   *   // the key type is set by the DESSecretKey's constructor, so you need
-   *   // not do it
-   *   desKeyTemplate.setValue(myDesKeyValueAs8BytesLongByteArray);
-   *   desKeyTemplate.setToken(Boolean.TRUE);
-   *   desKeyTemplate.setPrivate(Boolean.TRUE);
-   *   desKeyTemplate.setEncrypt(Boolean.TRUE);
-   *   desKeyTemplate.setDecrypt(Boolean.TRUE);
+   * the token. Example:
+   * <pre>
+   *   ValuedSecretKey aesKeyTemplate =
+   *       new ValuedSecretKey(PKCS11Constants.CKK_AES);
+   *   aesKeyTemplate.setValue(myDesKeyValueAs8BytesLongByteArray);
+   *   aesKeyTemplate.setToken(Boolean.TRUE);
+   *   aesKeyTemplate.setPrivate(Boolean.TRUE);
+   *   aesKeyTemplate.setEncrypt(Boolean.TRUE);
+   *   aesKeyTemplate.setDecrypt(Boolean.TRUE);
    *   ...
-   *   DESSecretKey theCreatedDESKeyObject =
-   *           (DESSecretKey) userSession.createObject(desKeyTemplate);
-   * </code> Refer to the PKCS#11 standard to find out what attributes must be
+   *   ValuedSecretKey theCreatedAESKeyObject =
+   *           (ValuedSecretKey) userSession.createObject(aesKeyTemplate);
+   * </pre>
+   *
+   * Refer to the PKCS#11 standard to find out what attributes must be
    * set for certain types of objects to create them on the token.
    *
    * @param templateObject
@@ -1841,6 +1845,16 @@ public class Session {
               (ckMechanism.pParameter)).pVersion);
       return (Key) PKCS11Object.getInstance(this, objectHandle);
     } else if ((ckMechanism.mechanism
+          == PKCS11Constants.CKM_TLS12_MASTER_KEY_DERIVE)
+        && (params instanceof TLS12MasterKeyDeriveParameters)) {
+      // set the returned client version
+      VersionParameters version =
+          ((TLS12MasterKeyDeriveParameters) params).getVersion();
+      CK_VERSION ckVersion =
+          TLS12MasterKeyDeriveParameters.getPVersion(ckMechanism.pParameter);
+      version.setPKCS11ParamsObject(ckVersion);
+      return (Key) PKCS11Object.getInstance(this, objectHandle);
+    } else if ((ckMechanism.mechanism
             == PKCS11Constants.CKM_SSL3_KEY_AND_MAC_DERIVE
           || ckMechanism.mechanism
             == PKCS11Constants.CKM_TLS_KEY_AND_MAC_DERIVE)
@@ -1856,6 +1870,21 @@ public class Session {
               ((CK_SSL3_KEY_MAT_PARAMS) ckMechanism.pParameter)
             .pReturnedKeyMaterial,
           this);
+      /*
+       * this mechanism returns its keys and values through the parameters
+       * object of the mechanism, but it does not return a key
+       */
+      return null;
+    } else if ((ckMechanism.mechanism
+            == PKCS11Constants.CKM_TLS12_KEY_AND_MAC_DERIVE)
+        && (params instanceof TLS12KeyMaterialParameters)) {
+      // set the returned secret keys and IVs
+      CK_SSL3_KEY_MAT_OUT pReturnedMaterial =
+          TLS12KeyMaterialParameters.getPReturnedKeyMaterial(
+              ckMechanism.pParameter);
+
+      ((TLS12KeyMaterialParameters) params).getReturnedKeyMaterial()
+          .setPKCS11ParamsObject(pReturnedMaterial, this);
       /*
        * this mechanism returns its keys and values through the parameters
        * object of the mechanism, but it does not return a key
