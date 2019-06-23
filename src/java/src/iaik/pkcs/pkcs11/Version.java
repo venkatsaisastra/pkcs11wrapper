@@ -57,12 +57,12 @@ public class Version {
   /**
    * The major version number.
    */
-  protected byte major_;
+  protected byte major;
 
   /**
    * The minor version number.
    */
-  protected byte minor_;
+  protected byte minor;
 
   /**
    * Constructor for internal use only.
@@ -84,8 +84,8 @@ public class Version {
       throw new NullPointerException(
           "Argument \"ckVersion\" must not be null.");
     }
-    major_ = ckVersion.major;
-    minor_ = ckVersion.minor;
+    this.major = ckVersion.major;
+    this.minor = ckVersion.minor;
   }
 
   /**
@@ -116,7 +116,7 @@ public class Version {
    * @return The major version number.
    */
   public byte getMajor() {
-    return major_;
+    return major;
   }
 
   /**
@@ -125,7 +125,7 @@ public class Version {
    * @return The minor version number.
    */
   public byte getMinor() {
-    return minor_;
+    return minor;
   }
 
   /**
@@ -136,12 +136,12 @@ public class Version {
   public String toString() {
     StringBuffer buffer = new StringBuffer();
 
-    buffer.append(major_ & 0xff);
+    buffer.append(major & 0xff);
     buffer.append('.');
-    if (minor_ < 10) {
+    if (minor < 10) {
       buffer.append('0');
     }
-    buffer.append(minor_ & 0xff);
+    buffer.append(minor & 0xff);
 
     return buffer.toString();
   }
@@ -161,7 +161,7 @@ public class Version {
     if (otherObject instanceof Version) {
       Version other = (Version) otherObject;
       equal = (this == other)
-          || ((this.major_ == other.major_) && (this.minor_ == other.minor_));
+          || ((this.major == other.major) && (this.minor == other.minor));
     }
 
     return equal;
@@ -175,7 +175,7 @@ public class Version {
    *         deviceError_.
    */
   public int hashCode() {
-    return major_ ^ minor_;
+    return major ^ minor;
   }
 
 }
