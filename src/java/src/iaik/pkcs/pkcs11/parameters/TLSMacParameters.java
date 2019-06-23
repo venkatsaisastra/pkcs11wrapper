@@ -110,7 +110,7 @@ public class TLSMacParameters implements Parameters {
 
   @Override
   public int hashCode() {
-    return (int) prfMechanism ^ (int) macLength ^ (int) serverOrClient;
+    return ((int) prfMechanism) ^ ((int) macLength) ^ ((int) serverOrClient);
   }
 
 }

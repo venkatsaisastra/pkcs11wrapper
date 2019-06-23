@@ -105,7 +105,7 @@ public class TLS12KeyMaterialParameters extends TLSKeyMaterialParameters {
 
   @Override
   public int hashCode() {
-    return super.hashCode() ^ (int) prfHashMechanism;
+    return super.hashCode() ^ ((int) prfHashMechanism);
   }
 
   @Override

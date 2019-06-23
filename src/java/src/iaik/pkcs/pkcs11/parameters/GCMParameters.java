@@ -45,6 +45,10 @@ public class GCMParameters implements Parameters {
         int.class, byte[].class, byte[].class);
   }
 
+  public static boolean isSupported() {
+    return constructor != null;
+  }
+
   public GCMParameters(int tagLen, byte[] iv, byte[] aad) {
     if (constructor == null) {
       throw new IllegalStateException(
@@ -61,6 +65,11 @@ public class GCMParameters implements Parameters {
         "\n  iv: ", Functions.toHexString(iv),
         "\n  aad: ", Functions.toHexString(aad),
         "\n  tagLen: ", tagLen);
+  }
+
+  @Override
+  public int hashCode() {
+    return Util.hashCode(iv) ^ Util.hashCode(aad) ^ tagLen;
   }
 
   @Override

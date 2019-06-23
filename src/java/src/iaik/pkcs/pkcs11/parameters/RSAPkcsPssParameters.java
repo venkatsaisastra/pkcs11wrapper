@@ -102,6 +102,11 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
     }
   }
 
+  @Deprecated
+  public RSAPkcsPssParameters(Mechanism hashAlg, long mgf, long saltLength) {
+    this(hashAlg.getMechanismCode(), mgf, saltLength);
+  }
+
   /**
    * Create a new RSAPkcsOaepParameters object with the given attributes.
    *
@@ -117,7 +122,7 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
    *                and (mgf == MessageGenerationFunctionType.Sha1)
    * @postconditions
    */
-  public RSAPkcsPssParameters(Mechanism hashAlg, long mgf, long saltLength) {
+  public RSAPkcsPssParameters(long hashAlg, long mgf, long saltLength) {
     super(hashAlg, mgf);
     if (constructor == null && constructorNoArgs == null) {
       throw new IllegalStateException(
@@ -139,8 +144,8 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
     if (constructorNoArgs != null) {
       try {
         CK_RSA_PKCS_PSS_PARAMS ret =
-            (CK_RSA_PKCS_PSS_PARAMS) constructor.newInstance();
-        hashAlgField.set(ret, hashAlg.getMechanismCode());
+            (CK_RSA_PKCS_PSS_PARAMS) constructorNoArgs.newInstance();
+        hashAlgField.set(ret, hashAlg);
         mgfField.set(ret, mgf);
         sLenField.set(ret, saltLength);
         return ret;
@@ -151,10 +156,12 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
       }
     } else {
       String hashAlgName = Functions.getHashAlgName(hashAlg);
-      String mgfAlgName = Functions.getMGFName(mgf);
+      // The constructor requires that mgf uses also hashAlg as its hash
+      // algorithm
+      String mgfHashAlgName = hashAlgName;
       try {
         return (CK_RSA_PKCS_PSS_PARAMS) constructor.newInstance(
-            hashAlgName, mgfAlgName, null, (int) saltLength);
+            hashAlgName, "MGF1", mgfHashAlgName, (int) saltLength);
       } catch (InstantiationException | IllegalAccessException
           | IllegalArgumentException | InvocationTargetException ex) {
         throw new IllegalStateException(

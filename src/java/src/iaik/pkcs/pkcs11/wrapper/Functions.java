@@ -1042,7 +1042,11 @@ public class Functions implements PKCS11Constants {
   }
 
   public static String getHashAlgName(Mechanism hashMechanism) {
-    return hashMechCodeToHashNames.get(hashMechanism.getMechanismCode());
+    return getHashAlgName(hashMechanism.getMechanismCode());
+  }
+
+  public static String getHashAlgName(long hashMechanism) {
+    return hashMechCodeToHashNames.get(hashMechanism);
   }
 
 }

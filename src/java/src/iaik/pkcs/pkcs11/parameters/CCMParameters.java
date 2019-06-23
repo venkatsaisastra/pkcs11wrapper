@@ -67,6 +67,11 @@ public class CCMParameters implements Parameters {
   }
 
   @Override
+  public int hashCode() {
+    return dataLen ^ Util.hashCode(iv) ^ Util.hashCode(aad) ^ tagLen;
+  }
+
+  @Override
   public Object getPKCS11ParamsObject() {
     try {
       return constructor.newInstance(tagLen, iv, aad, dataLen);

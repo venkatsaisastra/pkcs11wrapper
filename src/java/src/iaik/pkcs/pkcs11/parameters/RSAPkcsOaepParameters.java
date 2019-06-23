@@ -101,6 +101,13 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
    */
   protected byte[] sourceData;
 
+  @Deprecated
+  public RSAPkcsOaepParameters(Mechanism hashAlgorithm,
+      long maskGenerationFunction, long source, byte[] sourceData) {
+    this(hashAlgorithm.getMechanismCode(), maskGenerationFunction, source,
+        sourceData);
+  }
+
   /**
    * Create a new RSAPkcsOaepParameters object with the given attributes.
    *
@@ -122,7 +129,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
    *                     or (source == SourceType.DataSpecified))
    * @postconditions
    */
-  public RSAPkcsOaepParameters(Mechanism hashAlgorithm,
+  public RSAPkcsOaepParameters(long hashAlgorithm,
       long maskGenerationFunction, long source, byte[] sourceData) {
     super(hashAlgorithm, maskGenerationFunction);
     if ((source != SourceType.EMPTY)
@@ -146,7 +153,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
   public CK_RSA_PKCS_OAEP_PARAMS getPKCS11ParamsObject() {
     CK_RSA_PKCS_OAEP_PARAMS params = new CK_RSA_PKCS_OAEP_PARAMS();
 
-    params.hashAlg = hashAlg.getMechanismCode();
+    params.hashAlg = hashAlg;
     params.mgf = mgf;
     params.source = source;
     params.pSourceData = sourceData;

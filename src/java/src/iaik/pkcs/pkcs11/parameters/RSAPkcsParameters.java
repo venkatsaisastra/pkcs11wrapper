@@ -42,8 +42,8 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
@@ -63,7 +63,7 @@ abstract public class RSAPkcsParameters implements Parameters {
    * The message digest algorithm used to calculate the digest of the encoding
    * parameter.
    */
-  protected Mechanism hashAlg;
+  protected long hashAlg;
 
   /**
    * The mask to apply to the encoded block.
@@ -79,25 +79,44 @@ abstract public class RSAPkcsParameters implements Parameters {
    * @param mgf
    *          The mask to apply to the encoded block. One of the constants
    *          defined in the MessageGenerationFunctionType interface.
+   *          Due to limitation in the underlying jdk.crypto.cryptoki
+   *          implementation, only MGF1 is allowed and the hash algorithm
+   *          in mgf must be same as hashAlg.
    * @preconditions (hashAlgorithm <> null)
    *                and (maskGenerationFunction
    *                      == MessageGenerationFunctionType.Sha1)
    * @postconditions
    */
-  protected RSAPkcsParameters(Mechanism hashAlg, long mgf) {
-    if ((mgf != PKCS11Constants.CKG_MGF1_SHA1)
-        && (mgf != PKCS11Constants.CKG_MGF1_SHA224)
-        && (mgf != PKCS11Constants.CKG_MGF1_SHA256)
-        && (mgf != PKCS11Constants.CKG_MGF1_SHA384)
-        && (mgf != PKCS11Constants.CKG_MGF1_SHA512)
-        && (mgf != PKCS11Constants.CKG_MGF1_SHA3_224)
-        && (mgf != PKCS11Constants.CKG_MGF1_SHA3_256)
-        && (mgf != PKCS11Constants.CKG_MGF1_SHA3_384)
-        && (mgf != PKCS11Constants.CKG_MGF1_SHA3_512)) {
+  protected RSAPkcsParameters(long hashAlg, long mgf) {
+    boolean valid;
+    if (mgf == PKCS11Constants.CKG_MGF1_SHA1) {
+      valid = hashAlg == PKCS11Constants.CKM_SHA_1;
+    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA224) {
+      valid = hashAlg == PKCS11Constants.CKM_SHA224;
+    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA256) {
+      valid = hashAlg == PKCS11Constants.CKM_SHA256;
+    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA384) {
+      valid = hashAlg == PKCS11Constants.CKM_SHA384;
+    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA512) {
+      valid = hashAlg == PKCS11Constants.CKM_SHA512;
+    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_224) {
+      valid = hashAlg == PKCS11Constants.CKM_SHA3_224;
+    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_256) {
+      valid = hashAlg == PKCS11Constants.CKM_SHA3_256;
+    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_384) {
+      valid = hashAlg == PKCS11Constants.CKM_SHA3_384;
+    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_512) {
+      valid = hashAlg == PKCS11Constants.CKM_SHA3_512;
+    } else {
+      valid = false;
+    }
+
+    if (!valid) {
       throw new IllegalArgumentException(
         "Illegal value for argument\"mgf\": " + Long.toHexString(mgf));
     }
-    this.hashAlg = Util.requireNonNull("hashAlg", hashAlg);
+
+    this.hashAlg = hashAlg;
     this.mgf = mgf;
   }
 
@@ -110,7 +129,7 @@ abstract public class RSAPkcsParameters implements Parameters {
    * @preconditions
    * @postconditions (result <> null)
    */
-  public Mechanism getHashAlgorithm() {
+  public long getHashAlgorithm() {
     return hashAlg;
   }
 
@@ -135,8 +154,8 @@ abstract public class RSAPkcsParameters implements Parameters {
    * @preconditions (hashAlgorithm <> null)
    * @postconditions
    */
-  public void setHashAlgorithm(Mechanism hashAlg) {
-    this.hashAlg = Util.requireNonNull("hashAlg", hashAlg);
+  public void setHashAlgorithm(long hashAlg) {
+    this.hashAlg = hashAlg;
   }
 
   /**
@@ -193,7 +212,7 @@ abstract public class RSAPkcsParameters implements Parameters {
       mgfStr = "<unknown>";
     }
 
-    return Util.concat("  Hash Algorithm: ", hashAlg.toString(),
+    return Util.concat("  Hash Algorithm: ", Functions.getHashAlgName(hashAlg),
         "\n  Mask Generation Function: ", mgfStr);
   }
 
@@ -217,7 +236,7 @@ abstract public class RSAPkcsParameters implements Parameters {
     }
 
     RSAPkcsParameters other = (RSAPkcsParameters) otherObject;
-    return this.hashAlg.equals(other.hashAlg) && (this.mgf == other.mgf);
+    return this.hashAlg == other.hashAlg && (this.mgf == other.mgf);
   }
 
   /**
@@ -230,7 +249,7 @@ abstract public class RSAPkcsParameters implements Parameters {
    */
   @Override
   public int hashCode() {
-    return hashAlg.hashCode() ^ ((int) mgf);
+    return ((int) hashAlg) ^ ((int) mgf);
   }
 
 }

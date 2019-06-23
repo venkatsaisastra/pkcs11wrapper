@@ -865,8 +865,8 @@ public class Session {
    */
   public void encryptInit(Mechanism mechanism, Key key) throws TokenException {
     try {
-      pkcs11Module.C_EncryptInit(sessionHandle, toCkMechanism(mechanism),
-          key.getObjectHandle());
+      CK_MECHANISM mech = toCkMechanism(mechanism);
+      pkcs11Module.C_EncryptInit(sessionHandle, mech, key.getObjectHandle());
     } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
       throw new PKCS11Exception(ex);
     }
@@ -2053,7 +2053,7 @@ public class Session {
       }
       try {
         return (CK_MECHANISM) constructor.newInstance(
-                  params.getPKCS11ParamsObject());
+            code, params.getPKCS11ParamsObject());
       } catch (InstantiationException | IllegalAccessException
           | IllegalArgumentException | InvocationTargetException ex) {
         throw new IllegalArgumentException(
