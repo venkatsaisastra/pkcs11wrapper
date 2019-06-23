@@ -18,15 +18,13 @@ Use xipki/pkcs11wrapper in your project
 - Or copy the following jar file to your classpath:
   - [sunpkcs11-wrapper-1.4.5.jar](https://github.com/xipki/pkcs11wrapper/releases/download/v1.4.5/sunpkcs11-wrapper-1.4.5.jar)
 
-Changes of current branch sunpkcs11 compared to master
+Changes compared to [mikma/pkcs11wrapper](https://github.com/mikma/pkcs11wrapper)
 =============================================
 
 - No external library is required
-
 - Require OpenJDK or Oracle Java Runtime 1.8 or higher
-
 - Support PKCS#11 version 2.40
-
+- Support EdDSA Ed25519 (Signature and Keypair generation)
 - Port from [mikma/pkcs11wrapper](https://github.com/mikma/pkcs11wrapper) to this project
   - For `*SecretKey`, please use the constructor `ValuedSecretKey(long keyType)` instead, e.g. use `new ValuedSecretKey(PKCS11Constants.CKK_AES)` for AES SecretKey.
   - For `ECDSAPrivateKey` and `ECDSAPublicKey`, please use `ECPrivateKey` and `ECPublicKey` instead.
