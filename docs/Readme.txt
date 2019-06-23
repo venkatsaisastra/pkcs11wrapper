@@ -1,3 +1,7 @@
+THIS IS THE ORIGINAL README of IAIK. Documents in this
+folder are not up-to-date.
+=============================================
+
 IAIK PKCS#11 Wrapper for Java, Version 1.3
 =============================================
 
