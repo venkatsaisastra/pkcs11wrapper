@@ -14,7 +14,7 @@ Use xipki/pkcs11wrapper in your project
   </dependency>
   ```
 - Or copy the following jar files to your classpath:
-  - [sunpkcs11-wrapper-1.4.5.jar](https://github.com/xipki/pkcs11wrapper/releases/download/v1.4.4/sunpkcs11-wrapper-1.4.5.jar)
+  - [sunpkcs11-wrapper-1.4.5.jar](https://github.com/xipki/pkcs11wrapper/releases/download/v1.4.5/sunpkcs11-wrapper-1.4.5.jar)
 
 Changes of current branch sunpkcs11 compared to master
 =============================================
