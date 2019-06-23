@@ -14,8 +14,7 @@ Use xipki/pkcs11wrapper in your project
   </dependency>
   ```
 - Or copy the following jar files to your classpath:
-  - [sunpkcs11-wrapper-1.4.4.jar](http://central.maven.org/maven2/org/xipki/iaik/sunpkcs11-wrapper/1.4.4/sunpkcs11-wrapper-1.4.4.jar)
-  - [pkcs11-constants-1.4.4.jar](http://central.maven.org/maven2/org/xipki/iaik/pkcs11-constants/1.4.4/pkcs11-constants-1.4.4.jar)
+  - [sunpkcs11-wrapper-1.4.5.jar](http://central.maven.org/maven2/org/xipki/iaik/sunpkcs11-wrapper/1.4.4/sunpkcs11-wrapper-1.4.5.jar)
 
 Changes of current branch sunpkcs11 compared to master
 =============================================
@@ -31,7 +30,7 @@ Changes of current branch sunpkcs11 compared to master
   - For `ECDSAPrivateKey` and `ECDSAPublicKey`, please use `ECPrivateKey` and `ECPublicKey` instead.
   - `Object` is renamed to `PKCS11Object`.
   - `Token.closeAllSession()` cannot be supported, since it is not supported in the underlying JNI (JDK's SunPKCS11 provider). Please manage your session by yourself. You can close a single session by `Session.closeSession()`.
-  - Unlike the original PKCS#11 wrapper, we only call initialize() once per native .so/.dll. Once finalize(Object) has been called, the module cannot be initialized anymore.
+  - Unlike the original PKCS#11 wrapper, we only call `Module.initialize()` once per native .so/.dll. Once `Module.finalize(Object)` has been called, the module cannot be initialized anymore.
 
 IAIK PKCS#11 Wrapper for Java, Version 1.3
 =============================================
