@@ -27,7 +27,8 @@ import iaik.pkcs.pkcs11.parameters.GCMParameters;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
- * This demo program uses a PKCS#11 module to encrypt and decrypt via AES.
+ * This demo program uses a PKCS#11 module to encrypt and decrypt via
+ * CKM_AES_GCM.
  */
 public class AESGCMEncryptDecrypt extends SymmEncryptDecrypt {
 
@@ -61,8 +62,7 @@ public class AESGCMEncryptDecrypt extends SymmEncryptDecrypt {
 
   @Override
   protected Mechanism getEncryptionMech(Token token) throws TokenException {
-    Mechanism mech = getSupportedMechanism(token,
-        PKCS11Constants.CKM_AES_GCM);
+    Mechanism mech = getSupportedMechanism(token, PKCS11Constants.CKM_AES_GCM);
     GCMParameters params = new GCMParameters(16, iv, aad);
     mech.setParameters(params);
     return mech;

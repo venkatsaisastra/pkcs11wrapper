@@ -25,7 +25,13 @@ import iaik.pkcs.pkcs11.parameters.AesCtrParameters;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
- * This demo program uses a PKCS#11 module to encrypt and decrypt via AES_CTR.
+ * This demo program uses a PKCS#11 module to encrypt and decrypt via
+ * CKM_AES_CTR. The encryption are processed in multiple C_EncryptUpdate
+ * and finally C_EncryptFinal.
+ * And the decryption are processed in multiple C_EdcryptUpdate
+ * and finally C_DecryptFinal.
+ *
+ * @author Lijun Liao
  */
 public class MultipleStepsAESCTREncryptDecrypt
 extends MultipleStepsSymmEncryptDecrypt {

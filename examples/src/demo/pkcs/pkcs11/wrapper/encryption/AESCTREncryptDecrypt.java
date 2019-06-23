@@ -25,7 +25,11 @@ import iaik.pkcs.pkcs11.parameters.AesCtrParameters;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
- * This demo program uses a PKCS#11 module to encrypt and decrypt via AES_CTR.
+/**
+ * This demo program uses a PKCS#11 module to encrypt and decrypt via
+ * CKM_AES_CTR.
+ *
+ * @author Lijun Liao
  */
 public class AESCTREncryptDecrypt extends SymmEncryptDecrypt {
 
@@ -42,8 +46,7 @@ public class AESCTREncryptDecrypt extends SymmEncryptDecrypt {
 
   @Override
   protected Mechanism getEncryptionMech(Token token) throws TokenException {
-    Mechanism mech = getSupportedMechanism(token,
-        PKCS11Constants.CKM_AES_CTR);
+    Mechanism mech = getSupportedMechanism(token, PKCS11Constants.CKM_AES_CTR);
     AesCtrParameters params = new AesCtrParameters(iv);
     mech.setParameters(params);
     return mech;

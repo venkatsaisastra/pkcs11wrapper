@@ -69,6 +69,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
  * that are used by several classes in this package.
  *
  * @author Karl Scheibelhofer
+ * @author Lijun Liao
  */
 public class Util {
 
