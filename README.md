@@ -3,6 +3,8 @@
 [![Github forks](https://img.shields.io/github/forks/xipki/pkcs11wrapper.svg)](https://github.com/xipki/pkcs11wrapper/network)
 [![Github stars](https://img.shields.io/github/stars/xipki/pkcs11wrapper.svg)](https://github.com/xipki/pkcs11wrapper/stargazers)
 
+[Original Readme.txt](IAIK.Readme.txt)
+
 Use xipki/pkcs11wrapper in your project
 =====
 - Maven  
