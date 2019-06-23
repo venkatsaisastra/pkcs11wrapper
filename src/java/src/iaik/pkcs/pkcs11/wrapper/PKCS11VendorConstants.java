@@ -60,7 +60,7 @@ class PKCS11VendorConstants {
   private static final String VENDOR_FILE = "pkcs11.ckm-vendor.file";
 
   private static final String VENDOR_PROPERTIES =
-        "/iaik/pkcs/pkcs11/constants/ckm-vendor.properties";
+        "/iaik/pkcs/pkcs11/wrapper/ckm-vendor.properties";
 
   static final long CKK_VENDOR_SM2;
 

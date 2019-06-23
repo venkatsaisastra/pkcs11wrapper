@@ -90,14 +90,14 @@ public class Functions implements PKCS11Constants {
    * mechanism-codes.
    */
   private static final String CKM_CODE_PROPERTIES
-      = "/iaik/pkcs/pkcs11/constants/ckm.properties";
+      = "/iaik/pkcs/pkcs11/wrapper/ckm.properties";
 
   /**
    * The name of the properties file that holds the names of the PKCS#11
    * mechanism-codes.
    */
   private static final String CKR_CODE_PROPERTIES
-      = "/iaik/pkcs/pkcs11/constants/ckr.properties";
+      = "/iaik/pkcs/pkcs11/wrapper/ckr.properties";
 
   /**
    * True, if the mapping of mechanism codes to PKCS#11 mechanism names is
