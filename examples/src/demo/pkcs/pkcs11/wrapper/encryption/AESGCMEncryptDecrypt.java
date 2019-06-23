@@ -43,7 +43,10 @@ public class AESGCMEncryptDecrypt extends SymmEncryptDecrypt {
   @Test
   @Override
   public void main() throws TokenException {
-    if (!GCMParameters.isSupported()) {
+    // check whether supported in current JDK
+    try {
+      new GCMParameters(16, new byte[12], null);
+    } catch (IllegalStateException ex) {
       System.err.println("Unsupported in current JDK, skip");
       return;
     }

@@ -45,10 +45,6 @@ public class GCMParameters implements Parameters {
         int.class, byte[].class, byte[].class);
   }
 
-  public static boolean isSupported() {
-    return constructor != null;
-  }
-
   public GCMParameters(int tagLen, byte[] iv, byte[] aad) {
     if (constructor == null) {
       throw new IllegalStateException(
