@@ -2,8 +2,11 @@
 
 See also <https://github.com/xipki/pkcs11wrapper/releases>
 
-## 1.4.5
+## 1.4.6
  - Release date:
+
+## 1.4.5
+ - Release date: June 23, 2019
  - Error code will not be read. This has been corrected.
  - Code runnable also in JDK 13
  - Add support of AES GCM/CCM (only for JDK13 and above)
