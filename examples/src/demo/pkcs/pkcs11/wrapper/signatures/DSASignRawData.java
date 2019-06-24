@@ -17,6 +17,9 @@
 
 package demo.pkcs.pkcs11.wrapper.signatures;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import org.junit.Test;
 
 import demo.pkcs.pkcs11.wrapper.TestBase;
@@ -36,10 +39,10 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *
  * @author Lijun Liao
  */
-public class EdDSASignRawData extends TestBase {
+public class DSASignRawData extends TestBase {
 
   @Test
-  public void main() throws TokenException {
+  public void main() throws TokenException, NoSuchAlgorithmException {
     Token token = getNonNullToken();
     Session session = openReadOnlySession(token);
     try {
@@ -49,11 +52,12 @@ public class EdDSASignRawData extends TestBase {
     }
   }
 
-  private void main0(Token token, Session session) throws TokenException {
+  private void main0(Token token, Session session)
+      throws TokenException, NoSuchAlgorithmException {
     LOG.info("##################################################");
     LOG.info("generate signature key pair");
 
-    final long mechCode = PKCS11Constants.CKM_EDDSA;
+    final long mechCode = PKCS11Constants.CKM_DSA;
     if (!Util.supports(token, mechCode)) {
       System.out.println("Unsupported mechanism "
           + Functions.mechanismCodeToString(mechCode));
@@ -63,30 +67,30 @@ public class EdDSASignRawData extends TestBase {
     Mechanism signatureMechanism = getSupportedMechanism(token, mechCode);
 
     final boolean inToken = false;
-    // OID: 1.3.101.112 (Ed25519)
-    byte[] ecParams = new byte[] {0x06, 0x03, 0x2b, 0x65, 0x70};
 
     KeyPair generatedKeyPair =
-        generateEdDSAKeypair(token, session, ecParams, inToken);
+        generateDSAKeypair(token, session, inToken);
     PrivateKey generatedPrivateKey = generatedKeyPair.getPrivateKey();
 
     LOG.info("##################################################");
     LOG.info("signing data");
     byte[] dataToBeSigned = randomBytes(1057); // hash value
+    MessageDigest md = MessageDigest.getInstance("SHA-256");
+    byte[] hashValue = md.digest(dataToBeSigned);
 
     // initialize for signing
     session.signInit(signatureMechanism, generatedPrivateKey);
 
     // This signing operation is implemented in most of the drivers
-    byte[] signatureValue = session.sign(dataToBeSigned);
+    byte[] signatureValue = session.sign(hashValue);
     LOG.info("The signature value is: {}",
         Functions.toHexString(signatureValue));
 
-    // verify signature
+    // verify
     PublicKey generatedPublicKey = generatedKeyPair.getPublicKey();
     session.verifyInit(signatureMechanism, generatedPublicKey);
     // error will be thrown if signature is invalid
-    session.verify(dataToBeSigned, signatureValue);
+    session.verify(hashValue, signatureValue);
 
     LOG.info("##################################################");
   }

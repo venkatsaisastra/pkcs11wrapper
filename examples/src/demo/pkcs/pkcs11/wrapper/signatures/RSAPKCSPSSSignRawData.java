@@ -18,6 +18,8 @@
 package demo.pkcs.pkcs11.wrapper.signatures;
 
 import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import org.junit.Test;
 
@@ -29,6 +31,7 @@ import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
+import iaik.pkcs.pkcs11.objects.PublicKey;
 import iaik.pkcs.pkcs11.parameters.RSAPkcsPssParameters;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
@@ -41,7 +44,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 public class RSAPKCSPSSSignRawData extends TestBase {
 
   @Test
-  public void main() throws TokenException {
+  public void main() throws TokenException, NoSuchAlgorithmException {
     Token token = getNonNullToken();
     Session session = openReadOnlySession(token);
     try {
@@ -51,7 +54,8 @@ public class RSAPKCSPSSSignRawData extends TestBase {
     }
   }
 
-  private void main0(Token token, Session session) throws TokenException {
+  private void main0(Token token, Session session)
+      throws TokenException, NoSuchAlgorithmException {
     LOG.info("##################################################");
     LOG.info("generate signature key pair");
 
@@ -71,7 +75,9 @@ public class RSAPKCSPSSSignRawData extends TestBase {
 
     LOG.info("##################################################");
     LOG.info("signing data");
-    byte[] dataToBeSigned = randomBytes(32); // hash value
+    byte[] dataToBeSigned = randomBytes(1057); // hash value
+    MessageDigest md = MessageDigest.getInstance("SHA-256");
+    byte[] hashValue = md.digest(dataToBeSigned);
 
     RSAPkcsPssParameters pssParams = new RSAPkcsPssParameters(
         PKCS11Constants.CKM_SHA256, PKCS11Constants.CKG_MGF1_SHA256, 32);
@@ -81,10 +87,16 @@ public class RSAPKCSPSSSignRawData extends TestBase {
     session.signInit(signatureMechanism, generatedPrivateKey);
 
     // This signing operation is implemented in most of the drivers
-    byte[] signatureValue = session.sign(dataToBeSigned);
+    byte[] signatureValue = session.sign(hashValue);
 
     LOG.info("The signature value is: {}",
         new BigInteger(1, signatureValue).toString(16));
+
+    // verify
+    PublicKey generatedPublicKey = generatedKeyPair.getPublicKey();
+    session.verifyInit(signatureMechanism, generatedPublicKey);
+    // error will be thrown if signature is invalid
+    session.verify(hashValue, signatureValue);
 
     LOG.info("##################################################");
   }
