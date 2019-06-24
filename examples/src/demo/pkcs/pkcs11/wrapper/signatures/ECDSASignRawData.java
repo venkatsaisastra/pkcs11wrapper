@@ -17,8 +17,6 @@
 
 package demo.pkcs.pkcs11.wrapper.signatures;
 
-import java.math.BigInteger;
-
 import org.junit.Test;
 
 import demo.pkcs.pkcs11.wrapper.TestBase;
@@ -28,15 +26,15 @@ import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
-import iaik.pkcs.pkcs11.parameters.RSAPkcsPssParameters;
+import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
- * Signs some raw data on the token using CKM_RSA_PKCS_PSS.
+ * Signs some raw data on the token using CKM_RSA_PKCS.
  *
  * @author Lijun Liao
  */
-public class RSAPKCSPSSSignRawData extends TestBase {
+public class ECDSASignRawData extends TestBase {
 
   @Test
   public void main() throws TokenException {
@@ -53,8 +51,12 @@ public class RSAPKCSPSSSignRawData extends TestBase {
     LOG.info("##################################################");
     LOG.info("generate signature key pair");
     final boolean inToken = false;
+    // OID: 1.2.840.10045.3.1.7 (secp256r1, alias NIST P-256)
+    final byte[] ecParams = new byte[] {0x06, 0x08, 0x2a, (byte) 0x86,
+        0x48, (byte) 0xce, 0x3d, 0x03, 0x01, 0x07};
+
     KeyPair generatedKeyPair =
-        generateRSAKeypair(token, session, 2048, inToken);
+        generateECKeypair(token, session, ecParams, inToken);
     PrivateKey generatedPrivateKey = generatedKeyPair.getPrivateKey();
 
     LOG.info("##################################################");
@@ -63,12 +65,7 @@ public class RSAPKCSPSSSignRawData extends TestBase {
 
     // be sure that your token can process the specified mechanism
     Mechanism signatureMechanism = getSupportedMechanism(token,
-        PKCS11Constants.CKM_RSA_PKCS_PSS);
-
-    RSAPkcsPssParameters pssParams = new RSAPkcsPssParameters(
-        PKCS11Constants.CKM_SHA256, PKCS11Constants.CKG_MGF1_SHA256, 32);
-    signatureMechanism.setParameters(pssParams);
-
+        PKCS11Constants.CKM_ECDSA);
     // initialize for signing
     session.signInit(signatureMechanism, generatedPrivateKey);
 
@@ -76,7 +73,7 @@ public class RSAPKCSPSSSignRawData extends TestBase {
     byte[] signatureValue = session.sign(dataToBeSigned);
 
     LOG.info("The signature value is: {}",
-        new BigInteger(1, signatureValue).toString(16));
+        Functions.toHexString(signatureValue));
 
     LOG.info("##################################################");
   }

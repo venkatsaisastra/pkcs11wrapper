@@ -56,6 +56,8 @@ import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
+import iaik.pkcs.pkcs11.objects.ECPrivateKey;
+import iaik.pkcs.pkcs11.objects.ECPublicKey;
 import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
 import iaik.pkcs.pkcs11.objects.RSAPublicKey;
@@ -168,36 +170,79 @@ public class TestBase {
       throws TokenException {
     Mechanism keyPairGenMechanism = getSupportedMechanism(token,
         PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN);
-    RSAPublicKey rsaPublicKeyTemplate = new RSAPublicKey();
-    RSAPrivateKey rsaPrivateKeyTemplate = new RSAPrivateKey();
+    RSAPublicKey oublicKeyTemplate = new RSAPublicKey();
+    RSAPrivateKey privateKeyTemplate = new RSAPrivateKey();
 
     // set the general attributes for the public key
-    rsaPublicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(1024));
-    byte[] publicExponentBytes = { 0x01, 0x00, 0x01 }; // 2^16 + 1
-    rsaPublicKeyTemplate.getPublicExponent()
-        .setByteArrayValue(publicExponentBytes);
-    rsaPublicKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
+    oublicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(1024));
+    oublicKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
     byte[] id = new byte[20];
     new Random().nextBytes(id);
-    rsaPublicKeyTemplate.getId().setByteArrayValue(id);
+    oublicKeyTemplate.getId().setByteArrayValue(id);
 
-    rsaPrivateKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
-    rsaPrivateKeyTemplate.getToken().setBooleanValue(inToken);
-    rsaPrivateKeyTemplate.getPrivate().setBooleanValue(Boolean.TRUE);
-    rsaPrivateKeyTemplate.getId().setByteArrayValue(id);
+    privateKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
+    privateKeyTemplate.getToken().setBooleanValue(inToken);
+    privateKeyTemplate.getPrivate().setBooleanValue(Boolean.TRUE);
+    privateKeyTemplate.getId().setByteArrayValue(id);
 
-    rsaPrivateKeyTemplate.getSign().setBooleanValue(Boolean.TRUE);
-    rsaPublicKeyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
+    privateKeyTemplate.getSign().setBooleanValue(Boolean.TRUE);
+    oublicKeyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
 
     // netscape does not set these attribute, so we do no either
-    rsaPublicKeyTemplate.getKeyType().setPresent(false);
-    rsaPublicKeyTemplate.getObjectClass().setPresent(false);
-    rsaPrivateKeyTemplate.getKeyType().setPresent(false);
-    rsaPrivateKeyTemplate.getObjectClass().setPresent(false);
+    oublicKeyTemplate.getKeyType().setPresent(false);
+    oublicKeyTemplate.getObjectClass().setPresent(false);
+    privateKeyTemplate.getKeyType().setPresent(false);
+    privateKeyTemplate.getObjectClass().setPresent(false);
 
-    KeyPair generatedKeyPair = session.generateKeyPair(keyPairGenMechanism,
-        rsaPublicKeyTemplate, rsaPrivateKeyTemplate);
-    return generatedKeyPair;
+    return session.generateKeyPair(keyPairGenMechanism,
+        oublicKeyTemplate, privateKeyTemplate);
+  }
+
+  protected KeyPair generateECKeypair(
+      Token token, Session session, byte[] ecParams, boolean inToken)
+      throws TokenException {
+    return generateECKeypair(PKCS11Constants.CKM_EC_KEY_PAIR_GEN,
+        token, session, ecParams, inToken);
+  }
+
+  protected KeyPair generateEdDSAKeypair(
+      Token token, Session session, byte[] ecParams, boolean inToken)
+      throws TokenException {
+    return generateECKeypair(PKCS11Constants.CKM_EC_EDWARDS_KEY_PAIR_GEN,
+        token, session, ecParams, inToken);
+  }
+
+  private KeyPair generateECKeypair(long keyGenMechanism,
+      Token token, Session session, byte[] ecParams, boolean inToken)
+      throws TokenException {
+    Mechanism keyPairGenMechanism = getSupportedMechanism(token,
+          keyGenMechanism);
+    ECPublicKey publicKeyTemplate = new ECPublicKey();
+    ECPrivateKey privateKeyTemplate = new ECPrivateKey();
+
+    // set the general attributes for the public key
+    publicKeyTemplate.getEcdsaParams().setByteArrayValue(ecParams);
+    publicKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
+    byte[] id = new byte[20];
+    new Random().nextBytes(id);
+    publicKeyTemplate.getId().setByteArrayValue(id);
+
+    privateKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
+    privateKeyTemplate.getToken().setBooleanValue(inToken);
+    privateKeyTemplate.getPrivate().setBooleanValue(Boolean.TRUE);
+    privateKeyTemplate.getId().setByteArrayValue(id);
+
+    privateKeyTemplate.getSign().setBooleanValue(Boolean.TRUE);
+    publicKeyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
+
+    // netscape does not set these attribute, so we do no either
+    publicKeyTemplate.getKeyType().setPresent(false);
+    publicKeyTemplate.getObjectClass().setPresent(false);
+    privateKeyTemplate.getKeyType().setPresent(false);
+    privateKeyTemplate.getObjectClass().setPresent(false);
+
+    return session.generateKeyPair(keyPairGenMechanism,
+        publicKeyTemplate, privateKeyTemplate);
   }
 
 }

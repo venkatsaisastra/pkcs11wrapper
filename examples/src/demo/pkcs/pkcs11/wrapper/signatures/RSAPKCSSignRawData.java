@@ -27,7 +27,7 @@ import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.KeyPair;
-import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
+import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
@@ -54,8 +54,7 @@ public class RSAPKCSSignRawData extends TestBase {
     final boolean inToken = false;
     KeyPair generatedKeyPair =
         generateRSAKeypair(token, session, 2048, inToken);
-    RSAPrivateKey generatedRSAPrivateKey = (RSAPrivateKey)
-        generatedKeyPair.getPrivateKey();
+    PrivateKey generatedPrivateKey = generatedKeyPair.getPrivateKey();
 
     LOG.info("##################################################");
     LOG.info("signing data");
@@ -65,7 +64,7 @@ public class RSAPKCSSignRawData extends TestBase {
     Mechanism signatureMechanism = getSupportedMechanism(token,
         PKCS11Constants.CKM_RSA_PKCS);
     // initialize for signing
-    session.signInit(signatureMechanism, generatedRSAPrivateKey);
+    session.signInit(signatureMechanism, generatedPrivateKey);
 
     // This signing operation is implemented in most of the drivers
     byte[] signatureValue = session.sign(dataToBeSigned);
