@@ -80,7 +80,7 @@ public class TLS12Mechanisms extends TestBase {
       System.err.println("Unsupported in current JDK, skip");
       return;
     }
-    
+
     Token token = getNonNullToken();
     Session session = openReadWriteSession(token);
     try {

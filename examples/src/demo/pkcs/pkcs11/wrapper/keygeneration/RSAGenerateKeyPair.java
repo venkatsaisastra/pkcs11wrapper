@@ -55,6 +55,7 @@ import java.util.Random;
 import org.junit.Test;
 
 import demo.pkcs.pkcs11.wrapper.TestBase;
+import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.MechanismInfo;
 import iaik.pkcs.pkcs11.Session;
@@ -70,7 +71,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 /**
  * This demo program generates a 2048 bit RSA key-pair on the token.
  */
-public class GenerateKeyPair extends TestBase {
+public class RSAGenerateKeyPair extends TestBase {
 
   @Test
   public void main()
@@ -114,122 +115,133 @@ public class GenerateKeyPair extends TestBase {
       signatureMechanismInfo = null;
     }
 
+    final long mechCode = PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN;
+    if (!Util.supports(token, mechCode)) {
+      System.out.println("Unsupported mechanism "
+          + Functions.mechanismCodeToString(mechCode));
+      return;
+    }
+
     Mechanism keyPairGenerationMechanism = getSupportedMechanism(
-            token, PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN);
-    RSAPublicKey rsaPublicKeyTemplate = new RSAPublicKey();
-    RSAPrivateKey rsaPrivateKeyTemplate = new RSAPrivateKey();
+            token, mechCode);
+
+    RSAPublicKey publicKeyTemplate = new RSAPublicKey();
+    RSAPrivateKey privateKeyTemplate = new RSAPrivateKey();
 
     // set the general attributes for the public key
-    rsaPublicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(2048));
-    byte[] publicExponentBytes = { 0x01, 0x00, 0x01 }; // 2^16 + 1
-    rsaPublicKeyTemplate.getPublicExponent().setByteArrayValue(
-        publicExponentBytes);
-    rsaPublicKeyTemplate.getToken().setBooleanValue(Boolean.TRUE);
+    publicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(2048));
+    publicKeyTemplate.getToken().setBooleanValue(Boolean.TRUE);
     byte[] id = new byte[20];
     new Random().nextBytes(id);
-    rsaPublicKeyTemplate.getId().setByteArrayValue(id);
+    publicKeyTemplate.getId().setByteArrayValue(id);
 
-    rsaPrivateKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
-    rsaPrivateKeyTemplate.getToken().setBooleanValue(Boolean.TRUE);
-    rsaPrivateKeyTemplate.getPrivate().setBooleanValue(Boolean.TRUE);
-    rsaPrivateKeyTemplate.getId().setByteArrayValue(id);
+    privateKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
+    privateKeyTemplate.getToken().setBooleanValue(Boolean.TRUE);
+    privateKeyTemplate.getPrivate().setBooleanValue(Boolean.TRUE);
+    privateKeyTemplate.getId().setByteArrayValue(id);
 
     // set the attributes in a way netscape does, this should work with most
     // tokens
     if (signatureMechanismInfo != null) {
-      rsaPublicKeyTemplate.getVerify().setBooleanValue(
+      publicKeyTemplate.getVerify().setBooleanValue(
           signatureMechanismInfo.isVerify());
-      rsaPublicKeyTemplate.getVerifyRecover().setBooleanValue(
+      publicKeyTemplate.getVerifyRecover().setBooleanValue(
           signatureMechanismInfo.isVerifyRecover());
-      rsaPublicKeyTemplate.getEncrypt().setBooleanValue(
+      publicKeyTemplate.getEncrypt().setBooleanValue(
           signatureMechanismInfo.isEncrypt());
-      rsaPublicKeyTemplate.getDerive().setBooleanValue(
+      publicKeyTemplate.getDerive().setBooleanValue(
           signatureMechanismInfo.isDerive());
-      rsaPublicKeyTemplate.getWrap().setBooleanValue(
+      publicKeyTemplate.getWrap().setBooleanValue(
           signatureMechanismInfo.isWrap());
-      rsaPrivateKeyTemplate.getSign().setBooleanValue(
+      privateKeyTemplate.getSign().setBooleanValue(
           signatureMechanismInfo.isSign());
-      rsaPrivateKeyTemplate.getSignRecover().setBooleanValue(
+      privateKeyTemplate.getSignRecover().setBooleanValue(
           signatureMechanismInfo.isSignRecover());
-      rsaPrivateKeyTemplate.getDecrypt().setBooleanValue(
+      privateKeyTemplate.getDecrypt().setBooleanValue(
           signatureMechanismInfo.isDecrypt());
-      rsaPrivateKeyTemplate.getDerive().setBooleanValue(
+      privateKeyTemplate.getDerive().setBooleanValue(
           signatureMechanismInfo.isDerive());
-      rsaPrivateKeyTemplate.getUnwrap().setBooleanValue(
+      privateKeyTemplate.getUnwrap().setBooleanValue(
           signatureMechanismInfo.isUnwrap());
     } else {
       // if we have no information we assume these attributes
-      rsaPrivateKeyTemplate.getSign().setBooleanValue(Boolean.TRUE);
-      rsaPrivateKeyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
+      privateKeyTemplate.getSign().setBooleanValue(Boolean.TRUE);
+      privateKeyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
 
-      rsaPublicKeyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
-      rsaPublicKeyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
+      publicKeyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
+      publicKeyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
     }
 
     // netscape does not set these attribute, so we do no either
-    rsaPublicKeyTemplate.getKeyType().setPresent(false);
-    rsaPublicKeyTemplate.getObjectClass().setPresent(false);
+    publicKeyTemplate.getKeyType().setPresent(false);
+    publicKeyTemplate.getObjectClass().setPresent(false);
 
-    rsaPrivateKeyTemplate.getKeyType().setPresent(false);
-    rsaPrivateKeyTemplate.getObjectClass().setPresent(false);
+    privateKeyTemplate.getKeyType().setPresent(false);
+    privateKeyTemplate.getObjectClass().setPresent(false);
 
     KeyPair generatedKeyPair = session.generateKeyPair(
-        keyPairGenerationMechanism, rsaPublicKeyTemplate,
-        rsaPrivateKeyTemplate);
-    RSAPublicKey generatedRSAPublicKey =
+        keyPairGenerationMechanism, publicKeyTemplate,
+        privateKeyTemplate);
+    RSAPublicKey generatedPublicKey =
         (RSAPublicKey) generatedKeyPair.getPublicKey();
-    RSAPrivateKey generatedRSAPrivateKey =
+    RSAPrivateKey generatedPrivateKey =
         (RSAPrivateKey) generatedKeyPair.getPrivateKey();
     // no we may work with the keys...
 
-    LOG.info("Success");
-    LOG.info("The public key is");
-    LOG.info("__________________________________________________");
-    LOG.info("{}", generatedRSAPublicKey);
-    LOG.info("__________________________________________________");
-    LOG.info("The private key is");
-    LOG.info("__________________________________________________");
-    LOG.info("{}", generatedRSAPrivateKey);
-    LOG.info("__________________________________________________");
-
-    LOG.info("##################################################");
-    RSAPublicKey exportableRsaPublicKey = generatedRSAPublicKey;
-    BigInteger modulus = new BigInteger(1, exportableRsaPublicKey.getModulus()
-        .getByteArrayValue());
-    BigInteger publicExponent = new BigInteger(1, exportableRsaPublicKey
-        .getPublicExponent().getByteArrayValue());
-    RSAPublicKeySpec rsaPublicKeySpec =
-        new RSAPublicKeySpec(modulus, publicExponent);
-    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-    java.security.interfaces.RSAPublicKey javaRsaPublicKey =
-        (java.security.interfaces.RSAPublicKey)
-          keyFactory.generatePublic(rsaPublicKeySpec);
-    X509EncodedKeySpec x509EncodedPublicKey = (X509EncodedKeySpec)
-        keyFactory.getKeySpec(javaRsaPublicKey, X509EncodedKeySpec.class);
-    x509EncodedPublicKey.getEncoded();
-
-    // now we try to search for the generated keys
-    LOG.info("##################################################");
-    LOG.info("Trying to search for the public key of the generated key-pair by"
-        + " ID: {}", Functions.toHexString(id));
-    // set the search template for the public key
-    RSAPublicKey exportRsaPublicKeyTemplate = new RSAPublicKey();
-    exportRsaPublicKeyTemplate.getId().setByteArrayValue(id);
-
-    session.findObjectsInit(exportRsaPublicKeyTemplate);
-    PKCS11Object[] foundPublicKeys = session.findObjects(1);
-    session.findObjectsFinal();
-
-    if (foundPublicKeys.length != 1) {
-      LOG.error("Error: Cannot find the public key under the given ID!");
-    } else {
-      LOG.info("Found public key!");
+    try {
+      LOG.info("Success");
+      LOG.info("The public key is");
       LOG.info("__________________________________________________");
-      LOG.info("{}", foundPublicKeys[0]);
+      LOG.info("{}", generatedPublicKey);
       LOG.info("__________________________________________________");
+      LOG.info("The private key is");
+      LOG.info("__________________________________________________");
+      LOG.info("{}", generatedPrivateKey);
+      LOG.info("__________________________________________________");
+
+      LOG.info("##################################################");
+      RSAPublicKey exportablePublicKey = generatedPublicKey;
+      BigInteger modulus = new BigInteger(1, exportablePublicKey.getModulus()
+          .getByteArrayValue());
+      BigInteger publicExponent = new BigInteger(1, exportablePublicKey
+          .getPublicExponent().getByteArrayValue());
+      RSAPublicKeySpec rsaPublicKeySpec =
+          new RSAPublicKeySpec(modulus, publicExponent);
+      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+      java.security.interfaces.RSAPublicKey javaRsaPublicKey =
+          (java.security.interfaces.RSAPublicKey)
+            keyFactory.generatePublic(rsaPublicKeySpec);
+      X509EncodedKeySpec x509EncodedPublicKey = (X509EncodedKeySpec)
+          keyFactory.getKeySpec(javaRsaPublicKey, X509EncodedKeySpec.class);
+      x509EncodedPublicKey.getEncoded();
+
+      // now we try to search for the generated keys
+      LOG.info("##################################################");
+      LOG.info("Trying to search for the public key of the generated key-pair"
+          + " by ID: {}", Functions.toHexString(id));
+      // set the search template for the public key
+      RSAPublicKey exportRsaPublicKeyTemplate = new RSAPublicKey();
+      exportRsaPublicKeyTemplate.getId().setByteArrayValue(id);
+
+      session.findObjectsInit(exportRsaPublicKeyTemplate);
+      PKCS11Object[] foundPublicKeys = session.findObjects(1);
+      session.findObjectsFinal();
+
+      if (foundPublicKeys.length != 1) {
+        LOG.error("Error: Cannot find the public key under the given ID!");
+      } else {
+        LOG.info("Found public key!");
+        LOG.info("__________________________________________________");
+        LOG.info("{}", foundPublicKeys[0]);
+        LOG.info("__________________________________________________");
+      }
+
+      LOG.info("##################################################");
+    } finally {
+      session.destroyObject(generatedPrivateKey);
+      session.destroyObject(generatedPublicKey);
     }
 
-    LOG.info("##################################################");
   }
 
 }

@@ -61,10 +61,7 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  * This demo program uses a PKCS#11 module to wrap and unwrap a secret key.
  * The key to be wrapped must be extractable otherwise it can't be wrapped.
  */
-public abstract class WrapUnwrapEncrKey extends TestBase {
-
-  protected abstract Mechanism getSecretKeyMech(Token token)
-      throws TokenException;
+public class WrapUnwrapEncrKey extends TestBase {
 
   @Test
   public void main() throws TokenException {

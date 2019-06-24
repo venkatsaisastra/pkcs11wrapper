@@ -156,9 +156,7 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
       }
     } else {
       String hashAlgName = Functions.getHashAlgName(hashAlg);
-      // The constructor requires that mgf uses also hashAlg as its hash
-      // algorithm
-      String mgfHashAlgName = hashAlgName;
+      String mgfHashAlgName = Functions.getHashAlgName(mgf2HashAlgMap.get(mgf));
       try {
         return (CK_RSA_PKCS_PSS_PARAMS) constructor.newInstance(
             hashAlgName, "MGF1", mgfHashAlgName, (int) saltLength);

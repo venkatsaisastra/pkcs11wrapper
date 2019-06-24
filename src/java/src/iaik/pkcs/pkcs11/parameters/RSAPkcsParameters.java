@@ -42,6 +42,10 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
@@ -59,6 +63,8 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 // CHECKSTYLE:SKIP
 abstract public class RSAPkcsParameters implements Parameters {
 
+  protected static final Map<Long, Long> mgf2HashAlgMap;
+
   /**
    * The message digest algorithm used to calculate the digest of the encoding
    * parameter.
@@ -69,6 +75,20 @@ abstract public class RSAPkcsParameters implements Parameters {
    * The mask to apply to the encoded block.
    */
   protected long mgf;
+
+  static {
+    Map<Long, Long> map = new HashMap<>();
+    map.put(PKCS11Constants.CKG_MGF1_SHA1, PKCS11Constants.CKM_SHA_1);
+    map.put(PKCS11Constants.CKG_MGF1_SHA224, PKCS11Constants.CKM_SHA224);
+    map.put(PKCS11Constants.CKG_MGF1_SHA256, PKCS11Constants.CKM_SHA256);
+    map.put(PKCS11Constants.CKG_MGF1_SHA384, PKCS11Constants.CKM_SHA384);
+    map.put(PKCS11Constants.CKG_MGF1_SHA512, PKCS11Constants.CKM_SHA512);
+    map.put(PKCS11Constants.CKG_MGF1_SHA3_224, PKCS11Constants.CKM_SHA3_224);
+    map.put(PKCS11Constants.CKG_MGF1_SHA3_256, PKCS11Constants.CKM_SHA3_256);
+    map.put(PKCS11Constants.CKG_MGF1_SHA3_384, PKCS11Constants.CKM_SHA3_384);
+    map.put(PKCS11Constants.CKG_MGF1_SHA3_512, PKCS11Constants.CKM_SHA3_512);
+    mgf2HashAlgMap = Collections.unmodifiableMap(map);
+  }
 
   /**
    * Create a new RSAPkcsarameters object with the given attributes.
@@ -89,7 +109,7 @@ abstract public class RSAPkcsParameters implements Parameters {
    */
   protected RSAPkcsParameters(long hashAlg, long mgf) {
     boolean valid;
-    if (mgf == PKCS11Constants.CKG_MGF1_SHA1) {
+    if (mgf != PKCS11Constants.CKG_MGF1_SHA1) {
       valid = hashAlg == PKCS11Constants.CKM_SHA_1;
     } else if (mgf == PKCS11Constants.CKG_MGF1_SHA224) {
       valid = hashAlg == PKCS11Constants.CKM_SHA224;
@@ -167,18 +187,12 @@ abstract public class RSAPkcsParameters implements Parameters {
    * @postconditions
    */
   public void setMaskGenerationFunction(long mgf) {
-    if ((mgf != PKCS11Constants.CKG_MGF1_SHA1)
-        && (mgf != PKCS11Constants.CKG_MGF1_SHA256)
-        && (mgf != PKCS11Constants.CKG_MGF1_SHA384)
-        && (mgf != PKCS11Constants.CKG_MGF1_SHA512)
-        && (mgf != PKCS11Constants.CKG_MGF1_SHA3_224)
-        && (mgf != PKCS11Constants.CKG_MGF1_SHA3_256)
-        && (mgf != PKCS11Constants.CKG_MGF1_SHA3_384)
-        && (mgf != PKCS11Constants.CKG_MGF1_SHA3_512)) {
+    if (mgf2HashAlgMap.containsKey(mgf)) {
+      this.mgf = mgf;
+    } else {
       throw new IllegalArgumentException(
-        "Illegal value for argument\"mgf\": " + Long.toHexString(mgf));
+          "Illegal value for argument\"mgf\": " + Long.toHexString(mgf));
     }
-    this.mgf = mgf;
   }
 
   /**
@@ -189,31 +203,10 @@ abstract public class RSAPkcsParameters implements Parameters {
    */
   @Override
   public String toString() {
-    String mgfStr;
-    if (mgf == PKCS11Constants.CKG_MGF1_SHA1) {
-      mgfStr = "SHA-1";
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA224) {
-      mgfStr = "SHA-224";
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA256) {
-      mgfStr = "SHA-256";
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA384) {
-      mgfStr = "SHA-384";
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA512) {
-      mgfStr = "SHA-512";
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_224) {
-      mgfStr = "SHA3-224";
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_256) {
-      mgfStr = "SHA3-256";
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_384) {
-      mgfStr = "SHA3-384";
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_512) {
-      mgfStr = "SHA3-512";
-    } else {
-      mgfStr = "<unknown>";
-    }
-
-    return Util.concat("  Hash Algorithm: ", Functions.getHashAlgName(hashAlg),
-        "\n  Mask Generation Function: ", mgfStr);
+    String hashMech = Functions.mechanismCodeToString(hashAlg);
+    String mgfMech = Functions.mechanismCodeToString(mgf);
+    return Util.concat("  Hash Algorithm: ", hashMech,
+        "\n  Mask Generation Function: ", mgfMech);
   }
 
   /**

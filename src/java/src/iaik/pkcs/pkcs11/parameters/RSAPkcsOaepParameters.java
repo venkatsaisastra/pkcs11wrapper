@@ -195,7 +195,7 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
    */
   public void setSource(long source) {
     if ((source != SourceType.EMPTY)
-        && (source != SourceType.DATA_SPECIFIED)) {
+        && (source != SourceType.SALT_SPECIFIED)) {
       throw new IllegalArgumentException(
         "Illegal value for argument\"source\": "
         + Long.toHexString(source));
