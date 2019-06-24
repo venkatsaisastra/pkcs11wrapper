@@ -20,6 +20,7 @@ package demo.pkcs.pkcs11.wrapper.signatures;
 import org.junit.Test;
 
 import demo.pkcs.pkcs11.wrapper.TestBase;
+import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
@@ -50,6 +51,16 @@ public class EdDSASignRawData extends TestBase {
   private void main0(Token token, Session session) throws TokenException {
     LOG.info("##################################################");
     LOG.info("generate signature key pair");
+
+    final long mechCode = PKCS11Constants.CKM_EDDSA;
+    if (!Util.supports(token, mechCode)) {
+      System.out.println("Unsupported mechanism "
+          + Functions.mechanismCodeToString(mechCode));
+      return;
+    }
+    // be sure that your token can process the specified mechanism
+    Mechanism signatureMechanism = getSupportedMechanism(token, mechCode);
+
     final boolean inToken = false;
     // OID: 1.3.101.112 (Ed25519)
     byte[] ecParams = new byte[] {0x06, 0x03, 0x2b, 0x65, 0x70};
@@ -62,9 +73,6 @@ public class EdDSASignRawData extends TestBase {
     LOG.info("signing data");
     byte[] dataToBeSigned = randomBytes(32); // hash value
 
-    // be sure that your token can process the specified mechanism
-    Mechanism signatureMechanism = getSupportedMechanism(token,
-        PKCS11Constants.CKM_ECDSA);
     // initialize for signing
     session.signInit(signatureMechanism, generatedPrivateKey);
 

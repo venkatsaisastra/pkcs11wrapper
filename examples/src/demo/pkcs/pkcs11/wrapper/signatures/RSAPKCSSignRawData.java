@@ -22,12 +22,14 @@ import java.math.BigInteger;
 import org.junit.Test;
 
 import demo.pkcs.pkcs11.wrapper.TestBase;
+import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
+import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
@@ -51,6 +53,15 @@ public class RSAPKCSSignRawData extends TestBase {
   private void main0(Token token, Session session) throws TokenException {
     LOG.info("##################################################");
     LOG.info("generate signature key pair");
+    final long mechCode = PKCS11Constants.CKM_RSA_PKCS;
+    if (!Util.supports(token, mechCode)) {
+      System.out.println("Unsupported mechanism "
+          + Functions.mechanismCodeToString(mechCode));
+      return;
+    }
+    // be sure that your token can process the specified mechanism
+    Mechanism signatureMechanism = getSupportedMechanism(token, mechCode);
+
     final boolean inToken = false;
     KeyPair generatedKeyPair =
         generateRSAKeypair(token, session, 2048, inToken);
@@ -60,9 +71,6 @@ public class RSAPKCSSignRawData extends TestBase {
     LOG.info("signing data");
     byte[] dataToBeSigned = randomBytes(32); // hash value
 
-    // be sure that your token can process the specified mechanism
-    Mechanism signatureMechanism = getSupportedMechanism(token,
-        PKCS11Constants.CKM_RSA_PKCS);
     // initialize for signing
     session.signInit(signatureMechanism, generatedPrivateKey);
 
