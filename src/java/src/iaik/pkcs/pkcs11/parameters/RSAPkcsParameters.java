@@ -108,32 +108,9 @@ abstract public class RSAPkcsParameters implements Parameters {
    * @postconditions
    */
   protected RSAPkcsParameters(long hashAlg, long mgf) {
-    boolean valid;
-    if (mgf != PKCS11Constants.CKG_MGF1_SHA1) {
-      valid = hashAlg == PKCS11Constants.CKM_SHA_1;
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA224) {
-      valid = hashAlg == PKCS11Constants.CKM_SHA224;
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA256) {
-      valid = hashAlg == PKCS11Constants.CKM_SHA256;
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA384) {
-      valid = hashAlg == PKCS11Constants.CKM_SHA384;
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA512) {
-      valid = hashAlg == PKCS11Constants.CKM_SHA512;
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_224) {
-      valid = hashAlg == PKCS11Constants.CKM_SHA3_224;
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_256) {
-      valid = hashAlg == PKCS11Constants.CKM_SHA3_256;
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_384) {
-      valid = hashAlg == PKCS11Constants.CKM_SHA3_384;
-    } else if (mgf == PKCS11Constants.CKG_MGF1_SHA3_512) {
-      valid = hashAlg == PKCS11Constants.CKM_SHA3_512;
-    } else {
-      valid = false;
-    }
-
-    if (!valid) {
+    if (!mgf2HashAlgMap.containsKey(mgf)) {
       throw new IllegalArgumentException(
-        "Illegal value for argument\"mgf\": " + Long.toHexString(mgf));
+          "Illegal value for argument\"mgf\": " + Long.toHexString(mgf));
     }
 
     this.hashAlg = hashAlg;
