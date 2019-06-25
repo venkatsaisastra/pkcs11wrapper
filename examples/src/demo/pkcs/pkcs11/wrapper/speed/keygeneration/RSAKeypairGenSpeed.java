@@ -20,6 +20,7 @@ package demo.pkcs.pkcs11.wrapper.speed.keygeneration;
 import org.junit.Test;
 
 import demo.pkcs.pkcs11.wrapper.TestBase;
+import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
@@ -41,9 +42,8 @@ public class RSAKeypairGenSpeed extends TestBase {
   private class MyExecutor extends KeypairGenExecutor {
 
     public MyExecutor(Token token, char[] pin) throws TokenException {
-      super(Functions.mechanismCodeToString(
-            PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN) + " (2048) Speed",
-          PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN, token, pin);
+      super(Functions.mechanismCodeToString(mechanism) + " (2048) Speed",
+          mechanism, token, pin);
     }
 
     @Override
@@ -60,9 +60,18 @@ public class RSAKeypairGenSpeed extends TestBase {
 
   }
 
+  private static final long mechanism =
+      PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN;
+
   @Test
   public void main() throws TokenException {
     Token token = getNonNullToken();
+    if (!Util.supports(token, mechanism)) {
+      System.out.println(Functions.mechanismCodeToString(mechanism)
+          + " is not supported, skip test");
+      return;
+    }
+
     Session session = openReadOnlySession(token);
     try {
       MyExecutor executor = new MyExecutor(token, getModulePin());

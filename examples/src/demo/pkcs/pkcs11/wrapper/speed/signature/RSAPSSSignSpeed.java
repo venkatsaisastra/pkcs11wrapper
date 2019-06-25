@@ -3,6 +3,7 @@ package demo.pkcs.pkcs11.wrapper.speed.signature;
 import org.junit.Test;
 
 import demo.pkcs.pkcs11.wrapper.TestBase;
+import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
@@ -21,10 +22,10 @@ public class RSAPSSSignSpeed extends TestBase {
   private class MyExecutor extends SignExecutor {
 
     public MyExecutor(Token token, char[] pin) throws TokenException {
-      super(Functions.mechanismCodeToString(PKCS11Constants.CKM_RSA_PKCS_PSS)
+      super(Functions.mechanismCodeToString(signMechanism)
               + " (2048) Sign Speed",
-          Mechanism.get(PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN), token, pin,
-          signMechanism, 32);
+          Mechanism.get(keypairGenMechanism), token, pin,
+          signMechanism2, 32);
     }
 
     @Override
@@ -41,18 +42,34 @@ public class RSAPSSSignSpeed extends TestBase {
 
   }
 
-  private final Mechanism signMechanism;
+  private static final long keypairGenMechanism =
+      PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN;
+
+  private static final long signMechanism = PKCS11Constants.CKM_RSA_PKCS;
+
+  private final Mechanism signMechanism2;
 
   public RSAPSSSignSpeed() {
-    signMechanism = Mechanism.get(PKCS11Constants.CKM_RSA_PKCS_PSS);
+    signMechanism2 = Mechanism.get(PKCS11Constants.CKM_RSA_PKCS_PSS);
     RSAPkcsPssParameters parameters = new RSAPkcsPssParameters(
         PKCS11Constants.CKM_SHA256, PKCS11Constants.CKG_MGF1_SHA256, 32);
-    signMechanism.setParameters(parameters);
+    signMechanism2.setParameters(parameters);
   }
 
   @Test
   public void main() throws TokenException {
     Token token = getNonNullToken();
+    if (!Util.supports(token, keypairGenMechanism)) {
+      System.out.println(Functions.mechanismCodeToString(keypairGenMechanism)
+          + " is not supported, skip test");
+      return;
+    }
+
+    if (!Util.supports(token, signMechanism)) {
+      System.out.println(Functions.mechanismCodeToString(signMechanism)
+          + " is not supported, skip test");
+      return;
+    }
     Session session = openReadOnlySession(token);
     try {
       MyExecutor executor = new MyExecutor(token, getModulePin());

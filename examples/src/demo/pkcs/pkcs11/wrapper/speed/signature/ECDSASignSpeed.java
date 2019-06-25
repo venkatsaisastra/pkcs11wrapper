@@ -3,6 +3,7 @@ package demo.pkcs.pkcs11.wrapper.speed.signature;
 import org.junit.Test;
 
 import demo.pkcs.pkcs11.wrapper.TestBase;
+import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
@@ -20,10 +21,10 @@ public class ECDSASignSpeed extends TestBase {
   private class MyExecutor extends SignExecutor {
 
     public MyExecutor(Token token, char[] pin) throws TokenException {
-      super(Functions.mechanismCodeToString(PKCS11Constants.CKM_ECDSA)
+      super(Functions.mechanismCodeToString(signMechanism)
               + " (NIST P-256) Sign Speed",
-          Mechanism.get(PKCS11Constants.CKM_EC_KEY_PAIR_GEN), token, pin,
-          Mechanism.get(PKCS11Constants.CKM_ECDSA), 32);
+          Mechanism.get(keypairGenMechanism), token, pin,
+          Mechanism.get(signMechanism), 32);
     }
 
     @Override
@@ -44,9 +45,26 @@ public class ECDSASignSpeed extends TestBase {
 
   }
 
+  private static final long keypairGenMechanism =
+      PKCS11Constants.CKM_EC_KEY_PAIR_GEN;
+
+  private static final long signMechanism = PKCS11Constants.CKM_ECDSA;
+
   @Test
   public void main() throws TokenException {
     Token token = getNonNullToken();
+    if (!Util.supports(token, keypairGenMechanism)) {
+      System.out.println(Functions.mechanismCodeToString(keypairGenMechanism)
+          + " is not supported, skip test");
+      return;
+    }
+
+    if (!Util.supports(token, signMechanism)) {
+      System.out.println(Functions.mechanismCodeToString(signMechanism)
+          + " is not supported, skip test");
+      return;
+    }
+
     Session session = openReadOnlySession(token);
     try {
       MyExecutor executor = new MyExecutor(token, getModulePin());
