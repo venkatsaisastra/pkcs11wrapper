@@ -62,8 +62,28 @@ public class Functions implements PKCS11Constants {
 
   private static class Hex {
 
-    private static final char[] DIGITS = {'0', '1', '2', '3', '4', '5', '6',
-        '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    private static final char[] DIGITS = {'0', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+    private static final char[] UPPER_DIGITS = {'0', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
+    private static final int[] LINTS = new int['f' + 1];
+    private static final int[] HINTS = new int[LINTS.length];
+
+    static {
+      for (int i = 0; i < DIGITS.length; i++) {
+        LINTS[DIGITS[i]] = i;
+      }
+
+      for (int i = 10; i < UPPER_DIGITS.length; i++) {
+        LINTS[UPPER_DIGITS[i]] = i;
+      }
+
+      for (int i = 0; i < LINTS.length; i++) {
+        HINTS[i] = LINTS[i] << 4;
+      }
+    }
 
     public static String encode(byte[] bytes) {
       return new String(encodeToChars(bytes));
@@ -78,6 +98,24 @@ public class Functions implements PKCS11Constants {
       for (int i = 0, j = 0; i < len; i++) {
         out[j++] = DIGITS[(0xF0 & data[i]) >>> 4];
         out[j++] = DIGITS[0x0F & data[i]];
+      }
+
+      return out;
+    }
+
+    public static byte[] decode(String hex) {
+      char[] data = hex.toCharArray();
+      int len = data.length;
+
+      if ((len & 0x01) != 0) {
+        throw new IllegalArgumentException("Odd number of characters.");
+      }
+
+      byte[] out = new byte[len >> 1];
+
+      // two characters form the hex value.
+      for (int i = 0, j = 0; j < len; i++) {
+        out[i] = (byte) (HINTS[data[j++]] | LINTS[data[j++]]);
       }
 
       return out;
@@ -1039,6 +1077,10 @@ public class Functions implements PKCS11Constants {
    */
   public static String toHexString(byte[] value) {
     return Hex.encode(value);
+  }
+
+  public static byte[] decodeHex(String encoded) {
+    return Hex.decode(encoded);
   }
 
   public static String getHashAlgName(Mechanism hashMechanism) {
