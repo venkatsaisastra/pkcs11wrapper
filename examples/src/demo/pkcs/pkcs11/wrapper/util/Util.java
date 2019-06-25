@@ -190,9 +190,7 @@ public class Util {
         try {
           session.login(Session.UserType.USER, pin);
         } catch (PKCS11Exception ex) {
-          if (ex.getErrorCode() == PKCS11Constants.CKR_USER_ALREADY_LOGGED_IN) {
-            System.out.println("User already logged in");
-          } else {
+          if (ex.getErrorCode() != PKCS11Constants.CKR_USER_ALREADY_LOGGED_IN) {
             throw ex;
           }
         }

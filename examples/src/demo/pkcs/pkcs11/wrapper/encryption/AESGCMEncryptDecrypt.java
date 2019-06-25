@@ -38,7 +38,8 @@ public class AESGCMEncryptDecrypt extends SymmEncryptDecrypt {
 
   public AESGCMEncryptDecrypt() {
     iv = randomBytes(12);
-    aad = "hello".getBytes();
+    aad = new byte[20];
+    // aad = "hello".getBytes();
   }
 
   @Test
