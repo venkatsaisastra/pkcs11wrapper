@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package demo.pkcs.pkcs11.wrapper.speed;
+package demo.pkcs.pkcs11.wrapper.speed.keygeneration;
 
 import org.junit.Test;
 
@@ -23,38 +23,38 @@ import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.objects.ECPrivateKey;
-import iaik.pkcs.pkcs11.objects.ECPublicKey;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
+import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
+import iaik.pkcs.pkcs11.objects.RSAPublicKey;
+import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import junit.framework.Assert;
 
 /**
  * EDDSA Keypair Generation Speed Test
  *
  * @author Lijun Liao
  */
-public class ECKeypairGenSpeed extends TestBase {
+public class RSAKeypairGenSpeed extends TestBase {
 
   private class MyExecutor extends KeypairGenExecutor {
 
     public MyExecutor(Token token, char[] pin) throws TokenException {
-      super(PKCS11Constants.CKM_EC_KEY_PAIR_GEN, token, pin);
+      super(Functions.mechanismCodeToString(
+            PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN) + " (2048) Speed",
+          PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN, token, pin);
     }
 
     @Override
     protected PrivateKey getMinimalPrivateKeyTemplate() {
-      return new ECPrivateKey();
+      return new RSAPrivateKey();
     }
 
     @Override
     protected PublicKey getMinimalPublicKeyTemplate() {
-      ECPublicKey publicKeyTemplate = new ECPublicKey();
-      // set the general attributes for the public key
-      // OID: 1.2.840.10045.3.1.7 (secp256r1, alias NIST P-256)
-      byte[] encodedCurveOid = new byte[] {0x06, 0x08, 0x2a, (byte) 0x86,
-          0x48, (byte) 0xce, 0x3d, 0x03, 0x01, 0x07};
-      publicKeyTemplate.getEcdsaParams().setByteArrayValue(encodedCurveOid);
+      RSAPublicKey publicKeyTemplate = new RSAPublicKey();
+      publicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(2048));
       return publicKeyTemplate;
     }
 
@@ -66,8 +66,10 @@ public class ECKeypairGenSpeed extends TestBase {
     Session session = openReadOnlySession(token);
     try {
       MyExecutor executor = new MyExecutor(token, getModulePin());
-      executor.setThreads(4);
+      executor.setThreads(getSpeedTestThreads());
+      executor.setDuration(getSpeedTestDuration());
       executor.execute();
+      Assert.assertEquals("no error", 0, executor.getErrorAccout());
     } finally {
       session.closeSession();
     }

@@ -168,11 +168,19 @@ public class TestBase {
     return openReadWriteSession(getToken());
   }
 
+  protected String getSpeedTestDuration() {
+    return "5s";
+  }
+
+  protected int getSpeedTestThreads() {
+    return 4;
+  }
+
   protected InputStream getResourceAsStream(String path) {
     return getClass().getResourceAsStream(path);
   }
 
-  protected byte[] randomBytes(int len) {
+  public static byte[] randomBytes(int len) {
     byte[] ret = new byte[len];
     random.nextBytes(ret);
     return ret;

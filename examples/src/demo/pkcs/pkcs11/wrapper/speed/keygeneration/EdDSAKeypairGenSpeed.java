@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package demo.pkcs.pkcs11.wrapper.speed;
+package demo.pkcs.pkcs11.wrapper.speed.keygeneration;
 
 import org.junit.Test;
 
@@ -27,7 +27,9 @@ import iaik.pkcs.pkcs11.objects.ECPrivateKey;
 import iaik.pkcs.pkcs11.objects.ECPublicKey;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
+import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import junit.framework.Assert;
 
 /**
  * EDDSA Keypair Generation Speed Test
@@ -39,7 +41,9 @@ public class EdDSAKeypairGenSpeed extends TestBase {
   private class MyExecutor extends KeypairGenExecutor {
 
     public MyExecutor(Token token, char[] pin) throws TokenException {
-      super(PKCS11Constants.CKM_EC_EDWARDS_KEY_PAIR_GEN, token, pin);
+      super(Functions.mechanismCodeToString(
+          PKCS11Constants.CKM_EC_EDWARDS_KEY_PAIR_GEN) + " (Ed25519) Speed",
+      PKCS11Constants.CKM_EC_EDWARDS_KEY_PAIR_GEN, token, pin);
     }
 
     @Override
@@ -65,8 +69,10 @@ public class EdDSAKeypairGenSpeed extends TestBase {
     Session session = openReadOnlySession(token);
     try {
       MyExecutor executor = new MyExecutor(token, getModulePin());
-      executor.setThreads(4);
+      executor.setThreads(getSpeedTestThreads());
+      executor.setDuration(getSpeedTestDuration());
       executor.execute();
+      Assert.assertEquals("no error", 0, executor.getErrorAccout());
     } finally {
       session.closeSession();
     }
