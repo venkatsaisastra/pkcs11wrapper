@@ -41,10 +41,10 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *
  * @author Lijun Liao
  */
-public class RSAPKCSPSSSignRawData extends TestBase {
+public class RSAPKCSPSSSignRawData extends SignatureTestBase {
 
   @Test
-  public void main() throws TokenException, NoSuchAlgorithmException {
+  public void main() throws Exception {
     Token token = getNonNullToken();
     Session session = openReadOnlySession(token);
     try {
@@ -54,8 +54,7 @@ public class RSAPKCSPSSSignRawData extends TestBase {
     }
   }
 
-  private void main0(Token token, Session session)
-      throws TokenException, NoSuchAlgorithmException {
+  private void main0(Token token, Session session) throws Exception {
     LOG.info("##################################################");
     LOG.info("generate signature key pair");
 
@@ -99,7 +98,8 @@ public class RSAPKCSPSSSignRawData extends TestBase {
     session.verify(hashValue, signatureValue);
 
     // verify with JCE
-    // TODO: implement me
+    jceVerifySignature("SHA256withRSAandMGF1", generatedPublicKey,
+        dataToBeSigned, signatureValue);
 
     LOG.info("##################################################");
   }
