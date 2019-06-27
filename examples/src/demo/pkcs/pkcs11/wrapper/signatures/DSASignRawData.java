@@ -18,16 +18,14 @@
 package demo.pkcs.pkcs11.wrapper.signatures;
 
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import org.junit.Test;
+import org.xipki.security.util.SignerUtil;
 
-import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
@@ -39,10 +37,10 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *
  * @author Lijun Liao
  */
-public class DSASignRawData extends TestBase {
+public class DSASignRawData extends SignatureTestBase {
 
   @Test
-  public void main() throws TokenException, NoSuchAlgorithmException {
+  public void main() throws Exception {
     Token token = getNonNullToken();
     Session session = openReadOnlySession(token);
     try {
@@ -53,7 +51,7 @@ public class DSASignRawData extends TestBase {
   }
 
   private void main0(Token token, Session session)
-      throws TokenException, NoSuchAlgorithmException {
+      throws Exception {
     LOG.info("##################################################");
     LOG.info("generate signature key pair");
 
@@ -86,11 +84,15 @@ public class DSASignRawData extends TestBase {
     LOG.info("The signature value is: {}",
         Functions.toHexString(signatureValue));
 
-    // verify
+    // verify with PKCS#11
     PublicKey generatedPublicKey = generatedKeyPair.getPublicKey();
     session.verifyInit(signatureMechanism, generatedPublicKey);
     // error will be thrown if signature is invalid
     session.verify(hashValue, signatureValue);
+
+    // verify with JCE
+    jceVerifySignature("SHA256withDSA", generatedPublicKey, dataToBeSigned,
+        SignerUtil.dsaSigPlainToX962(signatureValue));
 
     LOG.info("##################################################");
   }

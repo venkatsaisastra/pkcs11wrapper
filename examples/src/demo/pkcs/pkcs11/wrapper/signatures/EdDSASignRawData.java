@@ -19,12 +19,10 @@ package demo.pkcs.pkcs11.wrapper.signatures;
 
 import org.junit.Test;
 
-import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
@@ -36,10 +34,10 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *
  * @author Lijun Liao
  */
-public class EdDSASignRawData extends TestBase {
+public class EdDSASignRawData extends SignatureTestBase {
 
   @Test
-  public void main() throws TokenException {
+  public void main() throws Exception {
     Token token = getNonNullToken();
     Session session = openReadOnlySession(token);
     try {
@@ -49,7 +47,7 @@ public class EdDSASignRawData extends TestBase {
     }
   }
 
-  private void main0(Token token, Session session) throws TokenException {
+  private void main0(Token token, Session session) throws Exception {
     LOG.info("##################################################");
     LOG.info("generate signature key pair");
 
@@ -87,6 +85,10 @@ public class EdDSASignRawData extends TestBase {
     session.verifyInit(signatureMechanism, generatedPublicKey);
     // error will be thrown if signature is invalid
     session.verify(dataToBeSigned, signatureValue);
+
+    // verify with JCE
+    jceVerifySignature("Ed25519", generatedPublicKey, dataToBeSigned,
+        signatureValue);
 
     LOG.info("##################################################");
   }

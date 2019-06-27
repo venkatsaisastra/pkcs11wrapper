@@ -19,16 +19,13 @@ package demo.pkcs.pkcs11.wrapper.signatures;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import org.junit.Test;
 
-import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
@@ -40,10 +37,10 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *
  * @author Lijun Liao
  */
-public class RSAPKCSSignRawData extends TestBase {
+public class RSAPKCSSignRawData extends SignatureTestBase {
 
   @Test
-  public void main() throws TokenException, NoSuchAlgorithmException {
+  public void main() throws Exception {
     Token token = getNonNullToken();
     Session session = openReadOnlySession(token);
     try {
@@ -53,8 +50,7 @@ public class RSAPKCSSignRawData extends TestBase {
     }
   }
 
-  private void main0(Token token, Session session)
-      throws TokenException, NoSuchAlgorithmException {
+  private void main0(Token token, Session session) throws Exception {
     LOG.info("##################################################");
     LOG.info("generate signature key pair");
     final long mechCode = PKCS11Constants.CKM_RSA_PKCS;
@@ -91,6 +87,10 @@ public class RSAPKCSSignRawData extends TestBase {
     session.verifyInit(signatureMechanism, generatedPublicKey);
     // error will be thrown if signature is invalid
     session.verify(hashValue, signatureValue);
+
+    // verify with JCE
+    jceVerifySignature("SHA256withRSA", generatedPublicKey, dataToBeSigned,
+        signatureValue);
 
     LOG.info("##################################################");
   }

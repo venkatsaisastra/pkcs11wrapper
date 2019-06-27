@@ -43,12 +43,21 @@
 package demo.pkcs.pkcs11.wrapper;
 
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.security.spec.DSAPublicKeySpec;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.RSAPublicKeySpec;
 import java.util.Properties;
 import java.util.Random;
 
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.DEROctetString;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xipki.security.util.KeyUtil;
 
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
@@ -60,7 +69,9 @@ import iaik.pkcs.pkcs11.objects.DSAPrivateKey;
 import iaik.pkcs.pkcs11.objects.DSAPublicKey;
 import iaik.pkcs.pkcs11.objects.ECPrivateKey;
 import iaik.pkcs.pkcs11.objects.ECPublicKey;
+import iaik.pkcs.pkcs11.objects.Key.KeyType;
 import iaik.pkcs.pkcs11.objects.KeyPair;
+import iaik.pkcs.pkcs11.objects.PublicKey;
 import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
 import iaik.pkcs.pkcs11.objects.RSAPublicKey;
 import iaik.pkcs.pkcs11.wrapper.Functions;
@@ -321,5 +332,52 @@ public class TestBase {
     return session.generateKeyPair(keyPairGenMechanism,
         publicKeyTemplate, privateKeyTemplate);
   }
+
+  protected static java.security.PublicKey generateJCEPublicKey(
+      PublicKey p11Key) throws InvalidKeySpecException {
+    if (p11Key instanceof RSAPublicKey) {
+      RSAPublicKey rsaP11Key = (RSAPublicKey) p11Key;
+      byte[] expBytes = rsaP11Key.getPublicExponent().getByteArrayValue();
+      BigInteger exp = new BigInteger(1, expBytes);
+
+      byte[] modBytes = rsaP11Key.getModulus().getByteArrayValue();
+      BigInteger mod = new BigInteger(1, modBytes);
+      RSAPublicKeySpec keySpec = new RSAPublicKeySpec(mod, exp);
+      return KeyUtil.generateRSAPublicKey(keySpec);
+    } else if (p11Key instanceof DSAPublicKey) {
+      DSAPublicKey dsaP11Key = (DSAPublicKey) p11Key;
+
+      BigInteger prime =
+          new BigInteger(1, dsaP11Key.getPrime().getByteArrayValue()); // p
+      BigInteger subPrime =
+          new BigInteger(1, dsaP11Key.getSubprime().getByteArrayValue()); // q
+      BigInteger base =
+          new BigInteger(1, dsaP11Key.getBase().getByteArrayValue()); // g
+      BigInteger value =
+          new BigInteger(1, dsaP11Key.getValue().getByteArrayValue()); // y
+      DSAPublicKeySpec keySpec =
+          new DSAPublicKeySpec(value, prime, subPrime, base);
+      return KeyUtil.generateDSAPublicKey(keySpec);
+    } else if (p11Key instanceof ECPublicKey) {
+      ECPublicKey ecP11Key = (ECPublicKey) p11Key;
+      long keyType = ecP11Key.getKeyType().getLongValue().longValue();
+      byte[] ecParameters = ecP11Key.getEcdsaParams().getByteArrayValue();
+      byte[] encodedPoint = DEROctetString.getInstance(
+          ecP11Key.getEcPoint().getByteArrayValue()).getOctets();
+
+      if (keyType == KeyType.EC_EDWARDS || keyType == KeyType.EC_MONTGOMERY) {
+        ASN1ObjectIdentifier algOid =
+            ASN1ObjectIdentifier.getInstance(ecParameters);
+        SubjectPublicKeyInfo pkInfo = new SubjectPublicKeyInfo(
+            new AlgorithmIdentifier(algOid), encodedPoint);
+        return KeyUtil.generatePublicKey(pkInfo);
+      } else {
+        return KeyUtil.createECPublicKey(ecParameters, encodedPoint);
+      }
+    } else {
+      throw new InvalidKeySpecException(
+          "unknown publicKey class " + p11Key.getClass().getName());
+    }
+  } // method generatePublicKey
 
 }

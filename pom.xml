@@ -38,8 +38,14 @@
   <dependencies>
     <dependency>
       <groupId>org.xipki</groupId>
-      <artifactId>util</artifactId>
+      <artifactId>security</artifactId>
       <version>5.3.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.xipki.iaik</groupId>
+          <artifactId>sunpkcs11-wrapper</artifactId>
+        </exclusion>
+      </exclusions>
       <scope>test</scope>
     </dependency>
     <dependency>
