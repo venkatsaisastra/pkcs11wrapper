@@ -42,10 +42,6 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
-import java.io.ByteArrayInputStream;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
-
 import org.junit.Test;
 
 import demo.pkcs.pkcs11.wrapper.TestBase;
@@ -61,8 +57,6 @@ import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.TokenInfo;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
-import iaik.pkcs.pkcs11.objects.X509AttributeCertificate;
-import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
 
 /**
  * This demo program lists information about a library, the available slots, the
@@ -148,49 +142,19 @@ public class GetInfo extends TestBase {
 
     session.findObjectsInit(null);
     PKCS11Object[] objects = session.findObjects(1);
-    if (0 < objects.length)
+    if (0 < objects.length) {
       counter++;
+    }
 
-    CertificateFactory x509CertificateFactory = null;
     while (objects.length > 0 && (0 == limit || counter < limit)) {
       PKCS11Object object = objects[0];
       LOG.info("--------------------------------------------------");
-      LOG.info("Object with handle: {}", objects[0].getObjectHandle());
+      LOG.info("Object with handle: {}", object.getObjectHandle());
       LOG.info("{}", object);
-      if (object instanceof X509PublicKeyCertificate) {
-        try {
-          byte[] encodedCertificate = ((X509PublicKeyCertificate) object)
-              .getValue().getByteArrayValue();
-          if (x509CertificateFactory == null) {
-            x509CertificateFactory = CertificateFactory.getInstance("X.509");
-          }
-          Certificate certificate = x509CertificateFactory.generateCertificate(
-              new ByteArrayInputStream(encodedCertificate));
-          LOG.info("..................................................");
-          LOG.info("The decoded X509PublicKeyCertificate is:\n{}", certificate);
-          LOG.info("..................................................");
-        } catch (Exception ex) {
-          LOG.info("Could not decode this X509PublicKeyCertificate: {}", ex);
-        }
-      } else if (object instanceof X509AttributeCertificate) {
-        try {
-          byte[] encodedCertificate = ((X509AttributeCertificate) object)
-              .getValue().getByteArrayValue();
-          if (x509CertificateFactory == null) {
-            x509CertificateFactory = CertificateFactory.getInstance("X.509");
-          }
-          Certificate certificate = x509CertificateFactory.generateCertificate(
-              new ByteArrayInputStream(encodedCertificate));
-          LOG.info("..................................................");
-          LOG.info("The decoded X509AttributeCertificate is:\n{}", certificate);
-          LOG.info("..................................................");
-        } catch (Exception ex) {
-          LOG.info("Could not decode this X509AttributeCertificate: {}", ex);
-        }
-      }
       LOG.info("--------------------------------------------------");
       objects = session.findObjects(1);
       counter++;
+      System.out.println(counter);
     }
     session.findObjectsFinal();
 

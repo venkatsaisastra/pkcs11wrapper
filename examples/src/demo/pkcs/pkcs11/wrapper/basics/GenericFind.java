@@ -112,7 +112,7 @@ public class GenericFind extends TestBase {
     } else {
       String msg = "There is no object with a CKA_SIGN attribute set to true.";
       LOG.info(msg);
-      throw new TokenException(msg);
+      return;
     }
     session.findObjectsFinal();
     LOG.info("##################################################\n{}",
