@@ -47,15 +47,6 @@ public abstract class KeyGenExecutor extends Pkcs11Executor {
             Session session = sessionBag.value();
             key = (ValuedSecretKey) session.generateKey(
                     mechanism, secretKeyTemplate);
-          } finally {
-            requiteSession(sessionBag);
-          }
-
-          // we use here explicitly not the same session.
-          sessionBag = null;
-          sessionBag = borrowSession();
-          try {
-            Session session = sessionBag.value();
             session.destroyObject(key);
           } finally {
             requiteSession(sessionBag);
@@ -78,9 +69,7 @@ public abstract class KeyGenExecutor extends Pkcs11Executor {
 
   public KeyGenExecutor(long mechnism, int keyLen, Token token, char[] pin,
       boolean inToken) throws TokenException {
-    super(Functions.mechanismCodeToString(mechnism)
-        + " (" + keyLen * 8 + " bits, inToken: " + inToken + ") Speed",
-        token, pin);
+    super(describe(mechnism, keyLen, inToken), token, pin);
     this.mechanism = new Mechanism(mechnism);
     this.inToken = inToken;
   }
@@ -90,6 +79,18 @@ public abstract class KeyGenExecutor extends Pkcs11Executor {
   @Override
   protected Runnable getTestor() throws Exception {
     return new MyRunnable();
+  }
+
+  private static String describe(long mechnism, int keyLen, boolean inToken) {
+    StringBuilder sb = new StringBuilder(100)
+      .append(Functions.mechanismCodeToString(mechnism))
+      .append(" (");
+    if (keyLen > 0) {
+      sb.append(keyLen * 8).append(" bits, ");
+    }
+
+    sb.append("inToken: ").append(inToken).append(") Speed");
+    return sb.toString();
   }
 
 }

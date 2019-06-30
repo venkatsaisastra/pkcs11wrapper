@@ -17,7 +17,7 @@ public class DES3KeyGenSpeed extends TestBase {
 
     public MyExecutor(Token token, char[] pin, boolean inToken)
         throws TokenException {
-      super(mechanism, 16, token, pin, inToken);
+      super(mechanism, 0, token, pin, inToken);
     }
 
     @Override

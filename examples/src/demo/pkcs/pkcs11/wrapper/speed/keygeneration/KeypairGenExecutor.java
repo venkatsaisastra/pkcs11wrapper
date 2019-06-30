@@ -62,15 +62,6 @@ public abstract class KeypairGenExecutor extends Pkcs11Executor {
             Session session = sessionBag.value();
             keypair = session.generateKeyPair(mechanism, publicKeyTemplate,
                 privateKeyTemplate);
-          } finally {
-            requiteSession(sessionBag);
-          }
-
-          // we use here explicitly not the same session.
-          sessionBag = null;
-          sessionBag = borrowSession();
-          try {
-            Session session = sessionBag.value();
             session.destroyObject(keypair.getPrivateKey());
             session.destroyObject(keypair.getPublicKey());
           } finally {
