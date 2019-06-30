@@ -53,6 +53,11 @@ import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 import javax.security.auth.x500.X500Principal;
 
+import org.bouncycastle.asn1.ASN1EncodableVector;
+import org.bouncycastle.asn1.ASN1Integer;
+import org.bouncycastle.asn1.DERSequence;
+import org.xipki.util.Args;
+
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
@@ -276,6 +281,30 @@ public class Util {
       }
     }
     return false;
+  }
+
+  public static byte[] dsaSigPlainToX962(byte[] signature) {
+    Args.notNull(signature, "signature");
+    if (signature.length % 2 != 0) {
+      throw new IllegalArgumentException(
+          "signature.lenth must be even, but is odd");
+    }
+    byte[] ba = new byte[signature.length / 2];
+    ASN1EncodableVector sigder = new ASN1EncodableVector();
+
+    System.arraycopy(signature, 0, ba, 0, ba.length);
+    sigder.add(new ASN1Integer(new BigInteger(1, ba)));
+
+    System.arraycopy(signature, ba.length, ba, 0, ba.length);
+    sigder.add(new ASN1Integer(new BigInteger(1, ba)));
+
+    DERSequence seq = new DERSequence(sigder);
+    try {
+      return seq.getEncoded();
+    } catch (IOException ex) {
+      throw new IllegalArgumentException(
+          "IOException, message: " + ex.getMessage(), ex);
+    }
   }
 
 }

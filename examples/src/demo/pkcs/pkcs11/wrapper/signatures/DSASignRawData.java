@@ -20,7 +20,6 @@ package demo.pkcs.pkcs11.wrapper.signatures;
 import java.security.MessageDigest;
 
 import org.junit.Test;
-import org.xipki.security.util.SignerUtil;
 
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
@@ -92,7 +91,7 @@ public class DSASignRawData extends SignatureTestBase {
 
     // verify with JCE
     jceVerifySignature("SHA256withDSA", generatedPublicKey, dataToBeSigned,
-        SignerUtil.dsaSigPlainToX962(signatureValue));
+        Util.dsaSigPlainToX962(signatureValue));
 
     LOG.info("##################################################");
   }

@@ -38,14 +38,14 @@
   <dependencies>
     <dependency>
       <groupId>org.xipki</groupId>
-      <artifactId>security</artifactId>
+      <artifactId>util</artifactId>
       <version>5.3.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.xipki.iaik</groupId>
-          <artifactId>sunpkcs11-wrapper</artifactId>
-        </exclusion>
-      </exclusions>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk15on</artifactId>
+      <version>1.62</version>
       <scope>test</scope>
     </dependency>
     <dependency>
