@@ -30,10 +30,12 @@ public abstract class KeyGenExecutor extends Pkcs11Executor {
         try {
           // generate key on token
           ValuedSecretKey secretKeyTemplate = getMinimalKeyTemplate();
-          secretKeyTemplate.getToken().setBooleanValue(Boolean.TRUE);
-          byte[] id = new byte[20];
-          new Random().nextBytes(id);
-          secretKeyTemplate.getId().setByteArrayValue(id);
+          secretKeyTemplate.getToken().setBooleanValue(inToken);
+          if (inToken) {
+            byte[] id = new byte[20];
+            new Random().nextBytes(id);
+            secretKeyTemplate.getId().setByteArrayValue(id);
+          }
 
           secretKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
           secretKeyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
@@ -72,11 +74,15 @@ public abstract class KeyGenExecutor extends Pkcs11Executor {
 
   private final Mechanism mechanism;
 
-  public KeyGenExecutor(long mechnism, int keyLen, Token token, char[] pin)
-      throws TokenException {
+  private final boolean inToken;
+
+  public KeyGenExecutor(long mechnism, int keyLen, Token token, char[] pin,
+      boolean inToken) throws TokenException {
     super(Functions.mechanismCodeToString(mechnism)
-        + " (" + keyLen * 8 + " bits) Speed", token, pin);
+        + " (" + keyLen * 8 + " bits, inToken: " + inToken + ") Speed",
+        token, pin);
     this.mechanism = new Mechanism(mechnism);
+    this.inToken = inToken;
   }
 
   protected abstract ValuedSecretKey getMinimalKeyTemplate();

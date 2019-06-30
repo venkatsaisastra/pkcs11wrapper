@@ -36,13 +36,15 @@ public abstract class KeypairGenExecutor extends Pkcs11Executor {
           privateKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
           privateKeyTemplate.getPrivate().setBooleanValue(Boolean.TRUE);
 
-          publicKeyTemplate.getToken().setBooleanValue(Boolean.TRUE);
-          privateKeyTemplate.getToken().setBooleanValue(Boolean.TRUE);
+          publicKeyTemplate.getToken().setBooleanValue(inToken);
+          privateKeyTemplate.getToken().setBooleanValue(inToken);
 
-          byte[] id = new byte[20];
-          new Random().nextBytes(id);
-          publicKeyTemplate.getId().setByteArrayValue(id);
-          privateKeyTemplate.getId().setByteArrayValue(id);
+          if (inToken) {
+            byte[] id = new byte[20];
+            new Random().nextBytes(id);
+            publicKeyTemplate.getId().setByteArrayValue(id);
+            privateKeyTemplate.getId().setByteArrayValue(id);
+          }
 
           publicKeyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
           privateKeyTemplate.getSign().setBooleanValue(Boolean.TRUE);
@@ -88,10 +90,13 @@ public abstract class KeypairGenExecutor extends Pkcs11Executor {
 
   private final Mechanism mechanism;
 
+  private final boolean inToken;
+
   public KeypairGenExecutor(String description, long mechnism,
-      Token token, char[] pin) throws TokenException {
+      Token token, char[] pin, boolean inToken) throws TokenException {
     super(description, token, pin);
     this.mechanism = new Mechanism(mechnism);
+    this.inToken = inToken;
   }
 
   protected abstract PrivateKey getMinimalPrivateKeyTemplate();

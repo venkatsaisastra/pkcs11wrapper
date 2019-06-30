@@ -113,6 +113,10 @@ public class TestBase {
 
   private static RuntimeException initException;
 
+  private static int speedThreads;
+
+  private static String speedDuration;
+
   private static SecureRandom random = new SecureRandom();
 
   protected Logger LOG = LoggerFactory.getLogger(getClass());
@@ -126,6 +130,9 @@ public class TestBase {
       String str = props.getProperty("module.slotIndex");
       slotIndex = (str == null) ? null : Integer.parseInt(str);
       module = Module.getInstance(modulePath);
+
+      speedThreads = Integer.getInteger("speed.threads", 2);
+      speedDuration = System.getProperty("speed.duration", "5s");
       module.initialize(null);
     } catch (Exception ex) {
       initException = new RuntimeException(ex);
@@ -180,11 +187,11 @@ public class TestBase {
   }
 
   protected String getSpeedTestDuration() {
-    return "5s";
+    return speedDuration;
   }
 
   protected int getSpeedTestThreads() {
-    return 4;
+    return speedThreads;
   }
 
   protected InputStream getResourceAsStream(String path) {

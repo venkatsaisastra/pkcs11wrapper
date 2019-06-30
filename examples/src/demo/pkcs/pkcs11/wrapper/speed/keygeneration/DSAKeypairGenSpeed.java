@@ -21,7 +21,6 @@ import org.junit.Test;
 
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
-import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.DSAPrivateKey;
@@ -41,10 +40,11 @@ public class DSAKeypairGenSpeed extends TestBase {
 
   private class MyExecutor extends KeypairGenExecutor {
 
-    public MyExecutor(Token token, char[] pin) throws TokenException {
+    public MyExecutor(Token token, char[] pin, boolean inToken)
+        throws TokenException {
       super(Functions.mechanismCodeToString(mechanism)
-            + " (P:2048, Q:256) Speed",
-          mechanism, token, pin);
+            + " (P:2048, Q:256, inToken: " + inToken + ") Speed",
+          mechanism, token, pin, inToken);
     }
 
     @Override
@@ -78,15 +78,13 @@ public class DSAKeypairGenSpeed extends TestBase {
       return;
     }
 
-    Session session = openReadOnlySession(token);
-    try {
-      MyExecutor executor = new MyExecutor(token, getModulePin());
+    boolean[] inTokens = new boolean[] {false, true};
+    for (boolean inToken : inTokens) {
+      MyExecutor executor = new MyExecutor(token, getModulePin(), inToken);
       executor.setThreads(getSpeedTestThreads());
       executor.setDuration(getSpeedTestDuration());
       executor.execute();
       Assert.assertEquals("no error", 0, executor.getErrorAccout());
-    } finally {
-      session.closeSession();
     }
   }
 

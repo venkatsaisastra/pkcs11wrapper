@@ -18,6 +18,17 @@ Use xipki/pkcs11wrapper in your project
 - Or copy the following jar file to your classpath:
   - [sunpkcs11-wrapper-1.4.5.jar](https://github.com/xipki/pkcs11wrapper/releases/download/v1.4.5/sunpkcs11-wrapper-1.4.5.jar)
 
+JUnit tests
+=====
+- Configure the library and PIN of your HSM module in the file `example/data/pkcs11.properties`.
+- `mvn test`  
+   - By default the speed test will run with 2 threads, you can change the
+     value via the Java property `speed.threads`, e.g.
+    `-Dspeed.threads=5` to use 5 threads.
+   - By default the speed test will take 5 seconds, you can change the
+     value via the Java property `speed.duration`, e.g.
+    `-Dspeed.duration=10s` for 10 seconds.
+
 Changes compared to [mikma/pkcs11wrapper](https://github.com/mikma/pkcs11wrapper)
 =============================================
 
