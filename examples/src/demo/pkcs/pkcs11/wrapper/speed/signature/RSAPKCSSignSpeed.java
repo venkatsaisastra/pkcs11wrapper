@@ -1,11 +1,11 @@
 package demo.pkcs.pkcs11.wrapper.speed.signature;
 
 import org.junit.Test;
+import org.xipki.util.BenchmarkExecutor;
 
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
@@ -18,9 +18,9 @@ import junit.framework.Assert;
 
 public class RSAPKCSSignSpeed extends TestBase {
 
-  private class MyExecutor extends SignExecutor {
+  private class MySignExecutor extends SignExecutor {
 
-    public MyExecutor(Token token, char[] pin) throws TokenException {
+    public MySignExecutor(Token token, char[] pin) throws TokenException {
       super(Functions.mechanismCodeToString(signMechanism)
               + " (2048) Sign Speed",
           Mechanism.get(keypairGenMechanism), token, pin,
@@ -29,14 +29,33 @@ public class RSAPKCSSignSpeed extends TestBase {
 
     @Override
     protected PrivateKey getMinimalPrivateKeyTemplate() {
-      return new RSAPrivateKey();
+      return getMinimalPrivateKeyTemplate0();
     }
 
     @Override
     protected PublicKey getMinimalPublicKeyTemplate() {
-      RSAPublicKey publicKeyTemplate = new RSAPublicKey();
-      publicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(2048));
-      return publicKeyTemplate;
+      return getMinimalPublicKeyTemplate0();
+    }
+
+  }
+
+  private class MyVerifyExecutor extends VerifyExecutor {
+
+    public MyVerifyExecutor(Token token, char[] pin) throws TokenException {
+      super(Functions.mechanismCodeToString(signMechanism)
+              + " (2048) Verify Speed",
+          Mechanism.get(keypairGenMechanism), token, pin,
+          Mechanism.get(signMechanism), 32);
+    }
+
+    @Override
+    protected PrivateKey getMinimalPrivateKeyTemplate() {
+      return getMinimalPrivateKeyTemplate0();
+    }
+
+    @Override
+    protected PublicKey getMinimalPublicKeyTemplate() {
+      return getMinimalPublicKeyTemplate0();
     }
 
   }
@@ -45,6 +64,16 @@ public class RSAPKCSSignSpeed extends TestBase {
       PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN;
 
   private static final long signMechanism = PKCS11Constants.CKM_RSA_PKCS;
+
+  private PrivateKey getMinimalPrivateKeyTemplate0() {
+    return new RSAPrivateKey();
+  }
+
+  private PublicKey getMinimalPublicKeyTemplate0() {
+    RSAPublicKey publicKeyTemplate = new RSAPublicKey();
+    publicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(2048));
+    return publicKeyTemplate;
+  }
 
   @Test
   public void main() throws TokenException {
@@ -61,16 +90,18 @@ public class RSAPKCSSignSpeed extends TestBase {
       return;
     }
 
-    Session session = openReadOnlySession(token);
-    try {
-      MyExecutor executor = new MyExecutor(token, getModulePin());
-      executor.setThreads(getSpeedTestThreads());
-      executor.setDuration(getSpeedTestDuration());
-      executor.execute();
-      Assert.assertEquals("no error", 0, executor.getErrorAccout());
-    } finally {
-      session.closeSession();
-    }
+    BenchmarkExecutor executor = new MySignExecutor(token, getModulePin());
+    executor.setThreads(getSpeedTestThreads());
+    executor.setDuration(getSpeedTestDuration());
+    executor.execute();
+    Assert.assertEquals("Sign speed", 0, executor.getErrorAccout());
+
+    executor = new MyVerifyExecutor(token, getModulePin());
+    executor.setThreads(getSpeedTestThreads());
+    executor.setDuration(getSpeedTestDuration());
+    executor.execute();
+    Assert.assertEquals("Verify speed", 0, executor.getErrorAccout());
+
   }
 
 }

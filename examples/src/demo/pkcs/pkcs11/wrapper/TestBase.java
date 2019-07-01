@@ -132,7 +132,7 @@ public class TestBase {
       module = Module.getInstance(modulePath);
 
       speedThreads = Integer.getInteger("speed.threads", 2);
-      speedDuration = System.getProperty("speed.duration", "5s");
+      speedDuration = System.getProperty("speed.duration", "3s");
       module.initialize(null);
     } catch (Exception ex) {
       initException = new RuntimeException(ex);

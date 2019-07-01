@@ -8,24 +8,23 @@ import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
+import iaik.pkcs.pkcs11.objects.ECPrivateKey;
+import iaik.pkcs.pkcs11.objects.ECPublicKey;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
-import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
-import iaik.pkcs.pkcs11.objects.RSAPublicKey;
-import iaik.pkcs.pkcs11.parameters.RSAPkcsPssParameters;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import junit.framework.Assert;
 
-public class RSAPSSSignSpeed extends TestBase {
+public class EDDSASignVerifySpeed extends TestBase {
 
   private class MySignExecutor extends SignExecutor {
 
     public MySignExecutor(Token token, char[] pin) throws TokenException {
       super(Functions.mechanismCodeToString(signMechanism)
-              + " (2048) Sign Speed",
+          + " (Ed25519) Sign Speed",
           Mechanism.get(keypairGenMechanism), token, pin,
-          signMechanism2, 32);
+          Mechanism.get(signMechanism), 107);
     }
 
     @Override
@@ -44,9 +43,9 @@ public class RSAPSSSignSpeed extends TestBase {
 
     public MyVerifyExecutor(Token token, char[] pin) throws TokenException {
       super(Functions.mechanismCodeToString(signMechanism)
-              + " (2048) Verify Speed",
+          + " (Ed25519) Verify Speed",
           Mechanism.get(keypairGenMechanism), token, pin,
-          signMechanism2, 32);
+          Mechanism.get(signMechanism), 107);
     }
 
     @Override
@@ -62,27 +61,21 @@ public class RSAPSSSignSpeed extends TestBase {
   }
 
   private static final long keypairGenMechanism =
-      PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN;
+      PKCS11Constants.CKM_EC_EDWARDS_KEY_PAIR_GEN;
 
-  private static final long signMechanism = PKCS11Constants.CKM_RSA_PKCS;
-
-  private final Mechanism signMechanism2;
+  private static final long signMechanism = PKCS11Constants.CKM_EDDSA;
 
   private PrivateKey getMinimalPrivateKeyTemplate0() {
-    return new RSAPrivateKey();
+    return new ECPrivateKey();
   }
 
   private PublicKey getMinimalPublicKeyTemplate0() {
-    RSAPublicKey publicKeyTemplate = new RSAPublicKey();
-    publicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(2048));
+    ECPublicKey publicKeyTemplate = new ECPublicKey();
+    // set the general attributes for the public key
+    // OID: 1.3.101.112 (Ed25519)
+    byte[] encodedCurveOid = new byte[] {0x06, 0x03, 0x2b, 0x65, 0x70};
+    publicKeyTemplate.getEcdsaParams().setByteArrayValue(encodedCurveOid);
     return publicKeyTemplate;
-  }
-
-  public RSAPSSSignSpeed() {
-    signMechanism2 = Mechanism.get(PKCS11Constants.CKM_RSA_PKCS_PSS);
-    RSAPkcsPssParameters parameters = new RSAPkcsPssParameters(
-        PKCS11Constants.CKM_SHA256, PKCS11Constants.CKG_MGF1_SHA256, 32);
-    signMechanism2.setParameters(parameters);
   }
 
   @Test
