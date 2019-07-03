@@ -24,6 +24,7 @@ import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
 /**
+* CK_CCM_PARAMS
 *
 * @author Lijun Liao
 * @since 1.4.5

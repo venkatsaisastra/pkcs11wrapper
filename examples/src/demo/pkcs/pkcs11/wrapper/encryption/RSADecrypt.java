@@ -35,6 +35,8 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 /**
  * This demo shows how to use a PKCS#11 token to decrypt a session key
  * encrypted by RSA.
+ *
+ * @author Lijun Liao
  */
 public class RSADecrypt extends TestBase {
 

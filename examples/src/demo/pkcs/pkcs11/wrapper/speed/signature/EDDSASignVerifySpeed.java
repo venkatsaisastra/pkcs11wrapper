@@ -33,6 +33,11 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import junit.framework.Assert;
 
+/**
+ * EDDSA sign / verify speed test.
+ *
+ * @author Lijun Liao
+ */
 public class EDDSASignVerifySpeed extends TestBase {
 
   private class MySignExecutor extends SignExecutor {

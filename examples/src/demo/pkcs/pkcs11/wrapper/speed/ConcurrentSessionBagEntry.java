@@ -21,6 +21,11 @@ import org.xipki.util.concurrent.ConcurrentBagEntry;
 
 import iaik.pkcs.pkcs11.Session;
 
+/**
+ * Concurrent bag entry for {@link Session}.
+ *
+ * @author Lijun Liao
+ */
 public class ConcurrentSessionBagEntry extends ConcurrentBagEntry<Session> {
 
   public ConcurrentSessionBagEntry(Session value) {

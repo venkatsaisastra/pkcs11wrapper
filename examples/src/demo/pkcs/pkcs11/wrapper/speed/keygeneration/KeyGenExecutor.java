@@ -31,6 +31,11 @@ import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 
+/**
+ * Secret key generation executor base class.
+ *
+ * @author Lijun Liao
+ */
 public abstract class KeyGenExecutor extends Pkcs11Executor {
 
   private static final Logger LOG =

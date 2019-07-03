@@ -32,6 +32,11 @@ import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
 
+/**
+ * Keypair generation executor base class.
+ *
+ * @author Lijun Liao
+ */
 public abstract class KeypairGenExecutor extends Pkcs11Executor {
 
   private static final Logger LOG =

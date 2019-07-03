@@ -28,6 +28,11 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import junit.framework.Assert;
 
+/**
+ * TripleDES speed test.
+ *
+ * @author Lijun Liao
+ */
 public class DES3KeyGenSpeed extends TestBase {
 
   private class MyExecutor extends KeyGenExecutor {

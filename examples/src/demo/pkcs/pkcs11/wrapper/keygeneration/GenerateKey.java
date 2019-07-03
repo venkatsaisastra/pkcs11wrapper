@@ -29,6 +29,8 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
  * This demo program shows how to generate secret keys.
+ *
+ * @author Lijun Liao
  */
 public class GenerateKey extends TestBase {
 

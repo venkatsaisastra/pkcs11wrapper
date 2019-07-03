@@ -27,6 +27,8 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 /**
  * This demo program uses a PKCS#11 module to encrypt and decrypt via
  * CKM_AES_CBC_PAD.
+ *
+ * @author Lijun Liao
  */
 public class AESCBCPadEncryptDecrypt extends SymmEncryptDecrypt {
 

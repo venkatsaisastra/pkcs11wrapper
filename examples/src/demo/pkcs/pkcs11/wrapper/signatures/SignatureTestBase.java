@@ -26,6 +26,11 @@ import org.junit.BeforeClass;
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.objects.PublicKey;
 
+/**
+ * Signature test base
+ *
+ * @author Lijun Liao
+ */
 public class SignatureTestBase extends TestBase {
 
   @BeforeClass

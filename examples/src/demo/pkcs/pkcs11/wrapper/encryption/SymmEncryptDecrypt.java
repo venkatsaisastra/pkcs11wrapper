@@ -32,6 +32,8 @@ import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 /**
  * This demo program uses a PKCS#11 module to encrypt a given file and test if
  * the data can be decrypted.
+ *
+ * @author Lijun Liao
  */
 public abstract class SymmEncryptDecrypt extends TestBase {
 

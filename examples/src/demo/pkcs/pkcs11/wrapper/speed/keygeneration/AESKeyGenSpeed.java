@@ -28,6 +28,11 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import junit.framework.Assert;
 
+/**
+ * AES speed test base class.
+ *
+ * @author Lijun Liao
+ */
 public abstract class AESKeyGenSpeed extends TestBase {
 
   private class MyExecutor extends KeyGenExecutor {

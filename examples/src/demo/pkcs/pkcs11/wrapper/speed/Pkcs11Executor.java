@@ -27,6 +27,11 @@ import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 
+/**
+ * Benchmark executor base class.
+ *
+ * @author Lijun Liao
+ */
 public abstract class Pkcs11Executor extends BenchmarkExecutor {
 
   private final ConcurrentBag<ConcurrentSessionBagEntry> sessions =

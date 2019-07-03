@@ -33,6 +33,12 @@ import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
 
+/**
+ * Verify executor base class.
+ *
+ * @author Lijun Liao
+ */
+
 public abstract class VerifyExecutor extends Pkcs11Executor {
 
   private static final Logger LOG =

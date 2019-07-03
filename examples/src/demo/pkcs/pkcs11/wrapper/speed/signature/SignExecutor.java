@@ -1,4 +1,4 @@
-packag/*
+/*
 *
 * Copyright (c) 2013 - 2019 Lijun Liao
 *
@@ -15,7 +15,7 @@ packag/*
 * limitations under the License.
 */
 
-e demo.pkcs.pkcs11.wrapper.speed.signature;
+package demo.pkcs.pkcs11.wrapper.speed.signature;
 
 import java.util.Random;
 
@@ -33,6 +33,11 @@ import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
 
+/**
+ * Sign executor base class.
+ *
+ * @author Lijun Liao
+ */
 public abstract class SignExecutor extends Pkcs11Executor {
 
   private static final Logger LOG = LoggerFactory.getLogger(SignExecutor.class);

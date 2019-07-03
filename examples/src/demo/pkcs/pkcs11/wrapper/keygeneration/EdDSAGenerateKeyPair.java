@@ -40,7 +40,9 @@ import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
- * This demo program generates a 2048 bit RSA key-pair on the token.
+ * This demo program generates an Ed25519 key-pair on the token.
+ *
+ * @author Lijun Liao
  */
 public class EdDSAGenerateKeyPair extends TestBase {
 

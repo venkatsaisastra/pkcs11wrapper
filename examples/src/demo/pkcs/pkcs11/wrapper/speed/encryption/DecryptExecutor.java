@@ -33,6 +33,11 @@ import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 
+/**
+ * Decryptor executor base class.
+ *
+ * @author Lijun Liao
+ */
 public abstract class DecryptExecutor extends Pkcs11Executor {
 
   private static final Logger LOG =

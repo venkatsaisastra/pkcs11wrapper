@@ -17,6 +17,11 @@
 
 package demo.pkcs.pkcs11.wrapper.speed.keygeneration;
 
+/**
+ * AES-256 speed test.
+ *
+ * @author Lijun Liao
+ */
 public class AES256KeyGenSpeed extends AESKeyGenSpeed {
 
   @Override
