@@ -91,6 +91,7 @@ package iaik.pkcs.pkcs11.wrapper;
  * </pre>
  *
  * @author Karl Scheibelhofer
+ * @author Lijun Liao
  * @version 1.0
  * @invariants
  */

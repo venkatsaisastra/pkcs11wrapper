@@ -45,7 +45,6 @@ import org.xipki.util.Args;
  * Key utility class.
  *
  * @author Lijun Liao
- * @since 2.0.0
  */
 
 public class KeyUtil {

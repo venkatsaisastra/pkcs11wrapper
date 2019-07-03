@@ -57,6 +57,7 @@ import iaik.pkcs.pkcs11.Mechanism;
  *
  * @author Karl Scheibelhofer
  * @author Martin Schlaeffer
+ * @author Lijun Liao
  */
 public class Functions implements PKCS11Constants {
 
