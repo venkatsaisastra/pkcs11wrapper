@@ -2,8 +2,13 @@
 
 See also <https://github.com/xipki/pkcs11wrapper/releases>
 
-## 1.4.6
+## 1.4.7
  - Release date:
+
+## 1.4.6
+ - Release date: July 3, 2019
+ - Allow different hash algorithm in the field mgf and hashAlg in CK_RSA_PKCS_PSS_PARAMS and CK_RSA_PKCS_OAEP_PARAMS.
+ - 
 
 ## 1.4.5
  - Release date: June 23, 2019
