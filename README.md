@@ -12,11 +12,11 @@ Use xipki/pkcs11wrapper in your project
   <dependency>
       <groupId>org.xipki.iaik</groupId>
       <artifactId>sunpkcs11-wrapper</artifactId>
-      <version>1.4.5</version>
+      <version>1.4.6</version>
   </dependency>
   ```
 - Or copy the following jar file to your classpath:
-  - [sunpkcs11-wrapper-1.4.5.jar](https://github.com/xipki/pkcs11wrapper/releases/download/v1.4.5/sunpkcs11-wrapper-1.4.5.jar)
+  - [sunpkcs11-wrapper-1.4.6.jar](https://github.com/xipki/pkcs11wrapper/releases/download/v1.4.6/sunpkcs11-wrapper-1.4.6.jar)
 
 JUnit tests
 =====
