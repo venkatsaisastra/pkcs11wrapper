@@ -154,7 +154,6 @@ public class GetInfo extends TestBase {
       LOG.info("--------------------------------------------------");
       objects = session.findObjects(1);
       counter++;
-      System.out.println(counter);
     }
     session.findObjectsFinal();
 

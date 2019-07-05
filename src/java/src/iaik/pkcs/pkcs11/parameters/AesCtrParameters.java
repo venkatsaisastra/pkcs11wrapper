@@ -59,7 +59,6 @@ import sun.security.pkcs11.wrapper.CK_AES_CTR_PARAMS;
  * } CK_AES_CTR_PARAMS;
  * </PRE>
  *
- * @author Lijun Liao
  */
 public class AesCtrParameters implements Parameters {
 
