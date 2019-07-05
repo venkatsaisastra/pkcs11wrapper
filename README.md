@@ -5,6 +5,9 @@
 
 [Original Readme.txt](IAIK.Readme.txt)
 
+## Prerequisite
+- JRE / JDK 8 (build 162+) or above
+
 Use xipki/pkcs11wrapper in your project
 =====
 - Maven  
