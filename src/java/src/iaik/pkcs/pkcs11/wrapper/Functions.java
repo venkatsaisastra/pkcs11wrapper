@@ -1049,8 +1049,8 @@ public class Functions implements PKCS11Constants {
 
   /**
    * Converts a byte array to a hexadecimal String. Each byte is presented by
-   * its two digit hex-code; 0x0A -&gt; "0a", 0x00 -&gt; "00". No leading "0x" is
-   * included in the result.
+   * its two digit hex-code; 0x0A -&gt; "0a", 0x00 -&gt; "00". No leading "0x"
+   * is included in the result.
    *
    * @param value
    *          the byte array to be converted

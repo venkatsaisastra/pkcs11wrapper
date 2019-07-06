@@ -94,13 +94,7 @@ public class GenericTemplate extends PKCS11Object {
    */
   public void addAllAttributes(PKCS11Object object) {
     Util.requireNonNull("object", object);
-    Enumeration<Long> newAttributeKeysEnumeration =
-        object.attributeTable.keys();
-    while (newAttributeKeysEnumeration.hasMoreElements()) {
-      Long newKey = newAttributeKeysEnumeration.nextElement();
-      attributeTable.put(newKey, object.attributeTable.get(newKey));
-    }
-    // attributeTable.putAll(); does not exist in JDK 1.1
+    attributeTable.putAll(object.attributeTable);
   }
 
   /**
