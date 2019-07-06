@@ -54,13 +54,6 @@ import sun.security.pkcs11.wrapper.CK_TOKEN_INFO;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (label <> null)
- *             and (manufacturerID <> null)
- *             and (model <> null)
- *             and (serialNumber <> null)
- *             and (hardwareVersion <> null)
- *             and (firmwareVersion <> null)
- *             and (time <> null)
  */
 public class TokenInfo {
 
@@ -179,8 +172,6 @@ public class TokenInfo {
    * @param ckTokenInfo
    *          The CK_TOKEN_INFO object as returned by
    *          PKCS11.C_GetTokenInfo.
-   * @preconditions (ckTokenInfo <> null)
-   * @postconditions
    */
   protected TokenInfo(CK_TOKEN_INFO ckTokenInfo) {
     Util.requireNonNull("ckTokenInfo", ckTokenInfo);
@@ -208,8 +199,6 @@ public class TokenInfo {
    * Get the label of this token.
    *
    * @return The label of this token.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public String getLabel() {
     return label;
@@ -219,8 +208,6 @@ public class TokenInfo {
    * Get the manufacturer identifier.
    *
    * @return A string identifying the manufacturer of this token.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   // CHECKSTYLE:SKIP
   public String getManufacturerID() {
@@ -231,8 +218,6 @@ public class TokenInfo {
    * Get the model of this token.
    *
    * @return A string specifying the model of this token.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public String getModel() {
     return model;
@@ -242,8 +227,6 @@ public class TokenInfo {
    * Get the serial number of this token.
    *
    * @return A string holding the serial number of this token.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public String getSerialNumber() {
     return serialNumber;
@@ -253,8 +236,6 @@ public class TokenInfo {
    * Get the maximum allowed number of (open) concurrent sessions.
    *
    * @return The maximum allowed number of (open) concurrent sessions.
-   * @preconditions
-   * @postconditions
    */
   public long getMaxSessionCount() {
     return maxSessionCount;
@@ -264,8 +245,6 @@ public class TokenInfo {
    * Get the current number of open sessions.
    *
    * @return The current number of open sessions.
-   * @preconditions
-   * @postconditions
    */
   public long getSessionCount() {
     return sessionCount;
@@ -276,8 +255,6 @@ public class TokenInfo {
    *
    * @return The maximum allowed number of (open) concurrent read-write
    *         sessions.
-   * @preconditions
-   * @postconditions
    */
   public long getMaxRwSessionCount() {
     return maxRwSessionCount;
@@ -287,8 +264,6 @@ public class TokenInfo {
    * Get the current number of open read-write sessions.
    *
    * @return The current number of open read-write sessions.
-   * @preconditions
-   * @postconditions
    */
   public long getRwSessionCount() {
     return rwSessionCount;
@@ -298,8 +273,6 @@ public class TokenInfo {
    * Get the maximum length for the PIN.
    *
    * @return The maximum length for the PIN.
-   * @preconditions
-   * @postconditions
    */
   public long getMaxPinLen() {
     return maxPinLen;
@@ -309,8 +282,6 @@ public class TokenInfo {
    * Get the minimum length for the PIN.
    *
    * @return The minimum length for the PIN.
-   * @preconditions
-   * @postconditions
    */
   public long getMinPinLen() {
     return minPinLen;
@@ -320,8 +291,6 @@ public class TokenInfo {
    * Get the total amount of memory for public objects.
    *
    * @return The total amount of memory for public objects.
-   * @preconditions
-   * @postconditions
    */
   public long getTotalPublicMemory() {
     return totalPublicMemory;
@@ -331,8 +300,6 @@ public class TokenInfo {
    * Get the amount of free memory for public objects.
    *
    * @return The amount of free memory for public objects.
-   * @preconditions
-   * @postconditions
    */
   public long getFreePublicMemory() {
     return freePublicMemory;
@@ -342,8 +309,6 @@ public class TokenInfo {
    * Get the total amount of memory for private objects.
    *
    * @return The total amount of memory for private objects.
-   * @preconditions
-   * @postconditions
    */
   public long getTotalPrivateMemory() {
     return totalPrivateMemory;
@@ -353,8 +318,6 @@ public class TokenInfo {
    * Get the amount of free memory for private objects.
    *
    * @return The amount of free memory for private objects.
-   * @preconditions
-   * @postconditions
    */
   public long getFreePrivateMemory() {
     return freePrivateMemory;
@@ -364,8 +327,6 @@ public class TokenInfo {
    * Get the version of the token's hardware.
    *
    * @return The version of the token's hardware.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public Version getHardwareVersion() {
     return hardwareVersion;
@@ -375,8 +336,6 @@ public class TokenInfo {
    * Get the version of the token's firmware.
    *
    * @return The version of the token's firmware.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public Version getFirmwareVersion() {
     return firmwareVersion;
@@ -389,8 +348,6 @@ public class TokenInfo {
    *
    * @return The current time on the token's clock.
    * @see #isClockOnToken()
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public Date getTime() {
     return time;
@@ -409,8 +366,6 @@ public class TokenInfo {
    *
    * @return True, if the token has a random number generator. False,
    *         otherwise.
-   * @preconditions
-   * @postconditions
    */
   // CHECKSTYLE:SKIP
   public boolean isRNG() {
@@ -421,8 +376,6 @@ public class TokenInfo {
    * Check, if the token is write protected.
    *
    * @return True, if the token is write protected. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isWriteProtected() {
     return (flags & PKCS11Constants.CKF_WRITE_PROTECTED) != 0L;
@@ -435,8 +388,6 @@ public class TokenInfo {
    *
    * @return True, if the token requires the user to log in before certain
    *         operations can be performed. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isLoginRequired() {
     return (flags & PKCS11Constants.CKF_LOGIN_REQUIRED) != 0L;
@@ -446,8 +397,6 @@ public class TokenInfo {
    * Check, if the user-PIN is already initialized.
    *
    * @return True, if the user-PIN is already initialized. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isUserPinInitialized() {
     return (flags & PKCS11Constants.CKF_USER_PIN_INITIALIZED) != 0L;
@@ -461,8 +410,6 @@ public class TokenInfo {
    * @return True, if a successful save of a session's cryptographic
    *         operations state always contains all keys needed to restore the
    *         state of the session. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isRestoreKeyNotNeeded() {
     return (flags & PKCS11Constants.CKF_RESTORE_KEY_NOT_NEEDED) != 0L;
@@ -472,8 +419,6 @@ public class TokenInfo {
    * Check, if the token has an own clock.
    *
    * @return True, if the token has its own clock. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isClockOnToken() {
     return (flags & PKCS11Constants.CKF_CLOCK_ON_TOKEN) != 0L;
@@ -487,8 +432,6 @@ public class TokenInfo {
    *
    * @return True, if the token has an protected authentication path. False,
    *         otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isProtectedAuthenticationPath() {
     return (flags & PKCS11Constants.CKF_PROTECTED_AUTHENTICATION_PATH)
@@ -500,8 +443,6 @@ public class TokenInfo {
    *
    * @return True, if the token supports dual crypto operations. False,
    *         otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isDualCryptoOperations() {
     return (flags & PKCS11Constants.CKF_DUAL_CRYPTO_OPERATIONS) != 0L;
@@ -511,8 +452,6 @@ public class TokenInfo {
    * Check, if the token is already initialized.
    *
    * @return True, if the token is already initialized. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isTokenInitialized() {
     return (flags & PKCS11Constants.CKF_TOKEN_INITIALIZED) != 0L;
@@ -524,8 +463,6 @@ public class TokenInfo {
    *
    * @return True, if the token supports secondary authentication. False,
    *         otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isSecondaryAuthentication() {
     return (flags & PKCS11Constants.CKF_SECONDARY_AUTHENTICATION) != 0L;
@@ -537,8 +474,6 @@ public class TokenInfo {
    *
    * @return True, if the the user-PIN has been entered incorrectly at least
    *         one since the last successful authentication. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isUserPinCountLow() {
     return (flags & PKCS11Constants.CKF_USER_PIN_COUNT_LOW) != 0L;
@@ -550,8 +485,6 @@ public class TokenInfo {
    *
    * @return True, if the user has just one try left to supply the correct PIN
    *         before the user-PIN gets locked. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isUserPinFinalTry() {
     return (flags & PKCS11Constants.CKF_USER_PIN_FINAL_TRY) != 0L;
@@ -561,8 +494,6 @@ public class TokenInfo {
    * Check, if the user-PIN is locked.
    *
    * @return True, if the user-PIN is locked. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isUserPinLocked() {
     return (flags & PKCS11Constants.CKF_USER_PIN_LOCKED) != 0L;
@@ -574,8 +505,6 @@ public class TokenInfo {
    *
    * @return True, if the user PIN value is the default value set by token
    *         initialization or manufacturing. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isUserPinToBeChanged() {
     return (flags & PKCS11Constants.CKF_USER_PIN_TO_BE_CHANGED) != 0L;
@@ -588,8 +517,6 @@ public class TokenInfo {
    * @return True, if the the security officer-PIN has been entered
    *         incorrectly at least one since the last successful
    *         authentication. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isSoPinCountLow() {
     return (flags & PKCS11Constants.CKF_SO_PIN_COUNT_LOW) != 0L;
@@ -602,8 +529,6 @@ public class TokenInfo {
    * @return True, if the security officer has just one try left to supply the
    *         correct PIN before the security officer-PIN gets locked. False,
    *         otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isSoPinFinalTry() {
     return (flags & PKCS11Constants.CKF_SO_PIN_FINAL_TRY) != 0L;
@@ -613,8 +538,6 @@ public class TokenInfo {
    * Check, if the security officer-PIN is locked.
    *
    * @return True, if the security officer-PIN is locked. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isSoPinLocked() {
     return (flags & PKCS11Constants.CKF_SO_PIN_LOCKED) != 0L;
@@ -626,8 +549,6 @@ public class TokenInfo {
    *
    * @return True, if the security officer PIN value is the default value set
    *         by token initialization or manufacturing. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isSoPinToBeChanged() {
     return (flags & PKCS11Constants.CKF_SO_PIN_TO_BE_CHANGED) != 0L;
@@ -704,8 +625,6 @@ public class TokenInfo {
    *          The other TokenInfo object.
    * @return True, if other is an instance of Info and all member variables of
    *         both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -742,8 +661,6 @@ public class TokenInfo {
    *
    * @return The hash code of this object. Gained from the label,
    *         manufacturerID, model and serialNumber.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

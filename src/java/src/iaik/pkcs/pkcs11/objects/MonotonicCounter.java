@@ -53,9 +53,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (resetOnInit <> null)
- *             and (hasReset <> null)
- *             and (value <> null)
  */
 public class MonotonicCounter extends HardwareFeature {
 
@@ -76,9 +73,6 @@ public class MonotonicCounter extends HardwareFeature {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public MonotonicCounter() {
     hardwareFeatureType.setLongValue(FeatureType.MONOTONIC_COUNTER);
@@ -96,8 +90,6 @@ public class MonotonicCounter extends HardwareFeature {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected MonotonicCounter(Session session, long objectHandle)
       throws TokenException {
@@ -120,8 +112,6 @@ public class MonotonicCounter extends HardwareFeature {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -135,8 +125,6 @@ public class MonotonicCounter extends HardwareFeature {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(MonotonicCounter object) {
     Util.requireNonNull("object", object);
@@ -149,9 +137,6 @@ public class MonotonicCounter extends HardwareFeature {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -172,8 +157,6 @@ public class MonotonicCounter extends HardwareFeature {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -194,8 +177,6 @@ public class MonotonicCounter extends HardwareFeature {
    * Gets the has-reset attribute of this monotonic counter object.
    *
    * @return The has-reset attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getHasReset() {
     return hasReset;
@@ -205,8 +186,6 @@ public class MonotonicCounter extends HardwareFeature {
    * Gets the reset-on-init attribute of this monotonic counter object.
    *
    * @return The reset-on-init attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute isResetOnInit() {
     return resetOnInit;
@@ -216,8 +195,6 @@ public class MonotonicCounter extends HardwareFeature {
    * Gets the value attribute of this monotonic counter object.
    *
    * @return The value attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getValue() {
     return value;
@@ -228,8 +205,6 @@ public class MonotonicCounter extends HardwareFeature {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -245,8 +220,6 @@ public class MonotonicCounter extends HardwareFeature {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -262,8 +235,6 @@ public class MonotonicCounter extends HardwareFeature {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

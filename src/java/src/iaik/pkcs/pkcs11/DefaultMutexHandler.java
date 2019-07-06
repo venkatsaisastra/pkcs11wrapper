@@ -50,7 +50,6 @@ import sun.security.pkcs11.wrapper.PKCS11Exception;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class DefaultMutexHandler implements MutexHandler {
 
@@ -68,9 +67,6 @@ public class DefaultMutexHandler implements MutexHandler {
 
     /**
      * Default constructor.
-     *
-     * @preconditions
-     * @postconditions (locked == false)
      */
     public Mutex() {
       locked = false;
@@ -82,8 +78,6 @@ public class DefaultMutexHandler implements MutexHandler {
      *
      * @exception InterruptedException
      *              If the current thread has been interrupted.
-     * @preconditions
-     * @postconditions (locked == true)
      */
     public synchronized void lock() throws InterruptedException {
       if (Thread.interrupted()) {
@@ -104,9 +98,6 @@ public class DefaultMutexHandler implements MutexHandler {
      * Unlocks this mutex. It returns the previous lock-state.
      *
      * @return True, if the mutex was locked. False, otherwise.
-     * @preconditions
-     * @postconditions (locked == false)
-     *                 and (result == locked@pre)
      */
     public synchronized boolean unlock() {
       boolean previousState = locked;
@@ -136,8 +127,6 @@ public class DefaultMutexHandler implements MutexHandler {
    *              If the wrapper should return a different value than CKR_OK
    *              to the library. It gets the error-code and returns it as
    *              CK_RV.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public Object createMutex() throws PKCS11Exception {
@@ -153,8 +142,6 @@ public class DefaultMutexHandler implements MutexHandler {
    *              If the wrapper should return a different value than CKR_OK
    *              to the library. It gets the error-code and returns it as
    *              CK_RV.
-   * @preconditions (mutex <> null)
-   * @postconditions
    */
   @Override
   public void destroyMutex(Object mutex) throws PKCS11Exception {
@@ -176,8 +163,6 @@ public class DefaultMutexHandler implements MutexHandler {
    *              If the wrapper should return a different value than CKR_OK
    *              to the library. It gets the error-code and returns it as
    *              CK_RV.
-   * @preconditions (mutex <> null)
-   * @postconditions
    */
   @Override
   public void lockMutex(Object mutex) throws PKCS11Exception {
@@ -220,8 +205,6 @@ public class DefaultMutexHandler implements MutexHandler {
    *              If the wrapper should return a different value than CKR_OK
    *              to the library. It gets the error-code and returns it as
    *              CK_RV.
-   * @preconditions (mutex <> null)
-   * @postconditions
    */
   @Override
   public void unlockMutex(Object mutex) throws PKCS11Exception {

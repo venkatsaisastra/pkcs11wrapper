@@ -55,7 +55,6 @@ import iaik.pkcs.pkcs11.TokenException;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 // CHECKSTYLE:SKIP
 public class PKCS11Exception extends TokenException {
@@ -92,8 +91,6 @@ public class PKCS11Exception extends TokenException {
    *
    * @return The message or the error code; e.g. "CKR_DEVICE_ERROR" or
    *         "0x00000030".
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public String getMessage() {
     return errorDescription;

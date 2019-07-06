@@ -52,9 +52,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (application <> null)
- *             and (objectID <> null)
- *             and (value <> null)
  */
 public class Data extends Storage {
 
@@ -76,9 +73,6 @@ public class Data extends Storage {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public Data() {
     objectClass.setLongValue(ObjectClass.DATA);
@@ -95,8 +89,6 @@ public class Data extends Storage {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected Data(Session session, long objectHandle) throws TokenException {
     super(session, objectHandle);
@@ -110,8 +102,6 @@ public class Data extends Storage {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(Data object) {
     Util.requireNonNull("object", object);
@@ -124,9 +114,6 @@ public class Data extends Storage {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -154,8 +141,6 @@ public class Data extends Storage {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -170,8 +155,6 @@ public class Data extends Storage {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -192,8 +175,6 @@ public class Data extends Storage {
    * Gets the application attribute of this data object.
    *
    * @return The application attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public CharArrayAttribute getApplication() {
     return application;
@@ -203,8 +184,6 @@ public class Data extends Storage {
    * Gets the object ID attribute of this data object.
    *
    * @return The object ID attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   // CHECKSTYLE:SKIP
   public ByteArrayAttribute getObjectID() {
@@ -215,8 +194,6 @@ public class Data extends Storage {
    * Gets the value attribute of this data object.
    *
    * @return The value attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getValue() {
     return value;
@@ -227,8 +204,6 @@ public class Data extends Storage {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -245,8 +220,6 @@ public class Data extends Storage {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -263,8 +236,6 @@ public class Data extends Storage {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

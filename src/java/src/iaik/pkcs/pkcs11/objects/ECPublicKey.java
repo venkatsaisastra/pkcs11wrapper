@@ -52,8 +52,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (ecdsaParams <> null)
- *             and (ecPoint <> null)
  */
 // CHECKSTYLE:SKIP
 public class ECPublicKey extends PublicKey {
@@ -70,9 +68,6 @@ public class ECPublicKey extends PublicKey {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public ECPublicKey() {
     this(KeyType.EC);
@@ -84,8 +79,6 @@ public class ECPublicKey extends PublicKey {
    * @param keyType
    *        key type. Valid Values are EC, VENDOR_SM2, EC_EDWARDS and
    *        EC_MONTGOMERY defined in {@link KeyType}.
-   * @preconditions
-   * @postconditions
    * @see KeyType
    */
   public ECPublicKey(long keyType) {
@@ -104,8 +97,6 @@ public class ECPublicKey extends PublicKey {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected ECPublicKey(Session session, long objectHandle)
       throws TokenException {
@@ -127,8 +118,6 @@ public class ECPublicKey extends PublicKey {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -142,8 +131,6 @@ public class ECPublicKey extends PublicKey {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(ECPublicKey object) {
     Util.requireNonNull("object", object);
@@ -155,9 +142,6 @@ public class ECPublicKey extends PublicKey {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -177,8 +161,6 @@ public class ECPublicKey extends PublicKey {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -198,8 +180,6 @@ public class ECPublicKey extends PublicKey {
    * Gets the ECDSA parameters attribute of this ECDSA key.
    *
    * @return The ECDSA parameters attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getEcdsaParams() {
     return ecdsaParams;
@@ -209,8 +189,6 @@ public class ECPublicKey extends PublicKey {
    * Gets the EC point attribute of this ECDSA key.
    *
    * @return The EC point attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getEcPoint() {
     return ecPoint;
@@ -225,8 +203,6 @@ public class ECPublicKey extends PublicKey {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -242,8 +218,6 @@ public class ECPublicKey extends PublicKey {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

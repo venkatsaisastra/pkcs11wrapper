@@ -49,14 +49,11 @@ package iaik.pkcs.pkcs11.objects;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class CertificateTypeAttribute extends LongAttribute {
 
   /**
    * Empty constructor.
-   *
-   * @postconditions
    */
   public CertificateTypeAttribute() {
     super(Attribute.CERTIFICATE_TYPE);
@@ -66,8 +63,6 @@ public class CertificateTypeAttribute extends LongAttribute {
    * Get a string representation of the value of this attribute.
    *
    * @return A string representation of the value of this attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   protected String getValueString() {

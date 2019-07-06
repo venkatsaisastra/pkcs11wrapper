@@ -54,8 +54,6 @@ import sun.security.pkcs11.wrapper.CK_RSA_PKCS_OAEP_PARAMS;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (source_ == SourceType.Empty)
- *             or (source_ == SourceType.DataSpecified)
  */
 // CHECKSTYLE:SKIP
 public class RSAPkcsOaepParameters extends RSAPkcsParameters {
@@ -66,7 +64,6 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
    *
    * @author Karl Scheibelhofer
    * @version 1.0
-   * @invariants
    */
   public interface SourceType {
 
@@ -122,12 +119,6 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
    *          defined in the SourceType interface.
    * @param sourceData
    *          The data used as the input for the encoding parameter source.
-   * @preconditions (hashAlgorithm <> null)
-   *                and (maskGenerationFunction
-   *                      == MessageGenerationFunctionType.Sha1)
-   *                and ((source == SourceType.Empty)
-   *                     or (source == SourceType.DataSpecified))
-   * @postconditions
    */
   public RSAPkcsOaepParameters(long hashAlgorithm,
       long maskGenerationFunction, long source, byte[] sourceData) {
@@ -146,8 +137,6 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
    * class.
    *
    * @return This object as a CK_RSA_PKCS_OAEP_PARAMS object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public CK_RSA_PKCS_OAEP_PARAMS getPKCS11ParamsObject() {
@@ -165,8 +154,6 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
    * Get the source of the encoding parameter.
    *
    * @return The source of the encoding parameter.
-   * @preconditions
-   * @postconditions
    */
   public long getSource() {
     return source;
@@ -176,8 +163,6 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
    * Get the data used as the input for the encoding parameter source.
    *
    * @return The data used as the input for the encoding parameter source.
-   * @preconditions
-   * @postconditions
    */
   public byte[] getSourceData() {
     return sourceData;
@@ -189,9 +174,6 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
    *
    * @param source
    *          The source of the encoding parameter.
-   * @preconditions ((source == SourceType.Empty)
-   *                 or (source == SourceType.DataSpecified))
-   * @postconditions
    */
   public void setSource(long source) {
     if ((source != SourceType.EMPTY)
@@ -208,8 +190,6 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
    *
    * @param sourceData
    *          The data used as the input for the encoding parameter source.
-   * @preconditions
-   * @postconditions
    */
   public void setSourceData(byte[] sourceData) {
     this.sourceData = sourceData;
@@ -246,8 +226,6 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -268,8 +246,6 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

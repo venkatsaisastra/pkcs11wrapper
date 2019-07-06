@@ -275,7 +275,7 @@ public class Functions implements PKCS11Constants {
   }
 
   /**
-   * Describes the mechanism in form of &lt;hex digital>(name), like
+   * Describes the mechanism in form of &lt;hex digital&gt;(name), like
    * 0x00001082 (CKM_AES_CBC).
    *
    * @param mechCode
@@ -445,8 +445,6 @@ public class Functions implements PKCS11Constants {
    *          The code of the mechanism to check.
    * @return True, if the provided mechanism is a full encrypt/decrypt
    *         mechanism. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public static boolean isFullEncryptDecryptMechanism(long mechCode) {
     // build the hashtable on demand (=first use)
@@ -511,8 +509,6 @@ public class Functions implements PKCS11Constants {
    *          The code of the mechanism to check.
    * @return True, if the provided mechanism is a single-operation
    *         encrypt/decrypt mechanism. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public static boolean isSingleOperationEncryptDecryptMechanism(
       long mechCode) {
@@ -541,8 +537,6 @@ public class Functions implements PKCS11Constants {
    *          The code of the mechanism to check.
    * @return True, if the provided mechanism is a full sign/verify
    *         mechanism. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public static boolean isFullSignVerifyMechanism(long mechCode) {
     // build the hashtable on demand (=first use)
@@ -681,8 +675,6 @@ public class Functions implements PKCS11Constants {
    *          The code of the mechanism to check.
    * @return True, if the provided mechanism is a single-operation
    *         sign/verify mechanism. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public static boolean isSingleOperationSignVerifyMechanism(long mechCode) {
     // build the hashtable on demand (=first use)
@@ -712,8 +704,6 @@ public class Functions implements PKCS11Constants {
    *          The code of the mechanism to check.
    * @return True, if the provided mechanism is a sign/verify mechanism with
    *         message recovery. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public static boolean isSignVerifyRecoverMechanism(long mechCode) {
     // build the hashtable on demand (=first use)
@@ -742,8 +732,6 @@ public class Functions implements PKCS11Constants {
    *          The code of the mechanism to check.
    * @return True, if the provided mechanism is a digest mechanism. False,
    *         otherwise.
-   * @preconditions
-   * @postconditions
    */
   public static boolean isDigestMechanism(long mechCode) {
     // build the hashtable on demand (=first use)
@@ -790,8 +778,6 @@ public class Functions implements PKCS11Constants {
    *          The code of the mechanism to check.
    * @return True, if the provided mechanism is a key generation mechanism.
    *         False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public static boolean isKeyGenerationMechanism(long mechCode) {
     // build the hashtable on demand (=first use)
@@ -853,8 +839,6 @@ public class Functions implements PKCS11Constants {
    *          The code of the mechanism to check.
    * @return True, if the provided mechanism is a key-pair generation
    *         mechanism. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public static boolean isKeyPairGenerationMechanism(long mechCode) {
     // build the hashtable on demand (=first use)
@@ -889,8 +873,6 @@ public class Functions implements PKCS11Constants {
    *          The code of the mechanism to check.
    * @return True, if the provided mechanism is a wrap/unwrap mechanism.
    *         False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public static boolean isWrapUnwrapMechanism(long mechCode) {
     // build the hashtable on demand (=first use)
@@ -960,8 +942,6 @@ public class Functions implements PKCS11Constants {
    *          The code of the mechanism to check.
    * @return True, if the provided mechanism is a key derivation mechanism.
    *         False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public static boolean isKeyDerivationMechanism(long mechCode) {
     // build the hashtable on demand (=first use)
@@ -1069,7 +1049,7 @@ public class Functions implements PKCS11Constants {
 
   /**
    * Converts a byte array to a hexadecimal String. Each byte is presented by
-   * its two digit hex-code; 0x0A -> "0a", 0x00 -> "00". No leading "0x" is
+   * its two digit hex-code; 0x0A -&gt; "0a", 0x00 -&gt; "00". No leading "0x" is
    * included in the result.
    *
    * @param value

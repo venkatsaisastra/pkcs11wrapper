@@ -50,10 +50,6 @@ import sun.security.pkcs11.wrapper.CK_INFO;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (cryptokiVersion <> null)
- *             and (manufacturerID <> null)
- *             and (libraryDescription <> null)
- *             and (libraryVersion <> null)
  */
 public class Info {
 
@@ -83,8 +79,6 @@ public class Info {
    *
    * @param ckInfo
    *          The info object as got from PKCS11.C_GetInfo().
-   * @preconditions (ckInfo <> null)
-   * @postconditions
    */
   public Info(CK_INFO ckInfo) {
     Util.requireNonNull("ckInfo", ckInfo);
@@ -98,8 +92,6 @@ public class Info {
    * Get the version of PKCS#11 that this module claims to be compliant to.
    *
    * @return The version object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public Version getCryptokiVersion() {
     return cryptokiVersion;
@@ -109,8 +101,6 @@ public class Info {
    * Get the identifier of the manufacturer.
    *
    * @return A string identifying the manufacturer of this module.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   // CHECKSTYLE:SKIP
   public String getManufacturerID() {
@@ -121,8 +111,6 @@ public class Info {
    * Get a short description of this module.
    *
    * @return A string describing the module.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public String getLibraryDescription() {
     return libraryDescription;
@@ -132,8 +120,6 @@ public class Info {
    * Get the version of this PKCS#11 module.
    *
    * @return The version of this module.
-   * @preconditions
-   * @postconditions
    */
   public Version getLibraryVersion() {
     return libraryVersion;
@@ -160,8 +146,6 @@ public class Info {
    *          The other Info object.
    * @return True, if other is an instance of Info and all member variables of
    *         both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -183,8 +167,6 @@ public class Info {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object. Gained from all member variables.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

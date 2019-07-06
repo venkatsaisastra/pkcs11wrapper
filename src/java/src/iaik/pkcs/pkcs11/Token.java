@@ -93,7 +93,6 @@ import sun.security.pkcs11.wrapper.CK_TOKEN_INFO;
  * @see iaik.pkcs.pkcs11.TokenInfo
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (slot <> null)
  */
 public class Token {
 
@@ -104,7 +103,6 @@ public class Token {
    * completeness.
    *
    * @version 1.0
-   * @invariants
    */
   public interface SessionType {
 
@@ -129,7 +127,6 @@ public class Token {
    * @author <a href="mailto:Karl.Scheibelhofer@iaik.at">Karl
    *         Scheibelhofer</a>
    * @version 1.0
-   * @invariants
    */
   public interface SessionReadWriteBehavior {
 
@@ -161,8 +158,6 @@ public class Token {
    *
    * @param slot
    *          The reference to the slot.
-   * @preconditions (module <> null)
-   * @postconditions
    */
   protected Token(Slot slot) {
     this.slot = Util.requireNonNull("slot", slot);
@@ -177,8 +172,6 @@ public class Token {
    *          The other Token object.
    * @return True, if other is an instance of Token and the slot
    *         member variable of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
@@ -195,8 +188,6 @@ public class Token {
    * Get the slot that created this Token object.
    *
    * @return The slot of this token.
-   * @preconditions
-   * @postconditions
    */
   public Slot getSlot() {
     return slot;
@@ -211,8 +202,6 @@ public class Token {
    * in.
    *
    * @return The ID of this token.
-   * @preconditions
-   * @postconditions
    */
   // CHECKSTYLE:SKIP
   public long getTokenID() {
@@ -225,8 +214,6 @@ public class Token {
    * @return An object containing information about this token.
    * @exception TokenException
    *              If reading the information fails.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public TokenInfo getTokenInfo() throws TokenException {
     CK_TOKEN_INFO ckTokenInfo;
@@ -249,8 +236,6 @@ public class Token {
    *         this token can perform. This array may be empty but not null.
    * @exception TokenException
    *              If reading the list of supported mechanisms fails.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public Mechanism[] getMechanismList() throws TokenException {
     long[] mechanismIdList;
@@ -278,9 +263,6 @@ public class Token {
    * @exception TokenException
    *              If reading the information fails, or if the mechanism is not
    *              supported by this token.
-   * @preconditions (mechanism <> null)
-   *                and (getMechanismList() contains mechanism)
-   * @postconditions (result <> null)
    */
   public MechanismInfo getMechanismInfo(Mechanism mechanism)
       throws TokenException {
@@ -301,8 +283,6 @@ public class Token {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object. Gained from the slot ID.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -328,8 +308,6 @@ public class Token {
    *          32 characters in length.
    * @exception TokenException
    *              If the initialization fails.
-   * @preconditions
-   * @postconditions
    */
   /*
   public void initToken(char[] pin, String label)
@@ -361,8 +339,6 @@ public class Token {
    * @return The newly opened session.
    * @exception TokenException
    *              If the session could not be opened.
-   * @preconditions (serialSession == SessionType.SERIAL_SESSION)
-   * @postconditions (result <> null)
    */
   public Session openSession(boolean serialSession, boolean rwSession,
       Object application, Notify notify) throws TokenException {
@@ -409,8 +385,6 @@ public class Token {
    *
    * @exception TokenException
    *              If closing all session fails.
-   * @preconditions
-   * @postconditions
    */
   /* public void closeAllSessions()
     throws TokenException {

@@ -50,7 +50,6 @@ import iaik.pkcs.pkcs11.objects.PKCS11Object;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class ObjectHandleParameters implements Parameters {
 
@@ -64,8 +63,6 @@ public class ObjectHandleParameters implements Parameters {
    *
    * @param object
    *          The PKCS#11 object which's handle to use.
-   * @preconditions
-   * @postconditions
    */
   public ObjectHandleParameters(PKCS11Object object) {
     this.object = object;
@@ -76,8 +73,6 @@ public class ObjectHandleParameters implements Parameters {
    * underlying object.
    *
    * @return This object as a Long object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public Long getPKCS11ParamsObject() {
@@ -88,8 +83,6 @@ public class ObjectHandleParameters implements Parameters {
    * Get the PKCS#11 object.
    *
    * @return The PKCS#11 object.
-   * @preconditions
-   * @postconditions
    */
   public PKCS11Object getObject() {
     return object;
@@ -100,8 +93,6 @@ public class ObjectHandleParameters implements Parameters {
    *
    * @param object
    *          The PKCS#11 object.
-   * @preconditions
-   * @postconditions
    */
   public void setObjectHandle(PKCS11Object object) {
     this.object = object;
@@ -126,8 +117,6 @@ public class ObjectHandleParameters implements Parameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -147,8 +136,6 @@ public class ObjectHandleParameters implements Parameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

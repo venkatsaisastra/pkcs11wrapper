@@ -54,7 +54,6 @@ import sun.security.pkcs11.wrapper.CK_DATE;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class DateAttribute extends Attribute {
 
@@ -64,8 +63,6 @@ public class DateAttribute extends Attribute {
    * @param type
    *          The PKCS#11 type of this attribute; e.g.
    *          PKCS11Constants.CKA_START_DATE.
-   * @preconditions (type <> null)
-   * @postconditions
    */
   public DateAttribute(Long type) {
     super(type);
@@ -77,8 +74,6 @@ public class DateAttribute extends Attribute {
    *
    * @param value
    *          The date value to set. May be null.
-   * @preconditions
-   * @postconditions
    */
   public void setDateValue(Date value) {
     ckAttribute.pValue = Util.convertToCkDate(value);
@@ -89,8 +84,6 @@ public class DateAttribute extends Attribute {
    * Get the date value of this attribute. Null, is also possible.
    *
    * @return The date value of this attribute or null.
-   * @preconditions
-   * @postconditions
    */
   public Date getDateValue() {
     return Util.convertToDate((CK_DATE) ckAttribute.pValue);
@@ -104,8 +97,6 @@ public class DateAttribute extends Attribute {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -135,8 +126,6 @@ public class DateAttribute extends Attribute {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -163,8 +152,6 @@ public class DateAttribute extends Attribute {
    *          The second date.
    * @return True, if both dates are <code>null</code> or both contain the
    *         same char values. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   private static boolean equals(CK_DATE date1, CK_DATE date2) {
     boolean equal = false;
@@ -188,8 +175,6 @@ public class DateAttribute extends Attribute {
    * @param date
    *          The date object.
    * @return A hash code for the given date.
-   * @preconditions
-   * @postconditions
    */
   private static int hashCode(CK_DATE date) {
     int hash = 0;

@@ -52,10 +52,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (prime <> null)
- *             and (base <> null)
- *             and (subprime <> null)
- *             and (value <> null)
  */
 // CHECKSTYLE:SKIP
 public class X942DHPublicKey extends DHPublicKey {
@@ -67,9 +63,6 @@ public class X942DHPublicKey extends DHPublicKey {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public X942DHPublicKey() {
     keyType.setLongValue(KeyType.X9_42_DH);
@@ -87,8 +80,6 @@ public class X942DHPublicKey extends DHPublicKey {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected X942DHPublicKey(Session session, long objectHandle)
       throws TokenException {
@@ -111,8 +102,6 @@ public class X942DHPublicKey extends DHPublicKey {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -126,8 +115,6 @@ public class X942DHPublicKey extends DHPublicKey {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(X942DHPublicKey object) {
     Util.requireNonNull("object", object);
@@ -140,9 +127,6 @@ public class X942DHPublicKey extends DHPublicKey {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -164,8 +148,6 @@ public class X942DHPublicKey extends DHPublicKey {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -187,8 +169,6 @@ public class X942DHPublicKey extends DHPublicKey {
    * Gets the prime attribute of this X9.42 DH key.
    *
    * @return The prime attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public ByteArrayAttribute getPrime() {
@@ -199,8 +179,6 @@ public class X942DHPublicKey extends DHPublicKey {
    * Gets the base attribute of this X9.42 DH key.
    *
    * @return The base attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public ByteArrayAttribute getBase() {
@@ -211,8 +189,6 @@ public class X942DHPublicKey extends DHPublicKey {
    * Gets the sub-prime attribute of this X9.42 DH key.
    *
    * @return The sub-prime attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getSubprime() {
     return subprime;
@@ -222,8 +198,6 @@ public class X942DHPublicKey extends DHPublicKey {
    * Gets the value attribute of this X9.42 DH key.
    *
    * @return The value attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public ByteArrayAttribute getValue() {
@@ -239,8 +213,6 @@ public class X942DHPublicKey extends DHPublicKey {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -256,8 +228,6 @@ public class X942DHPublicKey extends DHPublicKey {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

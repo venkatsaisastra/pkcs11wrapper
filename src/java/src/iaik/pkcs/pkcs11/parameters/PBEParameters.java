@@ -53,11 +53,6 @@ import sun.security.pkcs11.wrapper.CK_PBE_PARAMS;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (initializationVector == null)
- *             or ((initializationVector <> null)
- *                 and (initializationVector.length == 8))
- *             and (password <> null)
- *             and (salt <> null)
  */
 // CHECKSTYLE:SKIP
 public class PBEParameters implements Parameters {
@@ -85,7 +80,7 @@ public class PBEParameters implements Parameters {
   /**
    * Create a new PBEDeriveParameters object with the given attributes.
    *
-   * @param initializationVector
+   * @param iv
    *          The 8-byte initialization vector (IV), if an IV is required.
    * @param password
    *          The password to be used in the PBE key generation.
@@ -93,12 +88,6 @@ public class PBEParameters implements Parameters {
    *          The salt to be used in the PBE key generation.
    * @param iterations
    *          The number of iterations required for the generation.
-   * @preconditions (initializationVector == null)
-   *                or ((initializationVector <> null)
-   *                    and (initializationVector.length == 8))
-   *                and (password <> null)
-   *                and (salt <> null)
-   * @postconditions
    */
   public PBEParameters(char[] iv, char[] password, char[] salt,
       long iterations) {
@@ -117,8 +106,6 @@ public class PBEParameters implements Parameters {
    * Get this parameters object as an object of the CK_PBE_PARAMS class.
    *
    * @return This object as a CK_PBE_PARAMS object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public CK_PBE_PARAMS getPKCS11ParamsObject() {
@@ -136,10 +123,6 @@ public class PBEParameters implements Parameters {
    * Get the 8-byte initialization vector (IV), if an IV is required.
    *
    * @return The 8-byte initialization vector (IV), if an IV is required.
-   * @preconditions
-   * @postconditions (result == null)
-   *                 or ((result <> null)
-   *                     and (result.length == 8))
    */
   public char[] getInitializationVector() {
     return iv;
@@ -149,8 +132,6 @@ public class PBEParameters implements Parameters {
    * Get the password to be used in the PBE key generation.
    *
    * @return The password to be used in the PBE key generation.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public char[] getPassword() {
     return password;
@@ -160,8 +141,6 @@ public class PBEParameters implements Parameters {
    * Get the salt to be used in the PBE key generation.
    *
    * @return The salt to be used in the PBE key generation.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public char[] getSalt() {
     return salt;
@@ -171,8 +150,6 @@ public class PBEParameters implements Parameters {
    * Get the number of iterations required for the generation.
    *
    * @return The number of iterations required for the generation.
-   * @preconditions
-   * @postconditions
    */
   public long getIterations() {
     return iterations;
@@ -181,12 +158,8 @@ public class PBEParameters implements Parameters {
   /**
    * Set the 8-byte initialization vector (IV), if an IV is required.
    *
-   * @param initializationVector
+   * @param iv
    *          The 8-byte initialization vector (IV), if an IV is required.
-   * @preconditions (initializationVector == null)
-   *                or ((initializationVector <> null)
-   *                    and (initializationVector.length == 8))
-   * @postconditions
    */
   public void setInitializationVector(char[] iv) {
     if ((iv != null) && (iv.length != 8)) {
@@ -201,8 +174,6 @@ public class PBEParameters implements Parameters {
    *
    * @param password
    *          The password to be used in the PBE key generation.
-   * @preconditions (password <> null)
-   * @postconditions
    */
   public void setPassword(char[] password) {
     this.password = Util.requireNonNull("password", password);
@@ -213,8 +184,6 @@ public class PBEParameters implements Parameters {
    *
    * @param salt
    *          The salt to be used in the PBE key generation.
-   * @preconditions (salt <> null)
-   * @postconditions
    */
   public void setSalt(char[] salt) {
     this.salt = Util.requireNonNull("salt", salt);;
@@ -225,8 +194,6 @@ public class PBEParameters implements Parameters {
    *
    * @param iterations
    *          The number of iterations required for the generation.
-   * @preconditions
-   * @postconditions
    */
   public void setIterations(long iterations) {
     this.iterations = iterations;
@@ -254,8 +221,6 @@ public class PBEParameters implements Parameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -277,8 +242,6 @@ public class PBEParameters implements Parameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

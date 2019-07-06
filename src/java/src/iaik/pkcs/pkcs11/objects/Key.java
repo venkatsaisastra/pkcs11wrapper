@@ -60,13 +60,6 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (keyType <> null)
- *             and (id <> null)
- *             and (startDate <> null)
- *             and (endDate <> null)
- *             and (derive <> null)
- *             and (local <> null)
- *             and (keyGenMechanism <> null)
  */
 public class Key extends Storage {
 
@@ -79,7 +72,6 @@ public class Key extends Storage {
    *
    * @author Karl Scheibelhofer
    * @version 1.0
-   * @invariants
    */
   public interface KeyType {
 
@@ -256,7 +248,6 @@ public class Key extends Storage {
    *
    * @author Karl Scheibelhofer
    * @version 1.0
-   * @invariants
    */
   public interface VendorDefinedKeyBuilder {
 
@@ -276,8 +267,6 @@ public class Key extends Storage {
      *         according sub-class.
      * @exception PKCS11Exception
      *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions (result <> null)
      */
     public PKCS11Object build(Session session, long objectHandle)
         throws PKCS11Exception;
@@ -341,9 +330,6 @@ public class Key extends Storage {
    * The default constructor. An application use this constructor to
    * instantiate a key that serves as a template. It may also be useful for
    * working with vendor-defined keys.
-   *
-   * @preconditions
-   * @postconditions
    */
   public Key() {
   }
@@ -359,8 +345,6 @@ public class Key extends Storage {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected Key(Session session, long objectHandle) throws TokenException {
     super(session, objectHandle);
@@ -374,8 +358,6 @@ public class Key extends Storage {
    * @param builder
    *          The vendor-defined key builder. Null to clear any previously
    *          installed vendor-defined builder.
-   * @preconditions
-   * @postconditions
    */
   public static void setVendorDefinedKeyBuilder(
       VendorDefinedKeyBuilder builder) {
@@ -387,8 +369,6 @@ public class Key extends Storage {
    *
    * @return The currently set vendor-defined key builder or null if
    *         none is set.
-   * @preconditions
-   * @postconditions
    */
   public static VendorDefinedKeyBuilder getVendorDefinedKeyBuilder() {
     return vendorKeyBuilder;
@@ -400,8 +380,6 @@ public class Key extends Storage {
    * @param keyType
    *          The key type to get as string.
    * @return A string denoting the key type; e.g. "RSA".
-   * @preconditions (keyType <> null)
-   * @postconditions (result <> null)
    */
   public static String getKeyTypeName(Long keyType) {
     Util.requireNonNull("keyType", keyType);
@@ -459,8 +437,6 @@ public class Key extends Storage {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(Key object) {
     Util.requireNonNull("object", object);
@@ -479,9 +455,6 @@ public class Key extends Storage {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -508,8 +481,6 @@ public class Key extends Storage {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -537,8 +508,6 @@ public class Key extends Storage {
    * value bigger than KeyType.VENDOR_DEFINED.
    *
    * @return The key type identifier.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public LongAttribute getKeyType() {
     return keyType;
@@ -548,8 +517,6 @@ public class Key extends Storage {
    * Gets the ID attribute of this key.
    *
    * @return The key identifier attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getId() {
     return id;
@@ -559,8 +526,6 @@ public class Key extends Storage {
    * Gets the start date attribute of the validity of this key.
    *
    * @return The start date of validity.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public DateAttribute getStartDate() {
     return startDate;
@@ -570,8 +535,6 @@ public class Key extends Storage {
    * Gets the end date attribute of the validity of this key.
    *
    * @return The end date of validity.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public DateAttribute getEndDate() {
     return endDate;
@@ -581,8 +544,6 @@ public class Key extends Storage {
    * Check, if other keys can be derived from this key.
    *
    * @return Its value is true, if other keys can be derived from this key.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getDerive() {
     return derive;
@@ -593,8 +554,6 @@ public class Key extends Storage {
    * created via copy from a different key on the token.
    *
    * @return Its value is true, if the key was created on the token.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getLocal() {
     return local;
@@ -605,8 +564,6 @@ public class Key extends Storage {
    *
    * @return The mechanism attribute used to generate the key material for
    *         this key.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public MechanismAttribute getKeyGenMechanism() {
     return keyGenMechanism;
@@ -618,8 +575,6 @@ public class Key extends Storage {
    * cryptoki version 2.20 or higher.
    *
    * @return The list of mechanisms that are allowed to use with this key.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public MechanismArrayAttribute getAllowedMechanisms() {
     return allowedMechanisms;
@@ -630,8 +585,6 @@ public class Key extends Storage {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -647,8 +600,6 @@ public class Key extends Storage {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -666,8 +617,6 @@ public class Key extends Storage {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

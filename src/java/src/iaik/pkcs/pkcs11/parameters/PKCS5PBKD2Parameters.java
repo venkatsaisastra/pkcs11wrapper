@@ -53,10 +53,6 @@ import sun.security.pkcs11.wrapper.CK_PKCS5_PBKD2_PARAMS;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (saltSource == SaltSourceType.SaltSpecified)
- *           and (saltSourceData <> null)
- *           and (pseudoRandomFunction == PseudoRandomFunctionType.HMACSha1)
- *           and (pseudoRandomFunctionData <> null)
  */
 // CHECKSTYLE:SKIP
 public class PKCS5PBKD2Parameters implements Parameters {
@@ -67,7 +63,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    *
    * @author Karl Scheibelhofer
    * @version 1.0
-   * @invariants
    */
   public interface PseudoRandomFunctionType {
 
@@ -85,7 +80,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    *
    * @author Karl Scheibelhofer
    * @version 1.0
-   * @invariants
    */
   public interface SaltSourceType {
 
@@ -141,12 +135,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    * @param pseudoRandomFunctionData
    *          The data used as the input for PRF in addition to the salt
    *          value.
-   * @preconditions (saltSource == SaltSourceType.SaltSpecified)
-   *                and (saltSourceData <> null)
-   *                and (pseudoRandomFunction
-   *                      == PseudoRandomFunctionType.HMACSha1)
-   *                and (pseudoRandomFunctionData <> null)
-   * @postconditions
    */
   public PKCS5PBKD2Parameters(long saltSource, byte[] saltSourceData,
       long iterations, long pseudoRandomFunction,
@@ -175,8 +163,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    * class.
    *
    * @return This object as a CK_PKCS5_PBKD2_PARAMS object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public CK_PKCS5_PBKD2_PARAMS getPKCS11ParamsObject() {
@@ -195,8 +181,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    * Get the source of the salt value.
    *
    * @return The source of the salt value.
-   * @preconditions
-   * @postconditions (result == SaltSourceType.SaltSpecified)
    */
   public long getSaltSource() {
     return saltSource;
@@ -206,8 +190,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    * Get the data used as the input for the salt source.
    *
    * @return data used as the input for the salt source.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public byte[] getSaltSourceData() {
     return saltSourceData;
@@ -219,8 +201,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    *
    * @return The number of iterations to perform when generating each block of
    *         random data.
-   * @preconditions
-   * @postconditions
    */
   public long getIterations() {
     return iterations;
@@ -230,8 +210,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    * Get the pseudo-random function (PRF) to used to generate the key.
    *
    * @return The pseudo-random function (PRF) to used to generate the key.
-   * @preconditions
-   * @postconditions (result == PseudoRandomFunctionType.HMACSha1)
    */
   public long getPseudoRandomFunction() {
     return pseudoRandomFunction;
@@ -241,8 +219,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    * Get the data used as the input for PRF in addition to the salt value.
    *
    * @return The data used as the input for PRF in addition to the salt value.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public byte[] getPseudoRandomFunctionData() {
     return pseudoRandomFunctionData;
@@ -254,8 +230,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    * @param saltSource
    *          The source of the salt value. One of the constants defined in
    *          the SaltSourceType interface
-   * @preconditions (saltSource == SaltSourceType.SaltSpecified)
-   * @postconditions
    */
   public void setSaltSource(long saltSource) {
     if (saltSource != SaltSourceType.SALT_SPECIFIED) {
@@ -271,8 +245,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    *
    * @param saltSourceData
    *          The data used as the input for the salt source.
-   * @preconditions (saltSourceData <> null)
-   * @postconditions
    */
   public void setSaltSourceData(byte[] saltSourceData) {
     this.saltSourceData = Util.requireNonNull("saltSourceData",
@@ -286,8 +258,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    * @param iterations
    *          The number of iterations to perform when generating each block
    *          of random data.
-   * @preconditions
-   * @postconditions
    */
   public void setIterations(long iterations) {
     this.iterations = iterations;
@@ -300,9 +270,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    *          The pseudo-random function (PRF) to used to generate the key.
    *          One of the constants defined in the PseudoRandomFunctionType
    *          interface.
-   * @preconditions (pseudoRandomFunction
-   *                  == PseudoRandomFunctionType.HMACSha1)
-   * @postconditions
    */
   public void setPseudoRandomFunction(long pseudoRandomFunction) {
     if (pseudoRandomFunction != PseudoRandomFunctionType.HMAC_SHA1) {
@@ -319,8 +286,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    * @param pseudoRandomFunctionData
    *          The data used as the input for PRF in addition to the salt
    *          value.
-   * @preconditions (pseudoRandomFunctionData <> null)
-   * @postconditions
    */
   public void setPseudoRandomFunctionData(byte[] pseudoRandomFunctionData) {
     this.pseudoRandomFunctionData = Util.requireNonNull(
@@ -356,8 +321,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -381,8 +344,6 @@ public class PKCS5PBKD2Parameters implements Parameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

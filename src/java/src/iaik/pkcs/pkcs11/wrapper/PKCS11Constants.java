@@ -49,8 +49,8 @@ package iaik.pkcs.pkcs11.wrapper;
  * Latest version of the specification:
  * http://docs.oasis-open.org/pkcs11/pkcs11-base/v2.40/pkcs11-base-v2.40.html
  * This is mainly the content of the 'pkcs11t.h' header file.
- * <p/>
- * Mapping of primitive data types to Java types:
+ *
+ * <p>Mapping of primitive data types to Java types:
  * <pre>
  *   TRUE .......................................... true
  *   FALSE ......................................... false
@@ -93,7 +93,6 @@ package iaik.pkcs.pkcs11.wrapper;
  * @author Karl Scheibelhofer
  * @author Lijun Liao
  * @version 1.0
- * @invariants
  */
 // CHECKSTYLE:SKIP
 public interface PKCS11Constants {

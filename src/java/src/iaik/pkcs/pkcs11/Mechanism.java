@@ -52,7 +52,6 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class Mechanism {
 
@@ -72,8 +71,6 @@ public class Mechanism {
    *
    * @param pkcs11MechanismCode
    *          The mechanism code.
-   * @preconditions
-   * @postconditions
    */
   public Mechanism(long pkcs11MechanismCode) {
     this.pkcs11MechanismCode = pkcs11MechanismCode;
@@ -99,8 +96,6 @@ public class Mechanism {
    *          The other Mechanism object.
    * @return True, if other is an instance of this class and
    *         pkcs11MechanismCode and parameter of both objects are equal.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -123,8 +118,6 @@ public class Mechanism {
    * equals.
    *
    * @return The hash code of this object. Taken from the mechanism code.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -140,8 +133,6 @@ public class Mechanism {
    *
    * @return True, if this mechanism is a digest mechanism. False,
    *         otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isDigestMechanism() {
     return Functions.isDigestMechanism(pkcs11MechanismCode);
@@ -158,8 +149,6 @@ public class Mechanism {
    *
    * @return True, if this mechanism is a full encrypt/decrypt
    *         mechanism. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isFullEncryptDecryptMechanism() {
     return Functions.isFullEncryptDecryptMechanism(pkcs11MechanismCode);
@@ -176,8 +165,6 @@ public class Mechanism {
    *
    * @return True, if this mechanism is a full sign/verify
    *         mechanism. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isFullSignVerifyMechanism() {
     return Functions.isFullSignVerifyMechanism(pkcs11MechanismCode);
@@ -193,8 +180,6 @@ public class Mechanism {
    *
    * @return True, if this mechanism is a key derivation mechanism.
    *         False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isKeyDerivationMechanism() {
     return Functions.isKeyDerivationMechanism(pkcs11MechanismCode);
@@ -210,8 +195,6 @@ public class Mechanism {
    *
    * @return True, if this mechanism is a key generation mechanism.
    *         False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isKeyGenerationMechanism() {
     return Functions.isKeyGenerationMechanism(pkcs11MechanismCode);
@@ -227,8 +210,6 @@ public class Mechanism {
    *
    * @return True, if this mechanism is a key-pair generation mechanism.
    *         False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isKeyPairGenerationMechanism() {
     return Functions.isKeyPairGenerationMechanism(pkcs11MechanismCode);
@@ -244,8 +225,6 @@ public class Mechanism {
    *
    * @return True, if this mechanism is a sign/verify mechanism with
    *         message recovery. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isSignVerifyRecoverMechanism() {
     return Functions.isSignVerifyRecoverMechanism(pkcs11MechanismCode);
@@ -262,8 +241,6 @@ public class Mechanism {
    *
    * @return True, if this mechanism is a single-operation
    *         encrypt/decrypt mechanism. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isSingleOperationEncryptDecryptMechanism() {
     return Functions.isSingleOperationEncryptDecryptMechanism(
@@ -281,8 +258,6 @@ public class Mechanism {
    *
    * @return True, if this mechanism is a single-operation
    *         sign/verify mechanism. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isSingleOperationSignVerifyMechanism() {
     return Functions.isSingleOperationSignVerifyMechanism(
@@ -300,8 +275,6 @@ public class Mechanism {
    *
    * @return True, if this mechanism is a wrap/unwrap mechanism.
    *         False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isWrapUnwrapMechanism() {
     return Functions.isWrapUnwrapMechanism(pkcs11MechanismCode);
@@ -311,8 +284,6 @@ public class Mechanism {
    * Get the parameters object of this mechanism.
    *
    * @return The parameters of this mechanism. May be null.
-   * @preconditions
-   * @postconditions
    */
   public Parameters getParameters() {
     return parameters;
@@ -321,10 +292,8 @@ public class Mechanism {
   /**
    * Set the parameters for this mechanism.
    *
-   * @param params
+   * @param parameters
    *          The mechanism parameters to set.
-   * @preconditions
-   * @postconditions
    */
   public void setParameters(Parameters parameters) {
     this.parameters = parameters;
@@ -335,8 +304,6 @@ public class Mechanism {
    * pkcs11t.h likewise).
    *
    * @return The code of this mechanism.
-   * @preconditions
-   * @postconditions
    */
   public long getMechanismCode() {
     return pkcs11MechanismCode;
@@ -346,8 +313,6 @@ public class Mechanism {
    * Get the name of this mechanism.
    *
    * @return The name of this mechanism.
-   * @preconditions
-   * @postconditions
    */
   public String getName() {
     return Functions.mechanismCodeToString(pkcs11MechanismCode);

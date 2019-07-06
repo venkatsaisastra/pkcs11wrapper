@@ -52,11 +52,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (prime <> null)
- *             and (base <> null)
- *             and (subprime <> null)
- *             and (primeBits <> null)
- *             and (subprimeBits <> null)
  */
 // CHECKSTYLE:SKIP
 public class X942DHParams extends DHParams {
@@ -73,9 +68,6 @@ public class X942DHParams extends DHParams {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public X942DHParams() {
     keyType.setLongValue(Key.KeyType.X9_42_DH);
@@ -92,8 +84,6 @@ public class X942DHParams extends DHParams {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected X942DHParams(Session session, long objectHandle)
       throws TokenException {
@@ -116,8 +106,6 @@ public class X942DHParams extends DHParams {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -131,8 +119,6 @@ public class X942DHParams extends DHParams {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(X942DHParams object) {
     Util.requireNonNull("object", object);
@@ -147,9 +133,6 @@ public class X942DHParams extends DHParams {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -172,8 +155,6 @@ public class X942DHParams extends DHParams {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -196,8 +177,6 @@ public class X942DHParams extends DHParams {
    * Gets the prime attribute of this DH key.
    *
    * @return The prime attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public ByteArrayAttribute getPrime() {
@@ -208,8 +187,6 @@ public class X942DHParams extends DHParams {
    * Gets the base attribute of this DH key.
    *
    * @return The base attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public ByteArrayAttribute getBase() {
@@ -220,8 +197,6 @@ public class X942DHParams extends DHParams {
    * Gets the subprime attribute of this DH key.
    *
    * @return The subprime attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getSubprime() {
     return subprime;
@@ -231,8 +206,6 @@ public class X942DHParams extends DHParams {
    * Gets the value length of the prime (in bits).
    *
    * @return The prime bits attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public LongAttribute getPrimeBits() {
@@ -243,8 +216,6 @@ public class X942DHParams extends DHParams {
    * Gets the value length of the subprime (in bits).
    *
    * @return The subprime bits attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public LongAttribute getSubprimeBits() {
     return subprimeBits;
@@ -259,8 +230,6 @@ public class X942DHParams extends DHParams {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -276,8 +245,6 @@ public class X942DHParams extends DHParams {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

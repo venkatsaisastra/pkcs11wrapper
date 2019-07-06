@@ -54,8 +54,6 @@ import sun.security.pkcs11.wrapper.CK_X9_42_DH2_DERIVE_PARAMS;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (privateData <> null)
- *             and (publicData2 <> null)
  */
 public class X942DH2KeyDerivationParameters
 extends DHKeyDerivationParameters {
@@ -97,17 +95,6 @@ extends DHKeyDerivationParameters {
    *          The key for the second X9.42 private key value.
    * @param publicData2
    *          The other party's second X9.42 public key value.
-   * @preconditions ((keyDerivationFunction == KeyDerivationFunctionType.NULL)
-   *                 or (keyDerivationFunction
-   *                      == KeyDerivationFunctionType.SHA1_KDF)
-   *                 or (keyDerivationFunction
-   *                      == KeyDerivationFunctionType.SHA1_KDF_ASN1)
-   *                 or (keyDerivationFunction
-   *                      == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
-   *                and (publicData <> null)
-   *                and (privateData <> null)
-   *                and (publicData2 <> null)
-   * @postconditions
    */
   public X942DH2KeyDerivationParameters(long keyDerivationFunction,
       byte[] sharedData, byte[] publicData, long privateDataLength,
@@ -124,8 +111,6 @@ extends DHKeyDerivationParameters {
    * class.
    *
    * @return This object as a CK_X9_42_DH2_DERIVE_PARAMS object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public CK_X9_42_DH2_DERIVE_PARAMS getPKCS11ParamsObject() {
@@ -145,8 +130,6 @@ extends DHKeyDerivationParameters {
    * Get the data shared between the two parties.
    *
    * @return The data shared between the two parties.
-   * @preconditions
-   * @postconditions
    */
   public byte[] getOtherInfo() {
     return otherInfo;
@@ -157,8 +140,6 @@ extends DHKeyDerivationParameters {
    *
    * @param otherInfo
    *          The data shared between the two parties.
-   * @preconditions (otherInfo <> null)
-   * @postconditions
    */
   public void setOtherInfo(byte[] otherInfo) {
     this.otherInfo = otherInfo;
@@ -168,8 +149,6 @@ extends DHKeyDerivationParameters {
    * Get the key for the second X9.42 private key value.
    *
    * @return The key for the second X9.42 private key value.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public PKCS11Object getPrivateData() {
     return privateData;
@@ -179,8 +158,6 @@ extends DHKeyDerivationParameters {
    * Get the length in bytes of the second X9.42 private key.
    *
    * @return The length in bytes of the second X9.42 private key.
-   * @preconditions
-   * @postconditions
    */
   public long getPrivateDataLength() {
     return privateDataLength;
@@ -190,8 +167,6 @@ extends DHKeyDerivationParameters {
    * Get the other party's second X9.42 public key value.
    *
    * @return The other party's second X9.42 public key value.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public byte[] getPublicData2() {
     return publicData2;
@@ -202,8 +177,6 @@ extends DHKeyDerivationParameters {
    *
    * @param privateData
    *          The key for the second X9.42 private key value.
-   * @preconditions (privateData <> null)
-   * @postconditions
    */
   public void setPrivateData(PKCS11Object privateData) {
     this.privateData = Util.requireNonNull("privateData", privateData);
@@ -214,8 +187,6 @@ extends DHKeyDerivationParameters {
    *
    * @param privateDataLength
    *          The length in bytes of the second X9.42 private key.
-   * @preconditions
-   * @postconditions
    */
   public void setPrivateDataLength(long privateDataLength) {
     this.privateDataLength = privateDataLength;
@@ -226,8 +197,6 @@ extends DHKeyDerivationParameters {
    *
    * @param publicData2
    *          The other party's second X9.42 public key value.
-   * @preconditions (publicData2 <> null)
-   * @postconditions
    */
   public void setPublicData2(byte[] publicData2) {
     this.publicData2 = Util.requireNonNull("publicData2", publicData2);
@@ -256,8 +225,6 @@ extends DHKeyDerivationParameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -281,8 +248,6 @@ extends DHKeyDerivationParameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

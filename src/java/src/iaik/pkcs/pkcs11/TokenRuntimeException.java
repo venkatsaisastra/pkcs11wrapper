@@ -48,7 +48,6 @@ package iaik.pkcs.pkcs11;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class TokenRuntimeException extends RuntimeException {
 
@@ -62,9 +61,6 @@ public class TokenRuntimeException extends RuntimeException {
 
   /**
    * The default constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public TokenRuntimeException() {
   }
@@ -75,8 +71,6 @@ public class TokenRuntimeException extends RuntimeException {
    * @param message
    *          The message giving details about the exception to ease
    *          debugging.
-   * @preconditions
-   * @postconditions
    */
   public TokenRuntimeException(String message) {
     super(message);
@@ -87,8 +81,6 @@ public class TokenRuntimeException extends RuntimeException {
    *
    * @param encapsulatedException
    *          The other exception the wrap into this.
-   * @preconditions
-   * @postconditions
    */
   public TokenRuntimeException(Exception encapsulatedException) {
     this.encapsulatedException = encapsulatedException;
@@ -103,8 +95,6 @@ public class TokenRuntimeException extends RuntimeException {
    *          debugging.
    * @param encapsulatedException
    *          The other exception the wrap into this.
-   * @preconditions
-   * @postconditions
    */
   public TokenRuntimeException(String message,
       Exception encapsulatedException) {
@@ -117,8 +107,6 @@ public class TokenRuntimeException extends RuntimeException {
    *
    * @return The encapsulated (wrapped) exception, or null if there is no
    *         inner exception.
-   * @preconditions
-   * @postconditions
    */
   public Exception getEncapsulatedException() {
     return encapsulatedException;

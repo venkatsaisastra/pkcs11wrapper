@@ -48,7 +48,6 @@ package iaik.pkcs.pkcs11.objects;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class LongAttribute extends Attribute {
 
@@ -66,8 +65,6 @@ public class LongAttribute extends Attribute {
    * @param type
    *          The PKCS#11 type of this attribute; e.g.
    *          PKCS11Constants.CKA_VALUE_LEN.
-   * @preconditions (type <> null)
-   * @postconditions
    */
   public LongAttribute(Long type) {
     super(type);
@@ -79,8 +76,6 @@ public class LongAttribute extends Attribute {
    *
    * @param value
    *          The long value to set. May be null.
-   * @preconditions
-   * @postconditions
    */
   public void setLongValue(Long value) {
     ckAttribute.pValue = value;
@@ -91,8 +86,6 @@ public class LongAttribute extends Attribute {
    * Get the long value of this attribute. Null, is also possible.
    *
    * @return The long value of this attribute or null.
-   * @preconditions
-   * @postconditions
    */
   public Long getLongValue() {
     return (Long) ckAttribute.pValue;
@@ -105,8 +98,6 @@ public class LongAttribute extends Attribute {
    * @param radix
    *          The radix for the representation of the value.
    * @return A string representation of the value of this attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   protected String getValueString(int radix) {
     String valueString;
@@ -129,8 +120,6 @@ public class LongAttribute extends Attribute {
    * @param radix
    *          The radix for the representation of the value.
    * @return A string representation of the value of this attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public String toString(int radix) {
     if (present) {

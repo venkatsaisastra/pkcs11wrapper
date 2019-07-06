@@ -46,7 +46,6 @@ import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 
 /**
  * An object of this class represents a certificate as defined by PKCS#11.
@@ -57,8 +56,6 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (certificateType <> null)
- *             and (trusted <> null)
  */
 public class Certificate extends Storage {
 
@@ -68,7 +65,6 @@ public class Certificate extends Storage {
    *
    * @author Karl Scheibelhofer
    * @version 1.0
-   * @invariants
    */
   public static interface CertificateType {
 
@@ -106,7 +102,6 @@ public class Certificate extends Storage {
    *
    * @author Karl Scheibelhofer
    * @version 1.0
-   * @invariants
    */
   public interface VendorDefinedCertificateBuilder {
 
@@ -124,10 +119,8 @@ public class Certificate extends Storage {
      * @return The object representing the PKCS#11 object.
      *         The returned object can be casted to the
      *         according sub-class.
-     * @exception PKCS11Exception
+     * @exception sun.security.pkcs11.wrapper.PKCS11Exception
      *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions (result <> null)
      */
     public PKCS11Object build(Session session, long objectHandle)
         throws sun.security.pkcs11.wrapper.PKCS11Exception;
@@ -178,9 +171,6 @@ public class Certificate extends Storage {
    * The default constructor. An application use this constructor to
    * instantiate a certificate that serves as a template. It may also be
    * useful for working with vendor-defined certificates.
-   *
-   * @preconditions
-   * @postconditions
    */
   public Certificate() {
     objectClass.setLongValue(ObjectClass.CERTIFICATE);
@@ -200,8 +190,6 @@ public class Certificate extends Storage {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected Certificate(Session session, long objectHandle)
       throws TokenException {
@@ -216,8 +204,6 @@ public class Certificate extends Storage {
    *          The certificate type to get as string.
    * @return A string denoting the object certificate type; e.g.
    *         "X.509 Public Key".
-   * @preconditions (certificateType <> null)
-   * @postconditions (result <> null)
    */
   public static String getCertificateTypeName(Long certificateType) {
     Util.requireNonNull("certificateType", certificateType);
@@ -256,8 +242,6 @@ public class Certificate extends Storage {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -310,8 +294,6 @@ public class Certificate extends Storage {
    * @return A new PKCS11Object.
    * @throws TokenException
    *           If no object could be created.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   protected static PKCS11Object getUnknownCertificate(Session session,
       long objectHandle) throws TokenException {
@@ -342,8 +324,6 @@ public class Certificate extends Storage {
    * @param builder
    *          The vendor-defined certificate builder. Null to clear any
    *          previously installed vendor-defined builder.
-   * @preconditions
-   * @postconditions
    */
   public static void setVendorDefinedCertificateBuilder(
       VendorDefinedCertificateBuilder builder) {
@@ -355,8 +335,6 @@ public class Certificate extends Storage {
    *
    * @return The currently set vendor-defined certificate builder or null if
    *         none is set.
-   * @preconditions
-   * @postconditions
    */
   public static VendorDefinedCertificateBuilder
       getVendorDefinedCertificateBuilder() {
@@ -370,8 +348,6 @@ public class Certificate extends Storage {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(Certificate object) {
     Util.requireNonNull("object", object);
@@ -389,9 +365,6 @@ public class Certificate extends Storage {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -415,8 +388,6 @@ public class Certificate extends Storage {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -442,8 +413,6 @@ public class Certificate extends Storage {
    * an value bigger than CertificateType.VENDOR_DEFINED.
    *
    * @return The certificate type attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public LongAttribute getCertificateType() {
     return certificateType;
@@ -453,8 +422,6 @@ public class Certificate extends Storage {
    * Gets the trusted attribute of the PKCS#11 certificate.
    *
    * @return The trusted attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getTrusted() {
     return trusted;
@@ -464,8 +431,6 @@ public class Certificate extends Storage {
    * Gets the certificate category attribute of the PKCS#11 certificate.
    *
    * @return The certificate category attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public LongAttribute getCertificateCategory() {
     return certificateCategory;
@@ -475,8 +440,6 @@ public class Certificate extends Storage {
    * Gets the check value attribute of of the PKCS#11 certificate.
    *
    * @return The check value attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getCheckValue() {
     return checkValue;
@@ -486,8 +449,6 @@ public class Certificate extends Storage {
    * Gets the start date attribute of the validity of the PKCS#11 certificate.
    *
    * @return The start date of validity.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public DateAttribute getStartDate() {
     return startDate;
@@ -497,8 +458,6 @@ public class Certificate extends Storage {
    * Gets the end date attribute of the validity of the PKCS#11 certificate.
    *
    * @return The end date of validity.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public DateAttribute getEndDate() {
     return endDate;
@@ -509,8 +468,6 @@ public class Certificate extends Storage {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -526,8 +483,6 @@ public class Certificate extends Storage {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -544,8 +499,6 @@ public class Certificate extends Storage {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

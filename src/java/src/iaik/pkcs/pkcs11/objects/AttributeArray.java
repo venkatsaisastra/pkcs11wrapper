@@ -56,7 +56,6 @@ import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
  *
  * @author Birgit Haas
  * @version 1.0
- * @invariants
  */
 public class AttributeArray extends Attribute {
 
@@ -72,8 +71,6 @@ public class AttributeArray extends Attribute {
    * @param type
    *          The PKCS#11 type of this attribute; e.g.
    *          PKCS11Constants.CKA_VALUE.
-   * @preconditions (type <> null)
-   * @postconditions
    */
   public AttributeArray(Long type) {
     super(type);
@@ -86,8 +83,6 @@ public class AttributeArray extends Attribute {
    *
    * @param value
    *          The AttributeArray value to set. May be null.
-   * @preconditions
-   * @postconditions
    */
   public void setAttributeArrayValue(PKCS11Object value) {
     template = value;
@@ -110,8 +105,6 @@ public class AttributeArray extends Attribute {
    * Get the attribute array value of this attribute. Null, is also possible.
    *
    * @return The attribute array value of this attribute or null.
-   * @preconditions
-   * @postconditions
    */
   public PKCS11Object getAttributeArrayValue() {
     if (template != null) {
@@ -157,8 +150,6 @@ public class AttributeArray extends Attribute {
    * Get a string representation of the value of this attribute.
    *
    * @return A string representation of the value of this attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   protected String getValueString() {
     if (template == null) {
@@ -178,8 +169,6 @@ public class AttributeArray extends Attribute {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -215,8 +204,6 @@ public class AttributeArray extends Attribute {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

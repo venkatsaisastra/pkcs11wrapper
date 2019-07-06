@@ -52,7 +52,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (publicValue <> null)
  */
 // CHECKSTYLE:SKIP
 public class DHPkcsDeriveParameters implements Parameters {
@@ -68,8 +67,6 @@ public class DHPkcsDeriveParameters implements Parameters {
    * @param publicValue
    *          The public value of the other party in the key agreement
    *          protocol.
-   * @preconditions (publicValue <> null)
-   * @postconditions
    */
   public DHPkcsDeriveParameters(byte[] publicValue) {
     this.publicValue = publicValue;
@@ -79,8 +76,6 @@ public class DHPkcsDeriveParameters implements Parameters {
    * Get this parameters object as a byte array.
    *
    * @return This object as a byte array.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public byte[] getPKCS11ParamsObject() {
@@ -92,8 +87,6 @@ public class DHPkcsDeriveParameters implements Parameters {
    *
    * @return The public value of the other party in the key agreement
    *         protocol.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public byte[] getPublicValue() {
     return publicValue;
@@ -105,8 +98,6 @@ public class DHPkcsDeriveParameters implements Parameters {
    * @param publicValue
    *          The public value of the other party in the key agreement
    *          protocol.
-   * @preconditions (publicValue <> null)
-   * @postconditions
    */
   public void setPublicValue(byte[] publicValue) {
     this.publicValue = Util.requireNonNull("publicValue", publicValue);
@@ -131,8 +122,6 @@ public class DHPkcsDeriveParameters implements Parameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -151,8 +140,6 @@ public class DHPkcsDeriveParameters implements Parameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

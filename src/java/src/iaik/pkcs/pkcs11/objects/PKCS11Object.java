@@ -65,8 +65,6 @@ import sun.security.pkcs11.wrapper.PKCS11;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (attributeTable <> null)
- *             and (objectClass <> null)
  */
 // CHECKSTYLE:SKIP
 public class PKCS11Object {
@@ -79,7 +77,6 @@ public class PKCS11Object {
    *
    * @author Karl Scheibelhofer
    * @version 1.0
-   * @invariants
    */
   public interface ObjectClass {
 
@@ -147,7 +144,6 @@ public class PKCS11Object {
    *
    * @author Karl Scheibelhofer
    * @version 1.0
-   * @invariants
    */
   public interface VendorDefinedObjectBuilder {
 
@@ -167,8 +163,6 @@ public class PKCS11Object {
      *         according sub-class.
      * @exception PKCS11Exception
      *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions (result <> null)
      */
     public PKCS11Object build(Session session, long objectHandle)
         throws PKCS11Exception;
@@ -208,9 +202,6 @@ public class PKCS11Object {
    * The default constructor. An application use this constructor to
    * instantiate an object that serves as a template. It may also be useful
    * for working with vendor-defined objects.
-   *
-   * @preconditions
-   * @postconditions
    */
   public PKCS11Object() {
     attributeTable = new Hashtable<>(32);
@@ -232,8 +223,6 @@ public class PKCS11Object {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected PKCS11Object(Session session, long objectHandle)
       throws TokenException {
@@ -262,8 +251,6 @@ public class PKCS11Object {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -320,8 +307,6 @@ public class PKCS11Object {
    * @return A new PKCS11Object.
    * @throws TokenException
    *           If no object could be created.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   protected static PKCS11Object getUnknownObject(Session session,
       long objectHandle) throws TokenException {
@@ -351,8 +336,6 @@ public class PKCS11Object {
    * @param builder
    *          The vendor-defined object builder. Null to clear any previously
    *          installed vendor-defined builder.
-   * @preconditions
-   * @postconditions
    */
   public static void setVendorDefinedObjectBuilder(
       VendorDefinedObjectBuilder builder) {
@@ -365,8 +348,6 @@ public class PKCS11Object {
    * @param objectClass
    *          The object class to get as string.
    * @return A string denoting the object class; e.g. "Private Key".
-   * @preconditions (objectClass <> null)
-   * @postconditions (result <> null)
    */
   public static String getObjectClassName(Long objectClass) {
     Util.requireNonNull("objectClass", objectClass);
@@ -404,8 +385,6 @@ public class PKCS11Object {
    *
    * @return The currently set vendor-defined object builder or null if none
    *         is set.
-   * @preconditions
-   * @postconditions
    */
   public static VendorDefinedObjectBuilder getVendorDefinedObjectBuilder() {
     return vendorObjectBuilder;
@@ -418,8 +397,6 @@ public class PKCS11Object {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(PKCS11Object object) {
     Util.requireNonNull("object", object);
@@ -429,9 +406,6 @@ public class PKCS11Object {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   protected void allocateAttributes() {
     objectClass = new ObjectClassAttribute();
@@ -447,8 +421,6 @@ public class PKCS11Object {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -469,8 +441,6 @@ public class PKCS11Object {
    *
    * @return The table of all attributes of this object. Key is the attribute
    *         type as Long. This table is unmodifiable.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @SuppressWarnings("unchecked")
   public Hashtable<Long, Attribute> getAttributeTable() {
@@ -529,8 +499,6 @@ public class PKCS11Object {
    * Gets the object handle of the underlying PKCS#11 object on the token.
    *
    * @return The object handle of the corresponding PKCS#11 object.
-   * @preconditions
-   * @postconditions
    */
   public long getObjectHandle() {
     return objectHandle;
@@ -543,8 +511,6 @@ public class PKCS11Object {
    *
    * @param objectHandle
    *          The object handle of the corresponding PKCS#11 object.
-   * @preconditions
-   * @postconditions
    */
   public void setObjectHandle(long objectHandle) {
     this.objectHandle = objectHandle;
@@ -556,8 +522,6 @@ public class PKCS11Object {
    * bigger than ObjectClass.VENDOR_DEFINED.
    *
    * @return The object class attribute.
-   * @preconditions
-   * @postconditions
    */
   public LongAttribute getObjectClass() {
     return objectClass;
@@ -568,14 +532,12 @@ public class PKCS11Object {
    * contains CK_ATTRIBUTE objects, one for each present attribute of this
    * object; e.g. for each attribute that has a set value (which might be
    * sensitive).
-   * <p/>
-   * The array representation of this collection can be used directly as input
-   * for the PKCS#11 wrapper. The Session class uses this method for various
-   * object operations.
+   *
+   * <p>The array representation of this collection can be used directly as
+   * input for the PKCS#11 wrapper. The Session class uses this method for
+   * various object operations.
    *
    * @return An collection of CK_ATTRIBUTE objects.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public Vector<CK_ATTRIBUTE> getSetAttributes() {
     Vector<CK_ATTRIBUTE> attributeCollection =
@@ -608,8 +570,6 @@ public class PKCS11Object {
    *         null.
    * @exception PKCS11Exception
    *              If setting the attribute values.
-   * @preconditions
-   * @postconditions
    */
   public static CK_ATTRIBUTE[] getSetAttributes(PKCS11Object object)
       throws PKCS11Exception {
@@ -626,8 +586,6 @@ public class PKCS11Object {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -643,8 +601,6 @@ public class PKCS11Object {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   public void readAttributes(Session session)
       throws TokenException {
@@ -659,8 +615,6 @@ public class PKCS11Object {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {
@@ -687,8 +641,6 @@ public class PKCS11Object {
    * @param indent
    *        the indent to be used
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public String toString(boolean newline, boolean withName, String indent) {
     StringBuilder sb = new StringBuilder(1024);
@@ -735,9 +687,6 @@ public class PKCS11Object {
    *          value (see {@link Attribute#setCkAttribute(CK_ATTRIBUTE)}).
    * @exception PKCS11Exception
    *              If getting the attribute failed.
-   * @preconditions (session <> null)
-   *                and (attribute <> null)
-   * @postconditions
    */
   protected static void getAttributeValue(Session session, long objectHandle,
       Attribute attribute) throws PKCS11Exception {
@@ -793,9 +742,6 @@ public class PKCS11Object {
    *          values (see {@link Attribute#setCkAttribute(CK_ATTRIBUTE)}).
    * @exception PKCS11Exception
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   *                and (attributes <> null)
-   * @postconditions
    */
   protected static void getAttributeValues(Session session, long objectHandle,
       Attribute[] attributes) throws PKCS11Exception {

@@ -54,7 +54,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Birgit Haas
  * @version 1.0
- * @invariants
  */
 public class MechanismArrayAttribute extends Attribute {
 
@@ -64,8 +63,6 @@ public class MechanismArrayAttribute extends Attribute {
    * @param type
    *          The PKCS#11 type of this attribute; e.g.
    *          PKCS11Constants.CKA_VALUE.
-   * @preconditions (type <> null)
-   * @postconditions
    */
   public MechanismArrayAttribute(Long type) {
     super(type);
@@ -78,8 +75,6 @@ public class MechanismArrayAttribute extends Attribute {
    *
    * @param value
    *          The MechanismArrayAttribute value to set. May be null.
-   * @preconditions
-   * @postconditions
    */
   public void setMechanismAttributeArrayValue(Mechanism[] value) {
 
@@ -99,8 +94,6 @@ public class MechanismArrayAttribute extends Attribute {
    * Null, is also possible.
    *
    * @return The mechanism attribute array value of this attribute or null.
-   * @preconditions
-   * @postconditions
    */
   public Mechanism[] getMechanismAttributeArrayValue() {
     Mechanism[] mechanisms = null;
@@ -121,8 +114,6 @@ public class MechanismArrayAttribute extends Attribute {
    * Get a string representation of the value of this attribute.
    *
    * @return A string representation of the value of this attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   protected String getValueString() {
@@ -146,8 +137,6 @@ public class MechanismArrayAttribute extends Attribute {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -175,8 +164,6 @@ public class MechanismArrayAttribute extends Attribute {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

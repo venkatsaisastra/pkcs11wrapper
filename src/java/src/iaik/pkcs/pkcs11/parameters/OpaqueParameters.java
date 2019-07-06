@@ -38,8 +38,6 @@ public class OpaqueParameters implements Parameters {
    * Get this parameters object as a byte array.
    *
    * @return This object as a byte array.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public byte[] getPKCS11ParamsObject() {
@@ -51,8 +49,6 @@ public class OpaqueParameters implements Parameters {
    *
    * @return The public value of the other party in the key agreement
    *         protocol.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public byte[] getBytes() {
     return bytes;

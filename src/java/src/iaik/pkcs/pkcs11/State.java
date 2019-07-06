@@ -50,7 +50,6 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class State {
 
@@ -98,9 +97,6 @@ public class State {
    *                  PKCS11Constants.CKS_RW_PUBLIC_SESSION,
    *                  PKCS11Constants.CKS_RW_USER_FUNCTIONS or
    *                  PKCS11Constants.CKS_RW_SO_FUNCTIONS.
-   *
-   * @preconditions
-   * @postconditions
    */
   protected State(long code) {
     this.code = code;
@@ -114,8 +110,6 @@ public class State {
    *          The other State object.
    * @return True, if other is an instance of State and the state code
    *         of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -134,8 +128,6 @@ public class State {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object. Gained from the state code.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

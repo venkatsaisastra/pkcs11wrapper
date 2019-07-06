@@ -51,7 +51,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class MacGeneralParameters implements Parameters {
 
@@ -65,8 +64,6 @@ public class MacGeneralParameters implements Parameters {
    *
    * @param macLength
    *          The length of the MAC produced, in bytes.
-   * @preconditions
-   * @postconditions
    */
   public MacGeneralParameters(long macLength) {
     this.macLength = macLength;
@@ -76,8 +73,6 @@ public class MacGeneralParameters implements Parameters {
    * Get this parameters object as an Long object.
    *
    * @return This object as a Long object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public Long getPKCS11ParamsObject() {
@@ -88,8 +83,6 @@ public class MacGeneralParameters implements Parameters {
    * Get the length of the MAC produced, in bytes.
    *
    * @return The length of the MAC produced, in bytes.
-   * @preconditions
-   * @postconditions
    */
   public long getMacLength() {
     return macLength;
@@ -100,8 +93,6 @@ public class MacGeneralParameters implements Parameters {
    *
    * @param macLength
    *          The length of the MAC produced, in bytes.
-   * @preconditions
-   * @postconditions
    */
   public void setMacLength(long macLength) {
     this.macLength = macLength;
@@ -126,8 +117,6 @@ public class MacGeneralParameters implements Parameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -146,8 +135,6 @@ public class MacGeneralParameters implements Parameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

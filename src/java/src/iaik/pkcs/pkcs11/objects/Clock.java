@@ -55,7 +55,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (value <> null)
  */
 public class Clock extends HardwareFeature {
 
@@ -67,9 +66,6 @@ public class Clock extends HardwareFeature {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public Clock() {
     hardwareFeatureType.setLongValue(FeatureType.CLOCK);
@@ -86,8 +82,6 @@ public class Clock extends HardwareFeature {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected Clock(Session session, long objectHandle) throws TokenException {
     super(session, objectHandle);
@@ -109,8 +103,6 @@ public class Clock extends HardwareFeature {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -124,8 +116,6 @@ public class Clock extends HardwareFeature {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(Clock object) {
     Util.requireNonNull("object", object);
@@ -135,9 +125,6 @@ public class Clock extends HardwareFeature {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -156,8 +143,6 @@ public class Clock extends HardwareFeature {
    *          The other object to compare to.
    * @return True, if other is an instance of Info and all member variables of
    *         both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -176,8 +161,6 @@ public class Clock extends HardwareFeature {
    * Gets the value attribute of this clock object.
    *
    * @return The value attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getValue() {
     return value;
@@ -188,8 +171,6 @@ public class Clock extends HardwareFeature {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -205,8 +186,6 @@ public class Clock extends HardwareFeature {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -221,8 +200,6 @@ public class Clock extends HardwareFeature {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

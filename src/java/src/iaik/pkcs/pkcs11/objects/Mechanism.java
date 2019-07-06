@@ -93,8 +93,6 @@ public class Mechanism extends PKCS11Object {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(Mechanism object) {
     Util.requireNonNull("object", object);

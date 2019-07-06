@@ -52,7 +52,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class CharArrayAttribute extends Attribute {
 
@@ -62,8 +61,6 @@ public class CharArrayAttribute extends Attribute {
    * @param type
    *          The PKCS#11 type of this attribute; e.g.
    *          PKCS11Constants.CKA_LABEL.
-   * @preconditions (type <> null)
-   * @postconditions
    */
   public CharArrayAttribute(Long type) {
     super(type);
@@ -75,8 +72,6 @@ public class CharArrayAttribute extends Attribute {
    *
    * @param value
    *          The char-array value to set. May be null.
-   * @preconditions
-   * @postconditions
    */
   public void setCharArrayValue(char[] value) {
     ckAttribute.pValue = value;
@@ -87,8 +82,6 @@ public class CharArrayAttribute extends Attribute {
    * Get the char-array value of this attribute. Null, is also possible.
    *
    * @return The char-array value of this attribute or null.
-   * @preconditions
-   * @postconditions
    */
   public char[] getCharArrayValue() {
     return (char[]) ckAttribute.pValue;
@@ -98,8 +91,6 @@ public class CharArrayAttribute extends Attribute {
    * Get a string representation of the value of this attribute.
    *
    * @return A string representation of the value of this attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   protected String getValueString() {
@@ -122,8 +113,6 @@ public class CharArrayAttribute extends Attribute {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -161,8 +150,6 @@ public class CharArrayAttribute extends Attribute {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

@@ -52,10 +52,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (prime <> null)
- *             and (base <> null)
- *             and (value <> null)
- *             and (valueBits <> null)
  */
 // CHECKSTYLE:SKIP
 public class DHPrivateKey extends PrivateKey {
@@ -82,9 +78,6 @@ public class DHPrivateKey extends PrivateKey {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public DHPrivateKey() {
     keyType.setLongValue(KeyType.DH);
@@ -101,8 +94,6 @@ public class DHPrivateKey extends PrivateKey {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected DHPrivateKey(Session session, long objectHandle)
       throws TokenException {
@@ -125,8 +116,6 @@ public class DHPrivateKey extends PrivateKey {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -140,8 +129,6 @@ public class DHPrivateKey extends PrivateKey {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(DHPrivateKey object) {
     Util.requireNonNull("object", object);
@@ -154,9 +141,6 @@ public class DHPrivateKey extends PrivateKey {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -178,8 +162,6 @@ public class DHPrivateKey extends PrivateKey {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -201,8 +183,6 @@ public class DHPrivateKey extends PrivateKey {
    * Gets the prime attribute of this DH key.
    *
    * @return The prime attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getPrime() {
     return prime;
@@ -212,8 +192,6 @@ public class DHPrivateKey extends PrivateKey {
    * Gets the base attribute of this DH key.
    *
    * @return The base attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getBase() {
     return base;
@@ -223,8 +201,6 @@ public class DHPrivateKey extends PrivateKey {
    * Gets the value attribute of this DH key.
    *
    * @return The value attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getValue() {
     return value;
@@ -234,8 +210,6 @@ public class DHPrivateKey extends PrivateKey {
    * Gets the value length attribute of this DH key (in bits).
    *
    * @return The value length attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public LongAttribute getValueBits() {
     return valueBits;
@@ -250,8 +224,6 @@ public class DHPrivateKey extends PrivateKey {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -268,8 +240,6 @@ public class DHPrivateKey extends PrivateKey {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

@@ -50,8 +50,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (randomInfo <> null)
- *             and (returnedKeyMaterial <> null)
  */
 // CHECKSTYLE:SKIP
 public abstract class TLSKeyMaterialParameters implements Parameters {
@@ -100,7 +98,7 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    * @param keySizeInBits
    *          The length (in bits) of the secret keys agreed upon during the
    *          protocol handshake phase.
-   * @param initializationVectorSizeInBits
+   * @param ivSizeInBits
    *          The length (in bits) of the IV agreed upon during the protocol
    *          handshake phase. If no IV is required, the length should be set
    *          to 0.
@@ -111,9 +109,6 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    *          The client's and server's random data information.
    * @param returnedKeyMaterial
    *          Receives the handles for the keys generated and the IVs.
-   * @preconditions (randomInfo <> null)
-   *                and (returnedKeyMaterial <> null)
-   * @postconditions
    */
   public TLSKeyMaterialParameters(long macSizeInBits, long keySizeInBits,
       long ivSizeInBits, boolean export, SSL3RandomDataParameters randomInfo,
@@ -133,8 +128,6 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    *
    * @return The length (in bits) of the MACing keys agreed upon during the
    *         protocol handshake phase.
-   * @preconditions
-   * @postconditions
    */
   public long getMacSizeInBits() {
     return macSizeInBits;
@@ -146,8 +139,6 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    *
    * @return The length (in bits) of the secret keys agreed upon during the
    *         protocol handshake phase.
-   * @preconditions
-   * @postconditions
    */
   public long getKeySizeInBits() {
     return keySizeInBits;
@@ -160,8 +151,6 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    * @return The length (in bits) of the IV agreed upon during the protocol
    *         handshake phase. If no IV is required, the length should be set
    *         to 0.
-   * @preconditions
-   * @postconditions
    */
   // CHECKSTYLE:SKIP
   public long getIVSizeInBits() {
@@ -174,8 +163,6 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    *
    * @return True, if the keys have to be derived for an export version of the
    *         protocol; false, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isExport() {
     return export;
@@ -185,8 +172,6 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    * Get the client's and server's random data information.
    *
    * @return The client's and server's random data information.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public SSL3RandomDataParameters getRandomInfo() {
     return randomInfo;
@@ -198,8 +183,6 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    *
    * @return The object that receives the handles for the keys generated and
    *         the IVs.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public SSL3KeyMaterialOutParameters getReturnedKeyMaterial() {
     return returnedKeyMaterial;
@@ -212,8 +195,6 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    * @param macSizeInBits
    *          The length (in bits) of the MACing keys agreed upon during the
    *          protocol handshake phase.
-   * @preconditions
-   * @postconditions
    */
   public void setMacSizeInBits(long macSizeInBits) {
     this.macSizeInBits = macSizeInBits;
@@ -226,8 +207,6 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    * @param keySizeInBits
    *          The length (in bits) of the secret keys agreed upon during the
    *          protocol handshake phase.
-   * @preconditions
-   * @postconditions
    */
   public void setKeySizeInBits(long keySizeInBits) {
     this.keySizeInBits = keySizeInBits;
@@ -237,12 +216,10 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    * Set the length (in bits) of the IV agreed upon during the protocol
    * handshake phase. If no IV is required, the length should be set to 0.
    *
-   * @param initializationVectorSizeInBits
+   * @param ivSizeInBits
    *          The length (in bits) of the IV agreed upon during the protocol
    *          handshake phase. If no IV is required, the length should be set
    *          to 0.
-   * @preconditions
-   * @postconditions
    */
   // CHECKSTYLE:SKIP
   public void setIVSizeInBits(long ivSizeInBits) {
@@ -256,8 +233,6 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    * @param export
    *          True, if the keys have to be derived for an export version of
    *          the protocol; false, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public void setExport(boolean export) {
     this.export = export;
@@ -268,8 +243,6 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    *
    * @param randomInfo
    *          The client's and server's random data information.
-   * @preconditions (randomInfo <> null)
-   * @postconditions
    */
   public void setRandomInfo(SSL3RandomDataParameters randomInfo) {
     this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
@@ -282,8 +255,6 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    * @param returnedKeyMaterial
    *          The object that receives the handles for the keys generated and
    *          the IVs.
-   * @preconditions (returnedKeyMaterial <> null)
-   * @postconditions
    */
   public void setReturnedKeyMaterial(
       SSL3KeyMaterialOutParameters returnedKeyMaterial) {
@@ -315,8 +286,6 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -340,8 +309,6 @@ public abstract class TLSKeyMaterialParameters implements Parameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

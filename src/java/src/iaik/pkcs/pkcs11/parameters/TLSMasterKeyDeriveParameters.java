@@ -50,8 +50,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (randomInfo <> null)
- *             and (version <> null)
  */
 // CHECKSTYLE:SKIP
 public abstract class TLSMasterKeyDeriveParameters implements Parameters {
@@ -74,9 +72,6 @@ public abstract class TLSMasterKeyDeriveParameters implements Parameters {
    *          The client's and server's random data information.
    * @param version
    *          The SSL protocol version information.
-   * @preconditions (randomInfo <> null)
-   *                and (version <> null)
-   * @postconditions
    */
   public TLSMasterKeyDeriveParameters(SSL3RandomDataParameters randomInfo,
       VersionParameters version) {
@@ -88,8 +83,6 @@ public abstract class TLSMasterKeyDeriveParameters implements Parameters {
    * Get the client's and server's random data information.
    *
    * @return The client's and server's random data information.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public SSL3RandomDataParameters getRandomInfo() {
     return randomInfo;
@@ -99,8 +92,6 @@ public abstract class TLSMasterKeyDeriveParameters implements Parameters {
    * Get the SSL protocol version information.
    *
    * @return The SSL protocol version information.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public VersionParameters getVersion() {
     return version;
@@ -111,8 +102,6 @@ public abstract class TLSMasterKeyDeriveParameters implements Parameters {
    *
    * @param randomInfo
    *          The client's and server's random data information.
-   * @preconditions (randomInfo <> null)
-   * @postconditions
    */
   public void setRandomInfo(SSL3RandomDataParameters randomInfo) {
     this.randomInfo = Util.requireNonNull("randomInfo", randomInfo);
@@ -123,8 +112,6 @@ public abstract class TLSMasterKeyDeriveParameters implements Parameters {
    *
    * @param version
    *          The SSL protocol version information.
-   * @preconditions (version <> null)
-   * @postconditions
    */
   public void setVersion(VersionParameters version) {
     this.version = Util.requireNonNull("version", version);
@@ -150,8 +137,6 @@ public abstract class TLSMasterKeyDeriveParameters implements Parameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -172,8 +157,6 @@ public abstract class TLSMasterKeyDeriveParameters implements Parameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

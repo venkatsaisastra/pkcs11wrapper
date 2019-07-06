@@ -46,7 +46,6 @@ import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 
 /**
  * This is the base class for hardware feature classes. Objects of this class
@@ -59,7 +58,6 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (hardwareFeatureType <> null)
  */
 public class HardwareFeature extends PKCS11Object {
 
@@ -70,7 +68,6 @@ public class HardwareFeature extends PKCS11Object {
    *
    * @author Karl Scheibelhofer
    * @version 1.0
-   * @invariants
    */
   public interface FeatureType {
 
@@ -108,7 +105,6 @@ public class HardwareFeature extends PKCS11Object {
    *
    * @author Karl Scheibelhofer
    * @version 1.0
-   * @invariants
    */
   public interface VendorDefinedHardwareFeatureBuilder {
 
@@ -126,10 +122,8 @@ public class HardwareFeature extends PKCS11Object {
      * @return The object representing the PKCS#11 object.
      *         The returned object can be casted to the
      *         according sub-class.
-     * @exception PKCS11Exception
+     * @exception sun.security.pkcs11.wrapper.PKCS11Exception
      *              If getting the attributes failed.
-     * @preconditions (session <> null)
-     * @postconditions (result <> null)
      */
     public PKCS11Object build(Session session, long objectHandle)
         throws sun.security.pkcs11.wrapper.PKCS11Exception;
@@ -153,8 +147,6 @@ public class HardwareFeature extends PKCS11Object {
    * instantiate a hardware feature that serves as a template. It may also be
    * useful for working with vendor-defined hardware features.
    *
-   * @preconditions
-   * @postconditions
    */
   public HardwareFeature() {
     objectClass.setLongValue(ObjectClass.HW_FEATURE);
@@ -172,8 +164,6 @@ public class HardwareFeature extends PKCS11Object {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected HardwareFeature(Session session, long objectHandle)
       throws TokenException {
@@ -187,8 +177,6 @@ public class HardwareFeature extends PKCS11Object {
    * @param hardwareFeatureType
    *          The hardware feature type to get as string.
    * @return A string denoting the object hardware feature type; e.g. "Clock".
-   * @preconditions (hardwareFeatureType <> null)
-   * @postconditions (result <> null)
    */
   public static String getHardwareFeatureTypeName(Long hardwareFeatureType) {
     Util.requireNonNull("hardwareFeatureType", hardwareFeatureType);
@@ -229,8 +217,6 @@ public class HardwareFeature extends PKCS11Object {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -282,8 +268,6 @@ public class HardwareFeature extends PKCS11Object {
    * @return A new PKCS11Object.
    * @throws TokenException
    *           If no object could be created.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   protected static PKCS11Object getUnknownHardwareFeature(Session session,
       long objectHandle) throws TokenException {
@@ -315,8 +299,6 @@ public class HardwareFeature extends PKCS11Object {
    * @param builder
    *          The vendor-defined hardware feature builder. Null to clear any
    *          previously installed vendor-defined builder.
-   * @preconditions
-   * @postconditions
    */
   public static void setVendorDefinedHardwareFeatureBuilder(
       VendorDefinedHardwareFeatureBuilder builder) {
@@ -328,8 +310,6 @@ public class HardwareFeature extends PKCS11Object {
    *
    * @return The currently set vendor-defined hardware feature builder or null
    *         if none is set.
-   * @preconditions
-   * @postconditions
    */
   public static VendorDefinedHardwareFeatureBuilder
       getVendorDefinedHardwareFeatureBuilder() {
@@ -343,8 +323,6 @@ public class HardwareFeature extends PKCS11Object {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(HardwareFeature object) {
     Util.requireNonNull("object", object);
@@ -356,9 +334,6 @@ public class HardwareFeature extends PKCS11Object {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -377,8 +352,6 @@ public class HardwareFeature extends PKCS11Object {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -399,8 +372,6 @@ public class HardwareFeature extends PKCS11Object {
    * value bigger than FeatureType.VENDOR_DEFINED.
    *
    * @return The hardware feature type identifier.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public LongAttribute getHardwareFeatureType() {
     return hardwareFeatureType;
@@ -411,8 +382,6 @@ public class HardwareFeature extends PKCS11Object {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -425,8 +394,6 @@ public class HardwareFeature extends PKCS11Object {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

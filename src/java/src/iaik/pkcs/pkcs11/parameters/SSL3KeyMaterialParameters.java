@@ -52,8 +52,6 @@ import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (randomInfo <> null)
- *             and (returnedKeyMaterial <> null)
  */
 // CHECKSTYLE:SKIP
 public class SSL3KeyMaterialParameters extends TLSKeyMaterialParameters {
@@ -69,8 +67,6 @@ public class SSL3KeyMaterialParameters extends TLSKeyMaterialParameters {
    * Get this parameters object as a CK_SSL3_KEY_MAT_PARAMS object.
    *
    * @return This object as a CK_SSL3_KEY_MAT_PARAMS object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public CK_SSL3_KEY_MAT_PARAMS getPKCS11ParamsObject() {

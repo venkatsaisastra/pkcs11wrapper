@@ -52,11 +52,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (owner <> null)
- *             and (acIssuer <> null)
- *             and (serialNumber <> null)
- *             and (attrTypes <> null)
- *             and (value <> null)
  */
 public class X509AttributeCertificate extends Certificate {
 
@@ -87,9 +82,6 @@ public class X509AttributeCertificate extends Certificate {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public X509AttributeCertificate() {
     certificateType.setLongValue(CertificateType.X_509_ATTRIBUTE);
@@ -107,8 +99,6 @@ public class X509AttributeCertificate extends Certificate {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected X509AttributeCertificate(Session session, long objectHandle)
       throws TokenException {
@@ -131,8 +121,6 @@ public class X509AttributeCertificate extends Certificate {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -146,8 +134,6 @@ public class X509AttributeCertificate extends Certificate {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(
       X509AttributeCertificate object) {
@@ -163,9 +149,6 @@ public class X509AttributeCertificate extends Certificate {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -188,8 +171,6 @@ public class X509AttributeCertificate extends Certificate {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -212,8 +193,6 @@ public class X509AttributeCertificate extends Certificate {
    * Gets the owner attribute of this X.509 attribute certificate.
    *
    * @return The owner attribute of this X.509 attribute certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getOwner() {
     return owner;
@@ -225,8 +204,6 @@ public class X509AttributeCertificate extends Certificate {
    *
    * @return The attribute certificate issuer attribute of this X.509
    *         attribute certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getAcIssuer() {
     return acIssuer;
@@ -236,8 +213,6 @@ public class X509AttributeCertificate extends Certificate {
    * Gets the serial number attribute of this X.509 attribute certificate.
    *
    * @return The serial number attribute of this X.509 attribute certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getSerialNumber() {
     return serialNumber;
@@ -248,8 +223,6 @@ public class X509AttributeCertificate extends Certificate {
    *
    * @return The attribute types attribute of this X.509 attribute
    *         certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getAttrTypes() {
     return attrTypes;
@@ -259,8 +232,6 @@ public class X509AttributeCertificate extends Certificate {
    * Gets the value attribute of this X.509 attribute certificate.
    *
    * @return The value attribute of this X.509 attribute certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getValue() {
     return value;
@@ -271,8 +242,6 @@ public class X509AttributeCertificate extends Certificate {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -288,8 +257,6 @@ public class X509AttributeCertificate extends Certificate {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -305,8 +272,6 @@ public class X509AttributeCertificate extends Certificate {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

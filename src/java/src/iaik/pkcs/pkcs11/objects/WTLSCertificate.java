@@ -89,9 +89,6 @@ public class WTLSCertificate extends Certificate {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public WTLSCertificate() {
     certificateType.setLongValue(CertificateType.WTLS);
@@ -109,8 +106,6 @@ public class WTLSCertificate extends Certificate {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected WTLSCertificate(Session session, long objectHandle)
       throws TokenException {
@@ -133,8 +128,6 @@ public class WTLSCertificate extends Certificate {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -148,8 +141,6 @@ public class WTLSCertificate extends Certificate {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(WTLSCertificate object) {
     Util.requireNonNull("object", object);
@@ -166,9 +157,6 @@ public class WTLSCertificate extends Certificate {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -194,8 +182,6 @@ public class WTLSCertificate extends Certificate {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -221,8 +207,6 @@ public class WTLSCertificate extends Certificate {
    * Gets the subject attribute of this WTLS public key certificate.
    *
    * @return The subject attribute of this WTLS public key certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getSubject() {
     return subject;
@@ -232,8 +216,6 @@ public class WTLSCertificate extends Certificate {
    * Gets the issuer attribute of this WTLS public key certificate.
    *
    * @return The issuer attribute of this WTLS public key certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getIssuer() {
     return issuer;
@@ -243,8 +225,6 @@ public class WTLSCertificate extends Certificate {
    * Gets the value attribute of this WTLS public key certificate.
    *
    * @return The value attribute of this WTLS public key certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getValue() {
     return value;
@@ -254,8 +234,6 @@ public class WTLSCertificate extends Certificate {
    * Get the URL attribute of this object.
    *
    * @return Contains the URL as a char array.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public CharArrayAttribute getUrl() {
     return url;
@@ -267,8 +245,6 @@ public class WTLSCertificate extends Certificate {
    *
    * @return The hash of subject public key attribute of this WTLS public key
    *         certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getHashOfSubjectPublicKey() {
     return hashOfSubjectPublicKey;
@@ -280,8 +256,6 @@ public class WTLSCertificate extends Certificate {
    *
    * @return The hash of issuer public key attribute of this WTLS public key
    *         certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getHashOfIssuerPublicKey() {
     return hashOfIssuerPublicKey;
@@ -292,8 +266,6 @@ public class WTLSCertificate extends Certificate {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -309,8 +281,6 @@ public class WTLSCertificate extends Certificate {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -328,8 +298,6 @@ public class WTLSCertificate extends Certificate {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

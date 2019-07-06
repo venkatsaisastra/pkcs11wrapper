@@ -48,7 +48,6 @@ package iaik.pkcs.pkcs11;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public interface InitializeArgs {
 
@@ -60,8 +59,6 @@ public interface InitializeArgs {
    *
    * @return The handler object for mutex functionality, or null, if there is
    *         no handler for mutexes.
-   * @preconditions
-   * @postconditions
    */
   MutexHandler getMutexHandler();
 
@@ -72,8 +69,6 @@ public interface InitializeArgs {
    * @return True, if application threads which are executing calls to the
    *         library may not use native operating system calls to spawn new
    *         threads. False, if they may.
-   * @preconditions
-   * @postconditions
    */
   boolean isLibraryCantCreateOsThreads();
 
@@ -83,8 +78,6 @@ public interface InitializeArgs {
    *
    * @return True, if the library can use the native operation system
    *         threading model for locking. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   boolean isOsLockingOk();
 
@@ -92,8 +85,6 @@ public interface InitializeArgs {
    * Reserved parameter.
    *
    * @return Should be null in this version.
-   * @preconditions
-   * @postconditions (result == null)
    */
   Object getReserved();
 

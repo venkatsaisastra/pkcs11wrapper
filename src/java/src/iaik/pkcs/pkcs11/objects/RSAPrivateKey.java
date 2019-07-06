@@ -52,14 +52,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (modulus <> null)
- *             and (publicExponent <> null)
- *             and (privateExponent <> null)
- *             and (prime1 <> null)
- *             and (prime2 <> null)
- *             and (exponent1 <> null)
- *             and (exponent2 <> null)
- *             and (coefficient <> null)
  */
 // CHECKSTYLE:SKIP
 public class RSAPrivateKey extends PrivateKey {
@@ -106,9 +98,6 @@ public class RSAPrivateKey extends PrivateKey {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public RSAPrivateKey() {
     super();
@@ -126,8 +115,6 @@ public class RSAPrivateKey extends PrivateKey {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected RSAPrivateKey(Session session, long objectHandle)
       throws TokenException {
@@ -150,8 +137,6 @@ public class RSAPrivateKey extends PrivateKey {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -165,8 +150,6 @@ public class RSAPrivateKey extends PrivateKey {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(RSAPrivateKey object) {
     Util.requireNonNull("object", object);
@@ -184,9 +167,6 @@ public class RSAPrivateKey extends PrivateKey {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -212,8 +192,6 @@ public class RSAPrivateKey extends PrivateKey {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -239,8 +217,6 @@ public class RSAPrivateKey extends PrivateKey {
    * Gets the modulus attribute of this RSA key.
    *
    * @return The modulus attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getModulus() {
     return modulus;
@@ -250,8 +226,6 @@ public class RSAPrivateKey extends PrivateKey {
    * Gets the public exponent attribute of this RSA key.
    *
    * @return The public exponent attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getPublicExponent() {
     return publicExponent;
@@ -261,8 +235,6 @@ public class RSAPrivateKey extends PrivateKey {
    * Gets the private exponent attribute of this RSA key.
    *
    * @return The private exponent attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getPrivateExponent() {
     return privateExponent;
@@ -272,8 +244,6 @@ public class RSAPrivateKey extends PrivateKey {
    * Gets the first prime attribute of this RSA key.
    *
    * @return The first prime attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getPrime1() {
     return prime1;
@@ -283,8 +253,6 @@ public class RSAPrivateKey extends PrivateKey {
    * Gets the second prime attribute of this RSA key.
    *
    * @return The second prime attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getPrime2() {
     return prime2;
@@ -294,8 +262,6 @@ public class RSAPrivateKey extends PrivateKey {
    * Gets the first exponent (d mod (p-1)) attribute of this RSA key.
    *
    * @return The first exponent (d mod (p-1)) attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getExponent1() {
     return exponent1;
@@ -305,8 +271,6 @@ public class RSAPrivateKey extends PrivateKey {
    * Gets the second exponent (d mod (q-1)) attribute of this RSA key.
    *
    * @return The second exponent (d mod (q-1)) attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getExponent2() {
     return exponent2;
@@ -316,8 +280,6 @@ public class RSAPrivateKey extends PrivateKey {
    * Gets the coefficient (1/q mod (p)) attribute of this RSA key.
    *
    * @return The coefficient (1/q mod (p)) attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getCoefficient() {
     return coefficient;
@@ -332,8 +294,6 @@ public class RSAPrivateKey extends PrivateKey {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -351,8 +311,6 @@ public class RSAPrivateKey extends PrivateKey {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

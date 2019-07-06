@@ -53,7 +53,6 @@ import sun.security.pkcs11.wrapper.CK_X9_42_DH1_DERIVE_PARAMS;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
 
@@ -73,15 +72,6 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
    *          The data shared between the two parties.
    * @param publicData
    *          The other partie's public key value.
-   * @preconditions ((keyDerivationFunction == KeyDerivationFunctionType.NULL)
-   *                 or (keyDerivationFunction
-   *                      == KeyDerivationFunctionType.SHA1_KDF)
-   *                 or (keyDerivationFunction
-   *                      == KeyDerivationFunctionType.SHA1_KDF_ASN1)
-   *                 or (keyDerivationFunction
-   *                      == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
-   *                and (publicData <> null)
-   * @postconditions
    */
   public X942DH1KeyDerivationParameters(long keyDerivationFunction,
       byte[] otherInfo, byte[] publicData) {
@@ -94,8 +84,6 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
    * class.
    *
    * @return This object as a CK_X9_42_DH1_DERIVE_PARAMS object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public CK_X9_42_DH1_DERIVE_PARAMS getPKCS11ParamsObject() {
@@ -112,8 +100,6 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
    * Get the data shared between the two parties.
    *
    * @return The data shared between the two parties.
-   * @preconditions
-   * @postconditions
    */
   public byte[] getOtherInfo() {
     return otherInfo;
@@ -124,8 +110,6 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
    *
    * @param otherInfo
    *          The data shared between the two parties.
-   * @preconditions (otherInfo <> null)
-   * @postconditions
    */
   public void setOtherInfo(byte[] otherInfo) {
     this.otherInfo = otherInfo;
@@ -151,8 +135,6 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -173,8 +155,6 @@ public class X942DH1KeyDerivationParameters extends DHKeyDerivationParameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

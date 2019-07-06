@@ -54,10 +54,6 @@ import sun.security.pkcs11.wrapper.CK_SLOT_INFO;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (slotDescription <> null)
- *             and (manufacturerID <> null)
- *             and (hardwareVersion <> null)
- *             and (firmwareVersion <> null)
  */
 public class SlotInfo {
 
@@ -93,8 +89,6 @@ public class SlotInfo {
    *
    * @param ckSlotInfo
    *          The CK_SLOT_INFO object as given by PKCS11.C_GetSlotInfo().
-   * @preconditions (ckSlotInfo <> null)
-   * @postconditions
    */
   protected SlotInfo(CK_SLOT_INFO ckSlotInfo) {
     Util.requireNonNull("ckSlotInfo", ckSlotInfo);
@@ -109,8 +103,6 @@ public class SlotInfo {
    * Get a short description of this slot.
    *
    * @return A string describing this slot.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public String getSlotDescription() {
     return slotDescription;
@@ -120,8 +112,6 @@ public class SlotInfo {
    * Get an identifier for the manufacturer of this slot.
    *
    * @return A string identifying the manufacturer of this slot.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   // CHECKSTYLE:SKIP
   public String getManufacturerID() {
@@ -132,8 +122,6 @@ public class SlotInfo {
    * Get the version of the slot's hardware.
    *
    * @return The version of the hardware of this slot.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public Version getHardwareVersion() {
     return hardwareVersion;
@@ -143,8 +131,6 @@ public class SlotInfo {
    * Get the version of the slot's firmware.
    *
    * @return The version of the firmware of this slot.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public Version getFirmwareVersion() {
     return firmwareVersion;
@@ -157,8 +143,6 @@ public class SlotInfo {
    *
    * @return True, if there is a (compatible) token in the slot. False,
    *         otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isTokenPresent() {
     return (flags & PKCS11Constants.CKF_TOKEN_PRESENT) != 0L;
@@ -169,8 +153,6 @@ public class SlotInfo {
    * cases slot and token will be one device.
    *
    * @return True, if the tokens are removable. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isRemovableDevice() {
     return (flags & PKCS11Constants.CKF_REMOVABLE_DEVICE) != 0L;
@@ -181,8 +163,6 @@ public class SlotInfo {
    * software implementation; e.g. in case of a pure software token.
    *
    * @return True, if it is a hardware slot. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean isHwSlot() {
     return (flags & PKCS11Constants.CKF_HW_SLOT) != 0L;
@@ -214,8 +194,6 @@ public class SlotInfo {
    *          The other SlotInfo object.
    * @return True, if other is an instance of Info and all member variables of
    *         both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -239,8 +217,6 @@ public class SlotInfo {
    *
    * @return The hash code of this object. Gained from the slotDescription,
    *         manufacturerID, hardwareVersion and firmwareVersion.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

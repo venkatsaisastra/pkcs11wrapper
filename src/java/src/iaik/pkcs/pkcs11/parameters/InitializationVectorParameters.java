@@ -54,7 +54,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (initializationVector <> null)
  */
 // CHECKSTYLE:SKIP
 public class InitializationVectorParameters implements Parameters {
@@ -70,8 +69,6 @@ public class InitializationVectorParameters implements Parameters {
    *
    * @param iv
    *          The initialization vector.
-   * @preconditions (initializationVector <> null)
-   * @postconditions
    */
   public InitializationVectorParameters(byte[] iv) {
     this.iv = Util.requireNonNull("iv", iv);
@@ -81,8 +78,6 @@ public class InitializationVectorParameters implements Parameters {
    * Get this parameters object as a byte array.
    *
    * @return This object as a byte array.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public byte[] getPKCS11ParamsObject() {
@@ -93,8 +88,6 @@ public class InitializationVectorParameters implements Parameters {
    * Get the initialization vector.
    *
    * @return The initialization vector.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public byte[] getInitializationVector() {
     return iv;
@@ -105,8 +98,6 @@ public class InitializationVectorParameters implements Parameters {
    *
    * @param iv
    *          The initialization vector.
-   * @preconditions (initializationVector <> null)
-   * @postconditions
    */
   public void setInitializationVector(byte[] iv) {
     this.iv = Util.requireNonNull("iv", iv);
@@ -131,8 +122,6 @@ public class InitializationVectorParameters implements Parameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -152,8 +141,6 @@ public class InitializationVectorParameters implements Parameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

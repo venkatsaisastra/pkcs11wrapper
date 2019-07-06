@@ -76,7 +76,6 @@ public class Version {
    *
    * @param ckVersion
    *          A CK_VERSION object.
-   * @preconditions (ckVersion <> null)
    *
    */
   protected Version(CK_VERSION ckVersion) {
@@ -92,9 +91,6 @@ public class Version {
    * Create a (deep) clone of this object.
    *
    * @return A clone of this object.
-   *
-   * @postconditions (result <> null) and (result instanceof Version) and
-   *                 (result.equals(this))
    */
   public java.lang.Object clone() {
     Version clone;

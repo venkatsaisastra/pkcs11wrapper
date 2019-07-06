@@ -55,15 +55,6 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (keyDerivationFunction
- *                      == KeyDerivationFunctionType.NULL)
- *              or (keyDerivationFunction
- *                      == KeyDerivationFunctionType.SHA1_KDF)
- *              or (keyDerivationFunction
- *                      == KeyDerivationFunctionType.SHA1_KDF_ASN1)
- *              or (keyDerivationFunction
- *                      == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
- *             and (publicData <> null)
  */
 // CHECKSTYLE:SKIP
 abstract public class DHKeyDerivationParameters implements Parameters {
@@ -111,12 +102,6 @@ abstract public class DHKeyDerivationParameters implements Parameters {
    *          One of the values defined in KeyDerivationFunctionType.
    * @param publicData
    *          The other partie's public key value.
-   * @preconditions ((kdf == KeyDerivationFunctionType.NULL)
-   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF)
-   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1)
-   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
-   *              and (publicData <> null)
-   * @postconditions
    */
   protected DHKeyDerivationParameters(long kdf, byte[] publicData) {
     if ((kdf != KeyDerivationFunctionType.NULL)
@@ -136,8 +121,6 @@ abstract public class DHKeyDerivationParameters implements Parameters {
    *
    * @return The key derivation function used on the shared secret value.
    *         One of the values defined in KeyDerivationFunctionType.
-   * @preconditions
-   * @postconditions
    */
   public long getKeyDerivationFunction() {
     return kdf;
@@ -147,8 +130,6 @@ abstract public class DHKeyDerivationParameters implements Parameters {
    * Get the other partie's public key value.
    *
    * @return The other partie's public key value.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public byte[] getPublicData() {
     return publicData;
@@ -160,11 +141,6 @@ abstract public class DHKeyDerivationParameters implements Parameters {
    * @param kdf
    *          The key derivation function used on the shared secret value.
    *          One of the values defined in KeyDerivationFunctionType.
-   * @preconditions (kdf  == KeyDerivationFunctionType.NULL)
-   *             or (kdf == KeyDerivationFunctionType.SHA1_KDF))
-   *             or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1))
-   *             or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
-   * @postconditions
    */
   public void setKeyDerivationFunction(long kdf) {
     if ((kdf != KeyDerivationFunctionType.NULL)
@@ -182,8 +158,6 @@ abstract public class DHKeyDerivationParameters implements Parameters {
    *
    * @param publicData
    *          The other partie's public key value.
-   * @preconditions (publicData <> null)
-   * @postconditions
    */
   public void setPublicData(byte[] publicData) {
     this.publicData = Util.requireNonNull("publicData", publicData);
@@ -222,8 +196,6 @@ abstract public class DHKeyDerivationParameters implements Parameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -243,8 +215,6 @@ abstract public class DHKeyDerivationParameters implements Parameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

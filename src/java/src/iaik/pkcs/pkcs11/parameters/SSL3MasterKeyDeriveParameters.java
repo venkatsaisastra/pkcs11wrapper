@@ -52,8 +52,6 @@ import sun.security.pkcs11.wrapper.CK_VERSION;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (randomInfo <> null)
- *             and (version <> null)
  */
 // CHECKSTYLE:SKIP
 public class SSL3MasterKeyDeriveParameters
@@ -67,9 +65,6 @@ extends TLSMasterKeyDeriveParameters {
    *          The client's and server's random data information.
    * @param version
    *          The SSL protocol version information.
-   * @preconditions (randomInfo <> null)
-   *                and (version <> null)
-   * @postconditions
    */
   public SSL3MasterKeyDeriveParameters(SSL3RandomDataParameters randomInfo,
       VersionParameters version) {
@@ -80,8 +75,6 @@ extends TLSMasterKeyDeriveParameters {
    * Get this parameters object as a CK_SSL3_RANDOM_DATA object.
    *
    * @return This object as a CK_SSL3_RANDOM_DATA object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public CK_SSL3_MASTER_KEY_DERIVE_PARAMS getPKCS11ParamsObject() {

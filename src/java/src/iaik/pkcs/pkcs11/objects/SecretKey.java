@@ -53,16 +53,6 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (sensitive <> null)
- *             and (encrypt <> null)
- *             and (decrypt <> null)
- *             and (sign <> null)
- *             and (verify <> null)
- *             and (wrap <> null)
- *             and (unwrap <> null)
- *             and (extractable <> null)
- *             and (alwaysSensitive <> null)
- *             and (neverExtractable <> null)
  */
 public class SecretKey extends Key {
 
@@ -144,9 +134,6 @@ public class SecretKey extends Key {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public SecretKey() {
     objectClass.setLongValue(ObjectClass.SECRET_KEY);
@@ -163,8 +150,6 @@ public class SecretKey extends Key {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected SecretKey(Session session, long objectHandle)
       throws TokenException {
@@ -192,8 +177,6 @@ public class SecretKey extends Key {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -231,8 +214,6 @@ public class SecretKey extends Key {
    * @return A new PKCS11Object.
    * @throws TokenException
    *           If no object could be created.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   protected static PKCS11Object getUnknownSecretKey(Session session,
       long objectHandle) throws TokenException {
@@ -261,8 +242,6 @@ public class SecretKey extends Key {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(SecretKey object) {
     Util.requireNonNull("object", object);
@@ -291,9 +270,6 @@ public class SecretKey extends Key {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -326,8 +302,6 @@ public class SecretKey extends Key {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -360,8 +334,6 @@ public class SecretKey extends Key {
    * Gets the sensitive attribute of this key.
    *
    * @return The sensitive attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getSensitive() {
     return sensitive;
@@ -371,8 +343,6 @@ public class SecretKey extends Key {
    * Gets the encrypt attribute of this key.
    *
    * @return The encrypt attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getEncrypt() {
     return encrypt;
@@ -382,8 +352,6 @@ public class SecretKey extends Key {
    * Gets the verify attribute of this key.
    *
    * @return The verify attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getVerify() {
     return verify;
@@ -393,8 +361,6 @@ public class SecretKey extends Key {
    * Gets the decrypt attribute of this key.
    *
    * @return The decrypt attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getDecrypt() {
     return decrypt;
@@ -404,8 +370,6 @@ public class SecretKey extends Key {
    * Gets the sign attribute of this key.
    *
    * @return The sign attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getSign() {
     return sign;
@@ -415,8 +379,6 @@ public class SecretKey extends Key {
    * Gets the wrap attribute of this key.
    *
    * @return The wrap attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getWrap() {
     return wrap;
@@ -426,8 +388,6 @@ public class SecretKey extends Key {
    * Gets the unwrap attribute of this key.
    *
    * @return The unwrap attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getUnwrap() {
     return unwrap;
@@ -437,8 +397,6 @@ public class SecretKey extends Key {
    * Gets the extractable attribute of this key.
    *
    * @return The extractable attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getExtractable() {
     return extractable;
@@ -448,8 +406,6 @@ public class SecretKey extends Key {
    * Gets the always sensitive attribute of this key.
    *
    * @return The always sensitive attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getAlwaysSensitive() {
     return alwaysSensitive;
@@ -459,8 +415,6 @@ public class SecretKey extends Key {
    * Gets the never extractable attribute of this key.
    *
    * @return The never extractable attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getNeverExtractable() {
     return neverExtractable;
@@ -470,8 +424,6 @@ public class SecretKey extends Key {
    * Gets the check value attribute of this key.
    *
    * @return The check value attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getCheckValue() {
     return checkValue;
@@ -481,8 +433,6 @@ public class SecretKey extends Key {
    * Gets the wrap with trusted attribute of this key.
    *
    * @return The wrap with trusted attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getWrapWithTrusted() {
     return wrapWithTrusted;
@@ -492,8 +442,6 @@ public class SecretKey extends Key {
    * Gets the trusted attribute of this key.
    *
    * @return The trusted attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getTrusted() {
     return trusted;
@@ -505,8 +453,6 @@ public class SecretKey extends Key {
    * cryptoki version 2.20 or higher.
    *
    * @return The wrap template attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public AttributeArray getWrapTemplate() {
     return wrapTemplate;
@@ -518,8 +464,6 @@ public class SecretKey extends Key {
    * cryptoki version 2.20 or higher.
    *
    * @return The unwrap template attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public AttributeArray getUnwrapTemplate() {
     return unwrapTemplate;
@@ -534,8 +478,6 @@ public class SecretKey extends Key {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -555,8 +497,6 @@ public class SecretKey extends Key {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

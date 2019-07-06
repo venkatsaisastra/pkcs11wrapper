@@ -51,7 +51,6 @@ import sun.security.pkcs11.wrapper.CK_MECHANISM_INFO;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class MechanismInfo {
 
@@ -73,9 +72,6 @@ public class MechanismInfo {
   /**
    * Default constructor. All member variables get the default value for their
    * type.
-   *
-   * @preconditions
-   * @postconditions
    */
   public MechanismInfo() { /* left empty intentionally */
   }
@@ -85,8 +81,6 @@ public class MechanismInfo {
    *
    * @param ckMechanismInfo
    *          The CK_MECHANISM_INFO object that provides the data.
-   * @preconditions (ckMechanismInfo <> null)
-   * @postconditions
    */
   public MechanismInfo(CK_MECHANISM_INFO ckMechanismInfo) {
     Util.requireNonNull("ckMechanismInfo", ckMechanismInfo);
@@ -102,8 +96,6 @@ public class MechanismInfo {
    *          The other MechanismInfo object.
    * @return True, if other is an instance of this class and
    *         all member variables are equal.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -124,8 +116,6 @@ public class MechanismInfo {
    * equals.
    *
    * @return The hash code of this object. Taken from the mechanism code.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -136,8 +126,6 @@ public class MechanismInfo {
    * Get the minimum key length supported by this mechanism.
    *
    * @return The minimum key length supported by this mechanism..
-   * @preconditions
-   * @postconditions
    */
   public long getMinKeySize() {
     return minKeySize;
@@ -147,8 +135,6 @@ public class MechanismInfo {
    * Get the maximum key length supported by this mechanism.
    *
    * @return The maximum key length supported by this mechanism.
-   * @preconditions
-   * @postconditions
    */
   public long getMaxKeySize() {
     return maxKeySize;
@@ -158,8 +144,6 @@ public class MechanismInfo {
    * Check, if this mechanism is performed in hardware.
    *
    * @return True, if this mechanism is performed in hardware.
-   * @preconditions
-   * @postconditions
    */
   public boolean isHw() {
     return (flags & PKCS11Constants.CKF_HW) != 0L;
@@ -169,8 +153,6 @@ public class MechanismInfo {
    * Check, if this mechanism can be used for encryption.
    *
    * @return True, if this mechanism can be used for encryption.
-   * @preconditions
-   * @postconditions
    */
   public boolean isEncrypt() {
     return (flags & PKCS11Constants.CKF_ENCRYPT) != 0L;
@@ -180,8 +162,6 @@ public class MechanismInfo {
    * Check, if this mechanism can be used for decryption.
    *
    * @return True, if this mechanism can be used for decryption.
-   * @preconditions
-   * @postconditions
    */
   public boolean isDecrypt() {
     return (flags & PKCS11Constants.CKF_DECRYPT) != 0L;
@@ -191,8 +171,6 @@ public class MechanismInfo {
    * Check, if this mechanism can be used for digesting.
    *
    * @return True, if this mechanism can be used for digesting.
-   * @preconditions
-   * @postconditions
    */
   public boolean isDigest() {
     return (flags & PKCS11Constants.CKF_DIGEST) != 0L;
@@ -202,8 +180,6 @@ public class MechanismInfo {
    * Check, if this mechanism can be used for signing.
    *
    * @return True, if this mechanism can be used for signing.
-   * @preconditions
-   * @postconditions
    */
   public boolean isSign() {
     return (flags & PKCS11Constants.CKF_SIGN) != 0L;
@@ -214,8 +190,6 @@ public class MechanismInfo {
    *
    * @return True, if this mechanism can be used for signing with data
    *         recovery.
-   * @preconditions
-   * @postconditions
    */
   public boolean isSignRecover() {
     return (flags & PKCS11Constants.CKF_SIGN_RECOVER) != 0L;
@@ -225,8 +199,6 @@ public class MechanismInfo {
    * Check, if this mechanism can be used for verification.
    *
    * @return True, if this mechanism can be used for verification.
-   * @preconditions
-   * @postconditions
    */
   public boolean isVerify() {
     return (flags & PKCS11Constants.CKF_VERIFY) != 0L;
@@ -237,8 +209,6 @@ public class MechanismInfo {
    *
    * @return True, if this mechanism can be used for verification with data
    *         recovery.
-   * @preconditions
-   * @postconditions
    */
   public boolean isVerifyRecover() {
     return (flags & PKCS11Constants.CKF_VERIFY_RECOVER) != 0L;
@@ -248,8 +218,6 @@ public class MechanismInfo {
    * Check, if this mechanism can be used for secret key generation.
    *
    * @return True, if this mechanism can be used for secret key generation.
-   * @preconditions
-   * @postconditions
    */
   public boolean isGenerate() {
     return (flags & PKCS11Constants.CKF_GENERATE) != 0L;
@@ -259,8 +227,6 @@ public class MechanismInfo {
    * Check, if this mechanism can be used for key-pair generation.
    *
    * @return True, if this mechanism can be used for key-pair generation.
-   * @preconditions
-   * @postconditions
    */
   public boolean isGenerateKeyPair() {
     return (flags & PKCS11Constants.CKF_GENERATE_KEY_PAIR) != 0L;
@@ -270,8 +236,6 @@ public class MechanismInfo {
    * Check, if this mechanism can be used for key wrapping.
    *
    * @return True, if this mechanism can be used for key wrapping.
-   * @preconditions
-   * @postconditions
    */
   public boolean isWrap() {
     return (flags & PKCS11Constants.CKF_WRAP) != 0L;
@@ -281,8 +245,6 @@ public class MechanismInfo {
    * Check, if this mechanism can be used for key unwrapping.
    *
    * @return True, if this mechanism can be used for key unwrapping.
-   * @preconditions
-   * @postconditions
    */
   public boolean isUnwrap() {
     return (flags & PKCS11Constants.CKF_UNWRAP) != 0L;
@@ -292,8 +254,6 @@ public class MechanismInfo {
    * Check, if this mechanism can be used for key derivation.
    *
    * @return True, if this mechanism can be used for key derivation.
-   * @preconditions
-   * @postconditions
    */
   public boolean isDerive() {
     return (flags & PKCS11Constants.CKF_DERIVE) != 0L;
@@ -304,8 +264,6 @@ public class MechanismInfo {
    *
    * @return True, if this mechanism can be used with EC domain parameters
    *         over Fp.
-   * @preconditions
-   * @postconditions
    */
   public boolean isEcFp() {
     return (flags & PKCS11Constants.CKF_EC_F_P) != 0L;
@@ -316,8 +274,6 @@ public class MechanismInfo {
    *
    * @return True, if this mechanism can be used with EC domain parameters
    *         over F2m.
-   * @preconditions
-   * @postconditions
    */
   public boolean isEcF2m() {
     return (flags & PKCS11Constants.CKF_EC_F_2M) != 0L;
@@ -329,8 +285,6 @@ public class MechanismInfo {
    *
    * @return True, if this mechanism can be used with EC domain parameters of
    *         the choice ecParameters.
-   * @preconditions
-   * @postconditions
    */
   public boolean isEcEcParameters() {
     return (flags & PKCS11Constants.CKF_EC_ECPARAMETERS) != 0L;
@@ -342,8 +296,6 @@ public class MechanismInfo {
    *
    * @return True, if this mechanism can be used with EC domain parameters of
    *         the choice namedCurve.
-   * @preconditions
-   * @postconditions
    */
   public boolean isEcNamedCurve() {
     return (flags & PKCS11Constants.CKF_EC_OID) != 0L;
@@ -355,8 +307,6 @@ public class MechanismInfo {
    *
    * @return True, if this mechanism can be used with elliptic curve point
    *         uncompressed.
-   * @preconditions
-   * @postconditions
    */
   public boolean isEcUncompress() {
     return (flags & PKCS11Constants.CKF_EC_UNCOMPRESS) != 0L;
@@ -368,8 +318,6 @@ public class MechanismInfo {
    *
    * @return True, if this mechanism can be used with elliptic curve point
    *         compressed.
-   * @preconditions
-   * @postconditions
    */
   public boolean isEcCompress() {
     return (flags & PKCS11Constants.CKF_EC_COMPRESS) != 0L;
@@ -380,8 +328,6 @@ public class MechanismInfo {
    * Must be false for this version of PKCS#11.
    *
    * @return False for this version.
-   * @preconditions
-   * @postconditions
    */
   public boolean isExtension() {
     return (flags & PKCS11Constants.CKF_EXTENSION) != 0L;
@@ -392,8 +338,6 @@ public class MechanismInfo {
    *
    * @param minKeySize
    *          The minimum key length supported by this mechanism.
-   * @preconditions
-   * @postconditions
    */
   public void setMinKeySize(long minKeySize) {
     this.minKeySize = minKeySize;
@@ -405,8 +349,6 @@ public class MechanismInfo {
    *
    * @param maxKeySize
    *          The maximum key length supported by this mechanism.
-   * @preconditions
-   * @postconditions
    */
   public void setMaxKeySize(long maxKeySize) {
     this.maxKeySize = maxKeySize;
@@ -417,8 +359,6 @@ public class MechanismInfo {
    *
    * @param hw
    *          True, if this mechanism is performed in hardware.
-   * @preconditions
-   * @postconditions
    */
   public void setHw(boolean hw) {
     setFlagBit(PKCS11Constants.CKF_HW, hw);
@@ -429,8 +369,6 @@ public class MechanismInfo {
    *
    * @param encrypt
    *          True, if this mechanism can be used for encryption.
-   * @preconditions
-   * @postconditions
    */
   public void setEncrypt(boolean encrypt) {
     setFlagBit(PKCS11Constants.CKF_ENCRYPT, encrypt);
@@ -441,8 +379,6 @@ public class MechanismInfo {
    *
    * @param decrypt
    *          True, if this mechanism can be used for decryption.
-   * @preconditions
-   * @postconditions
    */
   public void setDecrypt(boolean decrypt) {
     setFlagBit(PKCS11Constants.CKF_DECRYPT, decrypt);
@@ -453,8 +389,6 @@ public class MechanismInfo {
    *
    * @param digest
    *          True, if this mechanism can be used for digesting.
-   * @preconditions
-   * @postconditions
    */
   public void setDigest(boolean digest) {
     setFlagBit(PKCS11Constants.CKF_DIGEST, digest);
@@ -465,8 +399,6 @@ public class MechanismInfo {
    *
    * @param sign
    *          True, if this mechanism can be used for signing.
-   * @preconditions
-   * @postconditions
    */
   public void setSign(boolean sign) {
     setFlagBit(PKCS11Constants.CKF_SIGN, sign);
@@ -478,8 +410,6 @@ public class MechanismInfo {
    * @param signRecover
    *          True, if this mechanism can be used for signing with data
    *          recovery.
-   * @preconditions
-   * @postconditions
    */
   public void setSignRecover(boolean signRecover) {
     setFlagBit(PKCS11Constants.CKF_SIGN_RECOVER, signRecover);
@@ -490,8 +420,6 @@ public class MechanismInfo {
    *
    * @param verfy
    *          True, if this mechanism can be used for verification.
-   * @preconditions
-   * @postconditions
    */
   public void setVerify(boolean verfy) {
     setFlagBit(PKCS11Constants.CKF_VERIFY, verfy);
@@ -503,8 +431,6 @@ public class MechanismInfo {
    * @param verifyRecover
    *          True, if this mechanism can be used for verification with data
    *          recovery.
-   * @preconditions
-   * @postconditions
    */
   public void setVerifyRecover(boolean verifyRecover) {
     setFlagBit(PKCS11Constants.CKF_VERIFY_RECOVER, verifyRecover);
@@ -515,8 +441,6 @@ public class MechanismInfo {
    *
    * @param generate
    *          True, if this mechanism can be used for secret key generation.
-   * @preconditions
-   * @postconditions
    */
   public void setGenerate(boolean generate) {
     setFlagBit(PKCS11Constants.CKF_GENERATE, generate);
@@ -527,8 +451,6 @@ public class MechanismInfo {
    *
    * @param generateKeyPair
    *          True, if this mechanism can be used for key-pair generation.
-   * @preconditions
-   * @postconditions
    */
   public void setGenerateKeyPair(boolean generateKeyPair) {
     setFlagBit(PKCS11Constants.CKF_GENERATE_KEY_PAIR, generateKeyPair);
@@ -539,8 +461,6 @@ public class MechanismInfo {
    *
    * @param wrap
    *          True, if this mechanism can be used for key wrapping.
-   * @preconditions
-   * @postconditions
    */
   public void setWrap(boolean wrap) {
     setFlagBit(PKCS11Constants.CKF_WRAP, wrap);
@@ -551,8 +471,6 @@ public class MechanismInfo {
    *
    * @param unwrap
    *          True, if this mechanism can be used for key unwrapping.
-   * @preconditions
-   * @postconditions
    */
   public void setUnwrap(boolean unwrap) {
     setFlagBit(PKCS11Constants.CKF_UNWRAP, unwrap);
@@ -563,8 +481,6 @@ public class MechanismInfo {
    *
    * @param derive
    *          True, if this mechanism can be used for key derivation.
-   * @preconditions
-   * @postconditions
    */
   public void setDerive(boolean derive) {
     setFlagBit(PKCS11Constants.CKF_DERIVE, derive);
@@ -576,8 +492,6 @@ public class MechanismInfo {
    * @param ecFp
    *          True, if this mechanism can be used with EC domain parameters
    *          over Fp.
-   * @preconditions
-   * @postconditions
    */
   public void setEcFp(boolean ecFp) {
     setFlagBit(PKCS11Constants.CKF_EC_F_P, ecFp);
@@ -589,8 +503,6 @@ public class MechanismInfo {
    * @param ecF2m
    *          True, if this mechanism can be used with EC domain parameters
    *          over F2m.
-   * @preconditions
-   * @postconditions
    */
   public void setEcF2m(boolean ecF2m) {
     setFlagBit(PKCS11Constants.CKF_EC_F_2M, ecF2m);
@@ -603,8 +515,6 @@ public class MechanismInfo {
    * @param ecEcParameters
    *          True, if this mechanism can be used with EC domain parameters of
    *          the choice ecParameters.
-   * @preconditions
-   * @postconditions
    */
   public void setEcEcParameters(boolean ecEcParameters) {
     setFlagBit(PKCS11Constants.CKF_EC_ECPARAMETERS, ecEcParameters);
@@ -617,8 +527,6 @@ public class MechanismInfo {
    * @param ecNamedCurve
    *          True, if this mechanism can be used with EC domain parameters of
    *          the choice namedCurve.
-   * @preconditions
-   * @postconditions
    */
   public void setEcNamedCurve(boolean ecNamedCurve) {
     setFlagBit(PKCS11Constants.CKF_EC_OID, ecNamedCurve);
@@ -631,8 +539,6 @@ public class MechanismInfo {
    * @param ecUncompress
    *          True, if this mechanism can be used with elliptic curve point
    *          uncompressed.
-   * @preconditions
-   * @postconditions
    */
   public void setEcUncompress(boolean ecUncompress) {
     setFlagBit(PKCS11Constants.CKF_EC_UNCOMPRESS, ecUncompress);
@@ -644,8 +550,6 @@ public class MechanismInfo {
    * @param ecCompress
    *          True, if this mechanism can be used with elliptic curve point
    *          compressed.
-   * @preconditions
-   * @postconditions
    */
   public void setEcCompress(boolean ecCompress) {
     setFlagBit(PKCS11Constants.CKF_EC_COMPRESS, ecCompress);
@@ -657,8 +561,6 @@ public class MechanismInfo {
    *
    * @param extension
    *          False for this version.
-   * @preconditions
-   * @postconditions
    */
   public void setExtension(boolean extension) {
     setFlagBit(PKCS11Constants.CKF_EXTENSION, extension);
@@ -674,8 +576,6 @@ public class MechanismInfo {
    * @param requiredFeatures
    *          The required features.
    * @return True, if the required features are supported.
-   * @preconditions (requiredFeatures <> null)
-   * @postconditions
    */
   public boolean supports(MechanismInfo requiredFeatures) {
     Util.requireNonNull("requiredFeatures", requiredFeatures);
@@ -736,8 +636,6 @@ public class MechanismInfo {
    *          The mask of the flag bit(s).
    * @param value
    *          True to set the flag(s), false to clear the flag(s).
-   * @preconditions
-   * @postconditions
    */
   private void setFlagBit(long flagMask, boolean value) {
     if (value) {

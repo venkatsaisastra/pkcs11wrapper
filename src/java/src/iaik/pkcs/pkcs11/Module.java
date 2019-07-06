@@ -62,14 +62,14 @@ import sun.security.pkcs11.wrapper.PKCS11;
  * native .so/.dll. Once finalize(Object) has been called, the module cannot
  * be initialized anymore.
  * </B>
- * <p/>
+ * <p>
  * Objects of this class represent a PKCS#11 module. The application should
  * create an instance by calling getInstance and passing the name of the
  * PKCS#11 module of the desired token; e.g. "slbck.dll". The application
  * must give the full path of the PKCS#11 module unless the module is in the
  * system's search path or in the path of the java.library.path system
  * property.
- * <p/>
+ * <p>
  * According to the specification, the application must call the initialize
  * method before calling any other method of the module.
  * This class contains slot and token management functions as defined by the
@@ -100,7 +100,7 @@ import sun.security.pkcs11.wrapper.PKCS11;
  * </code></pre>
  * to get a list of all those slots in which there is a currently a token
  * present.
- * <p/>
+ * <p>
  * To wait for the insertion of a token, the application can use the
  * <code>waitForSlotEvent</code> method. For example, the method call
  * <pre><code>
@@ -116,7 +116,6 @@ import sun.security.pkcs11.wrapper.PKCS11;
  * @see iaik.pkcs.pkcs11.Slot
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (pkcs11Module <> null)
  */
 
 public class Module {
@@ -127,7 +126,6 @@ public class Module {
    * getSlotList.
    *
    * @version 1.0
-   * @invariants
    */
   public static interface SlotRequirement {
 
@@ -151,7 +149,6 @@ public class Module {
    * behavior when calling waitForSlotEvent.
    *
    * @version 1.0
-   * @invariants
    */
   public static interface WaitingBehavior {
 
@@ -178,10 +175,8 @@ public class Module {
    * Create a new module that uses the given PKCS11 interface to interact with
    * the token.
    *
-   * @param pkcs11Module
+   * @param pkcs11ModuleName
    *          The interface to interact with the token.
-   * @preconditions
-   * @postconditions
    */
   public Module(String pkcs11ModuleName) {
     this.pkcs11ModuleName = pkcs11ModuleName;
@@ -197,9 +192,6 @@ public class Module {
    *         module.
    * @exception IOException
    *              If connecting to the named module fails.
-   * @preconditions (pkcs11ModuleName <> null)
-   *                and (pkcs11ModuleName is a valid PKCS#11 module name)
-   * @postconditions
    */
   public static Module getInstance(String pkcs11ModuleName) throws IOException {
     Util.requireNonNull("pkcs11ModuleName", pkcs11ModuleName);
@@ -230,9 +222,6 @@ public class Module {
    *         module using the specified PKCS#11-wrapper native library.
    * @exception IOException
    *              If connecting to the named module fails.
-   * @preconditions (pkcs11ModuleName <> null)
-   *                and (pkcs11ModuleName is a valid PKCS#11 module name)
-   * @postconditions
    */
   /*
   public static Module getInstance(String pkcs11ModuleName,
@@ -251,8 +240,6 @@ public class Module {
    * @return A object holding information about the module.
    * @exception TokenException
    *              If getting the information fails.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public Info getInfo() throws TokenException {
     assertInitialized();
@@ -275,8 +262,6 @@ public class Module {
    *          PKCS#11. May be null.
    * @exception TokenException
    *              If initialization fails.
-   * @preconditions
-   * @postconditions
    */
   public void initialize(InitializeArgs initArgs) throws TokenException {
     CK_C_INITIALIZE_ARGS wrapperInitArgs = null;
@@ -356,8 +341,6 @@ public class Module {
    * @return An array of Slot objects. May be an empty array but not null.
    * @exception TokenException
    *              If .
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public Slot[] getSlotList(boolean tokenPresent) throws TokenException {
     assertInitialized();
@@ -392,8 +375,6 @@ public class Module {
    * @exception TokenException
    *              If the method was called with WaitingBehavior.DONT_BLOCK but
    *              there was no event available, or if an error occurred.
-   * @preconditions (reserved == null)
-   * @postconditions (result <> null)
    */
   /*
   public Slot waitForSlotEvent(boolean dontBlock, PKCS11Object reserved)
@@ -408,8 +389,6 @@ public class Module {
    * Gets the PKCS#11 module of the wrapper package behind this object.
    *
    * @return The PKCS#11 module behind this object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   // CHECKSTYLE:SKIP
   public PKCS11 getPKCS11Module() {
@@ -432,7 +411,7 @@ public class Module {
    * native .so/.dll. Once finalize(Object) has been called, the module cannot
    * be initialized anymore.
    * </B>
-   * <p/>
+   * <p>
    * Finalizes this module. The application should call this method when it
    * finished using the module.
    * Note that this method is different from the <code>finalize</code> method,
@@ -444,8 +423,6 @@ public class Module {
    *          Must be null in version 2.x of PKCS#11.
    * @exception TokenException
    *              If finalization fails.
-   * @preconditions (args == null)
-   * @postconditions
    */
   public void finalize(Object args) throws TokenException {
     if (pkcs11Module == null) {
@@ -467,8 +444,6 @@ public class Module {
    *          The other Module object.
    * @return True, if other is an instance of Module and the pkcs11Module_ of
    *         both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -487,8 +462,6 @@ public class Module {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object. Gained from the sessionHandle.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

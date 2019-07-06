@@ -50,8 +50,8 @@ import sun.security.pkcs11.wrapper.CK_AES_CTR_PARAMS;
 /**
  * This class represents the necessary parameters required by
  * the CKM_AES_CTR mechanism as defined in CK_AES_CTR_PARAMS structure.
- * <p/>
- * <B>PKCS#11 structure:</B>
+ *
+ * <p><B>PKCS#11 structure:</B>
  * <PRE>
  * typedef struct CK_AES_CTR_PARAMS {
  *   CK_ULONG ulCounterBits;
@@ -103,8 +103,6 @@ public class AesCtrParameters implements Parameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -123,8 +121,6 @@ public class AesCtrParameters implements Parameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

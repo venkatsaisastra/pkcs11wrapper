@@ -52,8 +52,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (ecdsaParams <> null)
- *             and (value <> null)
  *
  */
 // CHECKSTYLE:SKIP
@@ -71,9 +69,6 @@ public class ECPrivateKey extends PrivateKey {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public ECPrivateKey() {
     this(KeyType.EC);
@@ -84,8 +79,6 @@ public class ECPrivateKey extends PrivateKey {
    *
    * @param keyType
    *        key type
-   * @preconditions
-   * @postconditions
    */
   public ECPrivateKey(long keyType) {
     this.keyType.setLongValue(keyType);
@@ -103,8 +96,6 @@ public class ECPrivateKey extends PrivateKey {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected ECPrivateKey(Session session, long objectHandle)
       throws TokenException {
@@ -126,8 +117,6 @@ public class ECPrivateKey extends PrivateKey {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -141,8 +130,6 @@ public class ECPrivateKey extends PrivateKey {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(ECPrivateKey object) {
     Util.requireNonNull("object", object);
@@ -154,9 +141,6 @@ public class ECPrivateKey extends PrivateKey {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -176,8 +160,6 @@ public class ECPrivateKey extends PrivateKey {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -197,8 +179,6 @@ public class ECPrivateKey extends PrivateKey {
    * Gets the ECDSA parameters attribute of this ECDSA key.
    *
    * @return The ECDSA parameters attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getEcdsaParams() {
     return ecdsaParams;
@@ -208,8 +188,6 @@ public class ECPrivateKey extends PrivateKey {
    * Gets the value attribute of this ECDSA key.
    *
    * @return The value attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getValue() {
     return value;
@@ -224,8 +202,6 @@ public class ECPrivateKey extends PrivateKey {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -241,8 +217,6 @@ public class ECPrivateKey extends PrivateKey {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

@@ -66,7 +66,6 @@ import sun.security.pkcs11.wrapper.CK_DATE;
  * @author Karl Scheibelhofer
  * @author Lijun Liao
  * @version 1.0
- * @invariants
  */
 public class Util {
 
@@ -86,8 +85,6 @@ public class Util {
    *          A time encoded as character array as specified in PKCS#11.
    * @return A Date object set to the time indicated in the given char-array.
    *         null, if the given char array is null or the format is wrong.
-   * @preconditions
-   * @postconditions
    */
   public static Date parseTime(char[] timeChars) {
     Date time = null;
@@ -111,8 +108,6 @@ public class Util {
    * @param ckDate
    *          The object providing the date information.
    * @return The new Date object or null, if the given ckDate is null.
-   * @preconditions
-   * @postconditions
    */
   public static Date convertToDate(CK_DATE ckDate) {
     Date date = null;
@@ -137,8 +132,6 @@ public class Util {
    * @param date
    *          The object providing the date information.
    * @return The new CK_DATE object or null, if the given date is null.
-   * @preconditions
-   * @postconditions
    */
   public static CK_DATE convertToCkDate(Date date) {
     CK_DATE ckDate = null;
@@ -171,9 +164,6 @@ public class Util {
    * @param exactArrayLength
    *          The exact length of the returned array.
    * @return The number as char array, one char for each decimal digit.
-   * @preconditions (exactArrayLength >= 0)
-   * @postconditions (result <> null)
-   *                 and (result.length == exactArrayLength)
    */
   public static char[] toCharArray(int number, int exactArrayLength) {
     char[] charArray = null;
@@ -216,10 +206,6 @@ public class Util {
    * @return The string as char array, padded or cut off, if necessary.
    *         The array will have length exactArrayLength. null, if the
    *         given string is null.
-   * @preconditions (exactArrayLength >= 0)
-   * @postconditions (result == null)
-   *                 or (result <> null)
-   *                    and (result.length == exactArrayLength)
    */
   public static char[] toPaddedCharArray(String string, int exactArrayLength,
       char paddingChar) {
@@ -249,8 +235,6 @@ public class Util {
    *          The BigInteger to convert.
    * @return The byte-array representation of the BigInterger without
    *         signum-bit. null, if the BigInteger is null.
-   * @preconditions
-   * @postconditions
    */
   public static byte[] unsignedBigIntergerToByteArray(BigInteger bigInteger) {
     if (bigInteger == null) {
@@ -278,9 +262,6 @@ public class Util {
    * @param attributes
    *          The vector which contains the attributes.
    * @return The array of the attributes.
-   * @preconditions
-   * @postconditions (attributes <> null) implies
-   *                 (result.length == attributes.size())
    */
   public static CK_ATTRIBUTE[] convertAttributesVectorToArray(
       Vector<CK_ATTRIBUTE> attributes) {
@@ -319,7 +300,7 @@ public class Util {
 
   /**
    * Converts a byte array to a hexadecimal String. Each byte is presented by
-   * its two digit hex-code; 0x0A -> "0a", 0x00 -> "00". No leading "0x" is
+   * its two digit hex-code; 0x0A to "0a", 0x00 to "00". No leading "0x" is
    * included in the result.
    *
    * @param value
@@ -371,8 +352,6 @@ public class Util {
    * @param array
    *          The byte array.
    * @return A hash code for the given array.
-   * @preconditions
-   * @postconditions
    */
   public static int hashCode(byte[] array) {
     int hash = 0;
@@ -392,8 +371,6 @@ public class Util {
    * @param array
    *          The char array.
    * @return A hash code for the given array.
-   * @preconditions
-   * @postconditions
    */
   public static int hashCode(char[] array) {
     int hash = 0;
@@ -413,8 +390,6 @@ public class Util {
    * @param array
    *          The long array.
    * @return A hash code for the given array.
-   * @preconditions
-   * @postconditions
    */
   public static int hashCode(long[] array) {
     int hash = 0;

@@ -53,11 +53,6 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (subject <> null)
- *             and (encrypt <> null)
- *             and (verify <> null)
- *             and (verifyRecover <> null)
- *             and (wrap <> null)
  */
 public class PublicKey extends Key {
 
@@ -98,9 +93,6 @@ public class PublicKey extends Key {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public PublicKey() {
     super();
@@ -118,8 +110,6 @@ public class PublicKey extends Key {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected PublicKey(Session session, long objectHandle)
       throws TokenException {
@@ -146,8 +136,6 @@ public class PublicKey extends Key {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -202,8 +190,6 @@ public class PublicKey extends Key {
    * @return A new PKCS11Object.
    * @throws TokenException
    *           If no object could be created.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   protected static PKCS11Object getUnknownPublicKey(Session session,
       long objectHandle) throws TokenException {
@@ -232,8 +218,6 @@ public class PublicKey extends Key {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(PublicKey object) {
     Util.requireNonNull("object", object);
@@ -251,9 +235,6 @@ public class PublicKey extends Key {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -278,8 +259,6 @@ public class PublicKey extends Key {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -304,8 +283,6 @@ public class PublicKey extends Key {
    * Gets the subject attribute of this key.
    *
    * @return The subject attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getSubject() {
     return subject;
@@ -315,8 +292,6 @@ public class PublicKey extends Key {
    * Gets the encrypt attribute of this key.
    *
    * @return The encrypt attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getEncrypt() {
     return encrypt;
@@ -326,8 +301,6 @@ public class PublicKey extends Key {
    * Gets the verify attribute of this key.
    *
    * @return The verify attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getVerify() {
     return verify;
@@ -337,8 +310,6 @@ public class PublicKey extends Key {
    * Gets the verify recover attribute of this key.
    *
    * @return The verify recover attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getVerifyRecover() {
     return verifyRecover;
@@ -348,8 +319,6 @@ public class PublicKey extends Key {
    * Gets the wrap attribute of this key.
    *
    * @return The wrap attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getWrap() {
     return wrap;
@@ -359,8 +328,6 @@ public class PublicKey extends Key {
    * Gets the trusted attribute of this key.
    *
    * @return The trusted attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getTrusted() {
     return trusted;
@@ -372,8 +339,6 @@ public class PublicKey extends Key {
    * cryptoki version 2.20 or higher.
    *
    * @return The wrap template attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public AttributeArray getWrapTemplate() {
     return wrapTemplate;
@@ -388,8 +353,6 @@ public class PublicKey extends Key {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -406,8 +369,6 @@ public class PublicKey extends Key {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

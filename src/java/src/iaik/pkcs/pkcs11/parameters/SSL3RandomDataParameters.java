@@ -53,8 +53,6 @@ import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (clientRandom <> null)
- *             and (serverRandom <> null)
  */
 // CHECKSTYLE:SKIP
 public class SSL3RandomDataParameters implements Parameters {
@@ -77,9 +75,6 @@ public class SSL3RandomDataParameters implements Parameters {
    *          The client's random data.
    * @param serverRandom
    *          The server's random data.
-   * @preconditions (clientRandom <> null)
-   *                and (serverRandom <> null)
-   * @postconditions
    */
   public SSL3RandomDataParameters(byte[] clientRandom, byte[] serverRandom) {
     this.clientRandom = Util.requireNonNull("clientRandom", clientRandom);
@@ -90,8 +85,6 @@ public class SSL3RandomDataParameters implements Parameters {
    * Get this parameters object as a CK_SSL3_RANDOM_DATA object.
    *
    * @return This object as a CK_SSL3_RANDOM_DATA object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public CK_SSL3_RANDOM_DATA getPKCS11ParamsObject() {
@@ -102,8 +95,6 @@ public class SSL3RandomDataParameters implements Parameters {
    * Get the client's random data.
    *
    * @return The client's random data.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public byte[] getClientRandom() {
     return clientRandom;
@@ -113,8 +104,6 @@ public class SSL3RandomDataParameters implements Parameters {
    * Get the server's random data.
    *
    * @return The server's random data.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public byte[] getServerRandom() {
     return serverRandom;
@@ -125,8 +114,6 @@ public class SSL3RandomDataParameters implements Parameters {
    *
    * @param clientRandom
    *          The client's random data.
-   * @preconditions (clientRandom <> null)
-   * @postconditions
    */
   public void setClientRandom(byte[] clientRandom) {
     this.clientRandom = Util.requireNonNull("clientRandom", clientRandom);
@@ -137,8 +124,6 @@ public class SSL3RandomDataParameters implements Parameters {
    *
    * @param serverRandom
    *          The server's random data.
-   * @preconditions (serverRandom <> null)
-   * @postconditions
    */
   public void setServerRandom(byte[] serverRandom) {
     this.serverRandom = Util.requireNonNull("serverRandom", serverRandom);
@@ -164,8 +149,6 @@ public class SSL3RandomDataParameters implements Parameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -185,8 +168,6 @@ public class SSL3RandomDataParameters implements Parameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

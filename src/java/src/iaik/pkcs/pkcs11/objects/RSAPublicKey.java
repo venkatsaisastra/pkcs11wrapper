@@ -52,9 +52,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (modulus <> null)
- *             and (publicExponent <> null)
- *             and (modulusBits <> null)
  */
 // CHECKSTYLE:SKIP
 public class RSAPublicKey extends PublicKey {
@@ -76,9 +73,6 @@ public class RSAPublicKey extends PublicKey {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public RSAPublicKey() {
     super();
@@ -96,8 +90,6 @@ public class RSAPublicKey extends PublicKey {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected RSAPublicKey(Session session, long objectHandle)
       throws TokenException {
@@ -120,8 +112,6 @@ public class RSAPublicKey extends PublicKey {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -135,8 +125,6 @@ public class RSAPublicKey extends PublicKey {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(RSAPublicKey object) {
     Util.requireNonNull("object", object);
@@ -149,9 +137,6 @@ public class RSAPublicKey extends PublicKey {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -172,8 +157,6 @@ public class RSAPublicKey extends PublicKey {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -194,8 +177,6 @@ public class RSAPublicKey extends PublicKey {
    * Gets the modulus attribute of this RSA key.
    *
    * @return The modulus attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getModulus() {
     return modulus;
@@ -205,8 +186,6 @@ public class RSAPublicKey extends PublicKey {
    * Gets the public exponent attribute of this RSA key.
    *
    * @return The public exponent attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getPublicExponent() {
     return publicExponent;
@@ -217,8 +196,6 @@ public class RSAPublicKey extends PublicKey {
    * key.
    *
    * @return The public exponent attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public LongAttribute getModulusBits() {
     return modulusBits;
@@ -233,8 +210,6 @@ public class RSAPublicKey extends PublicKey {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -250,8 +225,6 @@ public class RSAPublicKey extends PublicKey {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

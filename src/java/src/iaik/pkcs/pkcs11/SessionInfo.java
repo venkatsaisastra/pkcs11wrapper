@@ -52,7 +52,6 @@ import sun.security.pkcs11.wrapper.CK_SESSION_INFO;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (state <> null)
  */
 public class SessionInfo {
 
@@ -85,9 +84,6 @@ public class SessionInfo {
    *
    * @param ckSessionInfo
    *          The object providing the session information.
-   * @preconditions (pkcs11Module <> null)
-   *                and (ckSessionInfo <> null)
-   * @postconditions
    */
   protected SessionInfo(CK_SESSION_INFO ckSessionInfo) {
     Util.requireNonNull("ckSessionInfo", ckSessionInfo);
@@ -101,8 +97,6 @@ public class SessionInfo {
    * Get the current state of this session.
    *
    * @return The current state of this session.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public State getState() {
     return state;
@@ -113,8 +107,6 @@ public class SessionInfo {
    * device-specific. Its meaning is not defined in the PKCS#11 standard.
    *
    * @return The error-code of the device.
-   * @preconditions
-   * @postconditions
    */
   public long getDeviceError() {
     return deviceError;
@@ -125,8 +117,6 @@ public class SessionInfo {
    *
    * @return True, if this is a read-write session; false, if this is a
    *         read-only session.
-   * @preconditions
-   * @postconditions
    */
   public boolean isRwSession() {
     return (flags & PKCS11Constants.CKF_RW_SESSION) != 0L;
@@ -138,9 +128,7 @@ public class SessionInfo {
    *
    * @return True, if this is a serial session; false, if this is a parallel
    *         session. Should always be true for version 2.x of the PKCS#11
-   *         standard..
-   * @preconditions
-   * @postconditions
+   *         standard.
    */
   public boolean isSerialSession() {
     return (flags & PKCS11Constants.CKF_SERIAL_SESSION) != 0L;
@@ -169,8 +157,6 @@ public class SessionInfo {
    *          The other SessionInfo object.
    * @return True, if other is an instance of Info and all member variables of
    *         both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -193,8 +179,6 @@ public class SessionInfo {
    *
    * @return The hash code of this object. Gained from the slotID, state and
    *         deviceError.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

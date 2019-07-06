@@ -52,10 +52,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (token <> null)
- *             and (private <> null)
- *             and (modifiable <> null)
- *             and (label <> null)
  */
 public class Storage extends PKCS11Object {
 
@@ -84,9 +80,6 @@ public class Storage extends PKCS11Object {
    * The default constructor. An application use this constructor to
    * instantiate an object that serves as a template. It may also be useful
    * for working with vendor-defined objects.
-   *
-   * @preconditions
-   * @postconditions
    */
   public Storage() {
   }
@@ -105,8 +98,6 @@ public class Storage extends PKCS11Object {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected Storage(Session session, long objectHandle)
       throws TokenException {
@@ -120,8 +111,6 @@ public class Storage extends PKCS11Object {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(Storage object) {
     Util.requireNonNull("object", object);
@@ -134,9 +123,6 @@ public class Storage extends PKCS11Object {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -158,8 +144,6 @@ public class Storage extends PKCS11Object {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -181,8 +165,6 @@ public class Storage extends PKCS11Object {
    * Check, if this is a token object.
    *
    * @return Its value is true, if this is an token object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getToken() {
     return token;
@@ -192,8 +174,6 @@ public class Storage extends PKCS11Object {
    * Check, if this is a private object.
    *
    * @return Its value is true, if this is a private object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getPrivate() {
     return private_;
@@ -203,8 +183,6 @@ public class Storage extends PKCS11Object {
    * Check, if this is a modifiable object.
    *
    * @return Its value is true, if this is a modifiable object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getModifiable() {
     return modifiable;
@@ -214,8 +192,6 @@ public class Storage extends PKCS11Object {
    * Get the label attribute of this object.
    *
    * @return Contains the label as a char array.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public CharArrayAttribute getLabel() {
     return label;
@@ -230,8 +206,6 @@ public class Storage extends PKCS11Object {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -247,8 +221,6 @@ public class Storage extends PKCS11Object {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {
@@ -265,8 +237,6 @@ public class Storage extends PKCS11Object {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

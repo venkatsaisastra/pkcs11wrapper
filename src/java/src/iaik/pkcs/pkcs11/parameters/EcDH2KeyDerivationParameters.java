@@ -54,8 +54,6 @@ import sun.security.pkcs11.wrapper.CK_ECDH2_DERIVE_PARAMS;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (privateData <> null)
- *             and (publicData2 <> null)
  */
 public class EcDH2KeyDerivationParameters extends DHKeyDerivationParameters {
 
@@ -96,14 +94,6 @@ public class EcDH2KeyDerivationParameters extends DHKeyDerivationParameters {
    *          The key for the second EC private key value.
    * @param publicData2
    *          The other party's second EC public key value.
-   * @preconditions ((kdf == KeyDerivationFunctionType.NULL)
-   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF)
-   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_ASN1)
-   *              or (kdf == KeyDerivationFunctionType.SHA1_KDF_CONCATENATE))
-   *              and (publicData <> null)
-   *              and (privateData <> null)
-   *              and (publicData2 <> null)
-   * @postconditions
    */
   public EcDH2KeyDerivationParameters(long kdf, byte[] sharedData,
       byte[] publicData, long privateDataLength, PKCS11Object privateData,
@@ -120,8 +110,6 @@ public class EcDH2KeyDerivationParameters extends DHKeyDerivationParameters {
    * class.
    *
    * @return This object as a CK_ECDH2_DERIVE_PARAMS object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public CK_ECDH2_DERIVE_PARAMS getPKCS11ParamsObject() {
@@ -141,8 +129,6 @@ public class EcDH2KeyDerivationParameters extends DHKeyDerivationParameters {
    * Get the data shared between the two parties.
    *
    * @return The data shared between the two parties.
-   * @preconditions
-   * @postconditions
    */
   public byte[] getSharedData() {
     return sharedData;
@@ -153,8 +139,6 @@ public class EcDH2KeyDerivationParameters extends DHKeyDerivationParameters {
    *
    * @param sharedData
    *          The data shared between the two parties.
-   * @preconditions (sharedData <> null)
-   * @postconditions
    */
   public void setSharedData(byte[] sharedData) {
     this.sharedData = sharedData;
@@ -164,8 +148,6 @@ public class EcDH2KeyDerivationParameters extends DHKeyDerivationParameters {
    * Get the key for the second EC private key value.
    *
    * @return The key for the second EC private key value.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public PKCS11Object getPrivateData() {
     return privateData;
@@ -175,8 +157,6 @@ public class EcDH2KeyDerivationParameters extends DHKeyDerivationParameters {
    * Get the length in bytes of the second EC private key.
    *
    * @return The length in bytes of the second EC private key.
-   * @preconditions
-   * @postconditions
    */
   public long getPrivateDataLength() {
     return privateDataLength;
@@ -186,8 +166,6 @@ public class EcDH2KeyDerivationParameters extends DHKeyDerivationParameters {
    * Get the other party's second EC public key value.
    *
    * @return The other party's second EC public key value.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public byte[] getPublicData2() {
     return publicData2;
@@ -198,8 +176,6 @@ public class EcDH2KeyDerivationParameters extends DHKeyDerivationParameters {
    *
    * @param privateData
    *          The key for the second EC private key value.
-   * @preconditions (privateData <> null)
-   * @postconditions
    */
   public void setPrivateData(PKCS11Object privateData) {
     this.privateData = Util.requireNonNull("privateData", privateData);
@@ -210,8 +186,6 @@ public class EcDH2KeyDerivationParameters extends DHKeyDerivationParameters {
    *
    * @param privateDataLength
    *          The length in bytes of the second EC private key.
-   * @preconditions
-   * @postconditions
    */
   public void setPrivateDataLength(long privateDataLength) {
     this.privateDataLength = privateDataLength;
@@ -222,8 +196,6 @@ public class EcDH2KeyDerivationParameters extends DHKeyDerivationParameters {
    *
    * @param publicData2
    *          The other party's second EC public key value.
-   * @preconditions (publicData2 <> null)
-   * @postconditions
    */
   public void setPublicData2(byte[] publicData2) {
     this.publicData2 = Util.requireNonNull("publicData2", publicData2);
@@ -253,8 +225,6 @@ public class EcDH2KeyDerivationParameters extends DHKeyDerivationParameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -278,8 +248,6 @@ public class EcDH2KeyDerivationParameters extends DHKeyDerivationParameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

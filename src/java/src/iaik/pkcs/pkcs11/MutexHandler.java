@@ -50,7 +50,6 @@ import sun.security.pkcs11.wrapper.PKCS11Exception;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public interface MutexHandler {
 
@@ -62,8 +61,6 @@ public interface MutexHandler {
    *              If the wrapper should return a different value than CKR_OK
    *              to the library. It gets the error-code and returns it as
    *              CK_RV.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   Object createMutex() throws PKCS11Exception;
 
@@ -76,8 +73,6 @@ public interface MutexHandler {
    *              If the wrapper should return a different value than CKR_OK
    *              to the library. It gets the error-code and returns it as
    *              CK_RV.
-   * @preconditions (mutex <> null)
-   * @postconditions
    */
   void destroyMutex(Object mutex) throws PKCS11Exception;
 
@@ -96,8 +91,6 @@ public interface MutexHandler {
    *              If the wrapper should return a different value than CKR_OK
    *              to the library. It gets the error-code and returns it as
    *              CK_RV.
-   * @preconditions (mutex <> null)
-   * @postconditions
    */
   void lockMutex(Object mutex) throws PKCS11Exception;
 
@@ -125,8 +118,6 @@ public interface MutexHandler {
    *              If the wrapper should return a different value than CKR_OK
    *              to the library. It gets the error-code and returns it as
    *              CK_RV.
-   * @preconditions (mutex <> null)
-   * @postconditions
    */
   void unlockMutex(Object mutex) throws PKCS11Exception;
 

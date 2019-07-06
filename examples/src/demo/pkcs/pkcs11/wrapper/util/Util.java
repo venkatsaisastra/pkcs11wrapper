@@ -91,9 +91,6 @@ public class Util {
    * @exception IOException
    *              If writing a user prompt failed or if reading user input
    *              failed.
-   * @preconditions (pkcs11Module <> null)
-   *                 and (output <> null) and (input <> null)
-   *
    */
   public static Token selectToken(Module pkcs11Module)
       throws TokenException, IOException {
@@ -114,9 +111,6 @@ public class Util {
    * @exception IOException
    *              If writing a user prompt failed or if reading user input
    *              failed.
-   * @preconditions (pkcs11Module <> null)
-   *                 and (output <> null) and (input <> null)
-   *
    */
   public static Token selectToken(Module pkcs11Module, Integer slotIndex)
       throws TokenException {
@@ -170,8 +164,6 @@ public class Util {
    * @exception IOException
    *              If writing a user prompt failed or if reading user input
    *              failed.
-   * @preconditions (token <> null) and (output <> null) and (input <> null)
-   * @postconditions (result <> null)
    */
   public static Session openAuthorizedSession(
       Token token, boolean rwSession, char[] pin)

@@ -56,7 +56,6 @@ import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 // CHECKSTYLE:SKIP
 public class RSAPkcsPssParameters extends RSAPkcsParameters {
@@ -118,9 +117,6 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
    *          defined in the MessageGenerationFunctionType interface.
    * @param saltLength
    *          The length of the salt value in octets.
-   * @preconditions (hashAlg <> null)
-   *                and (mgf == MessageGenerationFunctionType.Sha1)
-   * @postconditions
    */
   public RSAPkcsPssParameters(long hashAlg, long mgf, long saltLength) {
     super(hashAlg, mgf);
@@ -136,8 +132,6 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
    * class.
    *
    * @return This object as a CK_RSA_PKCS_PSS_PARAMS object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public CK_RSA_PKCS_PSS_PARAMS getPKCS11ParamsObject() {
@@ -172,8 +166,6 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
    * Get the length of the salt value in octets.
    *
    * @return The length of the salt value in octets.
-   * @preconditions
-   * @postconditions
    */
   public long getSaltLength() {
     return saltLength;
@@ -184,8 +176,6 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
    *
    * @param saltLength
    *          The length of the salt value in octets.
-   * @preconditions
-   * @postconditions
    */
   public void setSaltLength(long saltLength) {
     this.saltLength = saltLength;
@@ -211,8 +201,6 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -231,8 +219,6 @@ public class RSAPkcsPssParameters extends RSAPkcsParameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

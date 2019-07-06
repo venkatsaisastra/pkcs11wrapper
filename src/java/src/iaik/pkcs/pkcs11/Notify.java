@@ -51,7 +51,6 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public interface Notify {
 
@@ -84,8 +83,6 @@ public interface Notify {
    *              If the method fails for some reason, or as PKCS11Exception
    *              with error-code CKR_CANCEL to signal the module to cancel
    *              the ongoing operation.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   void notify(Session session, boolean surrender, Object application)
       throws PKCS11Exception;

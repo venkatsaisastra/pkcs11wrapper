@@ -49,15 +49,11 @@ package iaik.pkcs.pkcs11.objects;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class ObjectClassAttribute extends LongAttribute {
 
   /**
    * Empty constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public ObjectClassAttribute() {
     super(Attribute.CLASS);
@@ -67,8 +63,6 @@ public class ObjectClassAttribute extends LongAttribute {
    * Get a string representation of the value of this attribute.
    *
    * @return A string representation of the value of this attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   protected String getValueString() {

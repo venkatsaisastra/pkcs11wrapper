@@ -56,9 +56,6 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (hashAlgorithm <> null)
- *             and (maskGenerationFunction
- *                  == MessageGenerationFunctionType.Sha1)
  */
 // CHECKSTYLE:SKIP
 abstract public class RSAPkcsParameters implements Parameters {
@@ -102,10 +99,6 @@ abstract public class RSAPkcsParameters implements Parameters {
    *          Due to limitation in the underlying jdk.crypto.cryptoki
    *          implementation, only MGF1 is allowed and the hash algorithm
    *          in mgf must be same as hashAlg.
-   * @preconditions (hashAlgorithm <> null)
-   *                and (maskGenerationFunction
-   *                      == MessageGenerationFunctionType.Sha1)
-   * @postconditions
    */
   protected RSAPkcsParameters(long hashAlg, long mgf) {
     if (!mgf2HashAlgMap.containsKey(mgf)) {
@@ -123,8 +116,6 @@ abstract public class RSAPkcsParameters implements Parameters {
    *
    * @return The message digest algorithm used to calculate the digest of the
    *         encoding parameter.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public long getHashAlgorithm() {
     return hashAlg;
@@ -134,8 +125,6 @@ abstract public class RSAPkcsParameters implements Parameters {
    * Get the mask to apply to the encoded block.
    *
    * @return The mask to apply to the encoded block.
-   * @preconditions
-   * @postconditions
    */
   public long getMaskGenerationFunction() {
     return mgf;
@@ -145,11 +134,9 @@ abstract public class RSAPkcsParameters implements Parameters {
    * Set the message digest algorithm used to calculate the digest of the
    * encoding parameter.
    *
-   * @param hashAlgorithm
+   * @param hashAlg
    *          The message digest algorithm used to calculate the digest of the
    *          encoding parameter.
-   * @preconditions (hashAlgorithm <> null)
-   * @postconditions
    */
   public void setHashAlgorithm(long hashAlg) {
     this.hashAlg = hashAlg;
@@ -161,7 +148,6 @@ abstract public class RSAPkcsParameters implements Parameters {
    *
    * @param mgf
    *          The mask to apply to the encoded block.
-   * @postconditions
    */
   public void setMaskGenerationFunction(long mgf) {
     if (mgf2HashAlgMap.containsKey(mgf)) {
@@ -194,8 +180,6 @@ abstract public class RSAPkcsParameters implements Parameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -214,8 +198,6 @@ abstract public class RSAPkcsParameters implements Parameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

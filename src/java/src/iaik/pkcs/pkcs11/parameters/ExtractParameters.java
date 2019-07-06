@@ -49,7 +49,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class ExtractParameters implements Parameters {
 
@@ -65,8 +64,6 @@ public class ExtractParameters implements Parameters {
    * @param bitIndex
    *          The bit of the base key that should be used as the first bit of
    *          the derived key.
-   * @preconditions
-   * @postconditions
    */
   public ExtractParameters(long bitIndex) {
     this.bitIndex = bitIndex;
@@ -76,8 +73,6 @@ public class ExtractParameters implements Parameters {
    * Get this parameters object as an Long object.
    *
    * @return This object as a Long object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public Long getPKCS11ParamsObject() {
@@ -90,8 +85,6 @@ public class ExtractParameters implements Parameters {
    *
    * @return The bit of the base key that should be used as the first bit of
    *         the derived key.
-   * @preconditions
-   * @postconditions
    */
   public long getBitIndex() {
     return bitIndex;
@@ -104,8 +97,6 @@ public class ExtractParameters implements Parameters {
    * @param bitIndex
    *          The bit of the base key that should be used as the first bit of
    *          the derived key.
-   * @preconditions
-   * @postconditions
    */
   public void setBitIndex(long bitIndex) {
     this.bitIndex = bitIndex;
@@ -130,8 +121,6 @@ public class ExtractParameters implements Parameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -150,8 +139,6 @@ public class ExtractParameters implements Parameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

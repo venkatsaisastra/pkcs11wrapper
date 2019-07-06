@@ -57,7 +57,6 @@ import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 // CHECKSTYLE:SKIP
 public class SSL3KeyMaterialOutParameters implements Parameters {
@@ -105,9 +104,6 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
    *          The buffer for the client initialization vector.
    * @param serverIV
    *          The buffer for the server initialization vector.
-   * @preconditions (clientIV <> null)
-   *                and (serverIV <> null)
-   * @postconditions
    */
   // CHECKSTYLE:SKIP
   public SSL3KeyMaterialOutParameters(byte[] clientIV, byte[] serverIV) {
@@ -120,8 +116,6 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
    * class.
    *
    * @return This object as a CK_SSL3_KEY_MAT_OUT object.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public CK_SSL3_KEY_MAT_OUT getPKCS11ParamsObject() {
@@ -152,9 +146,6 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
    *          it is a private object.
    * @exception TokenException
    *              If reading the secret key object attributes fails.
-   * @preconditions (input <> null)
-   *                and (session <> null)
-   * @postconditions
    */
   // CHECKSTYLE:SKIP
   public void setPKCS11ParamsObject(CK_SSL3_KEY_MAT_OUT input, Session session)
@@ -175,8 +166,6 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
    * Get the resulting client MAC secret key.
    *
    * @return The resulting client MAC secret key.
-   * @preconditions
-   * @postconditions (result == null)
    */
   public SecretKey getClientMacSecret() {
     return clientMacSecret;
@@ -186,8 +175,6 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
    * Get the resulting server MAC secret key.
    *
    * @return The resulting server MAC secret key.
-   * @preconditions
-   * @postconditions (result == null)
    */
   public SecretKey getServerMacSecret() {
     return serverMacSecret;
@@ -197,8 +184,6 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
    * Get the resulting client secret key.
    *
    * @return The resulting client secret key.
-   * @preconditions
-   * @postconditions (result == null)
    */
   public SecretKey getClientSecret() {
     return clientKey;
@@ -208,8 +193,6 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
    * Get the resulting server secret key.
    *
    * @return The resulting server secret key.
-   * @preconditions
-   * @postconditions (result == null)
    */
   public SecretKey getServerSecret() {
     return serverKey;
@@ -219,8 +202,6 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
    * Get the resulting client initialization vector.
    *
    * @return The resulting client initialization vector.
-   * @preconditions
-   * @postconditions
    */
   // CHECKSTYLE:SKIP
   public byte[] getClientIV() {
@@ -231,8 +212,6 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
    * Get the resulting server initialization vector.
    *
    * @return The resulting server initialization vector.
-   * @preconditions
-   * @postconditions
    */
   // CHECKSTYLE:SKIP
   public byte[] getServerIV() {
@@ -264,8 +243,6 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -290,8 +267,6 @@ public class SSL3KeyMaterialOutParameters implements Parameters {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

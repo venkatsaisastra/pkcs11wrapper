@@ -47,7 +47,6 @@ package iaik.pkcs.pkcs11;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class DefaultInitializeArgs implements InitializeArgs {
 
@@ -75,11 +74,6 @@ public class DefaultInitializeArgs implements InitializeArgs {
 
   /**
    * Default constructor.
-   *
-   * @preconditions
-   * @postconditions (mutexHandler == null)
-   *                 and (libraryCantCreateOsThreads == false)
-   *                 and (osLockingOk == true)
    */
   public DefaultInitializeArgs() {
     mutexHandler = null;
@@ -101,11 +95,6 @@ public class DefaultInitializeArgs implements InitializeArgs {
    * @param osLockingOk
    *          Indicates that the library may use mechanisms of the
    *          operating-system to do thread-locking.
-   * @preconditions
-   * @postconditions (mutexHandler == mutexHandler)
-   *                 and (libraryCantCreateOsThreads
-   *                         == libraryCantCreateOsThreads)
-   *                 and (osLockingOk == osLockingOk)
    */
   public DefaultInitializeArgs(MutexHandler mutexHandler,
       boolean libraryCantCreateOsThreads, boolean osLockingOk) {
@@ -123,8 +112,6 @@ public class DefaultInitializeArgs implements InitializeArgs {
    *
    * @return The handler object for mutex functionality, or null, if there is
    *         no handler for mutexes.
-   * @preconditions
-   * @postconditions (result == mutexHandler)
    */
   @Override
   public MutexHandler getMutexHandler() {
@@ -138,8 +125,6 @@ public class DefaultInitializeArgs implements InitializeArgs {
    * @return True, if application threads which are executing calls to the
    *         library may not use native operating system calls to spawn new
    *         threads. False, if they may.
-   * @preconditions
-   * @postconditions (result == libraryCantCreateOsThreads)
    */
   @Override
   public boolean isLibraryCantCreateOsThreads() {
@@ -152,8 +137,6 @@ public class DefaultInitializeArgs implements InitializeArgs {
    *
    * @return True, if the library can use the native operation system
    *         threading model for locking. False, otherwise.
-   * @preconditions
-   * @postconditions (result == osLockingOk)
    */
   @Override
   public boolean isOsLockingOk() {
@@ -164,8 +147,6 @@ public class DefaultInitializeArgs implements InitializeArgs {
    * Reserved parameter.
    *
    * @return Should be null in this version.
-   * @preconditions
-   * @postconditions
    */
   public Object getReserved() {
     return reserved;
@@ -178,8 +159,6 @@ public class DefaultInitializeArgs implements InitializeArgs {
    * @param mutexHandler
    *          The handler object for mutex functionality, or null to use no
    *          handler.
-   * @preconditions
-   * @postconditions (mutexHandler = mutexHandler)
    */
   public void setMutexHandler(MutexHandler mutexHandler) {
     this.mutexHandler = mutexHandler;
@@ -193,9 +172,6 @@ public class DefaultInitializeArgs implements InitializeArgs {
    *          True, if application threads which are executing calls to the
    *          library may not use native operating system calls to spawn new
    *          threads. False, if they may.
-   * @preconditions
-   * @postconditions (libraryCantCreateOsThreads
-   *                    == libraryCantCreateOsThreads)
    */
   public void setLibraryCantCreateOsThreads(
       boolean libraryCantCreateOsThreads) {
@@ -209,8 +185,6 @@ public class DefaultInitializeArgs implements InitializeArgs {
    * @param osLockingOk
    *          True, if the library can use the native operation system
    *          threading model for locking. False, otherwise.
-   * @preconditions
-   * @postconditions (osLockingOk == osLockingOk)
    */
   public void setOsLockingOk(boolean osLockingOk) {
     this.osLockingOk = osLockingOk;
@@ -221,8 +195,6 @@ public class DefaultInitializeArgs implements InitializeArgs {
    *
    * @param reserved
    *          Should be null in this version.
-   * @preconditions
-   * @postconditions
    */
   public void setReserved(Object reserved) {
     this.reserved = reserved;

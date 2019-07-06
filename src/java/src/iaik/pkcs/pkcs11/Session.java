@@ -134,7 +134,7 @@ import sun.security.pkcs11.wrapper.PKCS11;
  *   PKCS11Object[] privateSignatureKeys;
  *
  *   List signatureKeyList = new Vector(4);
- *   while ((privateSignatureKeys = session.findObjects(1)).length > 0) {
+ *   while ((privateSignatureKeys = session.findObjects(1)).length &gt; 0) {
  *     signatureKeyList.add(privateSignatureKeys[0]);
  *   }
  *   session.findObjectsFinal();
@@ -177,7 +177,6 @@ import sun.security.pkcs11.wrapper.PKCS11;
  * @see iaik.pkcs.pkcs11.SessionInfo
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (pkcs11Module <> null)
  */
 public class Session {
 
@@ -186,7 +185,6 @@ public class Session {
    *
    * @author Karl Scheibelhofer
    * @version 1.0
-   * @invariants
    */
   public interface UserType {
 
@@ -313,8 +311,6 @@ public class Session {
    *          The token this session operates with.
    * @param sessionHandle
    *          The session handle to perform the operations with.
-   * @preconditions (token <> null)
-   * @postconditions
    */
   protected Session(Token token, long sessionHandle) {
     this.token = Util.requireNonNull("token", token);
@@ -335,8 +331,6 @@ public class Session {
    * @exception TokenException
    *              If the session has not the right to set the PIN of if the
    *              operation fails for some other reason.
-   * @preconditions
-   * @postconditions
    */
   /*
   public void initPIN(char[] pin)
@@ -354,8 +348,6 @@ public class Session {
    *          The new value for the user-PIN.
    * @exception TokenException
    *              If setting the new PIN fails.
-   * @preconditions
-   * @postconditions
    */
   /*
   public void setPIN(char[] oldPin, char[] newPin)
@@ -369,8 +361,6 @@ public class Session {
    *
    * @exception TokenException
    *              If closing the session failed.
-   * @preconditions
-   * @postconditions
    */
   public void closeSession() throws TokenException {
     try {
@@ -388,8 +378,6 @@ public class Session {
    *          The other Session object.
    * @return True, if other is an instance of Token and the session handles
    *         and tokens of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -412,8 +400,6 @@ public class Session {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object. Gained from the sessionHandle.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -424,8 +410,6 @@ public class Session {
    * Get the handle of this session.
    *
    * @return The handle of this session.
-   * @preconditions
-   * @postconditions
    */
   public long getSessionHandle() {
     return sessionHandle;
@@ -437,8 +421,6 @@ public class Session {
    * @return An object providing information about this session.
    * @exception TokenException
    *              If getting the information failed.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public SessionInfo getSessionInfo() throws TokenException  {
     CK_SESSION_INFO ckSessionInfo;
@@ -455,8 +437,6 @@ public class Session {
    * Get the Module which this Session object operates with.
    *
    * @return The module of this session.
-   * @preconditions
-   * @postconditions
    */
   public Module getModule() {
     return module;
@@ -466,8 +446,6 @@ public class Session {
    * Get the token that created this Session object.
    *
    * @return The token of this session.
-   * @preconditions
-   * @postconditions
    */
   public Token getToken() {
     return token;
@@ -481,8 +459,6 @@ public class Session {
    * @exception TokenException
    *              If saving the state fails or is not possible.
    * @see #setOperationState(byte[],Key,Key)
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public byte[] getOperationState() throws TokenException {
     try {
@@ -511,8 +487,6 @@ public class Session {
    * @exception TokenException
    *              If restoring the state fails.
    * @see #getOperationState()
-   * @preconditions
-   * @postconditions
    */
   public void setOperationState(byte[] operationState, Key encryptionKey,
       Key authenticationKey) throws TokenException {
@@ -541,8 +515,6 @@ public class Session {
    *          the userType parameter.
    * @exception TokenException
    *              If login fails.
-   * @preconditions
-   * @postconditions
    */
   public void login(boolean userType, char[] pin) throws TokenException {
     long tmpUserType = (userType == UserType.SO)
@@ -554,6 +526,20 @@ public class Session {
     }
   }
 
+  /**
+   * Logs in the user or the security officer to the session. Notice that all
+   * sessions of a token have the same login state; i.e. if you login the user
+   * to one session all other open sessions of this token get user rights.
+   *
+   * @param userType
+   *          PKCS11Constants.CKU_SO for the security officer or
+   *          PKCS11Constants.CKU_USER to login the user.
+   * @param pin
+   *          The PIN. The security officer-PIN or the user-PIN depending on
+   *          the userType parameter.
+   * @exception TokenException
+   *              If login fails.
+   */
   public void login(long userType, char[] pin) throws TokenException {
     try {
       pkcs11Module.C_Login(sessionHandle, userType, pin);
@@ -567,8 +553,6 @@ public class Session {
    *
    * @exception TokenException
    *              If logging out the session fails.
-   * @preconditions
-   * @postconditions
    */
   public void logout() throws TokenException {
     try {
@@ -613,8 +597,6 @@ public class Session {
    * @exception TokenException
    *              If the creation of the new object fails. If it fails, the no
    *              new object was created on the token.
-   * @preconditions (templateObject <> null)
-   * @postconditions (result <> null)
    */
   public PKCS11Object createObject(PKCS11Object templateObject)
       throws TokenException {
@@ -646,8 +628,6 @@ public class Session {
    *         setting attributes to the values given by the templateObject.
    * @exception TokenException
    *              If copying the object fails for some reason.
-   * @preconditions (sourceObject <> null)
-   * @postconditions
    */
   public PKCS11Object copyObject(PKCS11Object sourceObject,
       PKCS11Object templateObject) throws TokenException {
@@ -683,8 +663,6 @@ public class Session {
    * @exception TokenException
    *              If update of the attributes fails. All or no attributes are
    *              updated.
-   * @preconditions (objectToUpdate <> null) and (template <> null)
-   * @postconditions
    */
   public void setAttributeValues(PKCS11Object objectToUpdate,
       PKCS11Object templateObject) throws TokenException {
@@ -712,8 +690,6 @@ public class Session {
    *         read from the token.
    * @exception TokenException
    *              If reading the attributes fails.
-   * @preconditions (objectToRead <> null)
-   * @postconditions (result <> null)
    */
   public PKCS11Object getAttributeValues(PKCS11Object objectToRead)
       throws TokenException {
@@ -730,8 +706,6 @@ public class Session {
    *          The object that should be destroyed.
    * @exception TokenException
    *              If the object could not be destroyed.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   public void destroyObject(PKCS11Object object) throws TokenException {
     long objectHandle = object.getObjectHandle();
@@ -751,8 +725,6 @@ public class Session {
    * @return The object's size bytes.
    * @exception TokenException
    *              If determining the size fails.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   /*
   public long getObjectSize(PKCS11Object object)
@@ -774,8 +746,6 @@ public class Session {
    *          private objects.
    * @exception TokenException
    *              If initializing the find operation fails.
-   * @preconditions
-   * @postconditions
    */
   public void findObjectsInit(PKCS11Object templateObject)
       throws TokenException {
@@ -803,8 +773,6 @@ public class Session {
    *              A plain TokenException if something during PKCS11 FindObject
    *              went wrong, a TokenException with a nested TokenException if
    *              the Exception is raised during object parsing.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public PKCS11Object[] findObjects(int maxObjectCount) throws TokenException {
     Vector<PKCS11Object> foundObjects = new Vector<>();
@@ -836,8 +804,6 @@ public class Session {
    *
    * @exception TokenException
    *              If finalizing the current find operation was not possible.
-   * @preconditions
-   * @postconditions
    */
   public void findObjectsFinal() throws TokenException {
     try {
@@ -864,8 +830,6 @@ public class Session {
    *          The decryption key to use.
    * @exception TokenException
    *              If initializing this operation failed.
-   * @preconditions (mechanism <> null) and (key <> null)
-   * @postconditions
    */
   public void encryptInit(Mechanism mechanism, Key key) throws TokenException {
     try {
@@ -883,13 +847,21 @@ public class Session {
    * encryptFinal() after this call. For encrypting multiple pieces of data
    * use encryptUpdate and encryptFinal.
    *
-   * @param data
-   *          The data to encrypt.
-   * @return The encrypted data.
+   * @param in
+   *          buffer containing the to-be-encrypted data
+   * @param inOfs
+   *          buffer offset of the to-be-encrypted data
+   * @param inLen
+   *          length of the to-be-encrypted data
+   * @param out
+   *          buffer for the encrypted data
+   * @param outOfs
+   *          buffer offset for the encrypted data
+   * @param outLen
+   *          buffer size for the encrypted data
+   * @return the length of encrypted data
    * @exception TokenException
    *              If encrypting failed.
-   * @preconditions (data <> null)
-   * @postconditions (result <> null)
    */
   public int encrypt(byte[] in, int inOfs, int inLen,
       byte[] out, int outOfs, int outLen) throws TokenException {
@@ -928,14 +900,21 @@ public class Session {
    * The application must call encryptFinal to get the final result of the
    * encryption after feeding in all data using this method.
    *
-   * @param part
-   *          The piece of data to encrypt.
-   * @return The intermediate encryption result. May not be available. To get
-   *         the final result call encryptFinal.
+   * @param in
+   *          buffer containing the to-be-encrypted data
+   * @param inOfs
+   *          buffer offset of the to-be-encrypted data
+   * @param inLen
+   *          length of the to-be-encrypted data
+   * @param out
+   *          buffer for the encrypted data
+   * @param outOfs
+   *          buffer offset for the encrypted data
+   * @param outLen
+   *          buffer size for the encrypted data
+   * @return the length of encrypted data for this update
    * @exception TokenException
    *              If encrypting the data failed.
-   * @preconditions (part <> null)
-   * @postconditions
    */
   public int encryptUpdate(byte[] in, int inOfs, int inLen,
       byte[] out, int outOfs, int outLen) throws TokenException {
@@ -956,11 +935,15 @@ public class Session {
    * you used the encrypt(byte[]) method, you need not (and shall not) call
    * this method, because encrypt(byte[]) finalizes the encryption itself.
    *
-   * @return The final result of the encryption; i.e. the encrypted data.
+   * @param out
+   *          buffer for the encrypted data
+   * @param outOfs
+   *          buffer offset for the encrypted data
+   * @param outLen
+   *          buffer size for the encrypted data
+   * @return the length of the last part of the encrypted data
    * @exception TokenException
    *              If calculating the final result failed.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public int encryptFinal(byte[] out, int outOfs, int outLen)
       throws TokenException {
@@ -991,8 +974,6 @@ public class Session {
    *          The decryption key to use.
    * @exception TokenException
    *              If initializing this operation failed.
-   * @preconditions (mechanism <> null) and (key <> null)
-   * @postconditions
    */
   public void decryptInit(Mechanism mechanism, Key key) throws TokenException {
     try {
@@ -1010,13 +991,21 @@ public class Session {
    * after this call. For decrypting multiple pieces of data use decryptUpdate
    * and decryptFinal.
    *
-   * @param data
-   *          The data to decrypt.
-   * @return The decrypted data.
+   * @param in
+   *          buffer containing the to-be-decrypted data
+   * @param inOfs
+   *          buffer offset of the to-be-decrypted data
+   * @param inLen
+   *          length of the to-be-decrypted data
+   * @param out
+   *          buffer for the decrypted data
+   * @param outOfs
+   *          buffer offset for the decrypted data
+   * @param outLen
+   *          buffer size for the decrypted data
+   * @return the length of decrypted data
    * @exception TokenException
    *              If decrypting failed.
-   * @preconditions (data <> null)
-   * @postconditions (result <> null)
    */
   public int decrypt(byte[] in, int inOfs, int inLen,
       byte[] out, int outOfs, int outLen) throws TokenException {
@@ -1056,14 +1045,21 @@ public class Session {
    * The application must call decryptFinal to get the final result of the
    * encryption after feeding in all data using this method.
    *
-   * @param encryptedPart
-   *          The piece of data to decrypt.
-   * @return The intermediate decryption result. May not be available. To get
-   *         the final result call decryptFinal.
+   * @param in
+   *          buffer containing the to-be-decrypted data
+   * @param inOfs
+   *          buffer offset of the to-be-decrypted data
+   * @param inLen
+   *          length of the to-be-decrypted data
+   * @param out
+   *          buffer for the decrypted data
+   * @param outOfs
+   *          buffer offset for the decrypted data
+   * @param outLen
+   *          buffer size for the decrypted data
+   * @return the length of decrypted data for this update
    * @exception TokenException
    *              If decrypting the data failed.
-   * @preconditions (encryptedPart <> null)
-   * @postconditions
    */
   public int decryptUpdate(byte[] in, int inOfs, int inLen,
       byte[] out, int outOfs, int outLen) throws TokenException {
@@ -1084,11 +1080,15 @@ public class Session {
    * you used the decrypt(byte[]) method, you need not (and shall not) call
    * this method, because decrypt(byte[]) finalizes the decryption itself.
    *
-   * @return The final result of the decryption; i.e. the decrypted data.
+   * @param out
+   *          buffer for the decrypted data
+   * @param outOfs
+   *          buffer offset for the decrypted data
+   * @param outLen
+   *          buffer size for the decrypted data
+   * @return the length of this last part of decrypted data
    * @exception TokenException
    *              If calculating the final result failed.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public int decryptFinal(byte[] out, int outOfs, int outLen)
       throws TokenException {
@@ -1115,8 +1115,6 @@ public class Session {
    *          The mechanism to use; e.g. Mechanism.SHA_1.
    * @exception TokenException
    *              If initializing this operation failed.
-   * @preconditions (mechanism <> null)
-   * @postconditions
    */
   public void digestInit(Mechanism mechanism) throws TokenException {
     try {
@@ -1132,13 +1130,21 @@ public class Session {
    * application need (and should) not call digestFinal() after this call. For
    * digesting multiple pieces of data use digestUpdate and digestFinal.
    *
-   * @param data
-   *          The data to digest.
-   * @return The digested data.
+   * @param in
+   *          buffer containing the to-be-digested data
+   * @param inOfs
+   *          buffer offset of the to-be-digested data
+   * @param inLen
+   *          length of the to-be-digested data
+   * @param digest
+   *          buffer for the digested data
+   * @param digestOfs
+   *          buffer offset for the digested data
+   * @param digestLen
+   *          buffer size for the digested data
+   * @return the length of digested data for this update
    * @exception TokenException
    *              If digesting the data failed.
-   * @preconditions (data <> null)
-   * @postconditions (result <> null)
    */
   public int digest(byte[] in, int inOfs, int inLen, byte[] digest,
       int digestOfs, int digestLen) throws TokenException {
@@ -1146,6 +1152,27 @@ public class Session {
     return digestFinal(digest, digestOfs, digestLen);
   }
 
+  /**
+   * This method digests data in a single part.
+   *
+   * @param mechanism
+   *          The mechanism to use; e.g. Mechanism.SHA_1.
+   * @param in
+   *          buffer containing the to-be-digested data
+   * @param inOfs
+   *          buffer offset of the to-be-digested data
+   * @param inLen
+   *          length of the to-be-digested data
+   * @param digest
+   *          buffer for the digested data
+   * @param digestOfs
+   *          buffer offset for the digested data
+   * @param digestLen
+   *          buffer size for the digested data
+   * @return the length of digested data for this update
+   * @throws TokenException
+   *              If digesting the data failed.
+   */
   public int digestSingle(Mechanism mechanism, byte[] in, int inOfs,
       int inLen, byte[] digest, int digestOfs, int digestLen)
       throws TokenException {
@@ -1169,11 +1196,13 @@ public class Session {
    * feeding in all data using this method.
    *
    * @param part
-   *          The piece of data to digest.
+   *          buffer containing the to-be-digested data
+   * @param partOfs
+   *          buffer offset of the to-be-digested data
+   * @param partLen
+   *          length of the to-be-digested data
    * @exception TokenException
    *              If digesting the data failed.
-   * @preconditions (part <> null)
-   * @postconditions
    */
   public void digestUpdate(byte[] part, int partOfs, int partLen)
       throws TokenException {
@@ -1195,8 +1224,6 @@ public class Session {
    *          The key to digest the value of.
    * @exception TokenException
    *              If digesting the key failed.
-   * @preconditions (key <> null)
-   * @postconditions
    */
   public void digestKey(SecretKey key) throws TokenException {
     try {
@@ -1213,11 +1240,15 @@ public class Session {
    * not) call this method, because digest(byte[]) finalizes the digesting
    * itself.
    *
-   * @return The final result of the digesting; i.e. the message digest.
+   * @param digest
+   *          buffer for the message digest
+   * @param digestOfs
+   *          buffer offset for the message digest
+   * @param digestLen
+   *          buffer size for the message digest
+   * @return the length of message digest
    * @exception TokenException
    *              If calculating the final message digest failed.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public int digestFinal(byte[] digest, int digestOfs, int digestLen)
       throws TokenException {
@@ -1249,8 +1280,6 @@ public class Session {
    *          The signing key to use.
    * @exception TokenException
    *              If initializing this operation failed.
-   * @preconditions (mechanism <> null) and (key <> null)
-   * @postconditions
    */
   public void signInit(Mechanism mechanism, Key key) throws TokenException {
     try {
@@ -1272,8 +1301,6 @@ public class Session {
    * @return The signed data.
    * @exception TokenException
    *              If signing the data failed.
-   * @preconditions (data <> null)
-   * @postconditions (result <> null)
    */
   public byte[] sign(byte[] data) throws TokenException {
     Util.requireNonNull("data", data);
@@ -1292,12 +1319,14 @@ public class Session {
    * signFinal to get the final result of the signing after feeding in all
    * data using this method.
    *
-   * @param part
-   *          The piece of data to sign.
+   * @param in
+   *          buffer containing the to-be-signed data
+   * @param inOfs
+   *          buffer offset of the to-be-signed data
+   * @param inLen
+   *          length of the to-be-signed data
    * @exception TokenException
    *              If signing the data failed.
-   * @preconditions (part <> null)
-   * @postconditions
    */
   public void signUpdate(byte[] in, int inOfs, int inLen)
       throws TokenException {
@@ -1316,12 +1345,12 @@ public class Session {
    * sign(byte[]) method, you need not (and shall not) call this method,
    * because sign(byte[]) finalizes the signing operation itself.
    *
+   * @param expectedLen
+   *          expected length of the signature value.
    * @return The final result of the signing operation; i.e. the signature
    *         value.
    * @exception TokenException
    *              If calculating the final signature value failed.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public byte[] signFinal(int expectedLen) throws TokenException {
     try {
@@ -1349,8 +1378,6 @@ public class Session {
    *          The signing key to use.
    * @exception TokenException
    *              If initializing this operation failed.
-   * @preconditions (mechanism <> null) and (key <> null)
-   * @postconditions
    */
   public void signRecoverInit(Mechanism mechanism, Key key)
       throws TokenException {
@@ -1368,13 +1395,21 @@ public class Session {
    * operation; there is no equivalent method to signUpdate for signing with
    * recovery.
    *
-   * @param data
-   *          The data to sign.
-   * @return The signed data.
+   * @param in
+   *          buffer containing the to-be-signed data
+   * @param inOfs
+   *          buffer offset of the to-be-signed data
+   * @param inLen
+   *          length of the to-be-signed data
+   * @param out
+   *          buffer for the signed data
+   * @param outOfs
+   *          buffer offset for the signed data
+   * @param outLen
+   *          buffer size for the signed data
+   * @return the length of signed data
    * @exception TokenException
    *              If signing the data failed.
-   * @preconditions (data <> null)
-   * @postconditions (result <> null)
    */
   public int signRecover(byte[] in, int inOfs,
       int inLen, byte[] out, int outOfs, int outLen) throws TokenException {
@@ -1407,8 +1442,6 @@ public class Session {
    *          The verification key to use.
    * @exception TokenException
    *              If initializing this operation failed.
-   * @preconditions (mechanism <> null) and (key <> null)
-   * @postconditions
    */
   public void verifyInit(Mechanism mechanism, Key key) throws TokenException {
     try {
@@ -1434,8 +1467,6 @@ public class Session {
    * @exception TokenException
    *              If verifying the signature fails. This is also the case, if
    *              the signature is forged.
-   * @preconditions (data <> null) and (signature <> null)
-   * @postconditions
    */
   public void verify(byte[] data, byte[] signature) throws TokenException {
     Util.requireNonNull("signature", signature);
@@ -1453,12 +1484,14 @@ public class Session {
    * verify the signature or MAC call verifyFinal after feeding in all data
    * using this method.
    *
-   * @param part
-   *          The piece of data to verify against.
+   * @param in
+   *          buffer containing the to-be-verified data
+   * @param inOfs
+   *          buffer offset of the to-be-verified data
+   * @param inLen
+   *          length of the to-be-verified data
    * @exception TokenException
    *              If verifying (e.g. digesting) the data failed.
-   * @preconditions (part <> null)
-   * @postconditions
    */
   public void verifyUpdate(byte[] in, int inOfs, int inLen)
       throws TokenException {
@@ -1485,8 +1518,6 @@ public class Session {
    * @exception TokenException
    *              If verifying the signature fails. This is also the case, if
    *              the signature is forged.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public void verifyFinal(byte[] signature) throws TokenException {
     Util.requireNonNull("signature", signature);
@@ -1515,8 +1546,6 @@ public class Session {
    *          The verification key to use.
    * @exception TokenException
    *              If initializing this operation failed.
-   * @preconditions (mechanism <> null) and (key <> null)
-   * @postconditions
    */
   public void verifyRecoverInit(Mechanism mechanism, Key key)
       throws TokenException {
@@ -1534,13 +1563,21 @@ public class Session {
    * operation; there is no equivalent method to signUpdate for signing with
    * recovery.
    *
-   * @param signature
-   *          The data to sign.
-   * @return The signed data.
+   * @param in
+   *          buffer containing the to-be-verified data
+   * @param inOfs
+   *          buffer offset of the to-be-verified data
+   * @param inLen
+   *          length of the to-be-verified data
+   * @param out
+   *          buffer for the verified data
+   * @param outOfs
+   *          buffer offset for the verified data
+   * @param outLen
+   *          buffer size for the verified data
+   * @return the length of verified data
    * @exception TokenException
    *              If signing the data failed.
-   * @preconditions (data <> null)
-   * @postconditions (result <> null)
    */
   public int verifyRecover(byte[] in, int inOfs,
       int inLen, byte[] out, int outOfs, int outLen) throws TokenException {
@@ -1566,8 +1603,6 @@ public class Session {
    * @return The intermediate result of the encryption.
    * @exception TokenException
    *              If digesting or encrypting the data failed.
-   * @preconditions (part <> null)
-   * @postconditions
    */
   /*
   public byte[] digestEncryptedUpdate(byte[] part)
@@ -1588,8 +1623,6 @@ public class Session {
    * @return The intermediate result of the decryption; the decrypted data.
    * @exception TokenException
    *              If decrypting or digesting the data failed.
-   * @preconditions (part <> null)
-   * @postconditions
    */
   /*
   public byte[] decryptDigestUpdate(byte[] part)
@@ -1608,8 +1641,6 @@ public class Session {
    * @return The intermediate result of the encryption; the encrypted data.
    * @exception TokenException
    *              If signing or encrypting the data failed.
-   * @preconditions (part <> null)
-   * @postconditions
    */
   /*
   public byte[] signEncryptUpdate(byte[] part)
@@ -1630,8 +1661,6 @@ public class Session {
    * @return The intermediate result of the decryption; the decrypted data.
    * @exception TokenException
    *              If decrypting or verifying the data failed.
-   * @preconditions (encryptedPart <> null)
-   * @postconditions
    */
   /*
   public byte[] decryptVerifyUpdate(byte[] encryptedPart)
@@ -1656,9 +1685,6 @@ public class Session {
    * @return The newly generated secret key or domain parameters.
    * @exception TokenException
    *              If generating a new secret key or domain parameters failed.
-   * @preconditions
-   * @postconditions (result instanceof SecretKey) or (result instanceof
-   *                 DomainParameters)
    */
   public PKCS11Object generateKey(Mechanism mechanism, PKCS11Object template)
       throws TokenException {
@@ -1694,8 +1720,6 @@ public class Session {
    * @return The newly generated key-pair.
    * @exception TokenException
    *              If generating a new key-pair failed.
-   * @preconditions
-   * @postconditions
    */
   public KeyPair generateKeyPair(Mechanism mechanism,
       PKCS11Object publicKeyTemplate, PKCS11Object privateKeyTemplate)
@@ -1735,9 +1759,6 @@ public class Session {
    * @return The wrapped key as byte array.
    * @exception TokenException
    *              If wrapping the key failed.
-   * @preconditions (mechanism <> null) and (wrappingKey <> null) and (key <>
-   *                null)
-   * @postconditions (result <> null)
    */
   public byte[] wrapKey(Mechanism mechanism, Key wrappingKey, Key key)
       throws TokenException {
@@ -1766,9 +1787,6 @@ public class Session {
    * @return A key object representing the newly created key object.
    * @exception TokenException
    *              If unwrapping the key or creating a new key object failed.
-   * @preconditions (mechanism <> null) and (unwrappingKey <> null) and
-   *                (wrappedKey <> null)
-   * @postconditions (result <> null)
    */
   public Key unwrapKey(Mechanism mechanism, Key unwrappingKey,
       byte[] wrappedKey, PKCS11Object keyTemplate)
@@ -1806,8 +1824,6 @@ public class Session {
    *         values; e.g. the CKM_SSL3_KEY_AND_MAC_DERIVE mechanism.
    * @exception TokenException
    *              If deriving the key or creating a new key object failed.
-   * @preconditions (mechanism <> null) and (baseKey <> null)
-   * @postconditions
    */
   public Key deriveKey(Mechanism mechanism, Key baseKey, Key template)
       throws TokenException {
@@ -1902,8 +1918,6 @@ public class Session {
    *          The seed bytes to mix in.
    * @exception TokenException
    *              If mixing in the seed failed.
-   * @preconditions (seed <> null)
-   * @postconditions
    */
   public void seedRandom(byte[] seed) throws TokenException {
     try {
@@ -1921,9 +1935,6 @@ public class Session {
    * @return An array of random bytes with length numberOfBytesToGenerate.
    * @exception TokenException
    *              If generating random bytes failed.
-   * @preconditions (numberOfBytesToGenerate >= 0)
-   * @postconditions (result <> null) and (result.length ==
-   *                 numberOfBytesToGenerate)
    */
   public byte[] generateRandom(int numberOfBytesToGenerate)
       throws TokenException {
@@ -1942,8 +1953,6 @@ public class Session {
    *
    * @exception TokenException
    *              Throws always an PKCS11Excption.
-   * @preconditions
-   * @postconditions
    */
   /*
   public void getFunctionStatus()
@@ -1957,8 +1966,6 @@ public class Session {
    *
    * @exception TokenException
    *              Throws always an PKCS11Excption.
-   * @preconditions
-   * @postconditions
    */
   /*
   public void cancelFunction()

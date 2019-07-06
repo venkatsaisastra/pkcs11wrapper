@@ -49,15 +49,11 @@ package iaik.pkcs.pkcs11.objects;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class KeyTypeAttribute extends LongAttribute {
 
   /**
    * Empty constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public KeyTypeAttribute() {
     super(Attribute.KEY_TYPE);
@@ -67,8 +63,6 @@ public class KeyTypeAttribute extends LongAttribute {
    * Get a string representation of the value of this attribute.
    *
    * @return A string representation of the value of this attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   protected String getValueString() {

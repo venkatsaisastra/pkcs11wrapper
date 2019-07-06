@@ -54,17 +54,6 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (subject <> null)
- *             and (sensitive <> null)
- *             and (secondaryAuth <> null)
- *             and (authPinFlags <> null)
- *             and (decrypt <> null)
- *             and (sign <> null)
- *             and (signRecover <> null)
- *             and (unwrap <> null)
- *             and (extractable <> null)
- *             and (alwaysSensitive <> null)
- *             and (neverExtractable <> null)
  */
 public class PrivateKey extends Key {
 
@@ -143,9 +132,6 @@ public class PrivateKey extends Key {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public PrivateKey() {
     objectClass.setLongValue(ObjectClass.PRIVATE_KEY);
@@ -162,8 +148,6 @@ public class PrivateKey extends Key {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected PrivateKey(Session session, long objectHandle)
       throws TokenException {
@@ -191,8 +175,6 @@ public class PrivateKey extends Key {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -249,8 +231,6 @@ public class PrivateKey extends Key {
    * @return A new PKCS11Object.
    * @throws TokenException
    *           If no object could be created.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   protected static PKCS11Object getUnknownPrivateKey(Session session,
       long objectHandle) throws TokenException {
@@ -279,8 +259,6 @@ public class PrivateKey extends Key {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(PrivateKey object) {
     Util.requireNonNull("object", object);
@@ -310,9 +288,6 @@ public class PrivateKey extends Key {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -344,8 +319,6 @@ public class PrivateKey extends Key {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -377,8 +350,6 @@ public class PrivateKey extends Key {
    * Gets the subject attribute of this key.
    *
    * @return The subject attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getSubject() {
     return subject;
@@ -388,8 +359,6 @@ public class PrivateKey extends Key {
    * Gets the sensitive attribute of this key.
    *
    * @return The sensitive attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getSensitive() {
     return sensitive;
@@ -399,8 +368,6 @@ public class PrivateKey extends Key {
    * Gets the secondary authentication attribute of this key.
    *
    * @return The secondary authentication attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getSecondaryAuth() {
     return secondaryAuth;
@@ -410,8 +377,6 @@ public class PrivateKey extends Key {
    * Gets the authentication flags for secondary authentication of this key.
    *
    * @return The authentication flags for secondary authentication attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public LongAttribute getAuthPinFlags() {
     return authPinFlags;
@@ -421,8 +386,6 @@ public class PrivateKey extends Key {
    * Gets the decrypt attribute of this key.
    *
    * @return The decrypt attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getDecrypt() {
     return decrypt;
@@ -432,8 +395,6 @@ public class PrivateKey extends Key {
    * Gets the sign attribute of this key.
    *
    * @return The sign attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getSign() {
     return sign;
@@ -443,8 +404,6 @@ public class PrivateKey extends Key {
    * Gets the sign recover attribute of this key.
    *
    * @return The sign recover attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getSignRecover() {
     return signRecover;
@@ -454,8 +413,6 @@ public class PrivateKey extends Key {
    * Gets the unwrap attribute of this key.
    *
    * @return The unwrap attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getUnwrap() {
     return unwrap;
@@ -465,8 +422,6 @@ public class PrivateKey extends Key {
    * Gets the extractable attribute of this key.
    *
    * @return The extractable attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getExtractable() {
     return extractable;
@@ -476,8 +431,6 @@ public class PrivateKey extends Key {
    * Gets the always sensitive attribute of this key.
    *
    * @return The always sensitive attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getAlwaysSensitive() {
     return alwaysSensitive;
@@ -487,8 +440,6 @@ public class PrivateKey extends Key {
    * Gets the never extractable attribute of this key.
    *
    * @return The never extractable attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getNeverExtractable() {
     return neverExtractable;
@@ -498,8 +449,6 @@ public class PrivateKey extends Key {
    * Gets the wrap with trusted attribute of this key.
    *
    * @return The wrap with trusted attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getWrapWithTrusted() {
     return wrapWithTrusted;
@@ -511,8 +460,6 @@ public class PrivateKey extends Key {
    * cryptoki version 2.20 or higher.
    *
    * @return The unwrap template attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public AttributeArray getUnwrapTemplate() {
     return unwrapTemplate;
@@ -522,8 +469,6 @@ public class PrivateKey extends Key {
    * Gets the always authenticate attribute of this key.
    *
    * @return The always authenticate attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public BooleanAttribute getAlwaysAuthenticate() {
     return alwaysAuthenticate;
@@ -538,8 +483,6 @@ public class PrivateKey extends Key {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -558,8 +501,6 @@ public class PrivateKey extends Key {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

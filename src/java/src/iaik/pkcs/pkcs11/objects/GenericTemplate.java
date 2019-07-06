@@ -61,15 +61,11 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (attributes <> null)
  */
 public class GenericTemplate extends PKCS11Object {
 
   /**
    * The default constructor. Creates an object with no attributes.
-   *
-   * @preconditions
-   * @postconditions
    */
   public GenericTemplate() {
     // we do not want any attributes in this object by default
@@ -81,8 +77,6 @@ public class GenericTemplate extends PKCS11Object {
    *
    * @param attribute
    *          The attribute to add to the template.
-   * @preconditions (attribute <> null)
-   * @postconditions
    */
   public void addAttribute(Attribute attribute) {
     Util.requireNonNull("attribute", attribute);
@@ -97,8 +91,6 @@ public class GenericTemplate extends PKCS11Object {
    *
    * @param object
    *          The object that holds the attributes to add to the template.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   public void addAllAttributes(PKCS11Object object) {
     Util.requireNonNull("object", object);
@@ -119,8 +111,6 @@ public class GenericTemplate extends PKCS11Object {
    *
    * @param object
    *          The object that holds the attributes to add to the template.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   public void addAllPresentAttributes(PKCS11Object object) {
     Util.requireNonNull("object", object);
@@ -142,8 +132,6 @@ public class GenericTemplate extends PKCS11Object {
    * @param attribute
    *          The attribute to look for.
    * @return True, if the attribute is in the template. False, otherwise.
-   * @preconditions (attribute <> null)
-   * @postconditions
    */
   public boolean containsAttribute(Attribute attribute) {
     Util.requireNonNull("attribute", attribute);
@@ -158,8 +146,6 @@ public class GenericTemplate extends PKCS11Object {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -178,8 +164,6 @@ public class GenericTemplate extends PKCS11Object {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -195,8 +179,6 @@ public class GenericTemplate extends PKCS11Object {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session)
@@ -227,8 +209,6 @@ public class GenericTemplate extends PKCS11Object {
    *          The attribute to remove.
    * @return The removed attribute, if the attribute was in the template.
    *         Null, otherwise.
-   * @preconditions (attribute <> null)
-   * @postconditions
    */
   public Attribute removeAttribute(Attribute attribute) {
     Util.requireNonNull("attribute", attribute);
@@ -246,8 +226,6 @@ public class GenericTemplate extends PKCS11Object {
    *
    * @param object
    *          The object that holds the attributes to add to the template.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   public void removeAllAttributes(PKCS11Object object) {
     Util.requireNonNull("object", object);
@@ -268,8 +246,6 @@ public class GenericTemplate extends PKCS11Object {
    *
    * @param object
    *          The object that holds the attributes to add to the template.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   public void removeAllPresentAttributes(PKCS11Object object) {
     Util.requireNonNull("object", object);
@@ -289,8 +265,6 @@ public class GenericTemplate extends PKCS11Object {
    *
    * @param present
    *          The new value for the present flags of all attributes.
-   * @preconditions
-   * @postconditions
    */
   protected void setAllPresentFlags(boolean present) {
     // make a deep clone of all attributes
@@ -307,8 +281,6 @@ public class GenericTemplate extends PKCS11Object {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {
@@ -328,8 +300,6 @@ public class GenericTemplate extends PKCS11Object {
    * @param indent
    *          the indent to be used
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString(boolean newline, boolean withName, String indent) {

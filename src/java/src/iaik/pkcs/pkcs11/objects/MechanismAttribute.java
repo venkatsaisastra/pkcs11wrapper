@@ -52,7 +52,6 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (ckAttribute <> null)
  */
 public class MechanismAttribute extends LongAttribute {
 
@@ -69,8 +68,6 @@ public class MechanismAttribute extends LongAttribute {
    * @param type
    *          The PKCS#11 type of this attribute; e.g.
    *          PKCS11Constants.CKA_VALUE_LEN.
-   * @preconditions (type <> null)
-   * @postconditions
    */
   public MechanismAttribute(Long type) {
     super(type);
@@ -83,8 +80,6 @@ public class MechanismAttribute extends LongAttribute {
    *
    * @param mechanism
    *          The mechanism value to set. May be <code>null</code>.
-   * @preconditions
-   * @postconditions
    */
   public void setMechanism(Mechanism mechanism) {
     ckAttribute.pValue = (mechanism != null)
@@ -96,8 +91,6 @@ public class MechanismAttribute extends LongAttribute {
    * Get the long value of this attribute. Null, is also possible.
    *
    * @return The long value of this attribute or null.
-   * @preconditions
-   * @postconditions
    */
   public Mechanism getMechanism() {
     return ((ckAttribute != null) && (ckAttribute.pValue != null))
@@ -109,8 +102,6 @@ public class MechanismAttribute extends LongAttribute {
    * Get a string representation of the value of this attribute.
    *
    * @return A string representation of the value of this attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   protected String getValueString() {

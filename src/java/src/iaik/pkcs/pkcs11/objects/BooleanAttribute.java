@@ -48,7 +48,6 @@ package iaik.pkcs.pkcs11.objects;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public class BooleanAttribute extends Attribute {
 
@@ -58,8 +57,6 @@ public class BooleanAttribute extends Attribute {
    * @param type
    *          The PKCS#11 type of this attribute; e.g.
    *          PKCS11Constants.CKA_PRIVATE.
-   * @preconditions (type <> null)
-   * @postconditions
    */
   public BooleanAttribute(Long type) {
     super(type);
@@ -71,8 +68,6 @@ public class BooleanAttribute extends Attribute {
    *
    * @param value
    *          The boolean value to set. May be null.
-   * @preconditions
-   * @postconditions
    */
   public void setBooleanValue(Boolean value) {
     ckAttribute.pValue = value;
@@ -83,8 +78,6 @@ public class BooleanAttribute extends Attribute {
    * Get the boolean value of this attribute. Null, is also possible.
    *
    * @return The boolean value of this attribute or null.
-   * @preconditions
-   * @postconditions
    */
   public Boolean getBooleanValue() {
     return (Boolean) ckAttribute.pValue;

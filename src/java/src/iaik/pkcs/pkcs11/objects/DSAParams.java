@@ -52,10 +52,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (prime <> null)
- *             and (subprime <> null)
- *             and (base <> null)
- *             and (primeBits <> null)
  */
 // CHECKSTYLE:SKIP
 public class DSAParams extends DomainParameters {
@@ -82,9 +78,6 @@ public class DSAParams extends DomainParameters {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public DSAParams() {
     keyType.setLongValue(Key.KeyType.DSA);
@@ -101,8 +94,6 @@ public class DSAParams extends DomainParameters {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected DSAParams(Session session, long objectHandle)
       throws TokenException {
@@ -125,8 +116,6 @@ public class DSAParams extends DomainParameters {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -140,8 +129,6 @@ public class DSAParams extends DomainParameters {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(DSAParams object) {
     Util.requireNonNull("object", object);
@@ -154,9 +141,6 @@ public class DSAParams extends DomainParameters {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -178,8 +162,6 @@ public class DSAParams extends DomainParameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -201,8 +183,6 @@ public class DSAParams extends DomainParameters {
    * Gets the prime attribute of this DSA key.
    *
    * @return The prime attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getPrime() {
     return prime;
@@ -212,8 +192,6 @@ public class DSAParams extends DomainParameters {
    * Gets the subprime attribute of this DSA key.
    *
    * @return The subprime attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getSubprime() {
     return subprime;
@@ -223,8 +201,6 @@ public class DSAParams extends DomainParameters {
    * Gets the base attribute of this DSA key.
    *
    * @return The base attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getBase() {
     return base;
@@ -234,8 +210,6 @@ public class DSAParams extends DomainParameters {
    * Gets the bit length of the prime value.
    *
    * @return The bit length of the prime value.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public LongAttribute getPrimeBits() {
     return primeBits;
@@ -250,8 +224,6 @@ public class DSAParams extends DomainParameters {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -267,8 +239,6 @@ public class DSAParams extends DomainParameters {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

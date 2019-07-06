@@ -66,7 +66,6 @@ import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (ckAttribute <> null)
  */
 public abstract class Attribute {
 
@@ -231,9 +230,6 @@ public abstract class Attribute {
    * Empty constructor.
    * Attention! If you use this constructor, you must set ckAttribute to
    * ensure that the class invariant is not violated.
-   *
-   * @preconditions
-   * @postconditions
    */
   protected Attribute() { /* left empty intentionally */
   }
@@ -244,8 +240,6 @@ public abstract class Attribute {
    * @param type
    *          The PKCS#11 type of this attribute; e.g.
    *          PKCS11Constants.CKA_PRIVATE.
-   * @preconditions (type <> null)
-   * @postconditions
    */
   protected Attribute(Long type) {
     Util.requireNonNull("type", type);
@@ -261,8 +255,6 @@ public abstract class Attribute {
    * @param type
    *          The attribute type.
    * @return The name of the attribute type, or null if there is no such type.
-   * @preconditions
-   * @postconditions
    */
   protected static synchronized String getAttributeName(Long type) {
     Util.requireNonNull("type", type);
@@ -385,8 +377,6 @@ public abstract class Attribute {
    *          The attribute type.
    * @return The class of the attribute type, or null if there is no such
    *         type.
-   * @preconditions
-   * @postconditions
    */
   protected static synchronized Class<?> getAttributeClass(Long type) {
     Util.requireNonNull("type", type);
@@ -507,8 +497,6 @@ public abstract class Attribute {
    *
    * @param present
    *          True, if attribute is present.
-   * @preconditions
-   * @postconditions
    */
   public void setPresent(boolean present) {
     this.present = present;
@@ -520,8 +508,6 @@ public abstract class Attribute {
    *
    * @param sensitive
    *          True, if attribute is sensitive.
-   * @preconditions
-   * @postconditions
    */
   public void setSensitive(boolean sensitive) {
     this.sensitive = sensitive;
@@ -547,8 +533,6 @@ public abstract class Attribute {
    *
    * @param ckAttribute
    *          The new CK_ATTRIBUTE of this Attribute.
-   * @preconditions (ckAttribute <> null)
-   * @postconditions
    */
   protected void setCkAttribute(CK_ATTRIBUTE ckAttribute) {
     this.ckAttribute = Util.requireNonNull("ckAttribute", ckAttribute);
@@ -559,8 +543,6 @@ public abstract class Attribute {
    *
    * @return True, if this attribute is really present in the associated
    *         object.
-   * @preconditions
-   * @postconditions
    */
   public boolean isPresent() {
     return present;
@@ -570,8 +552,6 @@ public abstract class Attribute {
    * Check, if this attribute is sensitive in the associated object.
    *
    * @return True, if this attribute is sensitive in the associated object.
-   * @preconditions
-   * @postconditions
    */
   public boolean isSensitive() {
     return sensitive;
@@ -582,8 +562,6 @@ public abstract class Attribute {
    * type and value .
    *
    * @return The CK_ATTRIBUTE of this Attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   protected CK_ATTRIBUTE getCkAttribute() {
     return ckAttribute;
@@ -593,8 +571,6 @@ public abstract class Attribute {
    * Get a string representation of the value of this attribute.
    *
    * @return A string representation of the value of this attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   protected String getValueString() {
     if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
@@ -611,8 +587,6 @@ public abstract class Attribute {
    * name.
    *
    * @return A string representation of the value of this attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {
@@ -628,8 +602,6 @@ public abstract class Attribute {
    *          If true, the string contains the attribute type name and the
    *          value. If false, it just contains the value.
    * @return A string representation of this attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public String toString(boolean withName) {
     StringBuilder sb = new StringBuilder(32);
@@ -656,8 +628,6 @@ public abstract class Attribute {
    *
    * @param type
    *          The PKCS#11 type of this attribute.
-   * @preconditions (type <> null)
-   * @postconditions
    */
   protected void setType(Long type) {
     Util.requireNonNull("type", type);
@@ -668,8 +638,6 @@ public abstract class Attribute {
    * Get the PKCS#11 type of this attribute.
    *
    * @return The PKCS#11 type of this attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   protected Long getType() {
     return Long.valueOf(ckAttribute.type);
@@ -684,8 +652,6 @@ public abstract class Attribute {
    * @return True, if both attributes are not present or if both attributes
    *         are present and all other member variables are equal. False,
    *         otherwise.
-   * @preconditions
-   * @postconditions
    */
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
@@ -716,8 +682,6 @@ public abstract class Attribute {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {

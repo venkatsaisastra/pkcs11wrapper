@@ -52,11 +52,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (subject <> null)
- *             and (id <> null)
- *             and (issuer <> null)
- *             and (serialNumber <> null)
- *             and (value <> null)
  */
 public class X509PublicKeyCertificate extends Certificate {
 
@@ -114,9 +109,6 @@ public class X509PublicKeyCertificate extends Certificate {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public X509PublicKeyCertificate() {
     certificateType.setLongValue(CertificateType.X_509_PUBLIC_KEY);
@@ -134,8 +126,6 @@ public class X509PublicKeyCertificate extends Certificate {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected X509PublicKeyCertificate(Session session, long objectHandle)
       throws TokenException {
@@ -157,8 +147,6 @@ public class X509PublicKeyCertificate extends Certificate {
    *         can be casted to the according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -172,8 +160,6 @@ public class X509PublicKeyCertificate extends Certificate {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(
       X509PublicKeyCertificate object) {
@@ -195,9 +181,6 @@ public class X509PublicKeyCertificate extends Certificate {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -227,8 +210,6 @@ public class X509PublicKeyCertificate extends Certificate {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -255,8 +236,6 @@ public class X509PublicKeyCertificate extends Certificate {
    * Gets the subject attribute of this X.509 public key certificate.
    *
    * @return The subject attribute of this X.509 public key certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getSubject() {
     return subject;
@@ -266,8 +245,6 @@ public class X509PublicKeyCertificate extends Certificate {
    * Gets the ID attribute of this X.509 public key certificate.
    *
    * @return The ID attribute of this X.509 public key certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getId() {
     return id;
@@ -277,8 +254,6 @@ public class X509PublicKeyCertificate extends Certificate {
    * Gets the issuer attribute of this X.509 public key certificate.
    *
    * @return The issuer attribute of this X.509 public key certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getIssuer() {
     return issuer;
@@ -288,8 +263,6 @@ public class X509PublicKeyCertificate extends Certificate {
    * Gets the serial number attribute of this X.509 public key certificate.
    *
    * @return The serial number attribute of this X.509 public key certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getSerialNumber() {
     return serialNumber;
@@ -299,8 +272,6 @@ public class X509PublicKeyCertificate extends Certificate {
    * Gets the value attribute of this X.509 public key certificate.
    *
    * @return The value attribute of this X.509 public key certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getValue() {
     return value;
@@ -310,8 +281,6 @@ public class X509PublicKeyCertificate extends Certificate {
    * Get the URL attribute of this object.
    *
    * @return Contains the URL as a char array.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public CharArrayAttribute getUrl() {
     return url;
@@ -323,8 +292,6 @@ public class X509PublicKeyCertificate extends Certificate {
    *
    * @return The hash of subject public key attribute of this X.509 public key
    *         certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getHashOfSubjectPublicKey() {
     return hashOfSubjectPublicKey;
@@ -336,8 +303,6 @@ public class X509PublicKeyCertificate extends Certificate {
    *
    * @return The hash of issuer public key attribute of this X.509 public key
    *         certificate.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getHashOfIssuerPublicKey() {
     return hashOfIssuerPublicKey;
@@ -347,8 +312,6 @@ public class X509PublicKeyCertificate extends Certificate {
    * Gets the java midp security domain attribute of the PKCS#11 certificate.
    *
    * @return The java midp security domain category attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public LongAttribute getJavaMidpSecurityDomain() {
     return javaMidpSecurityDomain;
@@ -359,8 +322,6 @@ public class X509PublicKeyCertificate extends Certificate {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
@@ -376,8 +337,6 @@ public class X509PublicKeyCertificate extends Certificate {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -396,8 +355,6 @@ public class X509PublicKeyCertificate extends Certificate {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

@@ -52,9 +52,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (prime <> null)
- *             and (base <> null)
- *             and (primeBits <> null)
  */
 // CHECKSTYLE:SKIP
 public class DHParams extends DomainParameters {
@@ -76,9 +73,6 @@ public class DHParams extends DomainParameters {
 
   /**
    * Default Constructor.
-   *
-   * @preconditions
-   * @postconditions
    */
   public DHParams() {
     keyType.setLongValue(Key.KeyType.DH);
@@ -95,8 +89,6 @@ public class DHParams extends DomainParameters {
    *          The object handle as given from the PKCS#111 module.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   protected DHParams(Session session, long objectHandle) throws TokenException {
     super(session, objectHandle);
@@ -118,8 +110,6 @@ public class DHParams extends DomainParameters {
    *         according sub-class.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions (result <> null)
    */
   public static PKCS11Object getInstance(Session session, long objectHandle)
       throws TokenException {
@@ -133,8 +123,6 @@ public class DHParams extends DomainParameters {
    *
    * @param object
    *          The object to handle.
-   * @preconditions (object <> null)
-   * @postconditions
    */
   protected static void putAttributesInTable(DHParams object) {
     Util.requireNonNull("object", object);
@@ -146,9 +134,6 @@ public class DHParams extends DomainParameters {
   /**
    * Allocates the attribute objects for this class and adds them to the
    * attribute table.
-   *
-   * @preconditions
-   * @postconditions
    */
   @Override
   protected void allocateAttributes() {
@@ -169,8 +154,6 @@ public class DHParams extends DomainParameters {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -191,8 +174,6 @@ public class DHParams extends DomainParameters {
    * Gets the prime attribute of this DH key.
    *
    * @return The prime attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getPrime() {
     return prime;
@@ -202,8 +183,6 @@ public class DHParams extends DomainParameters {
    * Gets the base attribute of this DH key.
    *
    * @return The base attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public ByteArrayAttribute getBase() {
     return base;
@@ -213,8 +192,6 @@ public class DHParams extends DomainParameters {
    * Gets the value length of the prime (in bits).
    *
    * @return The prime bits attribute.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public LongAttribute getPrimeBits() {
     return primeBits;
@@ -229,8 +206,6 @@ public class DHParams extends DomainParameters {
    *          it is a private object.
    * @exception TokenException
    *              If getting the attributes failed.
-   * @preconditions (session <> null)
-   * @postconditions
    */
   @Override
   public void readAttributes(Session session) throws TokenException {
@@ -246,8 +221,6 @@ public class DHParams extends DomainParameters {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {

@@ -47,7 +47,6 @@ package iaik.pkcs.pkcs11.parameters;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants
  */
 public interface Parameters {
 
@@ -56,8 +55,6 @@ public interface Parameters {
    * class of the sun.security.pkcs11.wrapper package.
    *
    * @return The object of the corresponding *_PARAMS class.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   // CHECKSTYLE:SKIP
   public Object getPKCS11ParamsObject();

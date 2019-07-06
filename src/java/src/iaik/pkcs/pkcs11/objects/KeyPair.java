@@ -50,8 +50,6 @@ import iaik.pkcs.pkcs11.Util;
  *
  * @author Karl Scheibelhofer
  * @version 1.0
- * @invariants (publicKey <> null)
- *             and (privateKey <> null)
  */
 public class KeyPair implements Cloneable {
 
@@ -72,9 +70,6 @@ public class KeyPair implements Cloneable {
    *          The public key of the key-pair.
    * @param privateKey
    *          The private key of the key-pair.
-   * @preconditions (publicKey <> null)
-   *                and (privateKey <> null)
-   * @postconditions
    */
   public KeyPair(PublicKey publicKey, PrivateKey privateKey) {
     this.publicKey = Util.requireNonNull("publicKey", publicKey);
@@ -85,8 +80,6 @@ public class KeyPair implements Cloneable {
    * Get the public key part of this key-pair.
    *
    * @return The public key part of this key-pair.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public PublicKey getPublicKey() {
     return publicKey;
@@ -97,8 +90,6 @@ public class KeyPair implements Cloneable {
    *
    * @param publicKey
    *          The public key part of this key-pair.
-   * @preconditions (publicKey <> null)
-   * @postconditions
    */
   public void setPublicKey(PublicKey publicKey) {
     this.publicKey = Util.requireNonNull("publicKey", publicKey);
@@ -108,8 +99,6 @@ public class KeyPair implements Cloneable {
    * Get the private key part of this key-pair.
    *
    * @return The private key part of this key-pair.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   public PrivateKey getPrivateKey() {
     return privateKey;
@@ -120,8 +109,6 @@ public class KeyPair implements Cloneable {
    *
    * @param privateKey
    *          he private key part of this key-pair.
-   * @preconditions (privateKey <> null)
-   * @postconditions
    */
   public void setPrivateKey(PrivateKey privateKey) {
     this.privateKey = Util.requireNonNull("privateKey", privateKey);
@@ -133,8 +120,6 @@ public class KeyPair implements Cloneable {
    * purposes.
    *
    * @return A string presentation of this object for debugging output.
-   * @preconditions
-   * @postconditions (result <> null)
    */
   @Override
   public String toString() {
@@ -152,8 +137,6 @@ public class KeyPair implements Cloneable {
    *          The other object to compare to.
    * @return True, if other is an instance of this class and all member
    *         variables of both objects are equal. False, otherwise.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public boolean equals(Object otherObject) {
@@ -175,8 +158,6 @@ public class KeyPair implements Cloneable {
    * class work correctly in a hashtable.
    *
    * @return The hash code of this object.
-   * @preconditions
-   * @postconditions
    */
   @Override
   public int hashCode() {
