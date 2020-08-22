@@ -51,7 +51,7 @@ public class AESGCMEncryptDecrypt extends SymmEncryptDecrypt {
     try {
       new GCMParameters(16, new byte[12], null);
     } catch (IllegalStateException ex) {
-      System.err.println("Unsupported in current JDK, skip");
+      System.err.println("AES-GCM unsupported in current JDK, skip");
       return;
     }
 

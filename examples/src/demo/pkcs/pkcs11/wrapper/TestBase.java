@@ -134,6 +134,17 @@ public class TestBase {
       speedThreads = Integer.getInteger("speed.threads", 2);
       speedDuration = System.getProperty("speed.duration", "3s");
       module.initialize(null);
+
+      Runtime.getRuntime().addShutdownHook(new Thread() {
+        public void run() {
+          System.out.println("finalizing module");
+          try {
+            module.finalize(null);
+          } catch (TokenException ex) {
+            ex.printStackTrace();
+          }
+        }
+      });
     } catch (Exception ex) {
       initException = new RuntimeException(ex);
     }
