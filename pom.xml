@@ -14,6 +14,9 @@
   <packaging>bundle</packaging>
   <name>PKCS#11 wrapper</name>
   <description>PKCS#11 wrapper based on sunpkcs11</description>
+  <properties>
+    <test.excludes>**/*Speed.java</test.excludes>
+  </properties>
   <licenses>
     <license>
       <name>IAIK of Graz University of Technology License</name>
@@ -136,6 +139,9 @@
             <includes>
               <include>**/*.java</include>
             </includes>
+            <excludes>
+              <exclude>${test.excludes}</exclude>
+            </excludes>
           </configuration>
         </plugin>
         <plugin>
@@ -223,6 +229,15 @@
     </plugins>
   </build>
   <profiles>
+    <profile>
+      <id>speedTests</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <test.excludes>none</test.excludes>
+      </properties>
+    </profile>
     <profile>
       <id>release</id>
       <activation>
