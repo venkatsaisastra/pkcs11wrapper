@@ -230,8 +230,7 @@ public class DHPrivateKey extends PrivateKey {
     super.readAttributes(session);
 
     PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-        prime, base, valueBits });
-    PKCS11Object.getAttributeValue(session, objectHandle, value);
+        prime, base, valueBits, value });
   }
 
   /**

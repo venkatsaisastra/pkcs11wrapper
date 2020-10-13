@@ -287,8 +287,7 @@ public class WTLSCertificate extends Certificate {
     super.readAttributes(session);
 
     PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-        subject, issuer, value });
-    PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        subject, issuer, value,
         url, hashOfSubjectPublicKey, hashOfIssuerPublicKey });
   }
 

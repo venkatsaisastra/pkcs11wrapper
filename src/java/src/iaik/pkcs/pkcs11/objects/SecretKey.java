@@ -486,9 +486,7 @@ public class SecretKey extends Key {
     PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
         sensitive, encrypt, decrypt, sign, verify, wrap, unwrap,
         extractable, alwaysSensitive, neverExtractable, checkValue,
-        wrapWithTrusted, trusted });
-    PKCS11Object.getAttributeValue(session, objectHandle, wrapTemplate);
-    PKCS11Object.getAttributeValue(session, objectHandle, unwrapTemplate);
+        wrapWithTrusted, trusted, wrapTemplate, unwrapTemplate });
   }
 
   /**

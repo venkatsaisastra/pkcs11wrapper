@@ -207,8 +207,8 @@ public class ECPrivateKey extends PrivateKey {
   public void readAttributes(Session session) throws TokenException {
     super.readAttributes(session);
 
-    PKCS11Object.getAttributeValue(session, objectHandle, ecdsaParams);
-    PKCS11Object.getAttributeValue(session, objectHandle, value);
+    PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        ecdsaParams, value });
   }
 
   /**

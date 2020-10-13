@@ -219,8 +219,7 @@ public class X942DHPrivateKey extends DHPrivateKey {
     super.readAttributes(session);
 
     PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-        prime, base, subprime });
-    PKCS11Object.getAttributeValue(session, objectHandle, value);
+        prime, base, subprime, value });
   }
 
   /**

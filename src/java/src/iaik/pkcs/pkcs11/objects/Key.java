@@ -606,9 +606,8 @@ public class Key extends Storage {
     super.readAttributes(session);
 
     PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-        keyType, id, startDate, endDate, derive, local, keyGenMechanism });
-    PKCS11Object.getAttributeValue(session, objectHandle,
-        allowedMechanisms);
+        keyType, id, startDate, endDate, derive, local, keyGenMechanism,
+        allowedMechanisms });
   }
 
   /**

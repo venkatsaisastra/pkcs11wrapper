@@ -300,8 +300,7 @@ public class RSAPrivateKey extends PrivateKey {
     super.readAttributes(session);
 
     PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-        modulus, publicExponent });
-    PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        modulus, publicExponent,
         privateExponent, prime1, prime2, exponent1, exponent2, coefficient });
   }
 

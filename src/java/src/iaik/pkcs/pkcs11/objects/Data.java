@@ -224,10 +224,8 @@ public class Data extends Storage {
   @Override
   public void readAttributes(Session session) throws TokenException {
     super.readAttributes(session);
-
-    PKCS11Object.getAttributeValue(session, objectHandle, application);
-    PKCS11Object.getAttributeValue(session, objectHandle, objectID);
-    PKCS11Object.getAttributeValue(session, objectHandle, value);
+    PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        application, objectID, value });
   }
 
   /**

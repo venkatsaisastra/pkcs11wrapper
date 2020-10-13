@@ -359,8 +359,7 @@ public class PublicKey extends Key {
     super.readAttributes(session);
 
     PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-        subject, encrypt, verify, verifyRecover, wrap, trusted });
-    PKCS11Object.getAttributeValue(session, objectHandle, wrapTemplate);
+        subject, encrypt, verify, verifyRecover, wrap, trusted, wrapTemplate });
   }
 
   /**

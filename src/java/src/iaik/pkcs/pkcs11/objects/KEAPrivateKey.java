@@ -230,8 +230,7 @@ public class KEAPrivateKey extends PrivateKey {
     super.readAttributes(session);
 
     PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-        prime, subprime, base });
-    PKCS11Object.getAttributeValue(session, objectHandle, value);
+        prime, subprime, base, value });
   }
 
   /**

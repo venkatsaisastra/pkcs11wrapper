@@ -43,6 +43,8 @@
 package iaik.pkcs.pkcs11.objects;
 
 import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
 
 //import java.util.Collection;
 import iaik.pkcs.pkcs11.Session;
@@ -184,11 +186,15 @@ public class GenericTemplate extends PKCS11Object {
     }
 
     super.readAttributes(session);
-
+    List<Attribute> attrs = new LinkedList<>();
     Enumeration<Attribute> attributeEnumeration = attributeTable.elements();
     while (attributeEnumeration.hasMoreElements()) {
-      Attribute attribute = attributeEnumeration.nextElement();
-      PKCS11Object.getAttributeValue(session, objectHandle, attribute);
+      attrs.add(attributeEnumeration.nextElement());
+    }
+
+    if (!attrs.isEmpty()) {
+      PKCS11Object.getAttributeValues(session, objectHandle,
+          attrs.toArray(new Attribute[0]));
     }
   }
 

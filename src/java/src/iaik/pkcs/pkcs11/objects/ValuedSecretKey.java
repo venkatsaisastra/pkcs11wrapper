@@ -214,8 +214,8 @@ public class ValuedSecretKey extends SecretKey {
   public void readAttributes(Session session) throws TokenException {
     super.readAttributes(session);
 
-    PKCS11Object.getAttributeValue(session, objectHandle, value);
-    PKCS11Object.getAttributeValue(session, objectHandle, valueLen);
+    PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        value, valueLen });
   }
 
   /**

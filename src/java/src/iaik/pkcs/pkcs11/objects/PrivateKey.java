@@ -491,8 +491,8 @@ public class PrivateKey extends Key {
     PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
         subject, sensitive, secondaryAuth, authPinFlags, decrypt,
         sign, signRecover, unwrap, extractable, alwaysSensitive,
-        neverExtractable, wrapWithTrusted, alwaysAuthenticate });
-    PKCS11Object.getAttributeValue(session, objectHandle, unwrapTemplate);
+        neverExtractable, wrapWithTrusted, alwaysAuthenticate,
+        unwrapTemplate });
   }
 
   /**

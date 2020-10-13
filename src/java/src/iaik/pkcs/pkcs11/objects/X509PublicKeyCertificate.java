@@ -343,8 +343,7 @@ public class X509PublicKeyCertificate extends Certificate {
     super.readAttributes(session);
 
     PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
-        subject, id, issuer, serialNumber, value });
-    PKCS11Object.getAttributeValues(session, objectHandle, new Attribute[] {
+        subject, id, issuer, serialNumber, value,
         url, hashOfSubjectPublicKey, hashOfIssuerPublicKey,
         javaMidpSecurityDomain });
   }
