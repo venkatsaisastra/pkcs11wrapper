@@ -48,6 +48,8 @@ import sun.security.pkcs11.wrapper.CK_MECHANISM_INFO;
 import sun.security.pkcs11.wrapper.CK_NOTIFY;
 import sun.security.pkcs11.wrapper.CK_TOKEN_INFO;
 
+import java.lang.reflect.Constructor;
+
 /**
  * Objects of this class represent PKCS#11 tokens. The application can get
  * information on the token, manage sessions and initialize the token. Notice
@@ -95,6 +97,36 @@ import sun.security.pkcs11.wrapper.CK_TOKEN_INFO;
  * @version 1.0
  */
 public class Token {
+
+  public static final String CLASS_PKCS11Exception =
+          "sun.security.pkcs11.wrapper.PKCS11Exception";
+
+  private static final Constructor<?> PKCS11ExceptionConstructor;
+
+  private static final int PKCS11ExceptionConstructorType;
+
+  static {
+    Constructor<?> constructor = null;
+    int type = 0;
+
+    try {
+      Class<?> clazz = Class.forName(CLASS_PKCS11Exception);
+
+      constructor = Util.getConstructor(clazz, long.class);
+      if (constructor != null) {
+        type = 1;
+      } else {
+        constructor= Util.getConstructor(clazz, long.class, String.class);
+        if (constructor != null) {
+          type = 2;
+        }
+      }
+    } catch (Exception ex) {
+    }
+
+    PKCS11ExceptionConstructor = constructor;
+    PKCS11ExceptionConstructorType = type;
+  }
 
   /**
    * This interface defines constants for the type of session that should
@@ -359,8 +391,23 @@ public class Token {
           try {
             notify.notify(newSession, surrender, pApplication);
           } catch (PKCS11Exception ex) {
-            throw new sun.security.pkcs11.wrapper.PKCS11Exception(
-                ex.getErrorCode());
+            long errorCode = ex.getErrorCode();
+            try {
+              if (PKCS11ExceptionConstructorType == 0) {
+                // ignore
+              } else if (PKCS11ExceptionConstructorType == 1) {
+                // JDK 8 - 16
+                throw (sun.security.pkcs11.wrapper.PKCS11Exception)
+                        PKCS11ExceptionConstructor.newInstance(errorCode);
+              } else if (PKCS11ExceptionConstructorType == 2) {
+                // JDK 17+
+                String extraInfo = null;
+                throw (sun.security.pkcs11.wrapper.PKCS11Exception)
+                        PKCS11ExceptionConstructor.newInstance(errorCode, extraInfo);
+              }
+            } catch (Throwable th) {
+              // ignore
+            }
           }
         }
       };
