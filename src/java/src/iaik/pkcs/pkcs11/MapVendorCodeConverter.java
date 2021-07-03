@@ -111,22 +111,26 @@ public class MapVendorCodeConverter implements VendorCodeConverter {
 
     @Override
     public long genericToVendorCKK(long ckk) {
-        return 0;
+        Long newValue = ckkGenericToVendorMap.get(ckk);
+        return newValue == null ? ckk : newValue;
     }
 
     @Override
     public long vendorToGenericCKK(long ckk) {
-        return 0;
+        Long newValue = ckkVendorToGenericMap.get(ckk);
+        return newValue == null ? ckk : newValue;
     }
 
     @Override
     public long genericToVendorCKM(long ckm) {
-        return 0;
+        Long newValue = ckmGenericToVendorMap.get(ckm);
+        return newValue == null ? ckm : newValue;
     }
 
     @Override
     public long vendorToGenericCKM(long ckm) {
-        return 0;
+        Long newValue = ckmVendorToGenericMap.get(ckm);
+        return newValue == null ? ckm : newValue;
     }
 
 }
