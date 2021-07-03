@@ -17,8 +17,6 @@
 
 package demo.pkcs.pkcs11.wrapper.speed.keygeneration;
 
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Token;
@@ -27,6 +25,7 @@ import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import junit.framework.Assert;
+import org.junit.Test;
 
 /**
  * TripleDES speed test.
@@ -44,8 +43,7 @@ public class DES3KeyGenSpeed extends TestBase {
 
     @Override
     protected ValuedSecretKey getMinimalKeyTemplate() {
-      ValuedSecretKey template = ValuedSecretKey.newDES3SecretKey();
-      return template;
+      return ValuedSecretKey.newDES3SecretKey();
     }
 
   }

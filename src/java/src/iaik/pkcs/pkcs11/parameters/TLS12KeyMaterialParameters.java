@@ -17,13 +17,13 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-
 import iaik.pkcs.pkcs11.Util;
 import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
 import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * CK_TLS12_KEY_MAT_PARAMS from PKCS#11 v2.40.
@@ -128,8 +128,7 @@ public class TLS12KeyMaterialParameters extends TLSKeyMaterialParameters {
     try {
       Object params = constructor.newInstance(
           (int) macSizeInBits,(int) keySizeInBits, (int) ivSizeInBits,
-          export, (CK_SSL3_RANDOM_DATA) randomInfo.getPKCS11ParamsObject(),
-          prfHashMechanism);
+          export, randomInfo.getPKCS11ParamsObject(), prfHashMechanism);
 
       field_pReturnedKeyMaterial.set(params,
           returnedKeyMaterial.getPKCS11ParamsObject());

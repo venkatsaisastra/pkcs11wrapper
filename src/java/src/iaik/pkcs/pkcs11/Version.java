@@ -130,7 +130,7 @@ public class Version {
    * @return the string representation of this object
    */
   public String toString() {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
 
     buffer.append(major & 0xff);
     buffer.append('.');

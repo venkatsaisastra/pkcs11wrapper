@@ -42,13 +42,14 @@
 
 package iaik.pkcs.pkcs11.objects;
 
+import iaik.pkcs.pkcs11.Util;
+import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
+
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
-import iaik.pkcs.pkcs11.Util;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
-import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
+import static iaik.pkcs.pkcs11.wrapper.PKCS11Constants.*;
 
 /**
  * This is the base-class for all types of attributes. In general, all PKCS#11
@@ -69,143 +70,92 @@ import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
  */
 public abstract class Attribute {
 
-  public static final Long CLASS = Long.valueOf(PKCS11Constants.CKA_CLASS);
-  public static final Long TOKEN = Long.valueOf(PKCS11Constants.CKA_TOKEN);
-  public static final Long PRIVATE = Long.valueOf(PKCS11Constants.CKA_PRIVATE);
-  public static final Long LABEL = Long.valueOf(PKCS11Constants.CKA_LABEL);
-  public static final Long APPLICATION
-      = Long.valueOf(PKCS11Constants.CKA_APPLICATION);
-  public static final Long VALUE = Long.valueOf(PKCS11Constants.CKA_VALUE);
-  public static final Long OBJECT_ID
-      = Long.valueOf(PKCS11Constants.CKA_OBJECT_ID);
-  public static final Long CERTIFICATE_TYPE
-      = Long.valueOf(PKCS11Constants.CKA_CERTIFICATE_TYPE);
-  public static final Long ISSUER = Long.valueOf(PKCS11Constants.CKA_ISSUER);
-  public static final Long SERIAL_NUMBER
-      = Long.valueOf(PKCS11Constants.CKA_SERIAL_NUMBER);
-  public static final Long URL = Long.valueOf(PKCS11Constants.CKA_URL);
-  public static final Long HASH_OF_SUBJECT_PUBLIC_KEY
-      = Long.valueOf(PKCS11Constants.CKA_HASH_OF_SUBJECT_PUBLIC_KEY);
-  public static final Long HASH_OF_ISSUER_PUBLIC_KEY
-      = Long.valueOf(PKCS11Constants.CKA_HASH_OF_ISSUER_PUBLIC_KEY);
-  public static final Long JAVA_MIDP_SECURITY_DOMAIN
-      = Long.valueOf(PKCS11Constants.CKA_JAVA_MIDP_SECURITY_DOMAIN);
-  public static final Long AC_ISSUER
-      = Long.valueOf(PKCS11Constants.CKA_AC_ISSUER);
-  public static final Long OWNER = Long.valueOf(PKCS11Constants.CKA_OWNER);
-  public static final Long ATTR_TYPES
-      = Long.valueOf(PKCS11Constants.CKA_ATTR_TYPES);
-  public static final Long TRUSTED = Long.valueOf(PKCS11Constants.CKA_TRUSTED);
-  public static final Long KEY_TYPE
-      = Long.valueOf(PKCS11Constants.CKA_KEY_TYPE);
-  public static final Long SUBJECT = Long.valueOf(PKCS11Constants.CKA_SUBJECT);
-  public static final Long ID = Long.valueOf(PKCS11Constants.CKA_ID);
-  public static final Long CHECK_VALUE
-      = Long.valueOf(PKCS11Constants.CKA_CHECK_VALUE);
-  public static final Long CERTIFICATE_CATEGORY
-      = Long.valueOf(PKCS11Constants.CKA_CERTIFICATE_CATEGORY);
-  public static final Long SENSITIVE
-      = Long.valueOf(PKCS11Constants.CKA_SENSITIVE);
-  public static final Long ENCRYPT = Long.valueOf(PKCS11Constants.CKA_ENCRYPT);
-  public static final Long DECRYPT = Long.valueOf(PKCS11Constants.CKA_DECRYPT);
-  public static final Long WRAP = Long.valueOf(PKCS11Constants.CKA_WRAP);
-  public static final Long WRAP_TEMPLATE
-      = Long.valueOf(PKCS11Constants.CKA_WRAP_TEMPLATE);
-  public static final Long UNWRAP = Long.valueOf(PKCS11Constants.CKA_UNWRAP);
-  public static final Long UNWRAP_TEMPLATE
-      = Long.valueOf(PKCS11Constants.CKA_UNWRAP_TEMPLATE);
-  public static final Long SIGN = Long.valueOf(PKCS11Constants.CKA_SIGN);
-  public static final Long SIGN_RECOVER
-      = Long.valueOf(PKCS11Constants.CKA_SIGN_RECOVER);
-  public static final Long VERIFY = Long.valueOf(PKCS11Constants.CKA_VERIFY);
-  public static final Long VERIFY_RECOVER
-      = Long.valueOf(PKCS11Constants.CKA_VERIFY_RECOVER);
-  public static final Long DERIVE = Long.valueOf(PKCS11Constants.CKA_DERIVE);
-  public static final Long START_DATE
-      = Long.valueOf(PKCS11Constants.CKA_START_DATE);
-  public static final Long END_DATE
-      = Long.valueOf(PKCS11Constants.CKA_END_DATE);
-  public static final Long MECHANISM_TYPE
-      = Long.valueOf(PKCS11Constants.CKA_MECHANISM_TYPE);
-  public static final Long MODULUS = Long.valueOf(PKCS11Constants.CKA_MODULUS);
-  public static final Long MODULUS_BITS
-      = Long.valueOf(PKCS11Constants.CKA_MODULUS_BITS);
-  public static final Long PUBLIC_EXPONENT
-      = Long.valueOf(PKCS11Constants.CKA_PUBLIC_EXPONENT);
-  public static final Long PRIVATE_EXPONENT
-      = Long.valueOf(PKCS11Constants.CKA_PRIVATE_EXPONENT);
-  public static final Long PRIME_1 = Long.valueOf(PKCS11Constants.CKA_PRIME_1);
-  public static final Long PRIME_2 = Long.valueOf(PKCS11Constants.CKA_PRIME_2);
-  public static final Long EXPONENT_1
-      = Long.valueOf(PKCS11Constants.CKA_EXPONENT_1);
-  public static final Long EXPONENT_2
-      = Long.valueOf(PKCS11Constants.CKA_EXPONENT_2);
-  public static final Long COEFFICIENT
-      = Long.valueOf(PKCS11Constants.CKA_COEFFICIENT);
-  public static final Long PRIME = Long.valueOf(PKCS11Constants.CKA_PRIME);
-  public static final Long SUBPRIME
-      = Long.valueOf(PKCS11Constants.CKA_SUBPRIME);
-  public static final Long BASE = Long.valueOf(PKCS11Constants.CKA_BASE);
-  public static final Long PRIME_BITS
-      = Long.valueOf(PKCS11Constants.CKA_PRIME_BITS);
-  public static final Long SUB_PRIME_BITS
-      = Long.valueOf(PKCS11Constants.CKA_SUB_PRIME_BITS);
-  public static final Long VALUE_BITS
-      = Long.valueOf(PKCS11Constants.CKA_VALUE_BITS);
-  public static final Long VALUE_LEN
-      = Long.valueOf(PKCS11Constants.CKA_VALUE_LEN);
-  public static final Long EXTRACTABLE
-      = Long.valueOf(PKCS11Constants.CKA_EXTRACTABLE);
-  public static final Long LOCAL = Long.valueOf(PKCS11Constants.CKA_LOCAL);
-  public static final Long NEVER_EXTRACTABLE
-      = Long.valueOf(PKCS11Constants.CKA_NEVER_EXTRACTABLE);
-  public static final Long WRAP_WITH_TRUSTED
-      = Long.valueOf(PKCS11Constants.CKA_WRAP_WITH_TRUSTED);
-  public static final Long ALWAYS_SENSITIVE
-      = Long.valueOf(PKCS11Constants.CKA_ALWAYS_SENSITIVE);
-  public static final Long ALWAYS_AUTHENTICATE
-      = Long.valueOf(PKCS11Constants.CKA_ALWAYS_AUTHENTICATE);
-  public static final Long KEY_GEN_MECHANISM
-      = Long.valueOf(PKCS11Constants.CKA_KEY_GEN_MECHANISM);
-  public static final Long ALLOWED_MECHANISMS
-      = Long.valueOf(PKCS11Constants.CKA_ALLOWED_MECHANISMS);
-  public static final Long MODIFIABLE
-      = Long.valueOf(PKCS11Constants.CKA_MODIFIABLE);
-  public static final Long EC_PARAMS
-      = Long.valueOf(PKCS11Constants.CKA_EC_PARAMS);
-  public static final Long EC_POINT
-      = Long.valueOf(PKCS11Constants.CKA_EC_POINT);
+  public static final long CLASS                = CKA_CLASS;
+  public static final long TOKEN                = CKA_TOKEN;
+  public static final long PRIVATE              = CKA_PRIVATE;
+  public static final long LABEL                = CKA_LABEL;
+  public static final long APPLICATION          = CKA_APPLICATION;
+  public static final long VALUE                = CKA_VALUE;
+  public static final long OBJECT_ID            = CKA_OBJECT_ID;
+  public static final long CERTIFICATE_TYPE     = CKA_CERTIFICATE_TYPE;
+  public static final long ISSUER               = CKA_ISSUER;
+  public static final long SERIAL_NUMBER        = CKA_SERIAL_NUMBER;
+  public static final long URL                  = CKA_URL;
+  public static final long HASH_OF_SUBJECT_PUBLIC_KEY
+          = CKA_HASH_OF_SUBJECT_PUBLIC_KEY;
+  public static final long HASH_OF_ISSUER_PUBLIC_KEY
+          = CKA_HASH_OF_ISSUER_PUBLIC_KEY;
+  public static final long JAVA_MIDP_SECURITY_DOMAIN
+          = CKA_JAVA_MIDP_SECURITY_DOMAIN;
+  public static final long AC_ISSUER            = CKA_AC_ISSUER;
+  public static final long OWNER                = CKA_OWNER;
+  public static final long ATTR_TYPES           = CKA_ATTR_TYPES;
+  public static final long TRUSTED              = CKA_TRUSTED;
+  public static final long KEY_TYPE             = CKA_KEY_TYPE;
+  public static final long SUBJECT              = CKA_SUBJECT;
+  public static final long ID                   = CKA_ID;
+  public static final long CHECK_VALUE          = CKA_CHECK_VALUE;
+  public static final long CERTIFICATE_CATEGORY = CKA_CERTIFICATE_CATEGORY;
+  public static final long SENSITIVE            = CKA_SENSITIVE;
+  public static final long ENCRYPT              = CKA_ENCRYPT;
+  public static final long DECRYPT              = CKA_DECRYPT;
+  public static final long WRAP                 = CKA_WRAP;
+  public static final long WRAP_TEMPLATE        = CKA_WRAP_TEMPLATE;
+  public static final long UNWRAP               = CKA_UNWRAP;
+  public static final long UNWRAP_TEMPLATE      = CKA_UNWRAP_TEMPLATE;
+  public static final long SIGN                 = CKA_SIGN;
+  public static final long SIGN_RECOVER         = CKA_SIGN_RECOVER;
+  public static final long VERIFY               = CKA_VERIFY;
+  public static final long VERIFY_RECOVER       = CKA_VERIFY_RECOVER;
+  public static final long DERIVE               = CKA_DERIVE;
+  public static final long START_DATE           = CKA_START_DATE;
+  public static final long END_DATE             = CKA_END_DATE;
+  public static final long MECHANISM_TYPE       = CKA_MECHANISM_TYPE;
+  public static final long MODULUS              = CKA_MODULUS;
+  public static final long MODULUS_BITS         = CKA_MODULUS_BITS;
+  public static final long PUBLIC_EXPONENT      = CKA_PUBLIC_EXPONENT;
+  public static final long PRIVATE_EXPONENT     = CKA_PRIVATE_EXPONENT;
+  public static final long PRIME_1              = CKA_PRIME_1;
+  public static final long PRIME_2              = CKA_PRIME_2;
+  public static final long EXPONENT_1           = CKA_EXPONENT_1;
+  public static final long EXPONENT_2           = CKA_EXPONENT_2;
+  public static final long COEFFICIENT          = CKA_COEFFICIENT;
+  public static final long PRIME                = CKA_PRIME;
+  public static final long SUBPRIME             = CKA_SUBPRIME;
+  public static final long BASE                 = CKA_BASE;
+  public static final long PRIME_BITS           = CKA_PRIME_BITS;
+  public static final long SUB_PRIME_BITS       = CKA_SUB_PRIME_BITS;
+  public static final long VALUE_BITS           = CKA_VALUE_BITS;
+  public static final long VALUE_LEN            = CKA_VALUE_LEN;
+  public static final long EXTRACTABLE          = CKA_EXTRACTABLE;
+  public static final long LOCAL                = CKA_LOCAL;
+  public static final long NEVER_EXTRACTABLE    = CKA_NEVER_EXTRACTABLE;
+  public static final long WRAP_WITH_TRUSTED    = CKA_WRAP_WITH_TRUSTED;
+  public static final long ALWAYS_SENSITIVE     = CKA_ALWAYS_SENSITIVE;
+  public static final long ALWAYS_AUTHENTICATE  = CKA_ALWAYS_AUTHENTICATE;
+  public static final long KEY_GEN_MECHANISM    = CKA_KEY_GEN_MECHANISM;
+  public static final long ALLOWED_MECHANISMS   = CKA_ALLOWED_MECHANISMS;
+  public static final long MODIFIABLE           = CKA_MODIFIABLE;
+  public static final long EC_PARAMS            = CKA_EC_PARAMS;
+  public static final long EC_POINT             = CKA_EC_POINT;
   @SuppressWarnings("deprecation")
-  public static final Long SECONDARY_AUTH
-      = Long.valueOf(PKCS11Constants.CKA_SECONDARY_AUTH);
+  public static final long SECONDARY_AUTH       = CKA_SECONDARY_AUTH;
   @SuppressWarnings("deprecation")
-  public static final Long AUTH_PIN_FLAGS
-      = Long.valueOf(PKCS11Constants.CKA_AUTH_PIN_FLAGS);
-  public static final Long HW_FEATURE_TYPE
-      = Long.valueOf(PKCS11Constants.CKA_HW_FEATURE_TYPE);
-  public static final Long RESET_ON_INIT
-      = Long.valueOf(PKCS11Constants.CKA_RESET_ON_INIT);
-  public static final Long HAS_RESET
-      = Long.valueOf(PKCS11Constants.CKA_HAS_RESET);
-  public static final Long VENDOR_DEFINED
-      = Long.valueOf(PKCS11Constants.CKA_VENDOR_DEFINED);
-  public static final Long PIXEL_X = Long.valueOf(PKCS11Constants.CKA_PIXEL_X);
-  public static final Long PIXEL_Y = Long.valueOf(PKCS11Constants.CKA_PIXEL_Y);
-  public static final Long RESOLUTION
-      = Long.valueOf(PKCS11Constants.CKA_RESOLUTION);
-  public static final Long CHAR_ROWS
-      = Long.valueOf(PKCS11Constants.CKA_CHAR_ROWS);
-  public static final Long CHAR_COLUMNS
-      = Long.valueOf(PKCS11Constants.CKA_CHAR_COLUMNS);
-  public static final Long COLOR = Long.valueOf(PKCS11Constants.CKA_COLOR);
-  public static final Long BITS_PER_PIXEL
-      = Long.valueOf(PKCS11Constants.CKA_BITS_PER_PIXEL);
-  public static final Long CHAR_SETS
-      = Long.valueOf(PKCS11Constants.CKA_CHAR_SETS);
-  public static final Long ENCODING_METHODS
-      = Long.valueOf(PKCS11Constants.CKA_ENCODING_METHODS);
-  public static final Long MIME_TYPES
-      = Long.valueOf(PKCS11Constants.CKA_MIME_TYPES);
+  public static final long AUTH_PIN_FLAGS       = CKA_AUTH_PIN_FLAGS;
+  public static final long HW_FEATURE_TYPE      = CKA_HW_FEATURE_TYPE;
+  public static final long RESET_ON_INIT        = CKA_RESET_ON_INIT;
+  public static final long HAS_RESET            = CKA_HAS_RESET;
+  public static final long VENDOR_DEFINED       = CKA_VENDOR_DEFINED;
+  public static final long PIXEL_X              = CKA_PIXEL_X;
+  public static final long PIXEL_Y              = CKA_PIXEL_Y;
+  public static final long RESOLUTION           = CKA_RESOLUTION;
+  public static final long CHAR_ROWS            = CKA_CHAR_ROWS;
+  public static final long CHAR_COLUMNS         = CKA_CHAR_COLUMNS;
+  public static final long COLOR                = CKA_COLOR;
+  public static final long BITS_PER_PIXEL       = CKA_BITS_PER_PIXEL;
+  public static final long CHAR_SETS            = CKA_CHAR_SETS;
+  public static final long ENCODING_METHODS     = CKA_ENCODING_METHODS;
+  public static final long MIME_TYPES           = CKA_MIME_TYPES;
 
   protected static Hashtable<Long, String> attributeNames;
   protected static Hashtable<Long, Class<?>> attributeClasses;
@@ -241,12 +191,11 @@ public abstract class Attribute {
    *          The PKCS#11 type of this attribute; e.g.
    *          PKCS11Constants.CKA_PRIVATE.
    */
-  protected Attribute(Long type) {
-    Util.requireNonNull("type", type);
+  protected Attribute(long type) {
     present = false;
     sensitive = false;
     ckAttribute = new CK_ATTRIBUTE();
-    ckAttribute.type = type.longValue();
+    ckAttribute.type = type;
   }
 
   /**
@@ -256,9 +205,7 @@ public abstract class Attribute {
    *          The attribute type.
    * @return The name of the attribute type, or null if there is no such type.
    */
-  protected static synchronized String getAttributeName(Long type) {
-    Util.requireNonNull("type", type);
-
+  protected static synchronized String getAttributeName(long type) {
     if (attributeNames == null) {
       attributeNames = new Hashtable<>(85);
       attributeNames.put(CLASS, "Class");
@@ -338,18 +285,18 @@ public abstract class Attribute {
 
     String name;
 
-    if ((type.longValue() & VENDOR_DEFINED.longValue()) != 0L) {
+    if ((type & VENDOR_DEFINED) != 0L) {
       StringBuilder nameBuffer = new StringBuilder(36);
       nameBuffer.append("VENDOR_DEFINED [0x");
-      nameBuffer.append(Long.toHexString(type.longValue()));
+      nameBuffer.append(Long.toHexString(type));
       nameBuffer.append(']');
       name = nameBuffer.toString();
     } else {
-      name = (String) attributeNames.get(type);
+      name = attributeNames.get(type);
       if (name == null) {
         StringBuilder nameBuffer = new StringBuilder(25);
         nameBuffer.append("[0x");
-        nameBuffer.append(Long.toHexString(type.longValue()));
+        nameBuffer.append(Long.toHexString(type));
         nameBuffer.append(']');
         name = nameBuffer.toString();
       }
@@ -378,9 +325,7 @@ public abstract class Attribute {
    * @return The class of the attribute type, or null if there is no such
    *         type.
    */
-  protected static synchronized Class<?> getAttributeClass(Long type) {
-    Util.requireNonNull("type", type);
-
+  protected static synchronized Class<?> getAttributeClass(long type) {
     if (attributeClasses == null) {
       Set<Long> boolSet = new HashSet<>();
       // CHECKSTYLE:SKIP
@@ -411,8 +356,7 @@ public abstract class Attribute {
       barrSet.add(OWNER); //Byte array
       barrSet.add(ATTR_TYPES); //Byte array
       boolSet.add(TRUSTED); //CK_BBOOL
-      attributeClasses.put(KEY_TYPE,
-          KeyTypeAttribute.class); //CK_KEY_TYPE
+      attributeClasses.put(KEY_TYPE, KeyTypeAttribute.class); //CK_KEY_TYPE
       barrSet.add(SUBJECT); //Byte array
       barrSet.add(ID); //Byte array
       barrSet.add(CHECK_VALUE); //Byte array
@@ -486,9 +430,7 @@ public abstract class Attribute {
       }
     }
 
-    Class<?> implementation = (Class<?>) attributeClasses.get(type);
-    return implementation;
-
+    return attributeClasses.get(type);
   }
 
   /**
@@ -607,7 +549,7 @@ public abstract class Attribute {
     StringBuilder sb = new StringBuilder(32);
 
     if (withName) {
-      String typeName = getAttributeName(Long.valueOf(ckAttribute.type));
+      String typeName = getAttributeName(ckAttribute.type);
       sb.append(typeName).append(": ");
     }
     if (present) {
@@ -629,9 +571,8 @@ public abstract class Attribute {
    * @param type
    *          The PKCS#11 type of this attribute.
    */
-  protected void setType(Long type) {
-    Util.requireNonNull("type", type);
-    ckAttribute.type = type.longValue();
+  protected void setType(long type) {
+    ckAttribute.type = type;
   }
 
   /**
@@ -640,7 +581,7 @@ public abstract class Attribute {
    * @return The PKCS#11 type of this attribute.
    */
   protected Long getType() {
-    return Long.valueOf(ckAttribute.type);
+    return ckAttribute.type;
   }
 
   /**

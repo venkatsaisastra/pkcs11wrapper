@@ -68,13 +68,13 @@ public class Slot {
   /**
    * The module that created this slot object.
    */
-  private Module module;
+  private final Module module;
 
   /**
    * The identifier of the slot.
    */
   // CHECKSTYLE:SKIP
-  private long slotID;
+  private final long slotID;
 
   /**
    * True, if UTF8 encoding is used as character encoding for character array

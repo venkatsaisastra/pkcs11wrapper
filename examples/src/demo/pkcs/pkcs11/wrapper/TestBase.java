@@ -42,6 +42,22 @@
 
 package demo.pkcs.pkcs11.wrapper;
 
+import demo.pkcs.pkcs11.wrapper.util.KeyUtil;
+import demo.pkcs.pkcs11.wrapper.util.Util;
+import iaik.pkcs.pkcs11.Mechanism;
+import iaik.pkcs.pkcs11.Module;
+import iaik.pkcs.pkcs11.*;
+import iaik.pkcs.pkcs11.objects.*;
+import iaik.pkcs.pkcs11.objects.Key.KeyType;
+import iaik.pkcs.pkcs11.wrapper.Functions;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.DEROctetString;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -50,32 +66,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Properties;
 import java.util.Random;
-
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
-import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import demo.pkcs.pkcs11.wrapper.util.KeyUtil;
-import demo.pkcs.pkcs11.wrapper.util.Util;
-import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.Module;
-import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.objects.DSAPrivateKey;
-import iaik.pkcs.pkcs11.objects.DSAPublicKey;
-import iaik.pkcs.pkcs11.objects.ECPrivateKey;
-import iaik.pkcs.pkcs11.objects.ECPublicKey;
-import iaik.pkcs.pkcs11.objects.Key.KeyType;
-import iaik.pkcs.pkcs11.objects.KeyPair;
-import iaik.pkcs.pkcs11.objects.PublicKey;
-import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
-import iaik.pkcs.pkcs11.objects.RSAPublicKey;
-import iaik.pkcs.pkcs11.wrapper.Functions;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 public class TestBase {
 

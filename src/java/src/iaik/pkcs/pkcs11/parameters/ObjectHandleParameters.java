@@ -76,7 +76,7 @@ public class ObjectHandleParameters implements Parameters {
    */
   @Override
   public Long getPKCS11ParamsObject() {
-    return Long.valueOf(object.getObjectHandle());
+    return object.getObjectHandle();
   }
 
   /**
@@ -127,8 +127,11 @@ public class ObjectHandleParameters implements Parameters {
     }
 
     ObjectHandleParameters other = (ObjectHandleParameters) otherObject;
-    return (this != null)
-        && this.object.equals(other.object);
+    if (this.object == null) {
+      return other.object == null;
+    } else {
+      return this.object.equals(other.object);
+    }
   }
 
   /**

@@ -17,11 +17,6 @@
 
 package demo.pkcs.pkcs11.wrapper.speed.signature;
 
-import java.util.Random;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.speed.ConcurrentSessionBagEntry;
 import demo.pkcs.pkcs11.wrapper.speed.Pkcs11Executor;
@@ -32,6 +27,10 @@ import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Random;
 
 /**
  * Sign executor base class.
@@ -79,7 +78,7 @@ public abstract class SignExecutor extends Pkcs11Executor {
 
   private final int inputLen;
 
-  private KeyPair keypair;
+  private final KeyPair keypair;
 
   public SignExecutor(String description, Mechanism keypairGenMechanism,
       Token token, char[] pin, Mechanism signMechanism, int inputLen)

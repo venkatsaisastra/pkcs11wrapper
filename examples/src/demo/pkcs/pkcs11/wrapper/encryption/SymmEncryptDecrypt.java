@@ -17,17 +17,16 @@
 
 package demo.pkcs.pkcs11.wrapper.encryption;
 
-import java.util.Arrays;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.Arrays;
 
 /**
  * This demo program uses a PKCS#11 module to encrypt a given file and test if

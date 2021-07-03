@@ -42,11 +42,6 @@
 
 package demo.pkcs.pkcs11.wrapper.encryption;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
@@ -56,6 +51,10 @@ import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.SecretKey;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import org.junit.Test;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 /**
  * This demo program uses a PKCS#11 module to wrap and unwrap a MAC secret key.
@@ -92,7 +91,7 @@ public class WrapUnwrapHmacKey extends TestBase {
     if (Util.supports(token, keyMechanism.getMechanismCode())) {
       LOG.info("generate secret MAC key");
       secretMACKeyTemplate.getValueLen().setLongValue(
-          Long.valueOf(keyBytesLen));
+              (long) keyBytesLen);
       hmacKey = (ValuedSecretKey) session.generateKey(keyMechanism,
           secretMACKeyTemplate);
     } else {
@@ -121,7 +120,7 @@ public class WrapUnwrapHmacKey extends TestBase {
     LOG.info("generate secret wrapping key");
     Mechanism wrapKeyMechanism = Mechanism.get(PKCS11Constants.CKM_AES_KEY_GEN);
     ValuedSecretKey wrapKeyTemplate = ValuedSecretKey.newAESSecretKey();
-    wrapKeyTemplate.getValueLen().setLongValue(Long.valueOf(16));
+    wrapKeyTemplate.getValueLen().setLongValue(16L);
     wrapKeyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
     wrapKeyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
     wrapKeyTemplate.getPrivate().setBooleanValue(Boolean.TRUE);

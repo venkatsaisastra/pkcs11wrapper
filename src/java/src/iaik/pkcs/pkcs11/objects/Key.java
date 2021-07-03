@@ -42,13 +42,13 @@
 
 package iaik.pkcs.pkcs11.objects;
 
-import java.util.Hashtable;
-
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
+
+import java.util.Hashtable;
 
 /**
  * An object of this class represents a key as defined by PKCS#11 2.11.
@@ -78,166 +78,154 @@ public class Key extends Storage {
     /**
      * The identifier for a RSA key.
      */
-    public static final Long RSA = Long.valueOf(PKCS11Constants.CKK_RSA);
+    long RSA = PKCS11Constants.CKK_RSA;
 
     /**
      * The identifier for a DSA key.
      */
-    public static final Long DSA = Long.valueOf(PKCS11Constants.CKK_DSA);
+    long DSA = PKCS11Constants.CKK_DSA;
 
     /**
      * The identifier for a Diffi-Hellman key.
      */
-    public static final Long DH = Long.valueOf(PKCS11Constants.CKK_DH);
+    long DH = PKCS11Constants.CKK_DH;
 
     /**
      * The identifier for a EC key.
      */
-    public static final Long EC = Long.valueOf(PKCS11Constants.CKK_EC);
+    long EC = PKCS11Constants.CKK_EC;
 
     /**
      * The identifier for a EC EDWARDS key.
      */
-    public static final Long EC_EDWARDS
-        = Long.valueOf(PKCS11Constants.CKK_EC_EDWARDS);
+    long EC_EDWARDS = PKCS11Constants.CKK_EC_EDWARDS;
 
     /**
      * The identifier for a EC MONTGOMERY key.
      */
-    public static final Long EC_MONTGOMERY
-        = Long.valueOf(PKCS11Constants.CKK_EC_MONTGOMERY);
+    long EC_MONTGOMERY = PKCS11Constants.CKK_EC_MONTGOMERY;
 
     /**
      * The identifier for a HKDF key.
      */
-    public static final Long HKDF = Long.valueOf(PKCS11Constants.CKK_HKDF);
+    long HKDF = PKCS11Constants.CKK_HKDF;
 
     /**
      * The identifier for a EC key.
      */
-    public static final Long X9_42_DH
-        = Long.valueOf(PKCS11Constants.CKK_X9_42_DH);
+    long X9_42_DH = PKCS11Constants.CKK_X9_42_DH;
 
     /**
      * The identifier for a KEA key.
      */
-    public static final Long KEA = Long.valueOf(PKCS11Constants.CKK_KEA);
+    long KEA = PKCS11Constants.CKK_KEA;
 
     /**
      * The identifier for a generic secret key.
      */
-    public static final Long GENERIC_SECRET =
-        Long.valueOf(PKCS11Constants.CKK_GENERIC_SECRET);
+    long GENERIC_SECRET = PKCS11Constants.CKK_GENERIC_SECRET;
 
     /**
      * The identifier for a RC2 key.
      */
-    public static final Long RC2 = Long.valueOf(PKCS11Constants.CKK_RC2);
+    long RC2 = PKCS11Constants.CKK_RC2;
 
     /**
      * The identifier for a RC4 key.
      */
-    public static final Long RC4 = Long.valueOf(PKCS11Constants.CKK_RC4);
+    long RC4 = PKCS11Constants.CKK_RC4;
 
     /**
      * The identifier for a DES key.
      */
-    public static final Long DES = Long.valueOf(PKCS11Constants.CKK_DES);
+    long DES = PKCS11Constants.CKK_DES;
 
     /**
      * The identifier for a double-length DES key.
      */
-    public static final Long DES2 = Long.valueOf(PKCS11Constants.CKK_DES2);
+    long DES2 = PKCS11Constants.CKK_DES2;
 
     /**
      * The identifier for a trible-length DES key (Trible-DES).
      */
-    public static final Long DES3 = Long.valueOf(PKCS11Constants.CKK_DES3);
+    long DES3 = PKCS11Constants.CKK_DES3;
 
     /**
      * The identifier for a CAST key.
      */
-    public static final Long CAST = Long.valueOf(PKCS11Constants.CKK_CAST);
+    long CAST = PKCS11Constants.CKK_CAST;
 
     /**
      * The identifier for a CAST3 key.
      */
-    public static final Long CAST3 = Long.valueOf(PKCS11Constants.CKK_CAST3);
+    long CAST3 = PKCS11Constants.CKK_CAST3;
 
     /**
      * The identifier for a CAST128 key.
      */
-    public static final Long CAST128
-        = Long.valueOf(PKCS11Constants.CKK_CAST128);
+    long CAST128 = PKCS11Constants.CKK_CAST128;
 
     /**
      * The identifier for a RC5 key.
      */
-    public static final Long RC5 = Long.valueOf(PKCS11Constants.CKK_RC5);
+    long RC5 = PKCS11Constants.CKK_RC5;
 
     /**
      * The identifier for a IDEA key.
      */
-    public static final Long IDEA = Long.valueOf(PKCS11Constants.CKK_IDEA);
+    long IDEA = PKCS11Constants.CKK_IDEA;
 
     /**
      * The identifier for a SKIPJACK key.
      */
-    public static final Long SKIPJACK
-        = Long.valueOf(PKCS11Constants.CKK_SKIPJACK);
+    long SKIPJACK = PKCS11Constants.CKK_SKIPJACK;
 
     /**
      * The identifier for a BATON key.
      */
-    public static final Long BATON = Long.valueOf(PKCS11Constants.CKK_BATON);
+    long BATON = PKCS11Constants.CKK_BATON;
 
     /**
      * The identifier for a JUNIPER key.
      */
-    public static final Long JUNIPER
-        = Long.valueOf(PKCS11Constants.CKK_JUNIPER);
+    long JUNIPER = PKCS11Constants.CKK_JUNIPER;
 
     /**
      * The identifier for a CDMF key.
      */
-    public static final Long CDMF = Long.valueOf(PKCS11Constants.CKK_CDMF);
+    long CDMF = PKCS11Constants.CKK_CDMF;
 
     /**
      * The identifier for a AES key.
      */
-    public static final Long AES = Long.valueOf(PKCS11Constants.CKK_AES);
+    long AES = PKCS11Constants.CKK_AES;
 
     /**
      * The identifier for a Blowfish key.
      */
-    public static final Long BLOWFISH
-        = Long.valueOf(PKCS11Constants.CKK_BLOWFISH);
+    long BLOWFISH = PKCS11Constants.CKK_BLOWFISH;
 
     /**
      * The identifier for a Twofish key.
      */
-    public static final Long TWOFISH
-        = Long.valueOf(PKCS11Constants.CKK_TWOFISH);
+    long TWOFISH = PKCS11Constants.CKK_TWOFISH;
 
     /**
      * The identifier for a SM2 key.
      */
-    public static final Long VENDOR_SM2 =
-        Long.valueOf(PKCS11Constants.CKK_VENDOR_SM2);
+    long VENDOR_SM2 = PKCS11Constants.CKK_VENDOR_SM2;
 
     /**
      * The identifier for a SM4 key.
      */
-    public static final Long VENDOR_SM4 =
-        Long.valueOf(PKCS11Constants.CKK_VENDOR_SM4);
+    long VENDOR_SM4 = PKCS11Constants.CKK_VENDOR_SM4;
 
     /**
-     * The identifier for a VENDOR_DEFINED key. Any Long object with a
+     * The identifier for a VENDOR_DEFINED key. Any long object with a
      * value bigger than this one is also a valid vendor-defined key
      * type identifier.
      */
-    public static final Long VENDOR_DEFINED =
-        Long.valueOf(PKCS11Constants.CKK_VENDOR_DEFINED);
+    long VENDOR_DEFINED = PKCS11Constants.CKK_VENDOR_DEFINED;
 
   }
 
@@ -268,7 +256,7 @@ public class Key extends Storage {
      * @exception PKCS11Exception
      *              If getting the attributes failed.
      */
-    public PKCS11Object build(Session session, long objectHandle)
+    PKCS11Object build(Session session, long objectHandle)
         throws PKCS11Exception;
 
   }
@@ -381,9 +369,7 @@ public class Key extends Storage {
    *          The key type to get as string.
    * @return A string denoting the key type; e.g. "RSA".
    */
-  public static String getKeyTypeName(Long keyType) {
-    Util.requireNonNull("keyType", keyType);
-
+  public static String getKeyTypeName(long keyType) {
     if (keyTypeNames == null) {
       // setup key type names table
       keyTypeNames = new Hashtable<>(24);
@@ -417,10 +403,9 @@ public class Key extends Storage {
       keyTypeNames.put(KeyType.VENDOR_SM4, "SM4");
     }
 
-    String keyTypeName = (String) keyTypeNames.get(keyType);
+    String keyTypeName = keyTypeNames.get(keyType);
     if (keyTypeName == null) {
-      if ((keyType.longValue()
-          & PKCS11Constants.CKK_VENDOR_DEFINED) != 0L) {
+      if ((keyType & PKCS11Constants.CKK_VENDOR_DEFINED) != 0L) {
         keyTypeName = "Vendor Defined";
       } else {
         keyTypeName = "<unknown>";

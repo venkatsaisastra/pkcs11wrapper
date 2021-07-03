@@ -42,11 +42,11 @@
 
 package iaik.pkcs.pkcs11.objects;
 
-import java.util.Arrays;
-import java.util.Date;
-
 import iaik.pkcs.pkcs11.Util;
 import sun.security.pkcs11.wrapper.CK_DATE;
+
+import java.util.Arrays;
+import java.util.Date;
 
 /**
  * Objects of this class represent a date attribute of an PKCS#11 object
@@ -64,7 +64,7 @@ public class DateAttribute extends Attribute {
    *          The PKCS#11 type of this attribute; e.g.
    *          PKCS11Constants.CKA_START_DATE.
    */
-  public DateAttribute(Long type) {
+  public DateAttribute(long type) {
     super(type);
   }
 
@@ -154,7 +154,7 @@ public class DateAttribute extends Attribute {
    *         same char values. False, otherwise.
    */
   private static boolean equals(CK_DATE date1, CK_DATE date2) {
-    boolean equal = false;
+    boolean equal;
 
     if (date1 == date2) {
       equal = true;

@@ -17,11 +17,6 @@
 
 package demo.pkcs.pkcs11.wrapper.speed.encryption;
 
-import java.util.Random;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.speed.ConcurrentSessionBagEntry;
 import demo.pkcs.pkcs11.wrapper.speed.Pkcs11Executor;
@@ -30,6 +25,10 @@ import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Random;
 
 /**
  * Encrypt executor base.
@@ -47,7 +46,7 @@ public abstract class EncryptExecutor extends Pkcs11Executor {
     public MyRunnable() {
     }
 
-    private byte[] out = new byte[inputLen + 64];
+    private final byte[] out = new byte[inputLen + 64];
 
     @Override
     public void run() {
@@ -81,7 +80,7 @@ public abstract class EncryptExecutor extends Pkcs11Executor {
 
   private final int inputLen;
 
-  private ValuedSecretKey key;
+  private final ValuedSecretKey key;
 
   protected abstract ValuedSecretKey getMinimalKeyTemplate();
 

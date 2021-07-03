@@ -69,7 +69,7 @@ public class MechanismAttribute extends LongAttribute {
    *          The PKCS#11 type of this attribute; e.g.
    *          PKCS11Constants.CKA_VALUE_LEN.
    */
-  public MechanismAttribute(Long type) {
+  public MechanismAttribute(long type) {
     super(type);
   }
 
@@ -83,7 +83,7 @@ public class MechanismAttribute extends LongAttribute {
    */
   public void setMechanism(Mechanism mechanism) {
     ckAttribute.pValue = (mechanism != null)
-        ? Long.valueOf(mechanism.getMechanismCode()) : null;
+        ? mechanism.getMechanismCode() : null;
     present = true;
   }
 
@@ -94,7 +94,7 @@ public class MechanismAttribute extends LongAttribute {
    */
   public Mechanism getMechanism() {
     return ((ckAttribute != null) && (ckAttribute.pValue != null))
-        ? new Mechanism(((Long) ckAttribute.pValue).longValue())
+        ? new Mechanism((Long) ckAttribute.pValue)
         : null;
   }
 
@@ -106,10 +106,9 @@ public class MechanismAttribute extends LongAttribute {
   @Override
   protected String getValueString() {
     if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
-      if (((Long) ckAttribute.pValue).longValue()
+      if (((Long) ckAttribute.pValue)
           != PKCS11Constants.CK_UNAVAILABLE_INFORMATION) {
-        return Functions.mechanismCodeToString(
-            ((Long) ckAttribute.pValue).longValue());
+        return Functions.mechanismCodeToString(((Long) ckAttribute.pValue));
       } else {
         return "<Information unavailable>";
       }

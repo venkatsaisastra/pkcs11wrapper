@@ -57,7 +57,7 @@ public class AESCTREncryptDecrypt extends SymmEncryptDecrypt {
     ValuedSecretKey keyTemplate = ValuedSecretKey.newAESSecretKey();
     keyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
     keyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
-    keyTemplate.getValueLen().setLongValue(Long.valueOf(16));
+    keyTemplate.getValueLen().setLongValue(16L);
     return keyTemplate;
   }
 

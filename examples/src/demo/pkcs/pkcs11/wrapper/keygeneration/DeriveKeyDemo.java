@@ -42,8 +42,6 @@
 
 package demo.pkcs.pkcs11.wrapper.keygeneration;
 
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Session;
@@ -52,6 +50,7 @@ import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.SecretKey;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import org.junit.Test;
 
 /**
  * This demo program shows how to derive a DES3 key.

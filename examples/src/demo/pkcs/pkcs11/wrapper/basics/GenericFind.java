@@ -42,23 +42,17 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.objects.Attribute;
-import iaik.pkcs.pkcs11.objects.BooleanAttribute;
-import iaik.pkcs.pkcs11.objects.GenericTemplate;
-import iaik.pkcs.pkcs11.objects.PKCS11Object;
-import iaik.pkcs.pkcs11.objects.PrivateKey;
-import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
+import iaik.pkcs.pkcs11.objects.*;
+import org.junit.Test;
+
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * This class demonstrates how to use the GenericSearchTemplate class.
@@ -94,7 +88,7 @@ public class GenericFind extends TestBase {
     // find first
     PKCS11Object[] foundSignatureKeyObjects = session.findObjects(1);
 
-    List<PKCS11Object> signatureKeys = null;
+    List<PKCS11Object> signatureKeys;
     if (foundSignatureKeyObjects.length > 0) {
       signatureKeys = new Vector<>();
       LOG.info("__________________________________________________\n{}",
@@ -121,9 +115,7 @@ public class GenericFind extends TestBase {
     List<PKCS11Object> privateSignatureKeys = new Vector<>();
 
     // sort out all signature keys that are private keys
-    Iterator<PKCS11Object> signatureKeysIterator = signatureKeys.iterator();
-    while (signatureKeysIterator.hasNext()) {
-      PKCS11Object signatureKey = (PKCS11Object) signatureKeysIterator.next();
+    for (PKCS11Object signatureKey : signatureKeys) {
       if (signatureKey instanceof PrivateKey) {
         privateSignatureKeys.add(signatureKey);
       }

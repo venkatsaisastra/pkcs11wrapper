@@ -203,8 +203,7 @@ public class PrivateKey extends Key {
         newObject = KEAPrivateKey.getInstance(session, objectHandle);
       } else if (keyType.equals(Key.KeyType.X9_42_DH)) {
         newObject = X942DHPrivateKey.getInstance(session, objectHandle);
-      } else if ((keyType.longValue()
-              & KeyType.VENDOR_DEFINED.longValue()) != 0L) {
+      } else if ((keyType & KeyType.VENDOR_DEFINED) != 0L) {
         newObject = getUnknownPrivateKey(session, objectHandle);
       } else {
         newObject = getUnknownPrivateKey(session, objectHandle);
@@ -511,7 +510,7 @@ public class PrivateKey extends Key {
     sb.append("\n  Secondary Authentication PIN Flags: ");
     if (authPinFlags.isPresent() && !authPinFlags.isSensitive()
         && (authPinFlags.getLongValue() != null)) {
-      long authFlagsValue = authPinFlags.getLongValue().longValue();
+      long authFlagsValue = authPinFlags.getLongValue();
 
       sb.append("\n    User PIN-Count low: ").append((authFlagsValue
             & PKCS11Constants.CKF_USER_PIN_COUNT_LOW) != 0L);

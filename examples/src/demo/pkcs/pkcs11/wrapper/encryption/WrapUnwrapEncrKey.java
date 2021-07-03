@@ -42,11 +42,6 @@
 
 package demo.pkcs.pkcs11.wrapper.encryption;
 
-import java.util.Arrays;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Session;
@@ -56,6 +51,10 @@ import iaik.pkcs.pkcs11.objects.SecretKey;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.parameters.InitializationVectorParameters;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.Arrays;
 
 /**
  * This demo program uses a PKCS#11 module to wrap and unwrap a secret key.
@@ -83,7 +82,7 @@ public class WrapUnwrapEncrKey extends TestBase {
     ValuedSecretKey secretEncryptionKeyTemplate =
         ValuedSecretKey.newAESSecretKey();
     secretEncryptionKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
-    secretEncryptionKeyTemplate.getValueLen().setLongValue(Long.valueOf(16));
+    secretEncryptionKeyTemplate.getValueLen().setLongValue(16L);
     secretEncryptionKeyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
     secretEncryptionKeyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
     secretEncryptionKeyTemplate.getPrivate().setBooleanValue(Boolean.TRUE);
@@ -121,7 +120,7 @@ public class WrapUnwrapEncrKey extends TestBase {
         PKCS11Constants.CKM_AES_KEY_GEN);
     ValuedSecretKey wrapKeyTemplate = ValuedSecretKey.newAESSecretKey();
     wrapKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
-    wrapKeyTemplate.getValueLen().setLongValue(Long.valueOf(16));
+    wrapKeyTemplate.getValueLen().setLongValue(16L);
     wrapKeyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
     wrapKeyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
     wrapKeyTemplate.getPrivate().setBooleanValue(Boolean.TRUE);

@@ -42,11 +42,11 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import java.util.Arrays;
-
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import sun.security.pkcs11.wrapper.CK_X9_42_DH2_DERIVE_PARAMS;
+
+import java.util.Arrays;
 
 /**
  * This abstract class encapsulates parameters for the X9.42 DH mechanisms

@@ -42,11 +42,6 @@
 
 package demo.pkcs.pkcs11.wrapper.macs;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
@@ -55,6 +50,10 @@ import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import org.junit.Test;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 /**
  * This demo program uses a PKCS#11 module to MAC a given file and test if the
@@ -88,7 +87,7 @@ public class MAC extends TestBase {
         Mechanism.get(PKCS11Constants.CKM_GENERIC_SECRET_KEY_GEN);
     if (Util.supports(token, keyMechanism.getMechanismCode())) {
       LOG.info("generate secret MAC key");
-      macKeyTemplate.getValueLen().setLongValue(Long.valueOf(keyBytesLen));
+      macKeyTemplate.getValueLen().setLongValue((long) keyBytesLen);
       secretMACKey = (ValuedSecretKey)
           session.generateKey(keyMechanism, macKeyTemplate);
     } else {

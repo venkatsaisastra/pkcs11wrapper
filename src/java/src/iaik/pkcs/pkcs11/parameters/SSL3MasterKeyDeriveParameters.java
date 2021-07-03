@@ -43,8 +43,6 @@
 package iaik.pkcs.pkcs11.parameters;
 
 import sun.security.pkcs11.wrapper.CK_SSL3_MASTER_KEY_DERIVE_PARAMS;
-import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
-import sun.security.pkcs11.wrapper.CK_VERSION;
 
 /**
  * This class encapsulates parameters for the Mechanism.SSL3_MASTER_KEY_DERIVE
@@ -78,12 +76,9 @@ extends TLSMasterKeyDeriveParameters {
    */
   @Override
   public CK_SSL3_MASTER_KEY_DERIVE_PARAMS getPKCS11ParamsObject() {
-    CK_SSL3_MASTER_KEY_DERIVE_PARAMS params =
-        new CK_SSL3_MASTER_KEY_DERIVE_PARAMS(
-            (CK_SSL3_RANDOM_DATA) randomInfo.getPKCS11ParamsObject(),
-            (CK_VERSION) version.getPKCS11ParamsObject());
-
-    return params;
+    return new CK_SSL3_MASTER_KEY_DERIVE_PARAMS(
+            randomInfo.getPKCS11ParamsObject(),
+            version.getPKCS11ParamsObject());
   }
 
 }

@@ -57,6 +57,6 @@ public interface Parameters {
    * @return The object of the corresponding *_PARAMS class.
    */
   // CHECKSTYLE:SKIP
-  public Object getPKCS11ParamsObject();
+  Object getPKCS11ParamsObject();
 
 }

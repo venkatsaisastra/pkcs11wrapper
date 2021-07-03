@@ -42,9 +42,9 @@
 
 package iaik.pkcs.pkcs11.objects;
 
-import java.util.Arrays;
-
 import iaik.pkcs.pkcs11.Util;
+
+import java.util.Arrays;
 
 /**
  * Objects of this class represent a byte-array attribute of a PKCS#11 object

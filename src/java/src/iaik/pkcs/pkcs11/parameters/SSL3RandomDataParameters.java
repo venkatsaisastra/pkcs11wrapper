@@ -42,10 +42,10 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import java.util.Arrays;
-
 import iaik.pkcs.pkcs11.Util;
 import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
+
+import java.util.Arrays;
 
 /**
  * This class encapsulates parameters for the Mechanism.SSL3_MASTER_KEY_DERIVE

@@ -42,11 +42,11 @@
 
 package iaik.pkcs.pkcs11.objects;
 
-import java.io.UnsupportedEncodingException;
-
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * Objects of this class represent a user interface as specified by PKCS#11
@@ -177,7 +177,6 @@ public class UserInterface extends HardwareFeature {
         && Util.objEquals(this.charSets, other.charSets)
         && Util.objEquals(this.color, other.color)
         && Util.objEquals(this.encodingMethods, other.encodingMethods)
-        && Util.objEquals(this.mimeTypes, other.mimeTypes)
         && Util.objEquals(this.mimeTypes, other.mimeTypes)
         && Util.objEquals(this.pixelX, other.pixelX)
         && Util.objEquals(this.pixelY, other.pixelY)
@@ -331,10 +330,6 @@ public class UserInterface extends HardwareFeature {
   }
 
   private static String toString(ByteArrayAttribute attr) {
-    try {
-      return new String(attr.getByteArrayValue(), "ASCII");
-    } catch (UnsupportedEncodingException ex) {
-      return new String(attr.getByteArrayValue());
-    }
+    return new String(attr.getByteArrayValue(), StandardCharsets.US_ASCII);
   }
 }

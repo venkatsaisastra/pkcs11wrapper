@@ -17,14 +17,13 @@
 
 package demo.pkcs.pkcs11.wrapper.encryption;
 
-import org.junit.Test;
-
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.parameters.GCMParameters;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import org.junit.Test;
 
 /**
  * This demo program uses a PKCS#11 module to encrypt and decrypt via
@@ -76,7 +75,7 @@ public class AESGCMEncryptDecrypt extends SymmEncryptDecrypt {
     ValuedSecretKey keyTemplate = ValuedSecretKey.newAESSecretKey();
     keyTemplate.getEncrypt().setBooleanValue(Boolean.TRUE);
     keyTemplate.getDecrypt().setBooleanValue(Boolean.TRUE);
-    keyTemplate.getValueLen().setLongValue(Long.valueOf(16));
+    keyTemplate.getValueLen().setLongValue(16L);
     return keyTemplate;
   }
 

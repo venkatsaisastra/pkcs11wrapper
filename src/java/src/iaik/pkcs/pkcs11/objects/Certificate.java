@@ -66,32 +66,29 @@ public class Certificate extends Storage {
    * @author Karl Scheibelhofer
    * @version 1.0
    */
-  public static interface CertificateType {
+  public interface CertificateType {
 
     /**
      * The identifier for a X.509 public key certificate.
      */
-    public static final Long X_509_PUBLIC_KEY
-        = Long.valueOf(PKCS11Constants.CKC_X_509);
+    long X_509_PUBLIC_KEY = PKCS11Constants.CKC_X_509;
 
     /**
      * The identifier for a X.509 attribute certificate.
      */
-    public static final Long X_509_ATTRIBUTE
-        = Long.valueOf(PKCS11Constants.CKC_X_509_ATTR_CERT);
+    long X_509_ATTRIBUTE = PKCS11Constants.CKC_X_509_ATTR_CERT;
 
     /**
      * The identifier for a WTL certificate.
      */
-    public static final Long WTLS = Long.valueOf(PKCS11Constants.CKC_WTLS);
+    long WTLS = PKCS11Constants.CKC_WTLS;
 
     /**
      * The identifier for a vendor-defined certificate. Any Long object with
      * a value bigger than this one is also a valid vendor-defined
      * certificate type identifier.
      */
-    public static final Long VENDOR_DEFINED
-        = Long.valueOf(PKCS11Constants.CKC_VENDOR_DEFINED);
+    long VENDOR_DEFINED = PKCS11Constants.CKC_VENDOR_DEFINED;
 
   }
 
@@ -122,7 +119,7 @@ public class Certificate extends Storage {
      * @exception sun.security.pkcs11.wrapper.PKCS11Exception
      *              If getting the attributes failed.
      */
-    public PKCS11Object build(Session session, long objectHandle)
+    PKCS11Object build(Session session, long objectHandle)
         throws sun.security.pkcs11.wrapper.PKCS11Exception;
 
   }
@@ -213,8 +210,7 @@ public class Certificate extends Storage {
       certificateTypeName = "X.509 Public Key";
     } else if (certificateType.equals(CertificateType.X_509_ATTRIBUTE)) {
       certificateTypeName = "X.509 Attribute";
-    } else if ((certificateType.longValue()
-                  & PKCS11Constants.CKC_VENDOR_DEFINED) != 0L) {
+    } else if ((certificateType & PKCS11Constants.CKC_VENDOR_DEFINED) != 0L) {
       certificateTypeName = "Vendor Defined";
     } else {
       certificateTypeName = "<unknown>";
@@ -265,8 +261,7 @@ public class Certificate extends Storage {
             objectHandle);
       } else if (certificateType.equals(CertificateType.WTLS)) {
         newObject = WTLSCertificate.getInstance(session, objectHandle);
-      } else if ((certificateType.longValue()
-            & PKCS11Constants.CKC_VENDOR_DEFINED) != 0L) {
+      } else if ((certificateType & PKCS11Constants.CKC_VENDOR_DEFINED) != 0L) {
         newObject = getUnknownCertificate(session, objectHandle);
       } else {
         newObject = getUnknownCertificate(session, objectHandle);

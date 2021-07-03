@@ -17,8 +17,6 @@
 
 package demo.pkcs.pkcs11.wrapper.keygeneration;
 
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Session;
@@ -26,6 +24,7 @@ import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import org.junit.Test;
 
 /**
  * This demo program shows how to generate secret keys.
@@ -52,7 +51,7 @@ public class GenerateKey extends TestBase {
     LOG.info("Generating generic secret key");
 
     ValuedSecretKey secretKeyTemplate = ValuedSecretKey.newGenericSecretKey();
-    secretKeyTemplate.getValueLen().setLongValue(Long.valueOf(16));
+    secretKeyTemplate.getValueLen().setLongValue(16L);
     secretKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
 
     ValuedSecretKey secretKey = (ValuedSecretKey) session.generateKey(

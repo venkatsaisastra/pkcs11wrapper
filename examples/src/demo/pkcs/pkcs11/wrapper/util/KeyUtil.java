@@ -17,6 +17,15 @@
 
 package demo.pkcs.pkcs11.wrapper.util;
 
+import org.bouncycastle.asn1.ASN1Encodable;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.asn1.x9.X962Parameters;
+import org.bouncycastle.asn1.x9.X9ObjectIdentifiers;
+import org.xipki.util.Args;
+
 import java.io.IOException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -31,15 +40,6 @@ import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.bouncycastle.asn1.ASN1Encodable;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
-import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
-import org.bouncycastle.asn1.x9.X962Parameters;
-import org.bouncycastle.asn1.x9.X9ObjectIdentifiers;
-import org.xipki.util.Args;
 
 /**
  * Key utility class.
@@ -71,13 +71,13 @@ public class KeyUtil {
       alg = "EC";
     }
     synchronized (KEY_FACTORIES) {
-      KeyFactory kf = KEY_FACTORIES.get(algorithm);
+      KeyFactory kf = KEY_FACTORIES.get(alg);
       if (kf != null) {
         return kf;
       }
 
       try {
-        kf = KeyFactory.getInstance(algorithm, "BC");
+        kf = KeyFactory.getInstance(alg, "BC");
       } catch (NoSuchAlgorithmException | NoSuchProviderException ex) {
         throw new InvalidKeySpecException(
             "could not find KeyFactory for " + algorithm

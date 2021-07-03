@@ -42,13 +42,13 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This abstract class encapsulates parameters for the RSA PKCS mechanisms

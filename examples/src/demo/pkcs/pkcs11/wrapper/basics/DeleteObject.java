@@ -42,8 +42,6 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.SessionInfo;
@@ -51,6 +49,7 @@ import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
+import org.junit.Test;
 
 /**
  * This demo program allows to delete certain objects on a certain token.

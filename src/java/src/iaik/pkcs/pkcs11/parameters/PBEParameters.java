@@ -42,10 +42,10 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import java.util.Arrays;
-
 import iaik.pkcs.pkcs11.Util;
 import sun.security.pkcs11.wrapper.CK_PBE_PARAMS;
+
+import java.util.Arrays;
 
 /**
  * This class encapsulates parameters for the Mechanism.PBA_* and
@@ -186,7 +186,7 @@ public class PBEParameters implements Parameters {
    *          The salt to be used in the PBE key generation.
    */
   public void setSalt(char[] salt) {
-    this.salt = Util.requireNonNull("salt", salt);;
+    this.salt = Util.requireNonNull("salt", salt);
   }
 
   /**

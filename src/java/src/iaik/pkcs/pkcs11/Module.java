@@ -42,19 +42,13 @@
 
 package iaik.pkcs.pkcs11;
 
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
+import sun.security.pkcs11.wrapper.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
-import sun.security.pkcs11.wrapper.CK_CREATEMUTEX;
-import sun.security.pkcs11.wrapper.CK_C_INITIALIZE_ARGS;
-import sun.security.pkcs11.wrapper.CK_DESTROYMUTEX;
-import sun.security.pkcs11.wrapper.CK_INFO;
-import sun.security.pkcs11.wrapper.CK_LOCKMUTEX;
-import sun.security.pkcs11.wrapper.CK_UNLOCKMUTEX;
-import sun.security.pkcs11.wrapper.PKCS11;
 
 /**
  * <B>Caution:
@@ -127,20 +121,20 @@ public class Module {
    *
    * @version 1.0
    */
-  public static interface SlotRequirement {
+  public interface SlotRequirement {
 
     /**
      * Causes getSlotList to return all slots of the system that the
      * respective module supports.
      */
-    static boolean ALL_SLOTS = false;
+    boolean ALL_SLOTS = false;
 
     /**
      * Causes getSlotList to return only those slots in which there is
      * currently a token present; e.g. there is a smart card in the reader's
      * slot.
      */
-    static boolean TOKEN_PRESENT = true;
+    boolean TOKEN_PRESENT = true;
 
   }
 
@@ -150,17 +144,17 @@ public class Module {
    *
    * @version 1.0
    */
-  public static interface WaitingBehavior {
+  public interface WaitingBehavior {
 
     /**
      * Tells waitForSlotEvent to block until an event occurs.
      */
-    static final boolean BLOCK = false;
+    boolean BLOCK = false;
 
     /**
      * Tells waitForSlotEvent to return immediately.
      */
-    static final boolean DONT_BLOCK = true;
+    boolean DONT_BLOCK = true;
 
   }
 
@@ -169,7 +163,7 @@ public class Module {
    */
   private PKCS11 pkcs11Module;
 
-  private String pkcs11ModuleName;
+  private final String pkcs11ModuleName;
 
   /**
    * Create a new module that uses the given PKCS11 interface to interact with

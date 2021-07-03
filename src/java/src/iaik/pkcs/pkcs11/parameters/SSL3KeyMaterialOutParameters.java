@@ -42,14 +42,14 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import java.util.Arrays;
-
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.objects.SecretKey;
 import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
+
+import java.util.Arrays;
 
 /**
  * Objects of this class encapsulates key material output for the mechanism

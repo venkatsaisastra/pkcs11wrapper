@@ -86,7 +86,7 @@ public class DomainParameters extends Storage {
      * @exception sun.security.pkcs11.wrapper.PKCS11Exception
      *              If getting the attributes failed.
      */
-    public PKCS11Object build(Session session, long objectHandle)
+    PKCS11Object build(Session session, long objectHandle)
         throws sun.security.pkcs11.wrapper.PKCS11Exception;
 
   }
@@ -200,8 +200,7 @@ public class DomainParameters extends Storage {
         newObject = DHParams.getInstance(session, objectHandle);
       } else if (keyType.equals(Key.KeyType.X9_42_DH)) {
         newObject = X942DHParams.getInstance(session, objectHandle);
-      } else if ((keyType.longValue()
-            & Key.KeyType.VENDOR_DEFINED.longValue()) != 0L) {
+      } else if ((keyType & Key.KeyType.VENDOR_DEFINED) != 0L) {
         newObject = getUnknownDomainParameters(session, objectHandle);
       } else {
         newObject = getUnknownDomainParameters(session, objectHandle);

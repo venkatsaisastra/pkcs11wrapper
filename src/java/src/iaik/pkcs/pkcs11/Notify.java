@@ -58,7 +58,7 @@ public interface Notify {
    * This is the code to return in a PKCS11Exception to signal surrender
    * to the library.
    */
-  static final long CANCEL = PKCS11Constants.CKR_CANCEL;
+  long CANCEL = PKCS11Constants.CKR_CANCEL;
 
   /**
    * The module calls this method in certain events. 'Surrender' is the only

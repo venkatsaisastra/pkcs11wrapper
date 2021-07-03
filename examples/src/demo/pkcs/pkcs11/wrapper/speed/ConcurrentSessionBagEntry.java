@@ -17,9 +17,8 @@
 
 package demo.pkcs.pkcs11.wrapper.speed;
 
-import org.xipki.util.concurrent.ConcurrentBagEntry;
-
 import iaik.pkcs.pkcs11.Session;
+import org.xipki.util.concurrent.ConcurrentBagEntry;
 
 /**
  * Concurrent bag entry for {@link Session}.

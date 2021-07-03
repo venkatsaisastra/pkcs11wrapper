@@ -42,14 +42,14 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * This class encapsulates parameters for the Mechanism.RSA_PKCS_PSS.

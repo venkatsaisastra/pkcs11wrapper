@@ -42,9 +42,9 @@
 
 package iaik.pkcs.pkcs11.objects;
 
-import java.util.Arrays;
-
 import iaik.pkcs.pkcs11.Util;
+
+import java.util.Arrays;
 
 /**
  * Objects of this class represent a char-array attribute of a PKCS#11 object
@@ -62,7 +62,7 @@ public class CharArrayAttribute extends Attribute {
    *          The PKCS#11 type of this attribute; e.g.
    *          PKCS11Constants.CKA_LABEL.
    */
-  public CharArrayAttribute(Long type) {
+  public CharArrayAttribute(long type) {
     super(type);
   }
 

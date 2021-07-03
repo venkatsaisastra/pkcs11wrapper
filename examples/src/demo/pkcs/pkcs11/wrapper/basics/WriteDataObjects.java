@@ -42,14 +42,13 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.Data;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
+import org.junit.Test;
 
 /**
  * This demo program can be used to download data to the card.

@@ -17,9 +17,6 @@
 
 package demo.pkcs.pkcs11.wrapper.speed.signature;
 
-import org.junit.Test;
-import org.xipki.util.BenchmarkExecutor;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
@@ -33,6 +30,8 @@ import iaik.pkcs.pkcs11.parameters.RSAPkcsPssParameters;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import junit.framework.Assert;
+import org.junit.Test;
+import org.xipki.util.BenchmarkExecutor;
 
 /**
  * RSA/PSS sign / verify speed test.
@@ -97,7 +96,7 @@ public class RSAPSSSignSpeed extends TestBase {
 
   private PublicKey getMinimalPublicKeyTemplate0() {
     RSAPublicKey publicKeyTemplate = new RSAPublicKey();
-    publicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(2048));
+    publicKeyTemplate.getModulusBits().setLongValue(2048L);
     return publicKeyTemplate;
   }
 

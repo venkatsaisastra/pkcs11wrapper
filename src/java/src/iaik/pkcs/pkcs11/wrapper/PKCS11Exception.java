@@ -64,9 +64,9 @@ public class PKCS11Exception extends TokenException {
   /**
    * The code of the error which was the reason for this exception.
    */
-  private long errorCode;
+  private final long errorCode;
 
-  private String errorDescription;
+  private final String errorDescription;
 
   /**
    * Constructor taking the error code as defined for the CKR_* constants

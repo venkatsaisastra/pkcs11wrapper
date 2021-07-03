@@ -190,8 +190,7 @@ public class SecretKey extends Key {
     PKCS11Object newObject;
 
     if (keyTypeAttribute.isPresent() && (keyType != null)) {
-      newObject = ValuedSecretKey.getInstance(session, objectHandle,
-          keyType.longValue());
+      newObject = ValuedSecretKey.getInstance(session, objectHandle, keyType);
     } else {
       newObject = getUnknownSecretKey(session, objectHandle);
     }

@@ -17,13 +17,13 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-
 import iaik.pkcs.pkcs11.Util;
 import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
 import sun.security.pkcs11.wrapper.CK_VERSION;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * CK_TLS12_MASTER_KEY_DERIVE_PARAMS from PKCS#11 v2.40.

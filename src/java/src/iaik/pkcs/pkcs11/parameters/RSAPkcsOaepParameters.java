@@ -42,12 +42,12 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import java.util.Arrays;
-
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import sun.security.pkcs11.wrapper.CK_RSA_PKCS_OAEP_PARAMS;
+
+import java.util.Arrays;
 
 /**
  * This class encapsulates parameters for the Mechanism.RSA_PKCS_OAEP.
@@ -71,21 +71,19 @@ public class RSAPkcsOaepParameters extends RSAPkcsParameters {
      * The identifier for empty parameter. This is not defined explicitly
      * in the PKCS#11 v2.11 standard but in the text.
      */
-    public static final long EMPTY = 0L;
+    long EMPTY = 0L;
 
     /**
      * The identifier for CKZ_SALT_SPECIFIED.
      */
-    public static final long SALT_SPECIFIED
-        = PKCS11Constants.CKZ_SALT_SPECIFIED;
+    long SALT_SPECIFIED = PKCS11Constants.CKZ_SALT_SPECIFIED;
 
     /**
      * Deprecated, use SALT_SPECIFIED instead.
      *
      */
     @Deprecated
-    public static final long DATA_SPECIFIED
-        = PKCS11Constants.CKZ_SALT_SPECIFIED;
+    long DATA_SPECIFIED = PKCS11Constants.CKZ_SALT_SPECIFIED;
   }
 
   /**

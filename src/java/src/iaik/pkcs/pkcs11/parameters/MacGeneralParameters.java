@@ -76,7 +76,7 @@ public class MacGeneralParameters implements Parameters {
    */
   @Override
   public Long getPKCS11ParamsObject() {
-    return Long.valueOf(macLength);
+    return macLength;
   }
 
   /**

@@ -42,10 +42,10 @@
 
 package iaik.pkcs.pkcs11;
 
-import java.util.Date;
-
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import sun.security.pkcs11.wrapper.CK_TOKEN_INFO;
+
+import java.util.Date;
 
 /**
  * Objects of this class provide information about a token. Serial number,
@@ -76,94 +76,94 @@ public class TokenInfo {
   /**
    * The label of this token.
    */
-  private String label;
+  private final String label;
 
   /**
    * The identifier of the manufacturer of this token.
    */
   // CHECKSTYLE:SKIP
-  private String manufacturerID;
+  private final String manufacturerID;
 
   /**
    * The model of this token.
    */
-  private String model;
+  private final String model;
 
   /**
    * The serial number of this token.
    */
-  private String serialNumber;
+  private final String serialNumber;
 
   /**
    * The maximum number of concurrent (open) sessions.
    */
-  private long maxSessionCount;
+  private final long maxSessionCount;
 
   /**
    * The current number of open sessions.
    */
-  private long sessionCount;
+  private final long sessionCount;
 
   /**
    * Maximum number of concurrent (open) read-write sessions.
    */
-  private long maxRwSessionCount;
+  private final long maxRwSessionCount;
 
   /**
    * The current number of open read-write sessions.
    */
-  private long rwSessionCount;
+  private final long rwSessionCount;
 
   /**
    * The maximum PIN length that this token allows.
    */
-  private long maxPinLen;
+  private final long maxPinLen;
 
   /**
    * The minimum PIN length that this token allows.
    */
-  private long minPinLen;
+  private final long minPinLen;
 
   /**
    * The total amount of memory for public objects on this token.
    */
-  private long totalPublicMemory;
+  private final long totalPublicMemory;
 
   /**
    * The amount of free memory for public objects on this token.
    */
-  private long freePublicMemory;
+  private final long freePublicMemory;
 
   /**
    * The total amount of memory for private objects on this token.
    */
-  private long totalPrivateMemory;
+  private final long totalPrivateMemory;
 
   /**
    * The amount of free memory for private objects on this token.
    */
-  private long freePrivateMemory;
+  private final long freePrivateMemory;
 
   /**
    * The version of the hardware of this token.
    */
-  private Version hardwareVersion;
+  private final Version hardwareVersion;
 
   /**
    * The version of the firmware of this token.
    */
-  private Version firmwareVersion;
+  private final Version firmwareVersion;
 
   /**
    * The current time on the token. This value only makes sense, if the token
    * contains a clock.
    */
-  private Date time;
+  private final Date time;
 
   /**
    * The token flags.
    */
-  private long flags;
+  private final long flags;
 
   /**
    * Constructor taking CK_TOKEN_INFO as given returned by

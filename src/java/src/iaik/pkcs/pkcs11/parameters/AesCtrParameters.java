@@ -42,10 +42,10 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import java.util.Arrays;
-
 import iaik.pkcs.pkcs11.Util;
 import sun.security.pkcs11.wrapper.CK_AES_CTR_PARAMS;
+
+import java.util.Arrays;
 
 /**
  * This class represents the necessary parameters required by

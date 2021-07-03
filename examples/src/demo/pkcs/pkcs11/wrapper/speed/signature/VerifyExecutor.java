@@ -17,11 +17,6 @@
 
 package demo.pkcs.pkcs11.wrapper.speed.signature;
 
-import java.util.Random;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.speed.ConcurrentSessionBagEntry;
 import demo.pkcs.pkcs11.wrapper.speed.Pkcs11Executor;
@@ -32,6 +27,10 @@ import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Random;
 
 /**
  * Verify executor base class.
@@ -77,11 +76,11 @@ public abstract class VerifyExecutor extends Pkcs11Executor {
 
   private final Mechanism signMechanism;
 
-  private KeyPair keypair;
+  private final KeyPair keypair;
 
-  private byte[] dataToVerify;
+  private final byte[] dataToVerify;
 
-  private byte[] signatureToVerify;
+  private final byte[] signatureToVerify;
 
   public VerifyExecutor(String description, Mechanism keypairGenMechanism,
       Token token, char[] pin, Mechanism signMechanism, int inputLen)

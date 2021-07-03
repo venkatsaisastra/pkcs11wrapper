@@ -60,28 +60,28 @@ public class SlotInfo {
   /**
    * A short description of this slot.
    */
-  private String slotDescription;
+  private final String slotDescription;
 
   /**
    * A string identifying the manufacturer of this slot.
    */
   // CHECKSTYLE:SKIP
-  private String manufacturerID;
+  private final String manufacturerID;
 
   /**
    * The version of the slot's hardware.
    */
-  private Version hardwareVersion;
+  private final Version hardwareVersion;
 
   /**
    * The version of the slot's firmware.
    */
-  private Version firmwareVersion;
+  private final Version firmwareVersion;
 
   /**
    * The flags.
    */
-  private long flags;
+  private final long flags;
 
   /**
    * Constructor that takes the CK_SLOT_INFO object as given by

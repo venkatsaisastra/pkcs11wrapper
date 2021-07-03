@@ -42,9 +42,7 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
 import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_PARAMS;
-import sun.security.pkcs11.wrapper.CK_SSL3_RANDOM_DATA;
 
 /**
  * This class encapsulates parameters for the Mechanism.SSL3_KEY_AND_MAC_DERIVE
@@ -72,9 +70,8 @@ public class SSL3KeyMaterialParameters extends TLSKeyMaterialParameters {
   public CK_SSL3_KEY_MAT_PARAMS getPKCS11ParamsObject() {
     CK_SSL3_KEY_MAT_PARAMS params = new CK_SSL3_KEY_MAT_PARAMS(
         (int) macSizeInBits,(int) keySizeInBits, (int) ivSizeInBits,
-        export, (CK_SSL3_RANDOM_DATA) randomInfo.getPKCS11ParamsObject());
-    params.pReturnedKeyMaterial = (CK_SSL3_KEY_MAT_OUT)
-        returnedKeyMaterial.getPKCS11ParamsObject();
+        export, randomInfo.getPKCS11ParamsObject());
+    params.pReturnedKeyMaterial = returnedKeyMaterial.getPKCS11ParamsObject();
 
     return params;
   }

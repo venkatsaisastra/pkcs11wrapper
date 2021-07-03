@@ -590,11 +590,7 @@ public class MechanismInfo {
       return false;
     }
 
-    if ((requiredFeatures.flags & flags) != requiredFeatures.flags) {
-      return false;
-    }
-
-    return true;
+    return (requiredFeatures.flags & flags) == requiredFeatures.flags;
   }
 
   /**

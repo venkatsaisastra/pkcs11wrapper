@@ -109,13 +109,13 @@ public class Token {
     /**
      * Indicates a parallel session. (No longer supported by PKCS#11!).
      */
-    public static boolean PARALLEL_SESSION = false;
+    boolean PARALLEL_SESSION = false;
 
     /**
      * Indicates a serial session. This is the only type of session
      * currently allowed by PKCS#11.
      */
-    public static boolean SERIAL_SESSION = true;
+    boolean SERIAL_SESSION = true;
 
   }
 
@@ -133,25 +133,25 @@ public class Token {
     /**
      * Indicates a read-only session.
      */
-    public static boolean RO_SESSION = false;
+    boolean RO_SESSION = false;
 
     /**
      * Indicates a read-write session.
      */
-    public static boolean RW_SESSION = true;
+    boolean RW_SESSION = true;
 
   }
 
   /**
    * The reference to the slot.
    */
-  private Slot slot;
+  private final Slot slot;
 
   /**
    * True, if UTF8 encoding is used as character encoding for character array
    * attributes and PINs.
    */
-  private boolean useUtf8Encoding;
+  private final boolean useUtf8Encoding;
 
   /**
    * The constructor that takes a reference to the module and the slot ID.

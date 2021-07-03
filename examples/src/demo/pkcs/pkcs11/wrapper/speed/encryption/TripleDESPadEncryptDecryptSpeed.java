@@ -42,9 +42,6 @@
 
 package demo.pkcs.pkcs11.wrapper.speed.encryption;
 
-import org.junit.Test;
-import org.xipki.util.BenchmarkExecutor;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
@@ -55,6 +52,8 @@ import iaik.pkcs.pkcs11.parameters.InitializationVectorParameters;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import junit.framework.Assert;
+import org.junit.Test;
+import org.xipki.util.BenchmarkExecutor;
 
 /**
  * This demo program uses a PKCS#11 module to encrypt and decrypt via
@@ -122,8 +121,7 @@ public class TripleDESPadEncryptDecryptSpeed extends TestBase {
   }
 
   private ValuedSecretKey getMinimalKeyTemplate0() {
-    ValuedSecretKey keyTemplate = ValuedSecretKey.newDES3SecretKey();
-    return keyTemplate;
+    return ValuedSecretKey.newDES3SecretKey();
   }
 
   @Test

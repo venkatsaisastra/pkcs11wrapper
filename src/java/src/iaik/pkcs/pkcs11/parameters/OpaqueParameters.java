@@ -17,9 +17,9 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import java.util.Arrays;
-
 import iaik.pkcs.pkcs11.Util;
+
+import java.util.Arrays;
 
 /**
  * This class encapsulates parameters byte arrays.

@@ -17,10 +17,6 @@
 
 package demo.pkcs.pkcs11.wrapper.signatures;
 
-import java.security.MessageDigest;
-
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Session;
@@ -30,6 +26,9 @@ import iaik.pkcs.pkcs11.objects.PrivateKey;
 import iaik.pkcs.pkcs11.objects.PublicKey;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import org.junit.Test;
+
+import java.security.MessageDigest;
 
 /**
  * Signs some raw data on the token using CKM_RSA_PKCS.

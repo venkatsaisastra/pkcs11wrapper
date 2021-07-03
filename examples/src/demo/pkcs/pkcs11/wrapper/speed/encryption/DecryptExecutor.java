@@ -17,13 +17,6 @@
 
 package demo.pkcs.pkcs11.wrapper.speed.encryption;
 
-import java.util.Arrays;
-import java.util.Random;
-
-import org.junit.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.speed.ConcurrentSessionBagEntry;
 import demo.pkcs.pkcs11.wrapper.speed.Pkcs11Executor;
@@ -32,6 +25,12 @@ import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
+import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.Random;
 
 /**
  * Decryptor executor base class.
@@ -48,7 +47,7 @@ public abstract class DecryptExecutor extends Pkcs11Executor {
     public MyRunnable() {
     }
 
-    private byte[] out = new byte[plainData.length + 64];
+    private final byte[] out = new byte[plainData.length + 64];
 
     @Override
     public void run() {
@@ -85,7 +84,7 @@ public abstract class DecryptExecutor extends Pkcs11Executor {
 
   private final byte[] plainData;
 
-  private ValuedSecretKey key;
+  private final ValuedSecretKey key;
 
   protected abstract ValuedSecretKey getMinimalKeyTemplate();
 

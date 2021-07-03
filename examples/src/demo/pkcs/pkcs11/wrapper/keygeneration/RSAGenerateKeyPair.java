@@ -42,6 +42,17 @@
 
 package demo.pkcs.pkcs11.wrapper.keygeneration;
 
+import demo.pkcs.pkcs11.wrapper.TestBase;
+import demo.pkcs.pkcs11.wrapper.util.Util;
+import iaik.pkcs.pkcs11.*;
+import iaik.pkcs.pkcs11.objects.KeyPair;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
+import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
+import iaik.pkcs.pkcs11.objects.RSAPublicKey;
+import iaik.pkcs.pkcs11.wrapper.Functions;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import org.junit.Test;
+
 import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -51,22 +62,6 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
-
-import org.junit.Test;
-
-import demo.pkcs.pkcs11.wrapper.TestBase;
-import demo.pkcs.pkcs11.wrapper.util.Util;
-import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.MechanismInfo;
-import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.objects.KeyPair;
-import iaik.pkcs.pkcs11.objects.PKCS11Object;
-import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
-import iaik.pkcs.pkcs11.objects.RSAPublicKey;
-import iaik.pkcs.pkcs11.wrapper.Functions;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
  * This demo program generates a 2048 bit RSA key-pair on the token.
@@ -131,7 +126,7 @@ public class RSAGenerateKeyPair extends TestBase {
     RSAPrivateKey privateKeyTemplate = new RSAPrivateKey();
 
     // set the general attributes for the public key
-    publicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(2048));
+    publicKeyTemplate.getModulusBits().setLongValue(2048L);
     publicKeyTemplate.getToken().setBooleanValue(Boolean.TRUE);
     byte[] id = new byte[20];
     new Random().nextBytes(id);
@@ -213,7 +208,7 @@ public class RSAGenerateKeyPair extends TestBase {
       java.security.interfaces.RSAPublicKey javaRsaPublicKey =
           (java.security.interfaces.RSAPublicKey)
             keyFactory.generatePublic(rsaPublicKeySpec);
-      X509EncodedKeySpec x509EncodedPublicKey = (X509EncodedKeySpec)
+      X509EncodedKeySpec x509EncodedPublicKey =
           keyFactory.getKeySpec(javaRsaPublicKey, X509EncodedKeySpec.class);
       x509EncodedPublicKey.getEncoded();
 

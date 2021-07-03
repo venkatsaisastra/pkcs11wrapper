@@ -42,21 +42,11 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
-import iaik.pkcs.pkcs11.Info;
-import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.MechanismInfo;
 import iaik.pkcs.pkcs11.Module;
-import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.SessionInfo;
-import iaik.pkcs.pkcs11.Slot;
-import iaik.pkcs.pkcs11.SlotInfo;
-import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.TokenInfo;
+import iaik.pkcs.pkcs11.*;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
+import org.junit.Test;
 
 /**
  * This demo program lists information about a library, the available slots, the

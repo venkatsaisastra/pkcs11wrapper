@@ -17,28 +17,20 @@
 
 package demo.pkcs.pkcs11.wrapper.keygeneration;
 
+import demo.pkcs.pkcs11.wrapper.TestBase;
+import demo.pkcs.pkcs11.wrapper.util.Util;
+import iaik.pkcs.pkcs11.Mechanism;
+import iaik.pkcs.pkcs11.*;
+import iaik.pkcs.pkcs11.objects.*;
+import iaik.pkcs.pkcs11.wrapper.Functions;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import org.junit.Test;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
-
-import org.junit.Test;
-
-import demo.pkcs.pkcs11.wrapper.TestBase;
-import demo.pkcs.pkcs11.wrapper.util.Util;
-import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.MechanismInfo;
-import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.objects.DSAPrivateKey;
-import iaik.pkcs.pkcs11.objects.DSAPublicKey;
-import iaik.pkcs.pkcs11.objects.ECPublicKey;
-import iaik.pkcs.pkcs11.objects.KeyPair;
-import iaik.pkcs.pkcs11.objects.PKCS11Object;
-import iaik.pkcs.pkcs11.wrapper.Functions;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
  * This demo program generates a 2048 bit DSA key-pair on the token.
@@ -60,7 +52,7 @@ public class DSAGenerateKeyPair extends TestBase {
   }
 
   private void main0(Token token, Session session)
-      throws TokenException, NoSuchAlgorithmException, InvalidKeySpecException {
+      throws TokenException {
     LOG.info("##################################################");
     LOG.info("Generating new DSA key-pair... ");
 
@@ -171,7 +163,7 @@ public class DSAGenerateKeyPair extends TestBase {
       byte[] value =
           exportablePublicKey.getValue().getByteArrayValue();
 
-      LOG.info("Public Key (Value): ", Functions.toHexString(value));
+      LOG.info("Public Key (Value): {}", Functions.toHexString(value));
 
       // now we try to search for the generated keys
       LOG.info("##################################################");

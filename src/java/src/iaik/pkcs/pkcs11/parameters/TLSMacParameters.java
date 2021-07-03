@@ -17,10 +17,10 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
+import iaik.pkcs.pkcs11.Util;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-
-import iaik.pkcs.pkcs11.Util;
 
 /**
  * CK_TLS_MAC_PARAMS from PKCS#11 v2.40.

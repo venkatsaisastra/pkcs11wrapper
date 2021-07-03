@@ -17,8 +17,6 @@
 
 package demo.pkcs.pkcs11.wrapper.speed.keygeneration;
 
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Token;
@@ -30,6 +28,7 @@ import iaik.pkcs.pkcs11.objects.RSAPublicKey;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import junit.framework.Assert;
+import org.junit.Test;
 
 /**
  * EDDSA Keypair Generation Speed Test
@@ -55,7 +54,7 @@ public class RSAKeypairGenSpeed extends TestBase {
     @Override
     protected PublicKey getMinimalPublicKeyTemplate() {
       RSAPublicKey publicKeyTemplate = new RSAPublicKey();
-      publicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(2048));
+      publicKeyTemplate.getModulusBits().setLongValue(2048L);
       return publicKeyTemplate;
     }
 

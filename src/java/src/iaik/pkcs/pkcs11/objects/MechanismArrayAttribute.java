@@ -42,10 +42,10 @@
 
 package iaik.pkcs.pkcs11.objects;
 
-import java.util.Arrays;
-
 import iaik.pkcs.pkcs11.Mechanism;
 import iaik.pkcs.pkcs11.Util;
+
+import java.util.Arrays;
 
 /**
  * Objects of this class represent a mechanism array attribute of a PKCS#11
@@ -99,11 +99,10 @@ public class MechanismArrayAttribute extends Attribute {
     Mechanism[] mechanisms = null;
     if (ckAttribute.pValue != null) {
       long[] values = (long[]) ckAttribute.pValue;
-      if (values != null && values.length > 0) {
+      if (values.length > 0) {
         mechanisms = new Mechanism[values.length];
         for (int i = 0; i < values.length; i++) {
-          Mechanism mechanism = new Mechanism(values[i]);
-          mechanisms[i] = mechanism;
+          mechanisms[i] = new Mechanism(values[i]);
         }
       }
     }
@@ -120,8 +119,8 @@ public class MechanismArrayAttribute extends Attribute {
     StringBuilder sb = new StringBuilder(1024);
     Mechanism[] allowedMechanisms = getMechanismAttributeArrayValue();
     if (allowedMechanisms != null && allowedMechanisms.length > 0) {
-      for (int i = 0; i < allowedMechanisms.length; i++) {
-        sb.append("\n      ").append(allowedMechanisms[i].getName());
+      for (Mechanism allowedMechanism : allowedMechanisms) {
+        sb.append("\n      ").append(allowedMechanism.getName());
       }
       return sb.toString();
     } else {

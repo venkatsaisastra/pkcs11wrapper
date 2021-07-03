@@ -17,27 +17,22 @@
 
 package demo.pkcs.pkcs11.wrapper.keygeneration;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Random;
-
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
-import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.MechanismInfo;
-import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
+import iaik.pkcs.pkcs11.*;
 import iaik.pkcs.pkcs11.objects.ECPrivateKey;
 import iaik.pkcs.pkcs11.objects.ECPublicKey;
 import iaik.pkcs.pkcs11.objects.KeyPair;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import org.junit.Test;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Random;
 
 /**
  * This demo program generates an Ed25519 key-pair on the token.
@@ -59,7 +54,7 @@ public class EdDSAGenerateKeyPair extends TestBase {
   }
 
   private void main0(Token token, Session session)
-      throws TokenException, NoSuchAlgorithmException, InvalidKeySpecException {
+      throws TokenException {
     LOG.info("##################################################");
     LOG.info("Generating new EdDSA (curve Ed25519) key-pair... ");
 
@@ -169,8 +164,8 @@ public class EdDSAGenerateKeyPair extends TestBase {
       byte[] curveOid =
           exportablePublicKey.getEcdsaParams().getByteArrayValue();
 
-      LOG.info("Public Key (Point): ", Functions.toHexString(encodedPoint));
-      LOG.info("Public Key (Curve OID): ", Functions.toHexString(curveOid));
+      LOG.info("Public Key (Point): {}", Functions.toHexString(encodedPoint));
+      LOG.info("Public Key (Curve OID): {}", Functions.toHexString(curveOid));
 
       // now we try to search for the generated keys
       LOG.info("##################################################");

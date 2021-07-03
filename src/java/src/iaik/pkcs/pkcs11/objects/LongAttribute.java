@@ -103,8 +103,7 @@ public class LongAttribute extends Attribute {
     String valueString;
 
     if ((ckAttribute != null) && (ckAttribute.pValue != null)) {
-      valueString = Long.toString(
-          ((Long) ckAttribute.pValue).longValue(), radix);
+      valueString = Long.toString(((Long) ckAttribute.pValue), radix);
     } else {
       valueString = "<NULL_PTR>";
     }

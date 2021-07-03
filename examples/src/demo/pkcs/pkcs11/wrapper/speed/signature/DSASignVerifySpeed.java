@@ -17,9 +17,6 @@
 
 package demo.pkcs.pkcs11.wrapper.speed.signature;
 
-import org.junit.Test;
-import org.xipki.util.BenchmarkExecutor;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
@@ -32,6 +29,8 @@ import iaik.pkcs.pkcs11.objects.PublicKey;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import junit.framework.Assert;
+import org.junit.Test;
+import org.xipki.util.BenchmarkExecutor;
 
 /**
  * DSA sign / verify speed test.

@@ -42,14 +42,9 @@
 
 package iaik.pkcs.pkcs11.wrapper;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.StringTokenizer;
-
 import iaik.pkcs.pkcs11.Mechanism;
+
+import java.util.*;
 
 /**
  * This class contains only static methods. It is the place for all functions
@@ -154,7 +149,7 @@ public class Functions implements PKCS11Constants {
    */
   private static Map<String, Long> mechNameToCodes;
 
-  private static Map<Long, String> hashMechCodeToHashNames;
+  private static final Map<Long, String> hashMechCodeToHashNames;
 
   /**
    * True, if the mapping of error codes to PKCS#11 error names is available.
@@ -168,7 +163,7 @@ public class Functions implements PKCS11Constants {
   private static Map<Long, String> errorCodeNames;
 
   // MGFs (CKG_*)
-  private static final Map<Long, String> mgfNames = new HashMap<Long, String>();
+  private static final Map<Long, String> mgfNames = new HashMap<>();
 
   /**
    * This set contains the mechanisms that are full encrypt/decrypt
@@ -286,9 +281,7 @@ public class Functions implements PKCS11Constants {
     StringBuilder sb = new StringBuilder();
     sb.append(String.format("%#010x", mechCode));
     String name = mechanismCodeToString(mechCode);
-    if (name != null) {
-      sb.append(" (").append(name).append(")");
-    }
+    sb.append(" (").append(name).append(")");
     return sb.toString();
   }
 

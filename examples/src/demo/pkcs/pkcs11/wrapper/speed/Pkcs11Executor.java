@@ -17,15 +17,14 @@
 
 package demo.pkcs.pkcs11.wrapper.speed;
 
-import java.util.concurrent.TimeUnit;
-
-import org.xipki.util.BenchmarkExecutor;
-import org.xipki.util.concurrent.ConcurrentBag;
-
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
+import org.xipki.util.BenchmarkExecutor;
+import org.xipki.util.concurrent.ConcurrentBag;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Benchmark executor base class.

@@ -42,11 +42,11 @@
 
 package iaik.pkcs.pkcs11.objects;
 
-import java.io.UnsupportedEncodingException;
-
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * Objects of this class represent a clock as specified by PKCS#11
@@ -205,11 +205,7 @@ public class Clock extends HardwareFeature {
   public String toString() {
     StringBuilder sb = new StringBuilder(super.toString());
     sb.append("\nValue: ");
-    try {
-      sb.append(new String(value.getByteArrayValue(), "ASCII"));
-    } catch (UnsupportedEncodingException ex) {
-      sb.append(new String(value.getByteArrayValue()));
-    }
+    sb.append(new String(value.getByteArrayValue(), StandardCharsets.US_ASCII));
 
     return sb.toString();
   }

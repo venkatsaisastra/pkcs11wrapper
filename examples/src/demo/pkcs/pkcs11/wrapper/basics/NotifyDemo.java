@@ -42,14 +42,12 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Notify;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
+import org.junit.Test;
 
 /**
  * This demo program tries to set a callback Notify handler.
@@ -58,8 +56,7 @@ public class NotifyDemo extends TestBase {
 
   private static class MyNotify implements Notify {
 
-    public void notify(Session session, boolean surrender, Object application)
-        throws PKCS11Exception {
+    public void notify(Session session, boolean surrender, Object application) {
       System.out.println("we got a Notify callback !!!");
       // we do not throw an exception, this means return value CKR_OK
     }

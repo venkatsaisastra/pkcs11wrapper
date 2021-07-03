@@ -42,14 +42,13 @@
 
 package iaik.pkcs.pkcs11.objects;
 
-import java.util.Enumeration;
-import java.util.LinkedList;
-import java.util.List;
-
-//import java.util.Collection;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
+
+import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * An object of this class is a generic template. Its purpose is to serve
@@ -213,7 +212,7 @@ public class GenericTemplate extends PKCS11Object {
   public Attribute removeAttribute(Attribute attribute) {
     Util.requireNonNull("attribute", attribute);
 
-    return (Attribute) attributeTable.remove(attribute.getType());
+    return attributeTable.remove(attribute.getType());
   }
 
   /**

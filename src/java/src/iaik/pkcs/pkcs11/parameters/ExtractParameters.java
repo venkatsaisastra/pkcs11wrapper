@@ -76,7 +76,7 @@ public class ExtractParameters implements Parameters {
    */
   @Override
   public Long getPKCS11ParamsObject() {
-    return Long.valueOf(bitIndex);
+    return bitIndex;
   }
 
   /**

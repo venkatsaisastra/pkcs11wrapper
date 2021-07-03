@@ -42,11 +42,6 @@
 
 package demo.pkcs.pkcs11.wrapper.SSL;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Mechanism;
@@ -55,12 +50,12 @@ import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.objects.SecretKey;
 import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
-import iaik.pkcs.pkcs11.parameters.SSL3KeyMaterialOutParameters;
-import iaik.pkcs.pkcs11.parameters.SSL3RandomDataParameters;
-import iaik.pkcs.pkcs11.parameters.TLS12KeyMaterialParameters;
-import iaik.pkcs.pkcs11.parameters.TLS12MasterKeyDeriveParameters;
-import iaik.pkcs.pkcs11.parameters.VersionParameters;
+import iaik.pkcs.pkcs11.parameters.*;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import org.junit.Test;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 /**
  * This demo program shows how to use the SSL mechanisms. Ensure that your token

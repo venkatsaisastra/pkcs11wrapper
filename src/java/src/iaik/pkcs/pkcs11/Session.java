@@ -42,55 +42,17 @@
 
 package iaik.pkcs.pkcs11;
 
+import iaik.pkcs.pkcs11.objects.*;
+import iaik.pkcs.pkcs11.parameters.*;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
+import sun.security.pkcs11.wrapper.*;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Vector;
-
-import iaik.pkcs.pkcs11.objects.Key;
-import iaik.pkcs.pkcs11.objects.KeyPair;
-import iaik.pkcs.pkcs11.objects.PKCS11Object;
-import iaik.pkcs.pkcs11.objects.PrivateKey;
-import iaik.pkcs.pkcs11.objects.PublicKey;
-import iaik.pkcs.pkcs11.objects.SecretKey;
-import iaik.pkcs.pkcs11.parameters.AesCtrParameters;
-import iaik.pkcs.pkcs11.parameters.CCMParameters;
-import iaik.pkcs.pkcs11.parameters.DHPkcsDeriveParameters;
-import iaik.pkcs.pkcs11.parameters.EcDH1KeyDerivationParameters;
-import iaik.pkcs.pkcs11.parameters.EcDH2KeyDerivationParameters;
-import iaik.pkcs.pkcs11.parameters.ExtractParameters;
-import iaik.pkcs.pkcs11.parameters.GCMParameters;
-import iaik.pkcs.pkcs11.parameters.InitializationVectorParameters;
-import iaik.pkcs.pkcs11.parameters.MacGeneralParameters;
-import iaik.pkcs.pkcs11.parameters.ObjectHandleParameters;
-import iaik.pkcs.pkcs11.parameters.OpaqueParameters;
-import iaik.pkcs.pkcs11.parameters.PBEParameters;
-import iaik.pkcs.pkcs11.parameters.PKCS5PBKD2Parameters;
-import iaik.pkcs.pkcs11.parameters.Parameters;
-import iaik.pkcs.pkcs11.parameters.RSAPkcsOaepParameters;
-import iaik.pkcs.pkcs11.parameters.RSAPkcsPssParameters;
-import iaik.pkcs.pkcs11.parameters.SSL3KeyMaterialParameters;
-import iaik.pkcs.pkcs11.parameters.SSL3MasterKeyDeriveParameters;
-import iaik.pkcs.pkcs11.parameters.SSL3RandomDataParameters;
-import iaik.pkcs.pkcs11.parameters.TLS12KeyMaterialParameters;
-import iaik.pkcs.pkcs11.parameters.TLS12MasterKeyDeriveParameters;
-import iaik.pkcs.pkcs11.parameters.TLSMacParameters;
-import iaik.pkcs.pkcs11.parameters.TLSPRFParameters;
-import iaik.pkcs.pkcs11.parameters.VersionParameters;
-import iaik.pkcs.pkcs11.parameters.X942DH1KeyDerivationParameters;
-import iaik.pkcs.pkcs11.parameters.X942DH2KeyDerivationParameters;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
-import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
-import sun.security.pkcs11.wrapper.CK_MECHANISM;
-import sun.security.pkcs11.wrapper.CK_RSA_PKCS_PSS_PARAMS;
-import sun.security.pkcs11.wrapper.CK_SESSION_INFO;
-import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_OUT;
-import sun.security.pkcs11.wrapper.CK_SSL3_KEY_MAT_PARAMS;
-import sun.security.pkcs11.wrapper.CK_SSL3_MASTER_KEY_DERIVE_PARAMS;
-import sun.security.pkcs11.wrapper.CK_VERSION;
-import sun.security.pkcs11.wrapper.PKCS11;
 
 /**
  * Session objects are used to perform cryptographic operations on a token. The
@@ -191,12 +153,12 @@ public class Session {
     /**
      * This constant stands for the security officer.
      */
-    public static boolean SO = false;
+    boolean SO = false;
 
     /**
      * Thsi constant stands for the user (token owner).
      */
-    public static boolean USER = true;
+    boolean USER = true;
 
   }
 
@@ -226,12 +188,12 @@ public class Session {
   /**
    * A reference to the underlying PKCS#11 module to perform the operations.
    */
-  private Module module;
+  private final Module module;
 
   /**
    * A reference to the underlying PKCS#11 module to perform the operations.
    */
-  private PKCS11 pkcs11Module;
+  private final PKCS11 pkcs11Module;
 
   /**
    * The session handle to perform the operations with.
@@ -241,7 +203,7 @@ public class Session {
   /**
    * The token to perform the operations on.
    */
-  private Token token;
+  private final Token token;
 
   static {
     Class<?> clazz = PKCS11.class;
@@ -784,8 +746,8 @@ public class Session {
     }
 
     try {
-      for (int i = 0; i < objectHandles.length; i++) {
-        PKCS11Object object = PKCS11Object.getInstance(this, objectHandles[i]);
+      for (long objectHandle : objectHandles) {
+        PKCS11Object object = PKCS11Object.getInstance(this, objectHandle);
         foundObjects.addElement(object);
       }
       PKCS11Object[] objectArray = new PKCS11Object[foundObjects.size()];
@@ -2044,9 +2006,6 @@ public class Session {
             "could not construct CK_MECHANISM for RSAPkcsPssParams", ex);
       }
       return mech;
-    } else if (params instanceof SSL3KeyMaterialParameters) {
-      return new CK_MECHANISM(code,
-          ((SSL3KeyMaterialParameters) params).getPKCS11ParamsObject());
     } else if (params instanceof SSL3KeyMaterialParameters) {
       return new CK_MECHANISM(code,
           ((SSL3KeyMaterialParameters) params).getPKCS11ParamsObject());

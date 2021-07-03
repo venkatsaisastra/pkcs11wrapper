@@ -42,8 +42,6 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
@@ -51,6 +49,7 @@ import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.TokenInfo;
 import iaik.pkcs.pkcs11.objects.Data;
 import iaik.pkcs.pkcs11.objects.PKCS11Object;
+import org.junit.Test;
 
 /**
  * This demo program read a data object with a specific label from the token.

@@ -17,15 +17,7 @@
 
 package demo.pkcs.pkcs11.wrapper;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -108,7 +100,7 @@ public class CanonicalizeCode {
       boolean lastLineEmpty = false;
 
       while ((line = reader.readLine()) != null) {
-        String canonicalizedLine = canonicalizeLine(line, newLine);
+        String canonicalizedLine = canonicalizeLine(line);
         boolean addThisLine = true;
         if (canonicalizedLine.isEmpty()) {
           if (!lastLineEmpty) {
@@ -143,7 +135,7 @@ public class CanonicalizeCode {
   /**
    * replace tab by 4 spaces, delete white spaces at the end.
    */
-  private static String canonicalizeLine(String line, byte[] newLine) {
+  private static String canonicalizeLine(String line) {
     if (line.trim().startsWith("//")) {
       // comments
       String nline = line.replace("\t", "    ");
@@ -226,18 +218,15 @@ public class CanonicalizeCode {
 
   public static void save(final File file, final byte[] content)
       throws IOException {
-    FileOutputStream out = new FileOutputStream(file);
-    try {
+    try (FileOutputStream out = new FileOutputStream(file)) {
       out.write(content);
-    } finally {
-      out.close();
     }
   }
 
   public static byte[] read(final InputStream in) throws IOException {
     try {
       ByteArrayOutputStream bout = new ByteArrayOutputStream();
-      int readed = 0;
+      int readed;
       byte[] buffer = new byte[2048];
       while ((readed = in.read(buffer)) != -1) {
         bout.write(buffer, 0, readed);
@@ -270,8 +259,6 @@ public class CanonicalizeCode {
             && !file.getName().equals("dev")) {
           checkWarningsInDir(file);
         }
-
-        continue;
       } else {
         String filename = file.getName();
         int idx = filename.lastIndexOf('.');
@@ -324,7 +311,6 @@ public class CanonicalizeCode {
               new StringTokenizer(trimmedLine, " ");
           if (tokenizer.countTokens() != 3) {
             lineNumbers.add(lineNumber);
-            continue;
           }
         }
 

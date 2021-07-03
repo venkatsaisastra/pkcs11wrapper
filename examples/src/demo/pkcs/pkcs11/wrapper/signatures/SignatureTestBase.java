@@ -17,14 +17,13 @@
 
 package demo.pkcs.pkcs11.wrapper.signatures;
 
-import java.security.Security;
-import java.security.Signature;
-
+import demo.pkcs.pkcs11.wrapper.TestBase;
+import iaik.pkcs.pkcs11.objects.PublicKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.BeforeClass;
 
-import demo.pkcs.pkcs11.wrapper.TestBase;
-import iaik.pkcs.pkcs11.objects.PublicKey;
+import java.security.Security;
+import java.security.Signature;
 
 /**
  * Signature test base

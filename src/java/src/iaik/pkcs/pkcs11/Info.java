@@ -56,23 +56,23 @@ public class Info {
   /**
    * The module claims to be compliant to this version of PKCS#11.
    */
-  private Version cryptokiVersion;
+  private final Version cryptokiVersion;
 
   /**
    * The identifier for the manufacturer of this module.
    */
   // CHECKSTYLE:SKIP
-  private String manufacturerID;
+  private final String manufacturerID;
 
   /**
    * A description of this module.
    */
-  private String libraryDescription;
+  private final String libraryDescription;
 
   /**
    * The version number of this module.
    */
-  private Version libraryVersion;
+  private final Version libraryVersion;
 
   /**
    * Constructor taking the CK_INFO object of the token.

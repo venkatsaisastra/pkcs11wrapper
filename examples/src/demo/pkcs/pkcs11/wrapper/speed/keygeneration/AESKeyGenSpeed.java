@@ -17,8 +17,6 @@
 
 package demo.pkcs.pkcs11.wrapper.speed.keygeneration;
 
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import demo.pkcs.pkcs11.wrapper.util.Util;
 import iaik.pkcs.pkcs11.Token;
@@ -27,6 +25,7 @@ import iaik.pkcs.pkcs11.objects.ValuedSecretKey;
 import iaik.pkcs.pkcs11.wrapper.Functions;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import junit.framework.Assert;
+import org.junit.Test;
 
 /**
  * AES speed test base class.
@@ -45,7 +44,7 @@ public abstract class AESKeyGenSpeed extends TestBase {
     @Override
     protected ValuedSecretKey getMinimalKeyTemplate() {
       ValuedSecretKey template = ValuedSecretKey.newAESSecretKey();
-      template.getValueLen().setLongValue(Long.valueOf(getKeyByteLen()));
+      template.getValueLen().setLongValue((long) getKeyByteLen());
       return template;
     }
 

@@ -42,10 +42,10 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import java.util.Arrays;
-
 import iaik.pkcs.pkcs11.Util;
 import sun.security.pkcs11.wrapper.CK_TLS_PRF_PARAMS;
+
+import java.util.Arrays;
 
 public class TLSPRFParameters implements Parameters {
 
@@ -76,7 +76,7 @@ public class TLSPRFParameters implements Parameters {
   public boolean equals(Object otherObject) {
     if (this == otherObject) {
       return true;
-    } else if (!(otherObject instanceof TLSMacParameters)) {
+    } else if (!(otherObject instanceof TLSPRFParameters)) {
       return false;
     }
 

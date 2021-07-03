@@ -74,27 +74,24 @@ public class HardwareFeature extends PKCS11Object {
     /**
      * The identifier for a monotonic counter.
      */
-    public static final Long MONOTONIC_COUNTER =
-        Long.valueOf(PKCS11Constants.CKH_MONOTONIC_COUNTER);
+    long MONOTONIC_COUNTER = PKCS11Constants.CKH_MONOTONIC_COUNTER;
 
     /**
      * The identifier for a clock.
      */
-    public static final Long CLOCK = Long.valueOf(PKCS11Constants.CKH_CLOCK);
+    long CLOCK = PKCS11Constants.CKH_CLOCK;
 
     /**
      * The identifier for a user interface.
      */
-    public static final Long USER_INTERFACE =
-        Long.valueOf(PKCS11Constants.CKH_USER_INTERFACE);
+    long USER_INTERFACE = PKCS11Constants.CKH_USER_INTERFACE;
 
     /**
      * The identifier for a VENDOR_DEFINED hardware feature. Any Long object
      * with a value bigger than this one is also a valid vendor-defined
      * hardware feature type identifier.
      */
-    public static final Long VENDOR_DEFINED =
-        Long.valueOf(PKCS11Constants.CKH_VENDOR_DEFINED);
+    long VENDOR_DEFINED = PKCS11Constants.CKH_VENDOR_DEFINED;
 
   }
 
@@ -125,7 +122,7 @@ public class HardwareFeature extends PKCS11Object {
      * @exception sun.security.pkcs11.wrapper.PKCS11Exception
      *              If getting the attributes failed.
      */
-    public PKCS11Object build(Session session, long objectHandle)
+    PKCS11Object build(Session session, long objectHandle)
         throws sun.security.pkcs11.wrapper.PKCS11Exception;
 
   }
@@ -178,18 +175,16 @@ public class HardwareFeature extends PKCS11Object {
    *          The hardware feature type to get as string.
    * @return A string denoting the object hardware feature type; e.g. "Clock".
    */
-  public static String getHardwareFeatureTypeName(Long hardwareFeatureType) {
-    Util.requireNonNull("hardwareFeatureType", hardwareFeatureType);
+  public static String getHardwareFeatureTypeName(long hardwareFeatureType) {
     String hardwareFeatureTypeName;
 
-    if (hardwareFeatureType.equals(FeatureType.MONOTONIC_COUNTER)) {
+    if (hardwareFeatureType == FeatureType.MONOTONIC_COUNTER) {
       hardwareFeatureTypeName = "Monotonic Counter";
-    } else if (hardwareFeatureType.equals(FeatureType.CLOCK)) {
+    } else if (hardwareFeatureType == FeatureType.CLOCK) {
       hardwareFeatureTypeName = "Clock";
-    } else if (hardwareFeatureType.equals(FeatureType.USER_INTERFACE)) {
+    } else if (hardwareFeatureType == FeatureType.USER_INTERFACE) {
       hardwareFeatureTypeName = "User Interface";
-    } else if ((hardwareFeatureType.longValue()
-            & FeatureType.VENDOR_DEFINED.longValue()) != 0L) {
+    } else if ((hardwareFeatureType & FeatureType.VENDOR_DEFINED) != 0L) {
       hardwareFeatureTypeName = "Vendor Defined";
     } else {
       hardwareFeatureTypeName = "<unknown>";
@@ -240,8 +235,7 @@ public class HardwareFeature extends PKCS11Object {
         // TODO: add user interface object
         // newObject = UserInterface.getInstance(session, objectHandle);
         newObject = getUnknownHardwareFeature(session, objectHandle);
-      } else if ((hardwareFeatureType.longValue()
-              & FeatureType.VENDOR_DEFINED.longValue()) != 0L) {
+      } else if ((hardwareFeatureType & FeatureType.VENDOR_DEFINED) != 0L) {
         newObject = getUnknownHardwareFeature(session, objectHandle);
       } else {
         newObject = getUnknownHardwareFeature(session, objectHandle);

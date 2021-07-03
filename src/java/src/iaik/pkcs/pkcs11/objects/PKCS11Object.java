@@ -42,11 +42,6 @@
 
 package iaik.pkcs.pkcs11.objects;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-
-//import java.util.Collections;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.UnsupportedAttributeException;
@@ -55,6 +50,10 @@ import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
 import sun.security.pkcs11.wrapper.PKCS11;
+
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * An object of this class represents an object as defined by PKCS#11.

@@ -42,6 +42,17 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
+import demo.pkcs.pkcs11.wrapper.TestBase;
+import demo.pkcs.pkcs11.wrapper.util.Util;
+import iaik.pkcs.pkcs11.Session;
+import iaik.pkcs.pkcs11.Token;
+import iaik.pkcs.pkcs11.TokenException;
+import iaik.pkcs.pkcs11.TokenInfo;
+import iaik.pkcs.pkcs11.objects.*;
+import org.junit.Test;
+
+import javax.crypto.spec.DHParameterSpec;
+import javax.security.auth.x500.X500Principal;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -55,24 +66,6 @@ import java.security.interfaces.DSAParams;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import javax.crypto.spec.DHParameterSpec;
-import javax.security.auth.x500.X500Principal;
-
-import org.junit.Test;
-
-import demo.pkcs.pkcs11.wrapper.TestBase;
-import demo.pkcs.pkcs11.wrapper.util.Util;
-import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.TokenInfo;
-import iaik.pkcs.pkcs11.objects.DHPrivateKey;
-import iaik.pkcs.pkcs11.objects.DSAPrivateKey;
-import iaik.pkcs.pkcs11.objects.Key;
-import iaik.pkcs.pkcs11.objects.PKCS11Object;
-import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
-import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
 
 /**
  * This demo program imports a given X.509 certificate onto a PKCS#11 token.

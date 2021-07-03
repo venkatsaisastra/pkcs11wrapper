@@ -42,11 +42,11 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import java.util.Arrays;
-
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import sun.security.pkcs11.wrapper.CK_PKCS5_PBKD2_PARAMS;
+
+import java.util.Arrays;
 
 /**
  * This class encapsulates parameters for the Mechanism.PKCS5_PKKD2 mechanism.
@@ -69,8 +69,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
     /**
      * The identifier for HMAC SHA-1 version.
      */
-    public static final long HMAC_SHA1
-        = PKCS11Constants.CKP_PKCS5_PBKD2_HMAC_SHA1;
+    long HMAC_SHA1 = PKCS11Constants.CKP_PKCS5_PBKD2_HMAC_SHA1;
 
   }
 
@@ -86,8 +85,7 @@ public class PKCS5PBKD2Parameters implements Parameters {
     /**
      * The identifier for specified salt.
      */
-    public static final long SALT_SPECIFIED
-        = PKCS11Constants.CKZ_SALT_SPECIFIED;
+    long SALT_SPECIFIED = PKCS11Constants.CKZ_SALT_SPECIFIED;
 
   }
 

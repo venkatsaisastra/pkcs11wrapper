@@ -42,6 +42,18 @@
 
 package demo.pkcs.pkcs11.wrapper.basics;
 
+import demo.pkcs.pkcs11.wrapper.TestBase;
+import demo.pkcs.pkcs11.wrapper.util.Util;
+import iaik.pkcs.pkcs11.Mechanism;
+import iaik.pkcs.pkcs11.MechanismInfo;
+import iaik.pkcs.pkcs11.Session;
+import iaik.pkcs.pkcs11.Token;
+import iaik.pkcs.pkcs11.objects.PKCS11Object;
+import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
+import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
@@ -54,19 +66,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
-
-import org.junit.Test;
-
-import demo.pkcs.pkcs11.wrapper.TestBase;
-import demo.pkcs.pkcs11.wrapper.util.Util;
-import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.MechanismInfo;
-import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.objects.PKCS11Object;
-import iaik.pkcs.pkcs11.objects.RSAPrivateKey;
-import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
  * This demo program can be used to personalize a card. It uploads a private
@@ -254,15 +253,15 @@ public class UploadPrivateKey extends TestBase {
       // flags according to the mechanism info
       if (signatureMechanismInfo != null) {
         pkcs11RsaPrivateKey.getSign().setBooleanValue(
-            Boolean.valueOf(signatureMechanismInfo.isSign()));
+                signatureMechanismInfo.isSign());
         pkcs11RsaPrivateKey.getSignRecover().setBooleanValue(
-            Boolean.valueOf(signatureMechanismInfo.isSignRecover()));
+                signatureMechanismInfo.isSignRecover());
         pkcs11RsaPrivateKey.getDecrypt().setBooleanValue(
-            Boolean.valueOf(signatureMechanismInfo.isDecrypt()));
+                signatureMechanismInfo.isDecrypt());
         pkcs11RsaPrivateKey.getDerive().setBooleanValue(
-            Boolean.valueOf(signatureMechanismInfo.isDerive()));
+                signatureMechanismInfo.isDerive());
         pkcs11RsaPrivateKey.getUnwrap().setBooleanValue(
-            Boolean.valueOf(signatureMechanismInfo.isUnwrap()));
+                signatureMechanismInfo.isUnwrap());
       } else {
         // if we have neither mechanism info nor key usage we just try all
         pkcs11RsaPrivateKey.getSign().setBooleanValue(Boolean.TRUE);

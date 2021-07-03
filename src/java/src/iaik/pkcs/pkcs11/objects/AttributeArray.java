@@ -42,11 +42,11 @@
 
 package iaik.pkcs.pkcs11.objects;
 
+import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
+
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-
-import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
 
 /**
  * Objects of this class represent a attribute array of a PKCS#11 object
@@ -96,8 +96,7 @@ public class AttributeArray extends Attribute {
         attributeList.add(attribute.getCkAttribute());
       }
     }
-    ckAttribute.pValue = (CK_ATTRIBUTE[])
-        attributeList.toArray(new CK_ATTRIBUTE[0]);
+    ckAttribute.pValue = attributeList.toArray(new CK_ATTRIBUTE[0]);
     present = true;
   }
 
@@ -118,28 +117,26 @@ public class AttributeArray extends Attribute {
 
     CK_ATTRIBUTE[] attributesArray = (CK_ATTRIBUTE[]) ckAttribute.pValue;
     GenericTemplate template = new GenericTemplate();
-    for (int i = 0; i < attributesArray.length; i++) {
-      Long type = Long.valueOf(attributesArray[i].type);
-      Class<?> implementation
-          = (Class<?>) Attribute.getAttributeClass(type);
+    for (CK_ATTRIBUTE ck_attribute : attributesArray) {
+      Long type = ck_attribute.type;
+      Class<?> implementation = Attribute.getAttributeClass(type);
       Attribute attribute;
       if (implementation == null) {
         attribute = new OtherAttribute();
         attribute.setType(type);
-        attribute.setCkAttribute(attributesArray[i]);
+        attribute.setCkAttribute(ck_attribute);
       } else {
         try {
           attribute = (Attribute)
-              implementation.getDeclaredConstructor(Attribute.class)
-                  .newInstance();
-          attribute.setCkAttribute(attributesArray[i]);
+                  implementation.getDeclaredConstructor(Attribute.class)
+                          .newInstance();
+          attribute.setCkAttribute(ck_attribute);
           attribute.setPresent(true);
           template.addAttribute(attribute);
         } catch (Exception ex) {
           System.err.println("Error when trying to create a "
-              + implementation + " instance for " + type
-              + ": " + ex.getMessage());
-          continue;
+                  + implementation + " instance for " + type
+                  + ": " + ex.getMessage());
         }
       }
     }

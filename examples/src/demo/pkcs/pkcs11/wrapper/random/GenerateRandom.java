@@ -42,13 +42,12 @@
 
 package demo.pkcs.pkcs11.wrapper.random;
 
-import org.junit.Test;
-
 import demo.pkcs.pkcs11.wrapper.TestBase;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.Token;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.wrapper.Functions;
+import org.junit.Test;
 
 /**
  * This demo program uses a PKCS#11 module to produce random data.

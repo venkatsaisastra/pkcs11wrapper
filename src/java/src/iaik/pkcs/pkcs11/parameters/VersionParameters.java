@@ -84,8 +84,7 @@ public class VersionParameters extends Version implements Parameters {
    * @return This object as a CK_VERSION object.
    */
   public CK_VERSION getPKCS11ParamsObject() {
-    CK_VERSION params = new CK_VERSION(major, minor);
-    return params;
+    return new CK_VERSION(major, minor);
   }
 
   /**

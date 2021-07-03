@@ -42,10 +42,10 @@
 
 package iaik.pkcs.pkcs11.parameters;
 
-import java.util.Arrays;
-
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+
+import java.util.Arrays;
 
 /**
  * This abstract class encapsulates parameters for the DH mechanisms
@@ -64,23 +64,22 @@ abstract public class DHKeyDerivationParameters implements Parameters {
     /**
      * The identifier for CKD_NULL.
      */
-    public static final long NULL = PKCS11Constants.CKD_NULL;
+    long NULL = PKCS11Constants.CKD_NULL;
 
     /**
      * The identifier for CKD_SHA1_KDF.
      */
-    public static final long SHA1_KDF = PKCS11Constants.CKD_SHA1_KDF;
+    long SHA1_KDF = PKCS11Constants.CKD_SHA1_KDF;
 
     /**
      * The identifier for CKD_SHA1_KDF_ASN1.
      */
-    public static final long SHA1_KDF_ASN1 = PKCS11Constants.CKD_SHA1_KDF_ASN1;
+    long SHA1_KDF_ASN1 = PKCS11Constants.CKD_SHA1_KDF_ASN1;
 
     /**
      * The identifier for CKD_SHA1_KDF_CONCATENATE.
      */
-    public static final long SHA1_KDF_CONCATENATE =
-        PKCS11Constants.CKD_SHA1_KDF_CONCATENATE;
+    long SHA1_KDF_CONCATENATE = PKCS11Constants.CKD_SHA1_KDF_CONCATENATE;
 
   }
 

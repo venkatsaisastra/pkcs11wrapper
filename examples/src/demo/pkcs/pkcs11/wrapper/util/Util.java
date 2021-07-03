@@ -42,32 +42,25 @@
 
 package demo.pkcs.pkcs11.wrapper.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
-
-import javax.naming.InvalidNameException;
-import javax.naming.ldap.LdapName;
-import javax.naming.ldap.Rdn;
-import javax.security.auth.x500.X500Principal;
-
+import iaik.pkcs.pkcs11.Module;
+import iaik.pkcs.pkcs11.*;
+import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.DERSequence;
 import org.xipki.util.Args;
 
-import iaik.pkcs.pkcs11.Mechanism;
-import iaik.pkcs.pkcs11.Module;
-import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.Slot;
-import iaik.pkcs.pkcs11.Token;
-import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.TokenInfo;
-import iaik.pkcs.pkcs11.objects.X509PublicKeyCertificate;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
-import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
+import javax.naming.InvalidNameException;
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
+import javax.security.auth.x500.X500Principal;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
 
 /**
  * This class contains only static methods. It is the place for all functions
@@ -93,7 +86,7 @@ public class Util {
    *              failed.
    */
   public static Token selectToken(Module pkcs11Module)
-      throws TokenException, IOException {
+      throws TokenException {
     return selectToken(pkcs11Module, null);
   }
 
@@ -104,13 +97,11 @@ public class Util {
    * @param pkcs11Module
    *          The PKCS#11 module to use.
    * @param slotIndex
+   *          The slot index, beginning with 0.
    * @return The selected token or null, if no token is available or the user
    *         canceled the action.
    * @exception TokenException
    *              If listing the tokens failed.
-   * @exception IOException
-   *              If writing a user prompt failed or if reading user input
-   *              failed.
    */
   public static Token selectToken(Module pkcs11Module, Integer slotIndex)
       throws TokenException {
@@ -161,9 +152,6 @@ public class Util {
    *         canceled the action.
    * @exception TokenException
    *              If listing the tokens failed.
-   * @exception IOException
-   *              If writing a user prompt failed or if reading user input
-   *              failed.
    */
   public static Session openAuthorizedSession(
       Token token, boolean rwSession, char[] pin)
