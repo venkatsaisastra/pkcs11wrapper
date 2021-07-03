@@ -47,6 +47,7 @@ import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
+import iaik.pkcs.pkcs11.VendorCodeConverter;
 
 /**
  * This is the base class for private (asymmetric) keys. Objects of this class
@@ -185,7 +186,7 @@ public class PrivateKey extends Key {
 
     Long keyType = keyTypeAttribute.getLongValue();
 
-    PKCS11Object newObject;
+    PKCS11Object newObject = null;
 
     if (keyTypeAttribute.isPresent() && (keyType != null)) {
       if (keyType.equals(Key.KeyType.RSA)) {
@@ -194,8 +195,7 @@ public class PrivateKey extends Key {
         newObject = DSAPrivateKey.getInstance(session, objectHandle);
       } else if (keyType.equals(Key.KeyType.EC)
         | keyType.equals(Key.KeyType.EC_EDWARDS)
-        | keyType.equals(Key.KeyType.EC_MONTGOMERY)
-        | keyType.equals(Key.KeyType.VENDOR_SM2)) {
+        | keyType.equals(Key.KeyType.EC_MONTGOMERY)) {
         newObject = ECPrivateKey.getInstance(session, objectHandle);
       } else if (keyType.equals(Key.KeyType.DH)) {
         newObject = DHPrivateKey.getInstance(session, objectHandle);
@@ -204,11 +204,19 @@ public class PrivateKey extends Key {
       } else if (keyType.equals(Key.KeyType.X9_42_DH)) {
         newObject = X942DHPrivateKey.getInstance(session, objectHandle);
       } else if ((keyType & KeyType.VENDOR_DEFINED) != 0L) {
-        newObject = getUnknownPrivateKey(session, objectHandle);
-      } else {
-        newObject = getUnknownPrivateKey(session, objectHandle);
+        VendorCodeConverter converter = session.getModule().getVendorCodeConverter();
+        if (converter != null) {
+          long genericKeyType = converter.vendorToGenericCKK(keyType);
+          if (genericKeyType == Key.KeyType.VENDOR_SM2) {
+            newObject = ECPrivateKey.getInstance(session, objectHandle);
+            // map also the key type
+            ((Key) newObject).keyType.setLongValue(genericKeyType);
+          }
+        }
       }
-    } else {
+    }
+
+    if (newObject == null) {
       newObject = getUnknownPrivateKey(session, objectHandle);
     }
 

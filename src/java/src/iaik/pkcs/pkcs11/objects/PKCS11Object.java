@@ -42,10 +42,7 @@
 
 package iaik.pkcs.pkcs11.objects;
 
-import iaik.pkcs.pkcs11.Session;
-import iaik.pkcs.pkcs11.TokenException;
-import iaik.pkcs.pkcs11.UnsupportedAttributeException;
-import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.*;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
@@ -555,18 +552,42 @@ public class PKCS11Object {
    * @param object
    *          The iaik.pkcs.pkcs11.object.Object object to get the attributes
    *          from.
+   * @param vendorCodeConverter
+   *          The vendor code converter.
    * @return An array of CK_ATTRIBUTE objects. null, if the given object is
    *         null.
    * @exception PKCS11Exception
    *              If setting the attribute values.
    */
-  public static CK_ATTRIBUTE[] getSetAttributes(PKCS11Object object)
+  public static CK_ATTRIBUTE[] getSetAttributes(
+          PKCS11Object object,
+          VendorCodeConverter vendorCodeConverter)
       throws PKCS11Exception {
     Vector<CK_ATTRIBUTE> setAttributes = (object != null)
         ? object.getSetAttributes() : null;
+    if (setAttributes == null) {
+      return null;
+    }
 
-    return (setAttributes != null)
-        ? Util.convertAttributesVectorToArray(setAttributes) : null;
+    // replace the generic key type to vendor specific one.
+    if (object instanceof Key && vendorCodeConverter != null) {
+      Long keyType = ((Key) object).getKeyType().getLongValue();
+      if (keyType != null && (keyType & PKCS11Constants.CKK_VENDOR_DEFINED) != 0) {
+        long vendorKeyType = vendorCodeConverter.genericToVendorCKK(keyType);
+        if (vendorKeyType != keyType) {
+          Vector<CK_ATTRIBUTE> newSetAttributes = new Vector<>();
+          for (CK_ATTRIBUTE attr : setAttributes) {
+            if (attr.type == PKCS11Constants.CKA_KEY_TYPE) {
+              attr = new CK_ATTRIBUTE(attr.type, vendorKeyType); // replace the keyType
+            }
+            newSetAttributes.add(attr);
+          }
+          setAttributes = newSetAttributes;
+        }
+      }
+    }
+
+    return Util.convertAttributesVectorToArray(setAttributes);
   }
 
   /**

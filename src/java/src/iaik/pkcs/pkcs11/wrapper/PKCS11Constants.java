@@ -42,6 +42,8 @@
 
 package iaik.pkcs.pkcs11.wrapper;
 
+import iaik.pkcs.pkcs11.VendorCodeConverter;
+
 /**
  * This interface holds constants of the PKCS#11 v2.40 errata 1 standard.
  * Source:
@@ -1297,38 +1299,38 @@ public interface PKCS11Constants {
   long CK_SP800_108_BYTE_ARRAY                  = 0x00000004L;
 
   // vendor
-  long CKK_VENDOR_SM2 = PKCS11VendorConstants.CKK_VENDOR_SM2;
+  long CKK_VENDOR_SM2 = VendorCodeConverter.CKK_VENDOR_SM2;
 
   long CKM_VENDOR_SM2_KEY_PAIR_GEN =
-      PKCS11VendorConstants.CKM_VENDOR_SM2_KEY_PAIR_GEN;
+      VendorCodeConverter.CKM_VENDOR_SM2_KEY_PAIR_GEN;
 
-  long CKM_VENDOR_SM2 = PKCS11VendorConstants.CKM_VENDOR_SM2;
+  long CKM_VENDOR_SM2 = VendorCodeConverter.CKM_VENDOR_SM2;
 
-  long CKM_VENDOR_SM2_SM3 = PKCS11VendorConstants.CKM_VENDOR_SM2_SM3;
+  long CKM_VENDOR_SM2_SM3 = VendorCodeConverter.CKM_VENDOR_SM2_SM3;
 
-  long CKM_VENDOR_SM2_ENCRYPT = PKCS11VendorConstants.CKM_VENDOR_SM2_ENCRYPT;
+  long CKM_VENDOR_SM2_ENCRYPT = VendorCodeConverter.CKM_VENDOR_SM2_ENCRYPT;
 
-  long CKM_VENDOR_SM3 = PKCS11VendorConstants.CKM_VENDOR_SM3;
+  long CKM_VENDOR_SM3 = VendorCodeConverter.CKM_VENDOR_SM3;
 
-  long CKK_VENDOR_SM4 = PKCS11VendorConstants.CKK_VENDOR_SM4;
+  long CKK_VENDOR_SM4 = VendorCodeConverter.CKK_VENDOR_SM4;
 
-  long CKM_VENDOR_SM4_KEY_GEN = PKCS11VendorConstants.CKM_VENDOR_SM4_KEY_GEN;
+  long CKM_VENDOR_SM4_KEY_GEN = VendorCodeConverter.CKM_VENDOR_SM4_KEY_GEN;
 
-  long CKM_VENDOR_SM4_ECB = PKCS11VendorConstants.CKM_VENDOR_SM4_ECB;
+  long CKM_VENDOR_SM4_ECB = VendorCodeConverter.CKM_VENDOR_SM4_ECB;
 
-  long CKM_VENDOR_SM4_CBC = PKCS11VendorConstants.CKM_VENDOR_SM4_CBC;
+  long CKM_VENDOR_SM4_CBC = VendorCodeConverter.CKM_VENDOR_SM4_CBC;
 
   long CKM_VENDOR_SM4_MAC_GENERAL =
-      PKCS11VendorConstants.CKM_VENDOR_SM4_MAC_GENERAL;
+          VendorCodeConverter.CKM_VENDOR_SM4_MAC_GENERAL;
 
-  long CKM_VENDOR_SM4_MAC = PKCS11VendorConstants.CKM_VENDOR_SM4_MAC;
+  long CKM_VENDOR_SM4_MAC = VendorCodeConverter.CKM_VENDOR_SM4_MAC;
 
   long CKM_VENDOR_ISO2_SM4_MAC_GENERAL =
-      PKCS11VendorConstants.CKM_VENDOR_ISO2_SM4_MAC_GENERAL;
+          VendorCodeConverter.CKM_VENDOR_ISO2_SM4_MAC_GENERAL;
 
-  long CKM_VENDOR_ISO2_SM4_MAC = PKCS11VendorConstants.CKM_VENDOR_ISO2_SM4_MAC;
+  long CKM_VENDOR_ISO2_SM4_MAC = VendorCodeConverter.CKM_VENDOR_ISO2_SM4_MAC;
 
   long CKM_VENDOR_SM4_ECB_ENCRYPT_DATA =
-      PKCS11VendorConstants.CKM_VENDOR_SM4_ECB_ENCRYPT_DATA;
+          VendorCodeConverter.CKM_VENDOR_SM4_ECB_ENCRYPT_DATA;
 
 }

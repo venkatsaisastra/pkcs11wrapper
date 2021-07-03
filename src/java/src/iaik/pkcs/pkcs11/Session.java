@@ -562,7 +562,7 @@ public class Session {
    */
   public PKCS11Object createObject(PKCS11Object templateObject)
       throws TokenException {
-    CK_ATTRIBUTE[] ckAttributes = PKCS11Object.getSetAttributes(templateObject);
+    CK_ATTRIBUTE[] ckAttributes = getSetAttributes(templateObject);
     long objectHandle;
     try {
       objectHandle = pkcs11Module.C_CreateObject(sessionHandle, ckAttributes);
@@ -594,7 +594,7 @@ public class Session {
   public PKCS11Object copyObject(PKCS11Object sourceObject,
       PKCS11Object templateObject) throws TokenException {
     long sourceObjectHandle = sourceObject.getObjectHandle();
-    CK_ATTRIBUTE[] ckAttributes = PKCS11Object.getSetAttributes(templateObject);
+    CK_ATTRIBUTE[] ckAttributes = getSetAttributes(templateObject);
     long newObjectHandle;
     try {
       newObjectHandle = pkcs11Module.C_CopyObject(sessionHandle,
@@ -629,8 +629,7 @@ public class Session {
   public void setAttributeValues(PKCS11Object objectToUpdate,
       PKCS11Object templateObject) throws TokenException {
     long objectToUpdateHandle = objectToUpdate.getObjectHandle();
-    CK_ATTRIBUTE[] ckAttributesTemplates =
-        PKCS11Object.getSetAttributes(templateObject);
+    CK_ATTRIBUTE[] ckAttributesTemplates = getSetAttributes(templateObject);
     try {
       pkcs11Module.C_SetAttributeValue(sessionHandle,
           objectToUpdateHandle, ckAttributesTemplates);
@@ -711,7 +710,7 @@ public class Session {
    */
   public void findObjectsInit(PKCS11Object templateObject)
       throws TokenException {
-    CK_ATTRIBUTE[] ckAttributes = PKCS11Object.getSetAttributes(templateObject);
+    CK_ATTRIBUTE[] ckAttributes = getSetAttributes(templateObject);
     try {
       pkcs11Module.C_FindObjectsInit(sessionHandle, ckAttributes);
     } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
@@ -795,8 +794,8 @@ public class Session {
    */
   public void encryptInit(Mechanism mechanism, Key key) throws TokenException {
     try {
-      CK_MECHANISM mech = toCkMechanism(mechanism);
-      pkcs11Module.C_EncryptInit(sessionHandle, mech, key.getObjectHandle());
+      pkcs11Module.C_EncryptInit(sessionHandle, toCkMechanism(mechanism),
+              key.getObjectHandle());
     } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
       throw new PKCS11Exception(ex);
     }
@@ -1650,7 +1649,7 @@ public class Session {
    */
   public PKCS11Object generateKey(Mechanism mechanism, PKCS11Object template)
       throws TokenException {
-    CK_ATTRIBUTE[] ckAttributes = PKCS11Object.getSetAttributes(template);
+    CK_ATTRIBUTE[] ckAttributes = getSetAttributes(template);
 
     long objectHandle;
     try {
@@ -1686,10 +1685,8 @@ public class Session {
   public KeyPair generateKeyPair(Mechanism mechanism,
       PKCS11Object publicKeyTemplate, PKCS11Object privateKeyTemplate)
       throws TokenException {
-    CK_ATTRIBUTE[] ckPublicKeyAttributes =
-        PKCS11Object.getSetAttributes(publicKeyTemplate);
-    CK_ATTRIBUTE[] ckPrivateKeyAttributes =
-        PKCS11Object.getSetAttributes(privateKeyTemplate);
+    CK_ATTRIBUTE[] ckPublicKeyAttributes = getSetAttributes(publicKeyTemplate);
+    CK_ATTRIBUTE[] ckPrivateKeyAttributes = getSetAttributes(privateKeyTemplate);
 
     long[] objectHandles;
     try {
@@ -1755,7 +1752,7 @@ public class Session {
       throws TokenException {
     Util.requireNonNull("wrappedKey", wrappedKey);
 
-    CK_ATTRIBUTE[] ckAttributes = PKCS11Object.getSetAttributes(keyTemplate);
+    CK_ATTRIBUTE[] ckAttributes = getSetAttributes(keyTemplate);
 
     long objectHandle;
     try {
@@ -1791,12 +1788,12 @@ public class Session {
       throws TokenException {
     CK_MECHANISM ckMechanism = toCkMechanism(mechanism);
     Parameters params = mechanism.getParameters();
-    CK_ATTRIBUTE[] ckAttributes = PKCS11Object.getSetAttributes(template);
+    CK_ATTRIBUTE[] ckAttributes = getSetAttributes(template);
 
     long objectHandle;
     try {
       objectHandle = pkcs11Module.C_DeriveKey(sessionHandle,
-          toCkMechanism(mechanism), baseKey.getObjectHandle(), ckAttributes);
+          ckMechanism, baseKey.getObjectHandle(), ckAttributes);
     } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
       throw new PKCS11Exception(ex);
     }
@@ -1947,8 +1944,15 @@ public class Session {
         "\nToken: ", token);
   }
 
-  private static CK_MECHANISM toCkMechanism(Mechanism mechanism) {
+  private CK_MECHANISM toCkMechanism(Mechanism mechanism) {
     long code = mechanism.getMechanismCode();
+    if ((code & PKCS11Constants.CKM_VENDOR_DEFINED) != 0) {
+      VendorCodeConverter converter = module.getVendorCodeConverter();
+      if (converter != null) {
+        code = converter.genericToVendorCKM(code);
+      }
+    }
+
     Parameters params = mechanism.getParameters();
     if (params == null) {
       return new CK_MECHANISM(code);
@@ -2058,6 +2062,10 @@ public class Session {
 
     throw new IllegalArgumentException(
         "Unsupported Parameters " + params.getClass().getName());
+  }
+
+  private CK_ATTRIBUTE[] getSetAttributes(PKCS11Object object) throws PKCS11Exception {
+    return PKCS11Object.getSetAttributes(object, module.getVendorCodeConverter());
   }
 
 }

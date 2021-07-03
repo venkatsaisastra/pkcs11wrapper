@@ -45,7 +45,9 @@ package iaik.pkcs.pkcs11.objects;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
+import iaik.pkcs.pkcs11.VendorCodeConverter;
 
 /**
  * This is the base class for public (asymmetric) keys. Objects of this class
@@ -146,7 +148,7 @@ public class PublicKey extends Key {
 
     Long keyType = keyTypeAttribute.getLongValue();
 
-    PKCS11Object newObject;
+    PKCS11Object newObject = null;
 
     if (keyTypeAttribute.isPresent() && (keyType != null)) {
       if (keyType.equals(Key.KeyType.RSA)) {
@@ -155,8 +157,7 @@ public class PublicKey extends Key {
         newObject = DSAPublicKey.getInstance(session, objectHandle);
       } else if (keyType.equals(Key.KeyType.EC)
           | keyType.equals(Key.KeyType.EC_EDWARDS)
-          | keyType.equals(Key.KeyType.EC_MONTGOMERY)
-          | keyType.equals(Key.KeyType.VENDOR_SM2)) {
+          | keyType.equals(Key.KeyType.EC_MONTGOMERY)) {
         newObject = ECPublicKey.getInstance(session, objectHandle);
       } else if (keyType.equals(Key.KeyType.DH)) {
         newObject = DHPublicKey.getInstance(session, objectHandle);
@@ -165,11 +166,19 @@ public class PublicKey extends Key {
       } else if (keyType.equals(Key.KeyType.X9_42_DH)) {
         newObject = X942DHPublicKey.getInstance(session, objectHandle);
       } else if ((keyType & KeyType.VENDOR_DEFINED) != 0L) {
-        newObject = getUnknownPublicKey(session, objectHandle);
-      } else {
-        newObject = getUnknownPublicKey(session, objectHandle);
+        VendorCodeConverter converter = session.getModule().getVendorCodeConverter();
+        if (converter != null) {
+          long genericKeyType = converter.vendorToGenericCKK(keyType);
+          if (genericKeyType == Key.KeyType.VENDOR_SM2) {
+            newObject = ECPublicKey.getInstance(session, objectHandle);
+            // map also the key type
+            ((Key) newObject).keyType.setLongValue(genericKeyType);
+          }
+        }
       }
-    } else {
+    }
+
+    if (newObject == null) {
       newObject = getUnknownPublicKey(session, objectHandle);
     }
 

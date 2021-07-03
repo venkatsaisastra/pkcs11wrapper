@@ -165,6 +165,8 @@ public class Module {
 
   private final String pkcs11ModuleName;
 
+  private VendorCodeConverter vendorCodeConverter;
+
   /**
    * Create a new module that uses the given PKCS11 interface to interact with
    * the token.
@@ -201,6 +203,14 @@ public class Module {
       throw new IOException("Can not read file " + pkcs11ModuleName + "");
     }
     return new Module(pkcs11ModuleName);
+  }
+
+  public VendorCodeConverter getVendorCodeConverter() {
+    return vendorCodeConverter;
+  }
+
+  public void setVendorCodeConverter(VendorCodeConverter vendorCodeConverter) {
+    this.vendorCodeConverter = vendorCodeConverter;
   }
 
   /**
