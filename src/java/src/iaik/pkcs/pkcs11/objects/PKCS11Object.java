@@ -82,57 +82,49 @@ public class PKCS11Object {
     /**
      * The identifier for a data object or any sub-class of it.
      */
-    public static final Long DATA = Long.valueOf(PKCS11Constants.CKO_DATA);
+    long DATA = PKCS11Constants.CKO_DATA;
 
     /**
      * The identifier for a certificate object or any sub-class of it.
      */
-    public static final Long CERTIFICATE =
-        Long.valueOf(PKCS11Constants.CKO_CERTIFICATE);
+    long CERTIFICATE = PKCS11Constants.CKO_CERTIFICATE;
 
     /**
      * The identifier for a public key object or any sub-class of it.
      */
-    public static final Long PUBLIC_KEY =
-        Long.valueOf(PKCS11Constants.CKO_PUBLIC_KEY);
+    long PUBLIC_KEY = PKCS11Constants.CKO_PUBLIC_KEY;
 
     /**
      * The identifier for a private key object or any sub-class of it.
      */
-    public static final Long PRIVATE_KEY =
-        Long.valueOf(PKCS11Constants.CKO_PRIVATE_KEY);
+    long PRIVATE_KEY = PKCS11Constants.CKO_PRIVATE_KEY;
 
     /**
      * The identifier for a secret key object or any sub-class of it.
      */
-    public static final Long SECRET_KEY =
-        Long.valueOf(PKCS11Constants.CKO_SECRET_KEY);
+    long SECRET_KEY = PKCS11Constants.CKO_SECRET_KEY;
 
     /**
      * The identifier for a hardware feature object or any sub-class of it.
      */
-    public static final Long HW_FEATURE =
-        Long.valueOf(PKCS11Constants.CKO_HW_FEATURE);
+    long HW_FEATURE = PKCS11Constants.CKO_HW_FEATURE;
 
     /**
      * The identifier for a domain parameters object or any sub-class of it.
      */
-    public static final Long DOMAIN_PARAMETERS =
-        Long.valueOf(PKCS11Constants.CKO_DOMAIN_PARAMETERS);
+    long DOMAIN_PARAMETERS = PKCS11Constants.CKO_DOMAIN_PARAMETERS;
 
     /**
      * The identifier for a mechanism object or any sub-class of it.
      */
-    public static final Long MECHANISM =
-        Long.valueOf(PKCS11Constants.CKO_MECHANISM);
+    long MECHANISM = PKCS11Constants.CKO_MECHANISM;
 
     /**
      * The identifier for a vendor-defined object. Any Long object with a
      * value bigger than this one is also a valid vendor-defined object
      * class identifier.
      */
-    public static final Long VENDOR_DEFINED =
-        Long.valueOf(PKCS11Constants.CKO_VENDOR_DEFINED);
+    long VENDOR_DEFINED = PKCS11Constants.CKO_VENDOR_DEFINED;
 
   }
 
@@ -163,7 +155,7 @@ public class PKCS11Object {
      * @exception PKCS11Exception
      *              If getting the attributes failed.
      */
-    public PKCS11Object build(Session session, long objectHandle)
+    PKCS11Object build(Session session, long objectHandle)
         throws PKCS11Exception;
 
   }
@@ -279,8 +271,7 @@ public class PKCS11Object {
         newObject = Mechanism.getInstance(session, objectHandle);
       } else if (objectClass.equals(ObjectClass.HW_FEATURE)) {
         newObject = HardwareFeature.getInstance(session, objectHandle);
-      } else if ((objectClass.longValue()
-              & ObjectClass.VENDOR_DEFINED.longValue()) != 0L) {
+      } else if ((objectClass & ObjectClass.VENDOR_DEFINED) != 0L) {
         newObject = getUnknownObject(session, objectHandle);
       } else {
         newObject = getUnknownObject(session, objectHandle);
@@ -352,8 +343,7 @@ public class PKCS11Object {
     Util.requireNonNull("objectClass", objectClass);
 
     String objectClassName;
-    if ((objectClass.longValue()
-        & PKCS11Constants.CKO_VENDOR_DEFINED) != 0L) {
+    if ((objectClass & PKCS11Constants.CKO_VENDOR_DEFINED) != 0L) {
       objectClassName = "Vendor Defined";
     } else {
       if (objectClassNames == null) {
@@ -370,7 +360,7 @@ public class PKCS11Object {
             "Domain Parameters");
       }
 
-      objectClassName = (String) objectClassNames.get(objectClass);
+      objectClassName = objectClassNames.get(objectClass);
       if (objectClassName == null) {
         objectClassName = "<unknown>";
       }
@@ -463,14 +453,14 @@ public class PKCS11Object {
    */
   public void putAttribute(long attribute, Object value)
       throws UnsupportedAttributeException {
-    Object myAttribute = getAttribute(attribute);
+    Attribute myAttribute = getAttribute(attribute);
     if (null == myAttribute) {
       throw new UnsupportedAttributeException(
           "Unsupported attribute 0x" + Long.toHexString(attribute)
           + " for " + this.getClass().getName());
     }
 
-    ((Attribute) myAttribute).setValue(value);
+    myAttribute.setValue(value);
   }
 
   /**
@@ -481,7 +471,7 @@ public class PKCS11Object {
    * @return the attribute
    */
   public Attribute getAttribute(long attribute) {
-    return (Attribute) attributeTable.get(Long.valueOf(attribute));
+    return attributeTable.get(attribute);
   }
 
   /**
@@ -574,10 +564,9 @@ public class PKCS11Object {
       throws PKCS11Exception {
     Vector<CK_ATTRIBUTE> setAttributes = (object != null)
         ? object.getSetAttributes() : null;
-    CK_ATTRIBUTE[] ckAttributes = (setAttributes != null)
-        ? Util.convertAttributesVectorToArray(setAttributes) : null;
 
-    return ckAttributes;
+    return (setAttributes != null)
+        ? Util.convertAttributesVectorToArray(setAttributes) : null;
   }
 
   /**
@@ -767,8 +756,8 @@ public class PKCS11Object {
       }
     } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
       // try to read values separately
-      for (int i = 0; i < attributes.length; i++) {
-        getAttributeValue(session, objectHandle, attributes[i]);
+      for (Attribute attribute : attributes) {
+        getAttributeValue(session, objectHandle, attribute);
       }
     }
   }
