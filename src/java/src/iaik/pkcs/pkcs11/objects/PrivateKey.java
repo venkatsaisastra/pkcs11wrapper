@@ -243,10 +243,12 @@ public class PrivateKey extends Key {
       long objectHandle) throws TokenException {
     Util.requireNonNull("session", session);
 
+    VendorDefinedKeyBuilder vendorKeyBuilder =
+            session.getModule().getVendorDefinedKeyBuilder();
     PKCS11Object newObject;
-    if (Key.vendorKeyBuilder != null) {
+    if (vendorKeyBuilder != null) {
       try {
-        newObject = Key.vendorKeyBuilder.build(session, objectHandle);
+        newObject = vendorKeyBuilder.build(session, objectHandle);
       } catch (PKCS11Exception ex) {
         // we can just treat it like some unknown type of private key
         newObject = new PrivateKey(session, objectHandle);

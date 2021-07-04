@@ -262,11 +262,6 @@ public class Key extends Storage {
   }
 
   /**
-   * The currently set vendor defined key builder, or null.
-   */
-  protected static VendorDefinedKeyBuilder vendorKeyBuilder;
-
-  /**
    * A table holding string representations for all known key types. Table key
    * is the key type as Long object.
    */
@@ -336,30 +331,6 @@ public class Key extends Storage {
    */
   protected Key(Session session, long objectHandle) throws TokenException {
     super(session, objectHandle);
-  }
-
-  /**
-   * Set a vendor-defined key builder that should be called to create an
-   * instance of an vendor-defined PKCS#11 key; i.e. an instance of a
-   * vendor defined sub-class of this class.
-   *
-   * @param builder
-   *          The vendor-defined key builder. Null to clear any previously
-   *          installed vendor-defined builder.
-   */
-  public static void setVendorDefinedKeyBuilder(
-      VendorDefinedKeyBuilder builder) {
-    vendorKeyBuilder = builder;
-  }
-
-  /**
-   * Get the currently set vendor-defined key builder.
-   *
-   * @return The currently set vendor-defined key builder or null if
-   *         none is set.
-   */
-  public static VendorDefinedKeyBuilder getVendorDefinedKeyBuilder() {
-    return vendorKeyBuilder;
   }
 
   /**

@@ -42,6 +42,7 @@
 
 package iaik.pkcs.pkcs11;
 
+import iaik.pkcs.pkcs11.objects.Key;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 import iaik.pkcs.pkcs11.wrapper.PKCS11Exception;
 import sun.security.pkcs11.wrapper.*;
@@ -168,6 +169,11 @@ public class Module {
   private VendorCodeConverter vendorCodeConverter;
 
   /**
+   * The currently set vendor defined key builder, or null.
+   */
+  private Key.VendorDefinedKeyBuilder vendorKeyBuilder;
+
+  /**
    * Create a new module that uses the given PKCS11 interface to interact with
    * the token.
    *
@@ -211,6 +217,30 @@ public class Module {
 
   public void setVendorCodeConverter(VendorCodeConverter vendorCodeConverter) {
     this.vendorCodeConverter = vendorCodeConverter;
+  }
+
+  /**
+   * Set a vendor-defined key builder that should be called to create an
+   * instance of an vendor-defined PKCS#11 key; i.e. an instance of a
+   * vendor defined sub-class of this class.
+   *
+   * @param builder
+   *          The vendor-defined key builder. Null to clear any previously
+   *          installed vendor-defined builder.
+   */
+  public void setVendorDefinedKeyBuilder(
+          Key.VendorDefinedKeyBuilder builder) {
+    vendorKeyBuilder = builder;
+  }
+
+  /**
+   * Get the currently set vendor-defined key builder.
+   *
+   * @return The currently set vendor-defined key builder or null if
+   *         none is set.
+   */
+  public Key.VendorDefinedKeyBuilder getVendorDefinedKeyBuilder() {
+    return vendorKeyBuilder;
   }
 
   /**
