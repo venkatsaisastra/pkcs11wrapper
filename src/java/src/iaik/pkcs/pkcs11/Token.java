@@ -270,6 +270,8 @@ public class Token {
    *              If reading the list of supported mechanisms fails.
    */
   public Mechanism[] getMechanismList() throws TokenException {
+    VendorCodeConverter vendorCodeConverter =
+            slot.getModule().getVendorCodeConverter();
     long[] mechanismIdList;
     try {
       mechanismIdList = slot.getModule().getPKCS11Module()
@@ -279,7 +281,12 @@ public class Token {
     }
     Mechanism[] mechanisms = new Mechanism[mechanismIdList.length];
     for (int i = 0; i < mechanisms.length; i++) {
-      mechanisms[i] = new Mechanism(mechanismIdList[i]);
+      long code = mechanismIdList[i];
+      if ((code & PKCS11Constants.CKM_VENDOR_DEFINED) != 0
+              && vendorCodeConverter != null) {
+        code = vendorCodeConverter.vendorToGenericCKM(code);
+      }
+      mechanisms[i] = new Mechanism(code);
     }
 
     return mechanisms;
@@ -299,6 +306,14 @@ public class Token {
   public MechanismInfo getMechanismInfo(Mechanism mechanism)
       throws TokenException {
     long mechanismCode = mechanism.getMechanismCode();
+    if ((mechanismCode & PKCS11Constants.CKM_VENDOR_DEFINED) != 0) {
+      VendorCodeConverter vendorCodeConverter =
+              slot.getModule().getVendorCodeConverter();
+      if (vendorCodeConverter != null) {
+        mechanismCode = vendorCodeConverter.genericToVendorCKM(mechanismCode);
+      }
+    }
+
     CK_MECHANISM_INFO ckMechanismInfo;
     try {
       ckMechanismInfo = slot.getModule().getPKCS11Module()
