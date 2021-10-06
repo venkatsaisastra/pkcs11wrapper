@@ -21,6 +21,13 @@ Use xipki/pkcs11wrapper in your project
 - Or copy the following jar file to your classpath:
   - [sunpkcs11-wrapper-1.4.7.jar](https://github.com/xipki/pkcs11wrapper/releases/download/v1.4.7/sunpkcs11-wrapper-1.4.7.jar)
 
+JDK17 or above
+=====
+To use pkcs11wrapper in JDK 17 or above, please add the following java option:
+```
+--add-exports=jdk.crypto.cryptoki/sun.security.pkcs11.wrapper=ALL-UNNAMED
+```
+
 JUnit tests
 =====
 - Configure the library and PIN of your HSM module in the file `example/data/pkcs11.properties`.
