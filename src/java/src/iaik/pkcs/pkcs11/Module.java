@@ -50,6 +50,9 @@ import sun.security.pkcs11.wrapper.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * <B>Caution:
@@ -360,6 +363,20 @@ public class Module {
       throw new TokenException(ex.getMessage(), ex);
     } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
       throw new PKCS11Exception(ex);
+    } catch (NoSuchMethodError ex) {
+      // In some JDKs like red hat, the getInstance is extended by fipsKeyImporter as follows:
+      // getInstance(String pkcs11ModulePath, String functionList, CK_C_INITIALIZE_ARGS pInitArgs,
+      //    boolean omitInitialize, MethodHandle fipsKeyImporter)
+      try {
+        Constructor<PKCS11> getInstanceMethod = PKCS11.class.getConstructor(
+            String.class, String.class,
+            CK_C_INITIALIZE_ARGS.class, boolean.class, MethodHandle.class);
+        pkcs11Module = (PKCS11) getInstanceMethod.newInstance(pkcs11ModuleName, functionList,
+            wrapperInitArgs, omitInitialize, null);
+      } catch (NoSuchMethodException | SecurityException | InstantiationException
+          | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex1) {
+        throw new TokenException(ex1.getMessage(), ex1);
+      }
     }
   }
 
