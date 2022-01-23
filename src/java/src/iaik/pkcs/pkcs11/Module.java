@@ -51,8 +51,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.invoke.MethodHandle;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * <B>Caution:
@@ -368,12 +368,12 @@ public class Module {
       // getInstance(String pkcs11ModulePath, String functionList, CK_C_INITIALIZE_ARGS pInitArgs,
       //    boolean omitInitialize, MethodHandle fipsKeyImporter)
       try {
-        Constructor<PKCS11> getInstanceMethod = PKCS11.class.getConstructor(
+        Method getInstanceMethod = PKCS11.class.getMethod("getInstance",
             String.class, String.class,
             CK_C_INITIALIZE_ARGS.class, boolean.class, MethodHandle.class);
-        pkcs11Module = (PKCS11) getInstanceMethod.newInstance(pkcs11ModuleName, functionList,
+        pkcs11Module = (PKCS11) getInstanceMethod.invoke(null, pkcs11ModuleName, functionList,
             wrapperInitArgs, omitInitialize, null);
-      } catch (NoSuchMethodException | SecurityException | InstantiationException
+      } catch (NoSuchMethodException | SecurityException
           | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex1) {
         throw new TokenException(ex1.getMessage(), ex1);
       }
