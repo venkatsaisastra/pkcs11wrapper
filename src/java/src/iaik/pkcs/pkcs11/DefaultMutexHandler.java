@@ -166,7 +166,7 @@ public class DefaultMutexHandler implements MutexHandler {
    */
   @Override
   public void lockMutex(Object mutex) throws PKCS11Exception {
-    if (mutex instanceof Mutex) {
+    if (!(mutex instanceof Mutex)) {
       throw new IllegalStateException("CKR_MUTEX_BAD: mutex is not instance of "
               + Mutex.class.getName());
     }
@@ -209,13 +209,12 @@ public class DefaultMutexHandler implements MutexHandler {
    */
   @Override
   public void unlockMutex(Object mutex) throws PKCS11Exception {
-    if (mutex instanceof Mutex) {
+    if (!(mutex instanceof Mutex)) {
       throw new IllegalStateException("CKR_MUTEX_BAD: mutex is not instance of "
               + Mutex.class.getName());
     }
 
-    Mutex castedMutex = (Mutex) mutex;
-    castedMutex.unlock();
+    ((Mutex) mutex).unlock();
   }
 
 }
