@@ -263,7 +263,7 @@ public class Functions implements PKCS11Constants {
     String name = mechCodeNamesAvailable ? mechNames.get(mechCode) : null;
 
     if (name == null) {
-      name = "Unknwon mechanism with code: 0x" + toFullHex(mechCode);
+      name = "Unknown mechanism with code: 0x" + toFullHex(mechCode);
     }
 
     return name;
@@ -384,7 +384,7 @@ public class Functions implements PKCS11Constants {
     String name = errorCodeNamesAvailable
         ? errorCodeNames.get(errorCode) : null;
     if (name == null) {
-      name = "Unknwon CKR with code: 0x" + toFullHex(errorCode);
+      name = "Unknown CKR with code: 0x" + toFullHex(errorCode);
     }
 
     return name;

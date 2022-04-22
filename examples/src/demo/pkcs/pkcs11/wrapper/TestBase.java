@@ -232,7 +232,7 @@ public class TestBase {
     RSAPrivateKey privateKeyTemplate = new RSAPrivateKey();
 
     // set the general attributes for the public key
-    oublicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(1024));
+    oublicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(keysize));
     oublicKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
     byte[] id = new byte[20];
     new Random().nextBytes(id);
