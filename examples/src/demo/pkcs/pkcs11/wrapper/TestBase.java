@@ -228,15 +228,15 @@ public class TestBase {
       throws TokenException {
     Mechanism keyPairGenMechanism = getSupportedMechanism(token,
         PKCS11Constants.CKM_RSA_PKCS_KEY_PAIR_GEN);
-    RSAPublicKey oublicKeyTemplate = new RSAPublicKey();
+    RSAPublicKey publicKeyTemplate = new RSAPublicKey();
     RSAPrivateKey privateKeyTemplate = new RSAPrivateKey();
 
     // set the general attributes for the public key
-    oublicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(keysize));
-    oublicKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
+    publicKeyTemplate.getModulusBits().setLongValue(Long.valueOf(keysize));
+    publicKeyTemplate.getToken().setBooleanValue(Boolean.FALSE);
     byte[] id = new byte[20];
     new Random().nextBytes(id);
-    oublicKeyTemplate.getId().setByteArrayValue(id);
+    publicKeyTemplate.getId().setByteArrayValue(id);
 
     privateKeyTemplate.getSensitive().setBooleanValue(Boolean.TRUE);
     privateKeyTemplate.getToken().setBooleanValue(inToken);
@@ -244,16 +244,16 @@ public class TestBase {
     privateKeyTemplate.getId().setByteArrayValue(id);
 
     privateKeyTemplate.getSign().setBooleanValue(Boolean.TRUE);
-    oublicKeyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
+    publicKeyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
 
     // netscape does not set these attribute, so we do no either
-    oublicKeyTemplate.getKeyType().setPresent(false);
-    oublicKeyTemplate.getObjectClass().setPresent(false);
+    publicKeyTemplate.getKeyType().setPresent(false);
+    publicKeyTemplate.getObjectClass().setPresent(false);
     privateKeyTemplate.getKeyType().setPresent(false);
     privateKeyTemplate.getObjectClass().setPresent(false);
 
     return session.generateKeyPair(keyPairGenMechanism,
-        oublicKeyTemplate, privateKeyTemplate);
+        publicKeyTemplate, privateKeyTemplate);
   }
 
   protected KeyPair generateECKeypair(

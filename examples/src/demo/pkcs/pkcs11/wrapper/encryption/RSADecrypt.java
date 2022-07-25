@@ -61,12 +61,13 @@ public class RSADecrypt extends TestBase {
     }
 
     final boolean inToken = false;
-    KeyPair keypair = generateRSAKeypair(token, session, 2048, inToken);
+    final int keysize = 2048;
+    KeyPair keypair = generateRSAKeypair(token, session, keysize, inToken);
     PrivateKey privKey = keypair.getPrivateKey();
     PublicKey pubKey = keypair.getPublicKey();
 
     byte[] sessionKey = new byte[16];
-    byte[] buffer = new byte[1024 / 8 + 32];
+    byte[] buffer = new byte[keysize / 8];
     session.encryptInit(encMech, pubKey);
     int len = session.encrypt(sessionKey, 0, sessionKey.length,
         buffer, 0, buffer.length);

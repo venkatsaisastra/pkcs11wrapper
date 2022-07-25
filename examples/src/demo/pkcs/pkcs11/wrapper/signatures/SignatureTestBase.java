@@ -46,7 +46,12 @@ public class SignatureTestBase extends TestBase {
     Signature signature = Signature.getInstance(algorithm, "BC");
     signature.initVerify(jcePublicKey);
     signature.update(data);
-    signature.verify(signatureValue);
+    boolean valid = signature.verify(signatureValue);
+    if (valid) {
+      System.out.println("signature is valid");
+    } else {
+      System.err.println("signature is invalid");
+    }
   }
 
 }

@@ -140,7 +140,7 @@ public class WrapUnwrapHmacKey extends TestBase {
 
     ValuedSecretKey keyTemplate = ValuedSecretKey.newGenericSecretKey();
     keyTemplate.getVerify().setBooleanValue(Boolean.TRUE);
-    keyTemplate.getToken().setBooleanValue(Boolean.TRUE);
+    keyTemplate.getToken().setBooleanValue(Boolean.FALSE);
 
     SecretKey unwrappedKey = (SecretKey) session.unwrapKey(wrapMechanism,
         wrappingKey, wrappedKey, keyTemplate);
