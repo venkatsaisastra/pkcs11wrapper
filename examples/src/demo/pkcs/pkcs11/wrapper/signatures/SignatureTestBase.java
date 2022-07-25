@@ -24,6 +24,7 @@ import org.junit.BeforeClass;
 
 import java.security.Security;
 import java.security.Signature;
+import java.security.SignatureException;
 
 /**
  * Signature test base
@@ -47,10 +48,8 @@ public class SignatureTestBase extends TestBase {
     signature.initVerify(jcePublicKey);
     signature.update(data);
     boolean valid = signature.verify(signatureValue);
-    if (valid) {
-      System.out.println("signature is valid");
-    } else {
-      System.err.println("signature is invalid");
+    if (!valid) {
+      throw new SignatureException("signature is invalid");
     }
   }
 
