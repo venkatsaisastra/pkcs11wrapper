@@ -168,11 +168,10 @@ public class PublicKey extends Key {
       } else if ((keyType & KeyType.VENDOR_DEFINED) != 0L) {
         VendorCodeConverter converter = session.getModule().getVendorCodeConverter();
         if (converter != null) {
-          long genericKeyType = converter.vendorToGenericCKK(keyType);
-          if (genericKeyType == Key.KeyType.VENDOR_SM2) {
+          if (converter.vendorToGenericCKK(keyType) == Key.KeyType.VENDOR_SM2) {
             newObject = ECPublicKey.getInstance(session, objectHandle);
             // map also the key type
-            ((Key) newObject).keyType.setLongValue(genericKeyType);
+            ((Key) newObject).keyType.setLongValue(keyType);
           }
         }
       }

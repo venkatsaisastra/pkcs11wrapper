@@ -200,6 +200,8 @@ public class Session {
    */
   private long sessionHandle;
 
+  private VendorCodeConverter vendorCodeConverter;
+
   /**
    * The token to perform the operations on.
    */
@@ -277,6 +279,7 @@ public class Session {
   protected Session(Token token, long sessionHandle) {
     this.token = Util.requireNonNull("token", token);
     this.module = token.getSlot().getModule();
+    this.vendorCodeConverter = module.getVendorCodeConverter();
     this.pkcs11Module = module.getPKCS11Module();
     this.sessionHandle = sessionHandle;
   }
@@ -1947,9 +1950,8 @@ public class Session {
   private CK_MECHANISM toCkMechanism(Mechanism mechanism) {
     long code = mechanism.getMechanismCode();
     if ((code & PKCS11Constants.CKM_VENDOR_DEFINED) != 0) {
-      VendorCodeConverter converter = module.getVendorCodeConverter();
-      if (converter != null) {
-        code = converter.genericToVendorCKM(code);
+      if (vendorCodeConverter != null) {
+        code = vendorCodeConverter.genericToVendorCKM(code);
       }
     }
 

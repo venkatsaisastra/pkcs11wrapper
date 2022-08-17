@@ -42,9 +42,11 @@
 
 package iaik.pkcs.pkcs11.objects;
 
+import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
+import iaik.pkcs.pkcs11.wrapper.PKCS11Constants;
 
 /**
  * Objects of this class represent ECDSA public keys as specified by PKCS#11
@@ -83,6 +85,14 @@ public class ECPublicKey extends PublicKey {
    */
   public ECPublicKey(long keyType) {
     this.keyType.setLongValue(keyType);
+  }
+
+  public static ECPublicKey newSM2PublicKey(Module module) {
+    long keyType = PKCS11Constants.CKK_VENDOR_SM2;
+    if (module.getVendorCodeConverter() != null) {
+      keyType = module.getVendorCodeConverter().genericToVendorCKK(keyType);
+    }
+    return new ECPublicKey(keyType);
   }
 
   /**

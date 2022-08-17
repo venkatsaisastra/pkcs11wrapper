@@ -42,6 +42,7 @@
 
 package iaik.pkcs.pkcs11.objects;
 
+import iaik.pkcs.pkcs11.Module;
 import iaik.pkcs.pkcs11.Session;
 import iaik.pkcs.pkcs11.TokenException;
 import iaik.pkcs.pkcs11.Util;
@@ -77,6 +78,14 @@ public class ValuedSecretKey extends SecretKey {
 
   public static ValuedSecretKey newGenericSecretKey() {
     return new ValuedSecretKey(PKCS11Constants.CKK_GENERIC_SECRET);
+  }
+
+  public static ValuedSecretKey newSM4SecretKey(Module module) {
+    long keyType = PKCS11Constants.CKK_VENDOR_SM4;
+    if (module.getVendorCodeConverter() != null) {
+      keyType = module.getVendorCodeConverter().genericToVendorCKK(keyType);
+    }
+    return new ValuedSecretKey(keyType);
   }
 
   /**
