@@ -803,6 +803,33 @@ public class Session {
       throw new PKCS11Exception(ex);
     }
   }
+  
+  /**
+   * Initializes a new encryption operation. The application must call this
+   * method before calling any other encrypt* operation. Before initializing a
+   * new operation, any currently pending operation must be finalized using
+   * the appropriate *Final method (e.g. digestFinal()). There are exceptions
+   * for dual-function operations. This method requires the mechanism to use
+   * for encryption and the key for this operation. The key must have set its
+   * encryption flag. For the mechanism the application may use a constant
+   * defined in the Mechanism class. Notice that the key and the mechanism
+   * must be compatible; i.e. you cannot use a DES key with the RSA mechanism.
+   *
+   * @param mechanism
+   *          The mechanism to use; e.g. Mechanism.DES_CBC.
+   * @param keyHandle
+   *          The decryption key handle to use.
+   * @exception TokenException
+   *              If initializing this operation failed.
+   */
+  public void encryptInit(Mechanism mechanism, long keyHandle) throws TokenException {
+    try {
+      pkcs11Module.C_EncryptInit(sessionHandle, toCkMechanism(mechanism),
+              keyHandle);
+    } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+      throw new PKCS11Exception(ex);
+    }
+  }
 
   /**
    * Encrypts the given data with the key and mechanism given to the
@@ -943,6 +970,33 @@ public class Session {
     try {
       pkcs11Module.C_DecryptInit(sessionHandle, toCkMechanism(mechanism),
           key.getObjectHandle());
+    } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+      throw new PKCS11Exception(ex);
+    }
+  }
+  
+    /**
+   * Initializes a new decryption operation. The application must call this
+   * method before calling any other decrypt* operation. Before initializing a
+   * new operation, any currently pending operation must be finalized using
+   * the appropriate *Final method (e.g. digestFinal()). There are exceptions
+   * for dual-function operations. This method requires the mechanism to use
+   * for decryption and the key for this operation. The key must have set its
+   * decryption flag. For the mechanism the application may use a constant
+   * defined in the Mechanism class. Notice that the key and the mechanism
+   * must be compatible; i.e. you cannot use a DES key with the RSA mechanism.
+   *
+   * @param mechanism
+   *          The mechanism to use; e.g. Mechanism.DES_CBC.
+   * @param keyHandle
+   *          The decryption key handle to use.
+   * @exception TokenException
+   *              If initializing this operation failed.
+   */
+  public void decryptInit(Mechanism mechanism, long keyHandle) throws TokenException {
+    try {
+      pkcs11Module.C_DecryptInit(sessionHandle, toCkMechanism(mechanism),
+          keyHandle);
     } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
       throw new PKCS11Exception(ex);
     }
@@ -1253,6 +1307,34 @@ public class Session {
       throw new PKCS11Exception(ex);
     }
   }
+  
+  /**
+   * Initializes a new signing operation. Use it for signatures and MACs. The
+   * application must call this method before calling any other sign*
+   * operation. Before initializing a new operation, any currently pending
+   * operation must be finalized using the appropriate *Final method
+   * (e.g. digestFinal()). There are exceptions for dual-function operations.
+   * This method requires the mechanism to use for signing and the key for
+   * this operation. The key must have set its sign flag. For the mechanism
+   * the application may use a constant defined in the Mechanism class. Notice
+   * that the key and the mechanism must be compatible; i.e. you cannot use a
+   * DES key with the RSA mechanism.
+   *
+   * @param mechanism
+   *          The mechanism to use; e.g. Mechanism.RSA_PKCS.
+   * @param keyHandle
+   *          The signing key handle to use.
+   * @exception TokenException
+   *              If initializing this operation failed.
+   */
+  public void signInit(Mechanism mechanism, long keyHandle) throws TokenException {
+    try {
+      pkcs11Module.C_SignInit(sessionHandle, toCkMechanism(mechanism),
+          keyHandle);
+    } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+      throw new PKCS11Exception(ex);
+    }
+  }
 
   /**
    * Signs the given data with the key and mechanism given to the signInit
@@ -1352,6 +1434,35 @@ public class Session {
       throw new PKCS11Exception(ex);
     }
   }
+  
+  /**
+   * Initializes a new signing operation for signing with recovery. The
+   * application must call this method before calling signRecover. Before
+   * initializing a new operation, any currently pending operation must be
+   * finalized using the appropriate *Final method (e.g. digestFinal()). There
+   * are exceptions for dual-function operations. This method requires the
+   * mechanism to use for signing and the key for this operation. The key must
+   * have set its sign-recover flag. For the mechanism the application may use
+   * a constant defined in the Mechanism class. Notice that the key and the
+   * mechanism must be compatible; i.e. you cannot use a DES key with the RSA
+   * mechanism.
+   *
+   * @param mechanism
+   *          The mechanism to use; e.g. Mechanism.RSA_9796.
+   * @param keyHandle
+   *          The signing key handle to use.
+   * @exception TokenException
+   *              If initializing this operation failed.
+   */
+  public void signRecoverInit(Mechanism mechanism, long keyHandle)
+      throws TokenException {
+    try {
+      pkcs11Module.C_SignRecoverInit(sessionHandle,
+          toCkMechanism(mechanism), key.getObjectHandle());
+    } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+      throw new PKCS11Exception(ex);
+    }
+  }
 
   /**
    * Signs the given data with the key and mechanism given to the
@@ -1402,6 +1513,34 @@ public class Session {
    *
    * @param mechanism
    *          The mechanism to use; e.g. Mechanism.RSA_PKCS.
+   * @param keyHandle
+   *          The verification key handle to use.
+   * @exception TokenException
+   *              If initializing this operation failed.
+   */
+  public void verifyInit(Mechanism mechanism, long keyHandle) throws TokenException {
+    try {
+      pkcs11Module.C_VerifyInit(sessionHandle, toCkMechanism(mechanism),
+          keyHandle);
+    } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+      throw new PKCS11Exception(ex);
+    }
+  }
+  
+  /**
+   * Initializes a new verification operation. You can use it for verifying
+   * signatures and MACs. The application must call this method before calling
+   * any other verify* operation. Before initializing a new operation, any
+   * currently pending operation must be finalized using the appropriate
+   * *Final method (e.g. digestFinal()). There are exceptions for
+   * dual-function operations. This method requires the mechanism to use for
+   * verification and the key for this operation. The key must have set its
+   * verify flag. For the mechanism the application may use a constant defined
+   * in the Mechanism class. Notice that the key and the mechanism must be
+   * compatible; i.e. you cannot use a DES key with the RSA mechanism.
+   *
+   * @param mechanism
+   *          The mechanism to use; e.g. Mechanism.RSA_PKCS.
    * @param key
    *          The verification key to use.
    * @exception TokenException
@@ -1411,6 +1550,34 @@ public class Session {
     try {
       pkcs11Module.C_VerifyInit(sessionHandle, toCkMechanism(mechanism),
           key.getObjectHandle());
+    } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+      throw new PKCS11Exception(ex);
+    }
+  }
+  
+  /**
+   * Initializes a new verification operation. You can use it for verifying
+   * signatures and MACs. The application must call this method before calling
+   * any other verify* operation. Before initializing a new operation, any
+   * currently pending operation must be finalized using the appropriate
+   * *Final method (e.g. digestFinal()). There are exceptions for
+   * dual-function operations. This method requires the mechanism to use for
+   * verification and the key for this operation. The key must have set its
+   * verify flag. For the mechanism the application may use a constant defined
+   * in the Mechanism class. Notice that the key and the mechanism must be
+   * compatible; i.e. you cannot use a DES key with the RSA mechanism.
+   *
+   * @param mechanism
+   *          The mechanism to use; e.g. Mechanism.RSA_PKCS.
+   * @param keyHandle
+   *          The verification key handle to use.
+   * @exception TokenException
+   *              If initializing this operation failed.
+   */
+  public void verifyInit(Mechanism mechanism, long keyHandle) throws TokenException {
+    try {
+      pkcs11Module.C_VerifyInit(sessionHandle, toCkMechanism(mechanism),
+          keyHandle);
     } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
       throw new PKCS11Exception(ex);
     }
@@ -1516,6 +1683,35 @@ public class Session {
     try {
       pkcs11Module.C_VerifyRecoverInit(sessionHandle,
           toCkMechanism(mechanism), key.getObjectHandle());
+    } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+      throw new PKCS11Exception(ex);
+    }
+  }
+  
+  
+  /**
+   * Initializes a new verification operation for verification with data
+   * recovery. The application must call this method before calling
+   * verifyRecover. Before initializing a new operation, any currently pending
+   * operation must be finalized using the appropriate *Final method (e.g.
+   * digestFinal()). This method requires the mechanism to use for
+   * verification and the key for this operation. The key must have set its
+   * verify-recover flag. For the mechanism the application may use a constant
+   * defined in the Mechanism class. Notice that the key and the mechanism
+   * must be compatible; i.e. you cannot use a DES key with the RSA mechanism.
+   *
+   * @param mechanism
+   *          The mechanism to use; e.g. Mechanism.RSA_9796.
+   * @param keyHandle
+   *          The verification key handle to use.
+   * @exception TokenException
+   *              If initializing this operation failed.
+   */
+  public void verifyRecoverInit(Mechanism mechanism, long keyHandle)
+      throws TokenException {
+    try {
+      pkcs11Module.C_VerifyRecoverInit(sessionHandle,
+          toCkMechanism(mechanism), keyHandle);
     } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
       throw new PKCS11Exception(ex);
     }
@@ -1731,6 +1927,30 @@ public class Session {
       throw new PKCS11Exception(ex);
     }
   }
+  
+  /**
+   * Wraps (encrypts) the given key with the wrapping key using the given
+   * mechanism.
+   *
+   * @param mechanism
+   *          The mechanism to use for wrapping the key.
+   * @param wrappingKeyHandle
+   *          The handle of the key to use for wrapping (encrypting).
+   * @param keyHandle
+   *          The handle of the key to wrap (encrypt).
+   * @return The wrapped key as byte array.
+   * @exception TokenException
+   *              If wrapping the key failed.
+   */
+  public byte[] wrapKey(Mechanism mechanism, long wrappingKeyHandle, long keyHandle)
+      throws TokenException {
+    try {
+      return pkcs11Module.C_WrapKey(sessionHandle, toCkMechanism(mechanism),
+          wrappingKeyHandle, keyHandle);
+    } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+      throw new PKCS11Exception(ex);
+    }
+  }
 
   /**
    * Unwraps (decrypts) the given encrypted key with the unwrapping key using
@@ -1767,6 +1987,44 @@ public class Session {
     }
 
     return (Key) PKCS11Object.getInstance(this, objectHandle);
+  }
+  
+  
+  /**
+   * Unwraps (decrypts) the given encrypted key with the unwrapping key using
+   * the given mechanism. The application can also pass a template key to set
+   * certain attributes of the unwrapped key. This creates a key object after
+   * unwrapping the key and returns an object representing this key.
+   *
+   * @param mechanism
+   *          The mechanism to use for unwrapping the key.
+   * @param unwrappingKeyHandle
+   *          The handle of the key to use for unwrapping (decrypting).
+   * @param wrappedKey
+   *          The encrypted key to unwrap (decrypt).
+   * @param keyTemplate
+   *          The template for creating the new key object.
+   * @return A key handle representing the newly created key object.
+   * @exception TokenException
+   *              If unwrapping the key or creating a new key object failed.
+   */
+  public long unwrapKey(Mechanism mechanism, long unwrappingKeyHandle,
+      byte[] wrappedKey, PKCS11Object keyTemplate)
+      throws TokenException {
+    Util.requireNonNull("wrappedKey", wrappedKey);
+
+    CK_ATTRIBUTE[] ckAttributes = getSetAttributes(keyTemplate);
+
+    long objectHandle;
+    try {
+      objectHandle = pkcs11Module.C_UnwrapKey(sessionHandle,
+          toCkMechanism(mechanism), unwrappingKeyHandle,
+          wrappedKey, ckAttributes);
+    } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+      throw new PKCS11Exception(ex);
+    }
+
+    return objectHandle;
   }
 
   /**
@@ -1870,6 +2128,111 @@ public class Session {
       return null;
     } else {
       return (Key) PKCS11Object.getInstance(this, objectHandle);
+    }
+  }
+  
+  
+  /**
+   * Derives a new key from a specified base key using the given mechanism.
+   * After deriving a new key from the base key, a new key object is created
+   * and a representation of it is returned. The application can provide a
+   * template key to set certain attributes of the new key object.
+   *
+   * @param mechanism
+   *          The mechanism to use for deriving the new key from the base key.
+   * @param baseKeyHandle
+   *          The handle of the key to use as base for derivation.
+   * @param template
+   *          The template for creating the new key object.
+   * @return A key handle representing the newly derived (created) key object
+   *         or null, if the used mechanism uses other means to return its
+   *         values; e.g. the CKM_SSL3_KEY_AND_MAC_DERIVE mechanism.
+   * @exception TokenException
+   *              If deriving the key or creating a new key object failed.
+   */
+  public long deriveKey(Mechanism mechanism, long baseKeyHandle, Key template)
+      throws TokenException {
+    CK_MECHANISM ckMechanism = toCkMechanism(mechanism);
+    Parameters params = mechanism.getParameters();
+    CK_ATTRIBUTE[] ckAttributes = getSetAttributes(template);
+
+    long objectHandle;
+    try {
+      objectHandle = pkcs11Module.C_DeriveKey(sessionHandle,
+          ckMechanism, baseKeyHandle, ckAttributes);
+    } catch (sun.security.pkcs11.wrapper.PKCS11Exception ex) {
+      throw new PKCS11Exception(ex);
+    }
+
+    /*
+     * for certain mechanisms we must copy back the returned values to the
+     * parameters object of the given mechanism
+     */
+    if ((ckMechanism.mechanism
+          == PKCS11Constants.CKM_SSL3_MASTER_KEY_DERIVE
+        || ckMechanism.mechanism
+          == PKCS11Constants.CKM_TLS_MASTER_KEY_DERIVE)
+        && (params instanceof SSL3MasterKeyDeriveParameters)) {
+      /*
+       * The SSL3MasterKeyDeriveParameters object need special handling
+       * due to their deeper nesting of their data structure, which needs
+       * to be copied back to get all the results.
+       */
+      // set the returned client version
+      VersionParameters version =
+          ((SSL3MasterKeyDeriveParameters) params).getVersion();
+      version.setPKCS11ParamsObject(
+          ((CK_SSL3_MASTER_KEY_DERIVE_PARAMS)
+              (ckMechanism.pParameter)).pVersion);
+      return (Key) PKCS11Object.getInstance(this, objectHandle);
+    } else if ((ckMechanism.mechanism
+          == PKCS11Constants.CKM_TLS12_MASTER_KEY_DERIVE)
+        && (params instanceof TLS12MasterKeyDeriveParameters)) {
+      // set the returned client version
+      VersionParameters version =
+          ((TLS12MasterKeyDeriveParameters) params).getVersion();
+      CK_VERSION ckVersion =
+          TLS12MasterKeyDeriveParameters.getPVersion(ckMechanism.pParameter);
+      version.setPKCS11ParamsObject(ckVersion);
+      return objectHandle;
+    } else if ((ckMechanism.mechanism
+            == PKCS11Constants.CKM_SSL3_KEY_AND_MAC_DERIVE
+          || ckMechanism.mechanism
+            == PKCS11Constants.CKM_TLS_KEY_AND_MAC_DERIVE)
+        && (params instanceof SSL3KeyMaterialParameters)) {
+      /*
+       * The SSL3KeyMaterialParameters object need special handling due to
+       * their deeper nesting of their data structure, which needs to be
+       * copied back to get all the results.
+       */
+      // set the returned secret keys and IVs
+      ((SSL3KeyMaterialParameters) params).getReturnedKeyMaterial()
+          .setPKCS11ParamsObject(
+              ((CK_SSL3_KEY_MAT_PARAMS) ckMechanism.pParameter)
+            .pReturnedKeyMaterial,
+          this);
+      /*
+       * this mechanism returns its keys and values through the parameters
+       * object of the mechanism, but it does not return a key
+       */
+      return null;
+    } else if ((ckMechanism.mechanism
+            == PKCS11Constants.CKM_TLS12_KEY_AND_MAC_DERIVE)
+        && (params instanceof TLS12KeyMaterialParameters)) {
+      // set the returned secret keys and IVs
+      CK_SSL3_KEY_MAT_OUT pReturnedMaterial =
+          TLS12KeyMaterialParameters.getPReturnedKeyMaterial(
+              ckMechanism.pParameter);
+
+      ((TLS12KeyMaterialParameters) params).getReturnedKeyMaterial()
+          .setPKCS11ParamsObject(pReturnedMaterial, this);
+      /*
+       * this mechanism returns its keys and values through the parameters
+       * object of the mechanism, but it does not return a key
+       */
+      return null;
+    } else {
+      return objectHandle;
     }
   }
 
